@@ -1101,6 +1101,33 @@
       ]
     },
     {
+      "researchKey": "Erpetoichthys calabaricus",
+      "baseScientificName": "Erpetoichthys calabaricus",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0106",
+          "name": "恐龙鱼 (草绳)",
+          "scientificName": "Erpetoichthys calabaricus",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Hemigrammus rodwayi",
       "baseScientificName": "Hemigrammus rodwayi",
       "priorityScore": 142,
@@ -1290,6 +1317,70 @@
       ]
     },
     {
+      "researchKey": "Semaprochilodus insignis",
+      "baseScientificName": "Semaprochilodus insignis",
+      "priorityScore": 142,
+      "catalogObjectCount": 2,
+      "exactObjectCount": 2,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0061",
+          "name": "飞凤鱼",
+          "scientificName": "Semaprochilodus insignis",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        },
+        {
+          "speciesId": "sp_0137",
+          "name": "飞凤鱼",
+          "scientificName": "Semaprochilodus insignis",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Semaprochilodus taeniurus",
+      "baseScientificName": "Semaprochilodus taeniurus",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0107",
+          "name": "飞凤鱼 (国旗飞凤)",
+          "scientificName": "Semaprochilodus taeniurus",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Sphaerichthys osphromenoides",
       "baseScientificName": "Sphaerichthys osphromenoides",
       "priorityScore": 142,
@@ -1382,6 +1473,35 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
+        }
+      ]
+    },
+    {
+      "researchKey": "Thayeria boehlkei",
+      "baseScientificName": "Thayeria boehlkei",
+      "priorityScore": 134,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water",
+        "ph"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0472",
+          "name": "企鹅灯",
+          "scientificName": "Thayeria boehlkei",
+          "gaps": [
+            "water",
+            "ph"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
         }
       ]
     },
@@ -1920,41 +2040,6 @@
       ]
     },
     {
-      "researchKey": "Erpetoichthys calabaricus",
-      "baseScientificName": "Erpetoichthys calabaricus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0106",
-          "name": "恐龙鱼 (草绳)",
-          "scientificName": "Erpetoichthys calabaricus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Melanotaenia praecox",
       "baseScientificName": "Melanotaenia praecox",
       "priorityScore": 110,
@@ -2312,90 +2397,6 @@
       ]
     },
     {
-      "researchKey": "Semaprochilodus insignis",
-      "baseScientificName": "Semaprochilodus insignis",
-      "priorityScore": 110,
-      "catalogObjectCount": 2,
-      "exactObjectCount": 2,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0061",
-          "name": "飞凤鱼",
-          "scientificName": "Semaprochilodus insignis",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        },
-        {
-          "speciesId": "sp_0137",
-          "name": "飞凤鱼",
-          "scientificName": "Semaprochilodus insignis",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Semaprochilodus taeniurus",
-      "baseScientificName": "Semaprochilodus taeniurus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0107",
-          "name": "飞凤鱼 (国旗飞凤)",
-          "scientificName": "Semaprochilodus taeniurus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Synchiropus splendidus",
       "baseScientificName": "Synchiropus splendidus",
       "priorityScore": 110,
@@ -2525,41 +2526,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Thayeria boehlkei",
-      "baseScientificName": "Thayeria boehlkei",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0472",
-          "name": "企鹅灯",
-          "scientificName": "Thayeria boehlkei",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },

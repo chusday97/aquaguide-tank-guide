@@ -734,6 +734,60 @@
         "existingCoveragePriorityScore": 159
       },
       {
+        "researchKey": "Erpetoichthys calabaricus",
+        "baseScientificName": "Erpetoichthys calabaricus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 252,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 252,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Semaprochilodus taeniurus",
+        "baseScientificName": "Semaprochilodus taeniurus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 252,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 252,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Semaprochilodus insignis",
+        "baseScientificName": "Semaprochilodus insignis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 503,
+        "gapInstances": 2,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 2,
+        "impactPerGap": 251.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
         "researchKey": "Epiplatys annulatus",
         "baseScientificName": "Epiplatys annulatus",
         "completionEligible": false,
@@ -879,6 +933,25 @@
         "existingCoveragePriorityScore": 124
       },
       {
+        "researchKey": "Thayeria boehlkei",
+        "baseScientificName": "Thayeria boehlkei",
+        "completionEligible": false,
+        "affectedUnknownPairs": 234,
+        "gapInstances": 2,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 117,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "ph"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 134
+      },
+      {
         "researchKey": "Chaetodon auriga",
         "baseScientificName": "Chaetodon auriga",
         "completionEligible": false,
@@ -903,28 +976,6 @@
       {
         "researchKey": "Cobitis sinensis",
         "baseScientificName": "Cobitis sinensis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 252,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50.4,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Erpetoichthys calabaricus",
-        "baseScientificName": "Erpetoichthys calabaricus",
         "completionEligible": false,
         "affectedUnknownPairs": 252,
         "gapInstances": 5,
@@ -989,28 +1040,6 @@
         "existingCoveragePriorityScore": 110
       },
       {
-        "researchKey": "Semaprochilodus taeniurus",
-        "baseScientificName": "Semaprochilodus taeniurus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 252,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50.4,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
-      },
-      {
         "researchKey": "Synchiropus splendidus",
         "baseScientificName": "Synchiropus splendidus",
         "completionEligible": false,
@@ -1052,28 +1081,6 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Semaprochilodus insignis",
-        "baseScientificName": "Semaprochilodus insignis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 503,
-        "gapInstances": 10,
-        "terminalGapInstances": 6,
-        "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 50.3,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 110
       },
       {
@@ -1228,28 +1235,6 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Thayeria boehlkei",
-        "baseScientificName": "Thayeria boehlkei",
-        "completionEligible": false,
-        "affectedUnknownPairs": 234,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 46.8,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 110
       },
       {
@@ -2027,6 +2012,60 @@
     ],
     "terminalBlockedTaxonQueue": [
       {
+        "researchKey": "Erpetoichthys calabaricus",
+        "baseScientificName": "Erpetoichthys calabaricus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 252,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 252,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Semaprochilodus taeniurus",
+        "baseScientificName": "Semaprochilodus taeniurus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 252,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 252,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Semaprochilodus insignis",
+        "baseScientificName": "Semaprochilodus insignis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 503,
+        "gapInstances": 2,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 2,
+        "impactPerGap": 251.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
         "researchKey": "Epiplatys annulatus",
         "baseScientificName": "Epiplatys annulatus",
         "completionEligible": false,
@@ -2172,6 +2211,25 @@
         "existingCoveragePriorityScore": 124
       },
       {
+        "researchKey": "Thayeria boehlkei",
+        "baseScientificName": "Thayeria boehlkei",
+        "completionEligible": false,
+        "affectedUnknownPairs": 234,
+        "gapInstances": 2,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 117,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "ph"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 134
+      },
+      {
         "researchKey": "Chaetodon auriga",
         "baseScientificName": "Chaetodon auriga",
         "completionEligible": false,
@@ -2196,28 +2254,6 @@
       {
         "researchKey": "Cobitis sinensis",
         "baseScientificName": "Cobitis sinensis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 252,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50.4,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Erpetoichthys calabaricus",
-        "baseScientificName": "Erpetoichthys calabaricus",
         "completionEligible": false,
         "affectedUnknownPairs": 252,
         "gapInstances": 5,
@@ -2282,28 +2318,6 @@
         "existingCoveragePriorityScore": 110
       },
       {
-        "researchKey": "Semaprochilodus taeniurus",
-        "baseScientificName": "Semaprochilodus taeniurus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 252,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50.4,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
-      },
-      {
         "researchKey": "Synchiropus splendidus",
         "baseScientificName": "Synchiropus splendidus",
         "completionEligible": false,
@@ -2345,28 +2359,6 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Semaprochilodus insignis",
-        "baseScientificName": "Semaprochilodus insignis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 503,
-        "gapInstances": 10,
-        "terminalGapInstances": 6,
-        "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 50.3,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 110
       },
       {
@@ -2521,28 +2513,6 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Thayeria boehlkei",
-        "baseScientificName": "Thayeria boehlkei",
-        "completionEligible": false,
-        "affectedUnknownPairs": 234,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 46.8,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 110
       },
       {
@@ -2863,7 +2833,7 @@
     },
     {
       "code": "missing_ph",
-      "count": 43674
+      "count": 43781
     },
     {
       "code": "missing_hardness",
@@ -2879,27 +2849,27 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 423,
+    "actionableGaps": 404,
     "fieldActionableGaps": [
       {
         "field": "tank_size",
-        "count": 86
+        "count": 81
       },
       {
         "field": "ph",
-        "count": 84
+        "count": 80
       },
       {
         "field": "temperature",
-        "count": 79
-      },
-      {
-        "field": "adult_size",
-        "count": 67
+        "count": 74
       },
       {
         "field": "water",
         "count": 66
+      },
+      {
+        "field": "adult_size",
+        "count": 62
       },
       {
         "field": "territoriality",

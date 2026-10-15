@@ -54,6 +54,13 @@ import {
   compatibilityNumericWave3Sources,
   compatibilityNumericWave3VerifiedSourceIds,
 } from './numeric-wave3-20261015';
+import {
+  compatibilityNumericWave4AuthorityPatch,
+  compatibilityNumericWave4FieldReviews,
+  compatibilityNumericWave4ProfilePatches,
+  compatibilityNumericWave4Sources,
+  compatibilityNumericWave4VerifiedSourceIds,
+} from './numeric-wave4-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -64,6 +71,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave1Sources,
   ...compatibilityNumericWave2Sources,
   ...compatibilityNumericWave3Sources,
+  ...compatibilityNumericWave4Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -75,6 +83,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave1FieldReviews,
   ...compatibilityNumericWave2FieldReviews,
   ...compatibilityNumericWave3FieldReviews,
+  ...compatibilityNumericWave4FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -86,6 +95,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave1VerifiedSourceIds,
   ...compatibilityNumericWave2VerifiedSourceIds,
   ...compatibilityNumericWave3VerifiedSourceIds,
+  ...compatibilityNumericWave4VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -97,6 +107,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave1ProfilePatches,
   ...compatibilityNumericWave2ProfilePatches,
   ...compatibilityNumericWave3ProfilePatches,
+  ...compatibilityNumericWave4ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -108,4 +119,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave1AuthorityPatch,
   compatibilityNumericWave2AuthorityPatch,
   compatibilityNumericWave3AuthorityPatch,
+  compatibilityNumericWave4AuthorityPatch,
 ] as const;

@@ -26,34 +26,34 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 106,
+      "reviewed_supported": 111,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 15,
-      "needs_research": 64,
+      "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 101,
+      "reviewed_supported": 105,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 20,
-      "needs_research": 64,
+      "needs_research": 60,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 118,
+      "reviewed_supported": 123,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 3,
-      "needs_research": 64,
+      "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 98,
+      "reviewed_supported": 103,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 20,
-      "needs_research": 67,
+      "needs_research": 62,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
@@ -85,23 +85,23 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 86
+      "count": 81
     },
     {
       "field": "ph",
-      "count": 84
+      "count": 80
     },
     {
       "field": "temperature",
-      "count": 79
-    },
-    {
-      "field": "adult_size",
-      "count": 67
+      "count": 74
     },
     {
       "field": "water",
       "count": 66
+    },
+    {
+      "field": "adult_size",
+      "count": 62
     },
     {
       "field": "territoriality",
@@ -5235,8 +5235,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -5249,32 +5249,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -8582,8 +8590,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -8596,32 +8604,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-erpetoichthys-calabaricus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-erpetoichthys-calabaricus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-erpetoichthys-calabaricus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-erpetoichthys-calabaricus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -8659,8 +8675,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -8673,32 +8689,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-taeniurus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-taeniurus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-taeniurus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-taeniurus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -11286,8 +11310,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -11300,32 +11324,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-semaprochilodus-insignis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -38918,8 +38950,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 2,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -38932,11 +38964,13 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-thayeria-boehlkei-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
           "status": "needs_research",
@@ -38946,18 +38980,22 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-thayeria-boehlkei-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-thayeria-boehlkei-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
