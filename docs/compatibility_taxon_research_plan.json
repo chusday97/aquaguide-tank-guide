@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 95,
-  "totalResearchJobs": 51,
+  "catalogObjects": 93,
+  "totalResearchJobs": 50,
   "variantBridgeJobs": 17,
   "items": [
     {
@@ -337,52 +337,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Opsariichthys bidens",
-      "baseScientificName": "Opsariichthys bidens",
-      "priorityScore": 167,
-      "catalogObjectCount": 2,
-      "exactObjectCount": 2,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "territoriality"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0038",
-          "name": "马口鱼",
-          "scientificName": "Opsariichthys bidens",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "territoriality"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        },
-        {
-          "speciesId": "sp_0130",
-          "name": "马口鱼",
-          "scientificName": "Opsariichthys bidens",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "territoriality"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },

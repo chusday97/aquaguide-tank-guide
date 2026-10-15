@@ -201,8 +201,18 @@ export const applyCatalogReviewDecisionBoundary = (
 ): SpeciesProfile => {
   let next = applyApprovedCatalogFieldReviews(profile, reviews);
   if (!compatibilityDecisionBoundarySpeciesIds.has(profile.id)) return next;
+
+  // Reviews are appended in authority order. A historical reviewed_unknown only
+  // invalidates a field when it is still the latest reviewed conclusion for that
+  // field; a later supported review must restore the value monotonically.
+  const latestReviewedByField = new Map<SpeciesFactKey, CatalogFieldReview>();
   for (const review of reviews) {
-    if (review.status !== 'reviewed' || review.resolution !== 'unknown' || !isCatalogFieldReviewValueValid(review)) continue;
+    if (review.status !== 'reviewed' || !isCatalogFieldReviewValueValid(review)) continue;
+    latestReviewedByField.set(review.field, review);
+  }
+
+  for (const review of latestReviewedByField.values()) {
+    if (review.resolution !== 'unknown') continue;
     if (review.field === 'water') next = { ...next, waterType: 'unknown' };
     if (review.field === 'temperature') next = { ...next, waterTemperatureMinC: null, waterTemperatureMaxC: null };
     if (review.field === 'ph') next = { ...next, phMin: null, phMax: null };

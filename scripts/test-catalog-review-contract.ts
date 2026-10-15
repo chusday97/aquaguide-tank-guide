@@ -106,6 +106,20 @@ assert.deepEqual(temperatureOverlay.evidenceSourceIds, ['reviewed-source']);
 assert.deepEqual(temperatureOverlay.factEvidence?.find(item => item.field === 'temperature'), {
   field: 'temperature', citationIds: ['reviewed-source'], reviewStatus: 'reviewed', confidence: 'medium',
 });
+const monotonicBoundaryProfile = { ...profile, id: 'sp_0047', catalogKey: 'sp_0047' };
+const historicalUnknownThenSupported = applyCatalogReviewDecisionBoundary(monotonicBoundaryProfile, [
+  { ...unknownTemperature, speciesId: 'sp_0047' },
+  { ...reviewedTemperature, speciesId: 'sp_0047' },
+]);
+assert.equal(historicalUnknownThenSupported.waterTemperatureMinC, 20);
+assert.equal(historicalUnknownThenSupported.waterTemperatureMaxC, 25);
+
+const supportedThenNewUnknown = applyCatalogReviewDecisionBoundary(monotonicBoundaryProfile, [
+  { ...reviewedTemperature, speciesId: 'sp_0047' },
+  { ...unknownTemperature, speciesId: 'sp_0047' },
+]);
+assert.equal(supportedThenNewUnknown.waterTemperatureMinC, null);
+assert.equal(supportedThenNewUnknown.waterTemperatureMaxC, null);
 
 const temporaryDirectory = await mkdtemp(join(tmpdir(), 'catalog-review-contract-'));
 const invalidCitationInput = join(temporaryDirectory, 'invalid-citation.json');

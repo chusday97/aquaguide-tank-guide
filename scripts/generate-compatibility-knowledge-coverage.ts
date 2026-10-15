@@ -131,6 +131,12 @@ const boundaryResolution = (codes: GapBoundaryCode[]) => {
   if (codes.includes('species_social_not_established')) {
     return 'evidence_ceiling';
   }
+  if (codes.includes('species_space_minimum_not_established')) {
+    return 'evidence_ceiling';
+  }
+  if (codes.includes('species_territoriality_not_established')) {
+    return 'evidence_ceiling';
+  }
   if (codes.includes('life_type_not_supported_by_fish_compatibility_domain')) {
     return 'domain_expansion_required';
   }

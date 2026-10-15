@@ -673,6 +673,39 @@ assert.deepEqual(
   [...highImpactWave17SourceIds].sort(),
   'high-impact wave17 koi husbandry, territoriality and rare small-fish predation evidence must resolve to reviewed source metadata',
 );
+const highImpactWave18SpeciesBindings: Array<[string, string]> = [
+  ['sp_0038', 'Opsariichthys bidens'],
+  ['sp_0130', 'Opsariichthys bidens'],
+];
+for (const [speciesId, expectedScientificName] of highImpactWave18SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'high-impact wave18 duplicate catalog object must remain bound to exact Opsariichthys bidens: ' + speciesId,
+  );
+  assert.deepEqual(approvedValue(speciesId, 'temperature'), { min: 18, max: 25 });
+  assert.deepEqual(approvedValue(speciesId, 'ph'), { min: 7, max: 8 });
+  assert.equal(approvedValue(speciesId, 'tank_size'), undefined, speciesId + ' must not invent a household tank minimum from production or experimental vessel dimensions');
+  assert.equal(approvedValue(speciesId, 'territoriality'), undefined, speciesId + ' must not translate aggression or dominance hierarchy into territoriality');
+  const row = rowOf(speciesId);
+  assert.equal(row?.authoritativeFieldCount, 6);
+  assert.equal(row?.actionableGapCount, 0);
+  assert.equal(row?.terminalGapCount, 2);
+  assert.equal(row?.genericOnboardingReady, false);
+  assert.equal(row?.fields.tank_size.disposition, 'terminal_hold');
+  assert.equal(row?.fields.tank_size.authoritySource, 'evidence_ceiling');
+  assert.equal(row?.fields.tank_size.reasonCode, 'species_space_minimum_not_established');
+  assert.equal(row?.fields.territoriality.disposition, 'terminal_hold');
+  assert.equal(row?.fields.territoriality.authoritySource, 'evidence_ceiling');
+  assert.equal(row?.fields.territoriality.reasonCode, 'species_territoriality_not_established');
+  assert.equal(backlog.some(item => item.speciesId === speciesId), false, speciesId + ' must leave ordinary research backlog after all remaining gaps become terminal evidence holds');
+}
+const highImpactWave18SourceIds = ['cnipa-opsariichthys-bidens-parent-culture-wave18'];
+assert.deepEqual(
+  resolveKnowledgeSources(highImpactWave18SourceIds).map(source => source.id).sort(),
+  [...highImpactWave18SourceIds].sort(),
+  'high-impact wave18 exact-taxon managed husbandry evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -698,9 +731,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 51, '353 actionable field gaps should collapse to 51 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 50, '345 actionable field gaps should collapse to 50 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 95, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 93, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
@@ -713,9 +746,7 @@ assert.equal(goldfishTaxonJob.catalogObjectCount, 12);
 assert.equal(goldfishTaxonJob.variantObjectCount, 12);
 assert.equal(goldfishTaxonJob.exactObjectCount, 0);
 const opsariichthysTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Opsariichthys bidens');
-assert.ok(opsariichthysTaxonJob);
-assert.deepEqual(opsariichthysTaxonJob.catalogObjects.map(item => item.speciesId), ['sp_0038', 'sp_0130']);
-assert.equal(opsariichthysTaxonJob.requiresVariantBridgeReview, false);
+assert.equal(opsariichthysTaxonJob, undefined, 'Opsariichthys bidens must leave the actionable taxon research plan once its supported fields are promoted and the two remaining fields are terminally classified');
 
 const matrixArtifact = JSON.parse(readFileSync('docs/compatibility_core_field_coverage.json', 'utf8')) as Record<string, unknown> & { rows: unknown[] };
 const backlogArtifact = JSON.parse(readFileSync('docs/compatibility_core_field_backlog.json', 'utf8')) as Record<string, unknown> & { items: unknown[] };

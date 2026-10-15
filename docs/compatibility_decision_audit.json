@@ -10,13 +10,13 @@
   "genericReadyUniquePairs": 2278,
   "fishPairs": 47895,
   "statuses": {
-    "compatible": 351,
-    "caution": 1771,
+    "compatible": 381,
+    "caution": 1741,
     "not_recommended": 18961,
     "insufficient_data": 26812
   },
   "decisionCoveragePct": 44.02,
-  "fullyInformedPairs": 5995,
+  "fullyInformedPairs": 6105,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
@@ -79,32 +79,6 @@
           "tank_size",
           "territoriality",
           "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0038",
-        "name": "马口鱼",
-        "scientificName": "Opsariichthys bidens",
-        "unknownPairs": 109,
-        "actionableFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0130",
-        "name": "马口鱼",
-        "scientificName": "Opsariichthys bidens",
-        "unknownPairs": 109,
-        "actionableFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
         ],
         "terminalReasons": []
       },
@@ -216,27 +190,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 159
-      },
-      {
-        "researchKey": "Opsariichthys bidens",
-        "baseScientificName": "Opsariichthys bidens",
-        "completionEligible": true,
-        "affectedUnknownPairs": 218,
-        "gapInstances": 8,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 27.25,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
       },
       {
         "researchKey": "Salminus brasiliensis",
@@ -1244,27 +1197,6 @@
         "existingCoveragePriorityScore": 159
       },
       {
-        "researchKey": "Opsariichthys bidens",
-        "baseScientificName": "Opsariichthys bidens",
-        "completionEligible": true,
-        "affectedUnknownPairs": 218,
-        "gapInstances": 8,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 27.25,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
-      },
-      {
         "researchKey": "Salminus brasiliensis",
         "baseScientificName": "Salminus brasiliensis",
         "completionEligible": true,
@@ -2177,10 +2109,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 51,
-      "completionEligibleJobs": 14,
+      "totalResearchJobs": 50,
+      "completionEligibleJobs": 13,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 15,
+      "completionEligibleCatalogObjects": 13,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2213,6 +2145,14 @@
         "speciesCount": 3
       },
       {
+        "reason": "species_space_minimum_not_established",
+        "speciesCount": 2
+      },
+      {
+        "reason": "species_territoriality_not_established",
+        "speciesCount": 2
+      },
+      {
         "reason": "catalog_common_name_identity_mismatch",
         "speciesCount": 1
       },
@@ -2233,7 +2173,7 @@
     },
     {
       "code": "missing_ph",
-      "count": 42126
+      "count": 42124
     },
     {
       "code": "missing_hardness",
@@ -2249,22 +2189,22 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 353,
+    "actionableGaps": 345,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 73
+        "count": 71
       },
       {
         "field": "tank_size",
-        "count": 72
-      },
-      {
-        "field": "temperature",
-        "count": 66
+        "count": 70
       },
       {
         "field": "water",
+        "count": 64
+      },
+      {
+        "field": "temperature",
         "count": 64
       },
       {
@@ -2277,7 +2217,7 @@
       },
       {
         "field": "territoriality",
-        "count": 9
+        "count": 7
       },
       {
         "field": "social_behavior",

@@ -11,7 +11,9 @@ export type KnowledgeEvidenceCeilingCode =
   | 'variant_social_not_established'
   | 'variant_husbandry_not_established'
   | 'species_social_not_established'
-  | 'species_space_minimum_conflicted';
+  | 'species_space_minimum_conflicted'
+  | 'species_space_minimum_not_established'
+  | 'species_territoriality_not_established';
 
 export type KnowledgeEvidenceField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
 
@@ -66,6 +68,54 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
     reviewedAt: '2026-10-13',
     researchDisposition: 'terminal_unknown_hold' as const,
   }]])),
+  sp_0038: [
+    {
+      speciesId: 'sp_0038',
+      field: 'space',
+      code: 'species_space_minimum_not_established',
+      sourceIds: [
+        'fishbase-opsariichthys-bidens',
+        'doi-opsariichthys-bidens-enrichment-2024',
+        'cnipa-opsariichthys-bidens-parent-culture-wave18',
+      ],
+      note: 'Targeted exact-taxon review established adult size, managed water conditions, feeding risk and social behavior for Opsariichthys bidens, but found no defensible household-aquarium minimum length or volume. Production ponds, broodstock facilities and experimental vessels are context-specific and must not be converted into a minimum tank size merely to clear coverage.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+    {
+      speciesId: 'sp_0038',
+      field: 'social',
+      code: 'species_territoriality_not_established',
+      sourceIds: ['doi-opsariichthys-bidens-enrichment-2024'],
+      note: 'The exact-taxon enrichment study documents chasing, nipping, clustering and dominance-hierarchy effects, but does not directly establish territory defense or non-territoriality for Opsariichthys bidens. Keep territoriality terminal-unknown rather than translating general aggression or dominance into a territorial trait.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+  ],
+  sp_0130: [
+    {
+      speciesId: 'sp_0130',
+      field: 'space',
+      code: 'species_space_minimum_not_established',
+      sourceIds: [
+        'fishbase-opsariichthys-bidens',
+        'doi-opsariichthys-bidens-enrichment-2024',
+        'cnipa-opsariichthys-bidens-parent-culture-wave18',
+      ],
+      note: 'This duplicate exact Opsariichthys bidens catalog object shares the same targeted evidence boundary as sp_0038: reviewed sources do not provide a defensible household-aquarium minimum length or volume, and production or experimental vessel dimensions must not be promoted as a tank minimum.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+    {
+      speciesId: 'sp_0130',
+      field: 'social',
+      code: 'species_territoriality_not_established',
+      sourceIds: ['doi-opsariichthys-bidens-enrichment-2024'],
+      note: 'This duplicate exact Opsariichthys bidens object shares the same behavioral evidence ceiling as sp_0038: direct research shows aggression and dominance hierarchy but not explicit territory defense or non-territoriality, so territoriality remains fail-closed.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+  ],
   sp_0047: [
     {
       speciesId: 'sp_0047',
