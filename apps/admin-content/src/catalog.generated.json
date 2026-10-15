@@ -2454,7 +2454,7 @@
     "catalog_key": "sp_0176",
     "name": "黑白大理石神仙",
     "scientific_name": "Pterophyllum scalare var. Marble",
-    "category": "硬景/底床",
+    "category": "慈鲷/斗鱼",
     "status": "catalog",
     "image": "/responsive/species/sp_0176-768.webp",
     "difficulty": "Easy",
@@ -2466,16 +2466,16 @@
   {
     "id": "sp_0177",
     "catalog_key": "sp_0177",
-    "name": "红眼蓝钻神仙",
-    "scientific_name": "Pterophyllum scalare var. Blue",
+    "name": "蓝钻神仙",
+    "scientific_name": "Pterophyllum scalare var. Blue Diamond",
     "category": "慈鲷/斗鱼",
     "status": "catalog",
     "image": "/responsive/species/sp_0177-768.webp",
     "difficulty": "Easy",
     "water_temperature": "24-30°C",
-    "ph_level": "6.0-7.0",
-    "tank_size": "至少 120 升",
-    "product_description": "带有金属蓝光泽和血红色眼睛。非常高贵的品种。光照充足时金属光泽会更加明显。"
+    "ph_level": "6.0-8.0",
+    "tank_size": "建议按成体至少 100 cm 缸长并保留充足缸高",
+    "product_description": "人工选育的 Pterophyllum scalare “Blue Diamond” 色系，成鱼呈明显金属蓝至蓝银色光泽。其基础饲养与普通神仙鱼一致，成体和繁殖期仍需注意同类领地行为。"
   },
   {
     "id": "sp_0178",
@@ -2487,9 +2487,9 @@
     "image": "/responsive/species/sp_0178-768.webp",
     "difficulty": "Easy",
     "water_temperature": "24-30°C",
-    "ph_level": "6.0-7.0",
-    "tank_size": "至少 120 升",
-    "product_description": "黑白斑块清晰如熊猫。性格温和，游姿优雅。适合在有沉木和高大水草的缸中饲养。"
+    "ph_level": "6.0-8.0",
+    "tank_size": "建议按成体至少 100 cm 缸长并保留充足缸高",
+    "product_description": "人工选育的 Pterophyllum scalare “Panda” 色系，典型特征是黑白或黑银色斑块。基础饲养与普通神仙鱼一致，成年和繁殖期仍需注意同类领地行为。"
   },
   {
     "id": "sp_0179",
@@ -3082,7 +3082,7 @@
   {
     "id": "sp_0221",
     "catalog_key": "sp_0221",
-    "name": "长鳍阿卡西短鲷",
+    "name": "火焰红阿卡西短鲷",
     "scientific_name": "Apistogramma agassizii var. Fire Red",
     "category": "慈鲷/斗鱼",
     "status": "catalog",
@@ -3091,7 +3091,7 @@
     "water_temperature": "24-28°C",
     "ph_level": "5.0-7.0",
     "tank_size": "至少 64 升",
-    "product_description": "通过选育使背鳍和尾鳍更加修长且呈现鲜红色。需要大量躲避穴（陶罐或沉木），在软水中色彩最艳丽。"
+    "product_description": "人工选育的 Apistogramma agassizii “Fire Red” 色系，红色主要集中在尾鳍、背鳍和臀鳍。需要洞穴、沉木等遮挡，并维持稳定的软水环境。"
   },
   {
     "id": "sp_0222",
@@ -5420,16 +5420,16 @@
   {
     "id": "sp_0388",
     "catalog_key": "sp_0388",
-    "name": "血钻神仙 (改良)",
+    "name": "超级红神仙（Red Devil）",
     "scientific_name": "Pterophyllum scalare var. Super Red",
     "category": "慈鲷/斗鱼",
     "status": "catalog",
     "image": "/responsive/species/sp_0388-768.webp",
     "difficulty": "Easy",
     "water_temperature": "24-30°C",
-    "ph_level": "6.0-7.0",
-    "tank_size": "至少 120 升",
-    "product_description": "全身覆盖厚重的鲜红色素。在绿色草缸中色彩反差极大，是目前神仙鱼中最火爆的改良种。"
+    "ph_level": "6.0-8.0",
+    "tank_size": "建议按成体至少 100 cm 缸长并保留充足缸高",
+    "product_description": "人工选育的 Pterophyllum scalare Super Red / Red Devil 色系，体色以高覆盖度红橙色为主要特征。基础饲养与普通神仙鱼一致，成年和繁殖期仍需注意同类领地行为。"
   },
   {
     "id": "sp_0389",
