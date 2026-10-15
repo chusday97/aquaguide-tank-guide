@@ -121,8 +121,8 @@ export const compatibilityNumericWave1FieldReviews: CatalogFieldReview[] = [
     'Fishipedia gives 24–26 °C for exact Nannostomus beckfordi.'),
   supported('sp_0473', 'ph', { min: 6, max: 6.8 }, nBeckfordi,
     'Fishipedia’s aquarium-maintenance range is pH 6.0–6.8; this narrower husbandry range is used instead of the broader natural-habitat range.'),
-  supported('sp_0473', 'adult_size', { min: null, max: 5 }, nBeckfordi,
-    'Fishipedia’s exact species morphology table lists a 5 cm maximum length.'),
+  supported('sp_0473', 'adult_size', { min: null, max: 6.5 }, nBeckfordi,
+    'Fishipedia’s structured morphology table lists 5 cm, while the exact-species prose reports a standard maximum around 6.5 cm; 6.5 cm is retained conservatively for adult-size compatibility.'),
   supported('sp_0473', 'tank_size', { liters: 80, lengthCm: null }, nBeckfordi,
     'Fishipedia’s exact species maintenance table gives an 80 L minimum aquarium volume; no tank-length minimum is inferred.'),
 ];

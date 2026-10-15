@@ -159,7 +159,7 @@ assert.deepEqual(approvedValue('sp_0458', 'adult_size'), { min: null, max: 14 })
 assert.deepEqual(approvedValue('sp_0458', 'tank_size'), { liters: 250, lengthCm: null });
 assert.deepEqual(approvedValue('sp_0473', 'temperature'), { min: 24, max: 26 });
 assert.deepEqual(approvedValue('sp_0473', 'ph'), { min: 6, max: 6.8 });
-assert.deepEqual(approvedValue('sp_0473', 'adult_size'), { min: null, max: 5 });
+assert.deepEqual(approvedValue('sp_0473', 'adult_size'), { min: null, max: 6.5 }, 'Nannostomus beckfordi adult size must conservatively retain the larger exact-page maximum');
 assert.deepEqual(approvedValue('sp_0473', 'tank_size'), { liters: 80, lengthCm: null });
 assert.equal(approvedValue('sp_0473', 'water'), undefined, 'Nannostomus beckfordi freshwater authority must remain unresolved until the exact source states it directly');
 const numericWave1SourceIds = [
