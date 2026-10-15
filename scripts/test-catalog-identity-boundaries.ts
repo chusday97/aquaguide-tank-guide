@@ -148,8 +148,24 @@ assert.ok(blueDiamondCorrection?.citationIds.includes('aquatic-arts-pterophyllum
 assert.ok(blueDiamondCorrection?.citationIds.includes('swelluk-pterophyllum-scalare-blue-diamond-wave26'));
 assert.equal(getCatalogIdentityBoundary('sp_0177'), undefined, 'reviewed Blue Diamond evidence must supersede the historical blue-lineage hold at runtime');
 assert.ok(getReviewedCompatibilityProfile('sp_0177'), 'resolved Blue Diamond angelfish must have an explicit same-species Compatibility bridge');
+
+
+const historicalPandaAngelfishHold = catalogIdentityBoundaries.sp_0178;
+assert.equal(historicalPandaAngelfishHold?.code, 'catalog_variant_identity_unresolved');
+assert.equal(historicalPandaAngelfishHold?.resolvedGranularity, 'variant_identity_unresolved');
+const pandaAngelfishCorrection = getCatalogFieldReviews('sp_0178').filter(review => review.field === 'identity').at(-1);
+assert.equal(pandaAngelfishCorrection?.resolution, 'supported');
+assert.deepEqual(pandaAngelfishCorrection?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Panda',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Panda',
+});
+assert.ok(pandaAngelfishCorrection?.citationIds.includes('aquatic-arts-pterophyllum-scalare-panda-wave27'));
+assert.ok(pandaAngelfishCorrection?.citationIds.includes('aquapets-pterophyllum-scalare-panda-wave27'));
+assert.equal(getCatalogIdentityBoundary('sp_0178'), undefined, 'reviewed Panda angelfish evidence must supersede the historical Panda lineage hold at runtime');
+assert.ok(getReviewedCompatibilityProfile('sp_0178'), 'resolved Panda angelfish must have an explicit same-species Compatibility bridge');
 assert.equal(getCatalogIdentityBoundary('sp_0175')?.code, 'catalog_variant_identity_unresolved', 'Red angelfish must remain fail-closed without its own exact lineage evidence');
-assert.equal(getCatalogIdentityBoundary('sp_0178')?.code, 'catalog_variant_identity_unresolved', 'Panda angelfish must remain fail-closed without its own exact lineage evidence');
+assert.equal(getCatalogIdentityBoundary('sp_0388')?.code, 'catalog_variant_identity_unresolved', 'Super Red angelfish must remain fail-closed without its own exact lineage evidence');
 
 const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
 assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');
@@ -183,7 +199,7 @@ assert.equal(superRedReview?.resolution, 'supported');
 assert.equal(getCatalogIdentityBoundary('sp_0283'), undefined);
 assert.ok(getReviewedCompatibilityProfile('sp_0283'));
 
-for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0178','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0234','sp_0235','sp_0240','sp_0242','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0272','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
+for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0234','sp_0235','sp_0240','sp_0242','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0272','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');

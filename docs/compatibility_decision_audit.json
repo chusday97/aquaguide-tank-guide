@@ -6,22 +6,22 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 74,
-  "genericReadyUniquePairs": 2701,
+  "genericOnboardingReadySpecies": 75,
+  "genericReadyUniquePairs": 2775,
   "fishPairs": 47895,
   "statuses": {
-    "compatible": 385,
-    "caution": 2084,
+    "compatible": 391,
+    "caution": 2156,
     "not_recommended": 19055,
-    "insufficient_data": 26371
+    "insufficient_data": 26293
   },
-  "decisionCoveragePct": 44.94,
-  "fullyInformedPairs": 6825,
+  "decisionCoveragePct": 45.1,
+  "fullyInformedPairs": 6942,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
-    "unresolved_identity": 20377,
-    "public_evidence_insufficient": 5994,
+    "unresolved_identity": 20239,
+    "public_evidence_insufficient": 6054,
     "missing_species_fact": 0,
     "other": 0
   },
@@ -32,7 +32,7 @@
         "speciesId": "sp_0011",
         "name": "月光鱼",
         "scientificName": "Xiphophorus maculatus",
-        "unknownPairs": 170,
+        "unknownPairs": 169,
         "actionableFields": [
           "predation"
         ],
@@ -42,7 +42,7 @@
         "speciesId": "sp_0062",
         "name": "红眼灯",
         "scientificName": "Moenkhausia sanctaefilomenae",
-        "unknownPairs": 170,
+        "unknownPairs": 169,
         "actionableFields": [
           "predation"
         ],
@@ -52,7 +52,7 @@
         "speciesId": "sp_0125",
         "name": "雪球异型 (L102)",
         "scientificName": "Hypancistrus inspector",
-        "unknownPairs": 170,
+        "unknownPairs": 169,
         "actionableFields": [
           "predation"
         ],
@@ -62,7 +62,7 @@
         "speciesId": "sp_0433",
         "name": "红鼻剪刀",
         "scientificName": "Hemigrammus rhodostomus",
-        "unknownPairs": 170,
+        "unknownPairs": 169,
         "actionableFields": [
           "predation"
         ],
@@ -74,11 +74,11 @@
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -92,11 +92,11 @@
         "researchKey": "Moenkhausia sanctaefilomenae",
         "baseScientificName": "Moenkhausia sanctaefilomenae",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -110,11 +110,11 @@
         "researchKey": "Petitella rhodostoma",
         "baseScientificName": "Petitella rhodostoma",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -128,11 +128,11 @@
         "researchKey": "Xiphophorus maculatus",
         "baseScientificName": "Xiphophorus maculatus",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -799,11 +799,11 @@
         "researchKey": "Amatitlania nigrofasciata",
         "baseScientificName": "Amatitlania nigrofasciata",
         "completionEligible": false,
-        "affectedUnknownPairs": 510,
+        "affectedUnknownPairs": 507,
         "gapInstances": 12,
         "terminalGapInstances": 6,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 42.5,
+        "impactPerGap": 42.25,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -1036,11 +1036,11 @@
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1054,11 +1054,11 @@
         "researchKey": "Moenkhausia sanctaefilomenae",
         "baseScientificName": "Moenkhausia sanctaefilomenae",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1072,11 +1072,11 @@
         "researchKey": "Petitella rhodostoma",
         "baseScientificName": "Petitella rhodostoma",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1090,11 +1090,11 @@
         "researchKey": "Xiphophorus maculatus",
         "baseScientificName": "Xiphophorus maculatus",
         "completionEligible": true,
-        "affectedUnknownPairs": 170,
+        "affectedUnknownPairs": 169,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 170,
+        "impactPerGap": 169,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1763,11 +1763,11 @@
         "researchKey": "Amatitlania nigrofasciata",
         "baseScientificName": "Amatitlania nigrofasciata",
         "completionEligible": false,
-        "affectedUnknownPairs": 510,
+        "affectedUnknownPairs": 507,
         "gapInstances": 12,
         "terminalGapInstances": 6,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 42.5,
+        "impactPerGap": 42.25,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -2005,7 +2005,7 @@
     "terminalReasonCounts": [
       {
         "reason": "catalog_variant_identity_unresolved",
-        "speciesCount": 63
+        "speciesCount": 62
       },
       {
         "reason": "variant_social_not_established",
@@ -2064,15 +2064,15 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 52584
+      "count": 52426
     },
     {
       "code": "missing_ph",
-      "count": 41109
+      "count": 40828
     },
     {
       "code": "missing_hardness",
-      "count": 9963
+      "count": 9940
     },
     {
       "code": "candidate_water_type_missing",
@@ -2080,7 +2080,7 @@
     },
     {
       "code": "water_type_unknown",
-      "count": 127
+      "count": 129
     }
   ],
   "coreFieldBacklog": {
@@ -2119,6 +2119,6 @@
         "count": 0
       }
     ],
-    "domainOrIdentityHeldSpecies": 284
+    "domainOrIdentityHeldSpecies": 283
   }
 }

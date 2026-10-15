@@ -146,4 +146,22 @@ assert.deepEqual(blueDiamondApproved.get('social_behavior')?.proposedValue, { mo
 assert.deepEqual(blueDiamondApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
 assert.deepEqual(blueDiamondApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
 
-console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, Fire Red Agassizii, and Blue Diamond angelfish corrections inherit only explicit same-species authority');
+
+const pandaAngelfishIdentity = getCatalogFieldReviews('sp_0178').filter(review => review.field === 'identity').at(-1);
+assert.equal(pandaAngelfishIdentity?.resolution, 'supported');
+assert.deepEqual(pandaAngelfishIdentity?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Panda',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Panda',
+});
+const pandaAngelfishApproved = new Map(getApprovedCatalogFieldReviews('sp_0178').map(review => [review.field, review]));
+assert.equal(pandaAngelfishApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(pandaAngelfishApproved.get('temperature')?.proposedValue, { min: 24, max: 30 });
+assert.deepEqual(pandaAngelfishApproved.get('ph')?.proposedValue, { min: 6, max: 8 });
+assert.deepEqual(pandaAngelfishApproved.get('adult_size')?.proposedValue, { min: null, max: 15 });
+assert.deepEqual(pandaAngelfishApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 100 });
+assert.deepEqual(pandaAngelfishApproved.get('social_behavior')?.proposedValue, { mode: 'group', minimumGroupSize: 5 });
+assert.deepEqual(pandaAngelfishApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
+assert.deepEqual(pandaAngelfishApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, Fire Red Agassizii, and Blue Diamond and Panda angelfish corrections inherit only explicit same-species authority');

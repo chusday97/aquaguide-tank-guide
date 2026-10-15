@@ -25,6 +25,7 @@ import { identityCorrectionsWave23FieldReviews, identityCorrectionsWave23Verifie
 import { identityCorrectionsWave24FieldReviews, identityCorrectionsWave24VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-wave24';
 import { identityCorrectionsWave25FieldReviews, identityCorrectionsWave25VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-wave25';
 import { identityCorrectionsWave26FieldReviews, identityCorrectionsWave26VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-wave26';
+import { identityCorrectionsWave27FieldReviews, identityCorrectionsWave27VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-wave27';
 
 /** Source-controlled field review record. Drafts never enter runtime Catalog. */
 export const catalogFieldReviewSchema = z.object({
@@ -111,6 +112,7 @@ export const catalogFieldReviews: CatalogFieldReview[] = [
   ...identityCorrectionsWave24FieldReviews,
   ...identityCorrectionsWave25FieldReviews,
   ...identityCorrectionsWave26FieldReviews,
+  ...identityCorrectionsWave27FieldReviews,
 ];
 
 /** Source content must be read and verified before any field can overlay runtime data. */
@@ -136,6 +138,7 @@ export const catalogContentVerifiedSourceIds = new Set([
   ...identityCorrectionsWave24VerifiedSourceIds,
   ...identityCorrectionsWave25VerifiedSourceIds,
   ...identityCorrectionsWave26VerifiedSourceIds,
+  ...identityCorrectionsWave27VerifiedSourceIds,
 ]);
 
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);

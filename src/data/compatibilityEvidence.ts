@@ -29,6 +29,7 @@ import { identityCorrectionsWave23Sources } from './catalogReviewBatches/identit
 import { identityCorrectionsWave24Sources } from './catalogReviewBatches/identity-corrections-wave24';
 import { identityCorrectionsWave25Sources } from './catalogReviewBatches/identity-corrections-wave25';
 import { identityCorrectionsWave26Sources } from './catalogReviewBatches/identity-corrections-wave26';
+import { identityCorrectionsWave27Sources } from './catalogReviewBatches/identity-corrections-wave27';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 
 export type ReviewedCompatibilityProfile = {
@@ -1646,6 +1647,11 @@ profiles.sp_0177 = wave04BridgeProfile(
   'sp_0177',
   'sp_0446',
   identityCorrectionsWave26Sources.blueDiamondAquaticArts,
+);
+profiles.sp_0178 = wave04BridgeProfile(
+  'sp_0178',
+  'sp_0446',
+  identityCorrectionsWave27Sources.pandaAquaticArts,
 );
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {

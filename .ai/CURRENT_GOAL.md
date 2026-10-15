@@ -1,3 +1,48 @@
+## CURRENT OVERRIDE — 2026-10-15 Panda angelfish identity + catalog correction wave27 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave27 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
+- Wave27 resolves exactly one additional identity-held fish: `sp_0178 熊猫神仙 / Pterophyllum scalare var. Panda`.
+- Two independent exact-trade-line sources support Panda as a `Pterophyllum scalare` ornamental variety:
+  - Aquatic Arts: `Panda Angelfish (Pterophyllum scalare - variant), USA Bred`, explicitly identifying Panda Angelfish as a `P. scalare` variant.
+  - Aquapets: `Panda Angel (Pterophyllum scalare)`, independently identifying the same trade form as `P. scalare` and describing it as a selectively bred fancy variety.
+- Catalog correction is object-scoped:
+  - Panda identity is retained as `Pterophyllum scalare var. Panda`.
+  - pH display is aligned to reviewed base authority: 6–8.
+  - tank copy is aligned to the reviewed spatial boundary: plan around at least 100 cm tank length plus adequate height.
+  - the copied `建议单养 / 斗鱼...追咬` template is removed and replaced by reviewed angelfish-compatible `谨慎混养` guidance.
+  - Red / Super Red / longfin / balloon / platinum and all other angelfish morphs remain fail-closed unless separately evidenced.
+- Identity-correction map now contains seven reviewed bridges:
+  - `sp_0176 -> sp_0446` Marble angelfish -> `Pterophyllum scalare`
+  - `sp_0177 -> sp_0446` Blue Diamond angelfish -> `Pterophyllum scalare`
+  - `sp_0178 -> sp_0446` Panda angelfish -> `Pterophyllum scalare`
+  - `sp_0221 -> sp_0017` Fire Red Agassizii -> `Apistogramma agassizii`
+  - `sp_0229 -> sp_0441` Albino Gyrinocheilus -> `Gyrinocheilus aymonieri`
+  - `sp_0236 -> sp_0438` Albino Red swordtail -> `Xiphophorus hellerii`
+  - `sp_0407 -> sp_0103` Blood Red A arowana -> `Scleropages formosus`
+- `sp_0178` now has explicit reviewed bridges for all eight Compatibility core fields, reusing the already-reviewed `sp_0446` authority only after Panda identity is established:
+  - freshwater
+  - 24–30°C
+  - pH 6–8
+  - adult max 15 cm
+  - minimum horizontal tank length 100 cm, with tall-tank requirement retained in Species Knowledge
+  - group social mode, minimum group size 5
+  - breeding male territoriality
+  - small-fish predation risk
+- Object-level regression confirms `sp_0178` is **8/8 authoritative + generic-ready**, while `sp_0175 Red` and `sp_0388 Super Red` remain 0/8 identity-held and cannot inherit the base species automatically.
+- Coverage after Wave27: **90 authoritative 8/8 fish / 75 strict generic-ready / 283 identity-domain held**. Ordinary research backlog remains exactly **336 actionable field gaps**, confirming no unrelated angelfish morph review leakage.
+- Global decision impact versus Wave26:
+  - decision coverage **44.94% -> 45.10%**
+  - `unresolved_identity` **20,377 -> 20,239 (-138 pairs)**
+  - total `insufficient_data` **26,371 -> 26,293 (-78 pairs)**
+  - `public_evidence_insufficient` **5,994 -> 6,054 (+60)** because identity resolution exposes the next real evidence boundary rather than inventing certainty
+  - `missing_species_fact` remains **0**
+  - status totals: **391 compatible / 2,156 caution / 19,055 not_recommended / 26,293 insufficient_data**
+- Strict fully-informed invariant expands to **75 ready fish = 2,775 unordered pairs = 141 compatible / 1,191 caution / 1,443 not_recommended / 0 insufficient_data**.
+- Repository authority now contains **108 reviewed Profiles** = released target 101 + 7 source-controlled pending identity corrections (`sp_0176`, `sp_0177`, `sp_0178`, `sp_0221`, `sp_0229`, `sp_0236`, `sp_0407`). Historical release generations remain exact **63 -> 85 -> 95 -> 99 -> 100 -> 101**.
+- Historical authority remains immutable; the generic later-source-controlled-correction contract permits the reviewed Wave27 bridge to supersede the runtime historical hold without rewriting migration history.
+- PASS: catalog identity boundaries, explicit identity bridge reviews, Species Knowledge resolver, rollout window, runtime authority, frozen historical migrations, core-field coverage, strict fully-informed matrix, V4 readability, user conclusion, release badcases, full `test:backend-release-gate`, API/project TypeScript, Business API bundle, lint, and `git diff --check`.
+- NEXT: continue exact-lineage resolution. The remaining `sp_0175 Red` and `sp_0388 Super Red` angelfish objects still contain copied Betta housing text but will not be corrected/released until their exact lineage identities are independently evidenced.
+
 ## CURRENT OVERRIDE — 2026-10-15 Blue Diamond angelfish identity + catalog correction wave26 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave26 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
