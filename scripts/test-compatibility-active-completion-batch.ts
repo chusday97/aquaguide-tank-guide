@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   buildCompatibilityResearchBatchWorkItem,
   selectCompatibilityResearchBatchJobs,
@@ -62,5 +63,9 @@ assert.equal(buildCompatibilityResearchBatchWorkItem({
   status: 'research_assessed', resourceLabel: 'A', reviewPacket: packet('terminal_hold', ['identity_conflict']),
   queueMode: 'active_completion', researchScopeComplete: false, requestedGapFields: ['predation'],
 }).queue, 'terminal_hold');
+
+const runnerSource = readFileSync('scripts/run-compatibility-active-completion-batch.ts', 'utf8');
+assert.match(runnerSource, /arg\('offset'\)/, 'active completion runner must support offset-based resume without replaying completed research jobs');
+assert.match(runnerSource, /ACTIVE_COMPLETION_CHECKPOINT/, 'active completion runner must persist and expose page checkpoints during long research batches');
 
 console.log('Compatibility active-completion batch PASS: queue membership is derived from current non-terminal coverage, scoped gap research is reviewed without redoing existing authority, and all retry/hold outcomes stay fail-closed.');
