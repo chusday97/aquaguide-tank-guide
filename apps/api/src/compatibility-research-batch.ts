@@ -12,7 +12,6 @@ import {
   type CompatibilitySpeciesOnboardingAssessment,
 } from '../../../src/services/compatibility/species-onboarding-research.service';
 import {
-  buildCompatibilityCoreFieldCoverage,
   buildCompatibilityTaxonResearchPlan,
   type CompatibilityTaxonResearchPlanItem,
 } from '../../../src/services/compatibility/compatibility-field-coverage.service';
@@ -142,12 +141,11 @@ export const selectCompatibilityResearchBatchJobs = (
   excludeResearchKeys: readonly string[] = [],
 ): { sourcePlanJobs: number; jobs: CompatibilityTaxonResearchPlanItem[] } => {
   const plan = buildCompatibilityTaxonResearchPlan();
-  const rows = new Map(buildCompatibilityCoreFieldCoverage().rows.map(row => [row.speciesId, row]));
-  const queueJobs = queueMode === 'plan'
-    ? plan
-    : plan.filter(job => job.catalogObjects.every(object => (
-      (rows.get(object.speciesId)?.terminalGapCount ?? 0) === 0
-    )));
+  // The research plan is already field-scoped: combinedGapFields contains only
+  // targeted_source_expansion fields. A terminal hold on a different field
+  // (for example variant social behavior) must not suppress research for an
+  // otherwise actionable environment/size field on the same taxon.
+  const queueJobs = plan;
   const requested = new Set(researchKeys.filter(Boolean));
   const excluded = new Set(excludeResearchKeys.filter(Boolean));
   const requestedJobs = requested.size > 0

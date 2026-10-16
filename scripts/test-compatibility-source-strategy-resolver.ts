@@ -15,6 +15,17 @@ assert.equal(buildCompatibilitySpecializedSourceRoutes(['predation'], ['predatio
 assert.equal(hasExhaustedCompatibilitySpecializedRoutes(['predation'], predation.map(route => route.id)), true);
 assert.equal(hasExhaustedCompatibilitySpecializedRoutes(['predation'], []), false);
 
+const temperature = buildCompatibilitySpecializedSourceRoutes(['temperature']);
+assert.deepEqual(
+  temperature.map(route => route.id),
+  ['temperature_institutional_husbandry', 'temperature_peer_reviewed_husbandry'],
+);
+assert.equal(hasExhaustedCompatibilitySpecializedRoutes(
+  ['temperature'],
+  temperature.map(route => route.id),
+), true);
+assert.equal(hasExhaustedCompatibilitySpecializedRoutes(['temperature'], []), false);
+
 const phAndTank = buildCompatibilitySpecializedSourceRoutes(['ph', 'tank_size']);
 assert.deepEqual(
   phAndTank.map(route => route.id),

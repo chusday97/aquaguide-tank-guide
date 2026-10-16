@@ -21,5 +21,21 @@ const make = (s: S): SpeciesKnowledgeProfile['knowledge'] => ({
   socialBehavior: { mode: 'unknown', summary: '来源不足以确认适用于该 catalog object 的稳定水族箱社会模式。', evidence: ev(s, 'social behavior') },
   spaceAndGrowth: { activityLevel: 'unknown', evidence: ev(s, 'space and growth') },
 });
-export const phase2Batch05Knowledge = Object.fromEntries(Object.entries(phase2Batch05Subjects).map(([id, s]) => [id, make(s)])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
+
+const rodwayiMultiWaterKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  ...make(phase2Batch05Subjects.sp_0362),
+  environment: {
+    waterType: 'unknown',
+    waterTypes: ['freshwater', 'brackish'],
+    notes: ['FishBase records the exact taxon as freshwater, while Seriously Fish explicitly reports Hemigrammus rodwayi as sometimes occurring in mildly brackish coastal floodplains. Both reviewed habitats are retained; no salinity optimum is inferred.'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch07-fishbase-hemigrammus-rodwayi', 'wave30-seriouslyfish-hemigrammus-rodwayi'],
+      reviewedAt: '2026-10-16',
+      note: 'The brackish extension is exact-taxon direct evidence; the single legacy waterType remains unknown to avoid lossy collapse.',
+    },
+  },
+};
+export const phase2Batch05Knowledge = Object.fromEntries(Object.entries(phase2Batch05Subjects).map(([id, s]) => [id, id === 'sp_0362' ? rodwayiMultiWaterKnowledge : make(s)])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch05Authority: Record<string, Partial<Record<'feeding' | 'care', Phase2Batch05FieldAuthority>>> = Object.fromEntries(Object.entries(phase2Batch05Subjects).map(([id, s]) => [id, { feeding: { status: 'reviewed_unknown', citationIds: s.sourceIds, factEvidence: `${s.title} does not establish the object-specific feeding regime; ${s.note}.` }, care: { status: 'reviewed_unknown', citationIds: s.sourceIds, factEvidence: `${s.title} does not establish the object-specific care protocol; ${s.note}.` } }]));

@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildCompatibilityResearchReviewManifest } from '../src/services/compatibility/research-review-queue.service';
+import {
+  buildCompatibilityResearchReviewManifest,
+  reconcileCompatibilityResearchBatchReportToActiveScopes,
+  reconcileCompatibilityResearchReviewManifestToActiveScopes,
+} from '../src/services/compatibility/research-review-queue.service';
 
 const report = {
   generatedAt: '2026-10-16T12:00:00.000Z',
@@ -291,6 +295,16 @@ assert.equal(evidenceCeiling.items[0]?.requiresHumanReview, false);
 assert.equal(evidenceCeiling.items[0]?.nextResearch, null);
 assert.ok(evidenceCeiling.items[0]?.reasonCodes.includes('specialized_source_routes_exhausted'));
 
+const transientRetryBase = JSON.parse(JSON.stringify(evidenceCeiling));
+transientRetryBase.items[0].queue = 'extraction_retry';
+transientRetryBase.items[0].reasonCodes = [];
+const recoveredEvidenceCeiling = buildCompatibilityResearchReviewManifest([], '2026-10-16T16:15:00.000Z', transientRetryBase);
+assert.equal(recoveredEvidenceCeiling.summary.extraction_retry, 0, 'exhausted specialized-route history must not regress to extraction retry on a base-only rebuild');
+assert.equal(recoveredEvidenceCeiling.summary.evidence_ceiling_review, 1);
+assert.equal(recoveredEvidenceCeiling.items[0]?.queue, 'evidence_ceiling_review');
+assert.ok(recoveredEvidenceCeiling.items[0]?.reasonCodes.includes('specialized_source_routes_exhausted'));
+
+
 const partialSpecializedResult = buildCompatibilityResearchReviewManifest([{
   sourcePath: 'partial-specialized.json',
   report: {
@@ -344,6 +358,159 @@ assert.deepEqual(partialSpecializedResult.items[0]?.unresolvedFields, ['predatio
 assert.deepEqual(partialSpecializedResult.items[0]?.researchHistory.attemptedRouteIds, ['ph_institutional_husbandry']);
 
 
+const variantBridgeReport = {
+  pages: [{
+    results: [{
+      researchKey: 'Variantus baseus',
+      scientificName: 'Variantus baseus',
+      researchDisposition: 'base_taxon_candidate_research_with_variant_bridge',
+      catalogObjects: [{
+        speciesId: 'sp_variant',
+        name: 'Variant',
+        scientificName: 'Variantus baseus var. Fancy',
+        isVariant: true,
+        isExactBaseTaxon: false,
+      }],
+      requestedGapFields: ['ph'],
+      researchScope: { unresolvedFields: [], complete: true },
+      workItem: { queue: 'gap_review', reasonCodes: [] },
+      packet: { sources: [{
+        id: 'source-variant-base',
+        url: 'https://example.edu/variant-base',
+        title: 'Base taxon husbandry',
+        publisher: 'Example University',
+        sourceType: 'university',
+        contentVerified: true,
+      }] },
+      reviewPacket: { fields: [{
+        field: 'ph',
+        status: 'supported',
+        proposedValue: { min: 6, max: 8 },
+        sourceIds: ['source-variant-base'],
+        notes: ['Direct pH evidence for the base taxon only.'],
+        draftReview: { confidence: 'high' },
+      }] },
+      resumeBundle: { documents: [{
+        url: 'https://example.edu/variant-base',
+        title: 'Base taxon husbandry',
+        publisher: 'Example University',
+        sourceType: 'university',
+        text: 'raw',
+        contentSha256: 'variant-base-hash',
+      }] },
+    }],
+  }],
+};
+const variantBridge = buildCompatibilityResearchReviewManifest([{ sourcePath: 'variant.json', report: variantBridgeReport }], '2026-10-16T17:00:00.000Z');
+assert.equal(variantBridge.summary.field_review, 0);
+assert.equal(variantBridge.summary.variant_bridge_review, 1);
+assert.equal(variantBridge.items[0]?.queue, 'variant_bridge_review');
+assert.equal(variantBridge.items[0]?.requiresHumanReview, true);
+assert.equal(variantBridge.items[0]?.promotionAllowed, false);
+assert.deepEqual(variantBridge.items[0]?.fieldCandidates.map(item => item.field), ['ph']);
+assert.ok(variantBridge.items[0]?.reasonCodes.includes('variant_bridge_required'));
+
+const multiWaterReport = {
+  pages: [{
+    results: [{
+      researchKey: 'Multiwater exactus',
+      scientificName: 'Multiwater exactus',
+      catalogObjects: [{
+        speciesId: 'sp_multi_water',
+        name: 'Multi Water',
+        scientificName: 'Multiwater exactus',
+        isVariant: false,
+        isExactBaseTaxon: true,
+      }],
+      requestedGapFields: ['water'],
+      researchScope: { unresolvedFields: [], complete: true },
+      workItem: { queue: 'gap_review', reasonCodes: [] },
+      packet: { sources: [{
+        id: 'source-multi-water',
+        url: 'https://example.org/multi-water',
+        title: 'Multi-water ecology',
+        publisher: 'Example',
+        sourceType: 'professional_association',
+        contentVerified: true,
+      }] },
+      reviewPacket: { fields: [{
+        field: 'water',
+        status: 'supported',
+        proposedValue: 'freshwater',
+        sourceIds: ['source-multi-water'],
+        notes: ['Exact-taxon environment states Freshwater; brackish; benthopelagic.'],
+        draftReview: { confidence: 'high' },
+      }] },
+      resumeBundle: { documents: [{
+        url: 'https://example.org/multi-water',
+        title: 'Multi-water ecology',
+        publisher: 'Example',
+        sourceType: 'professional_association',
+        text: 'raw',
+        contentSha256: 'multi-water-hash',
+      }] },
+    }],
+  }],
+};
+const multiWater = buildCompatibilityResearchReviewManifest([{ sourcePath: 'multi-water.json', report: multiWaterReport }], '2026-10-16T17:10:00.000Z');
+assert.equal(multiWater.summary.field_review, 0);
+assert.equal(multiWater.summary.multi_water_review, 1);
+assert.equal(multiWater.items[0]?.queue, 'multi_water_review');
+assert.equal(multiWater.items[0]?.requiresHumanReview, true);
+assert.equal(multiWater.items[0]?.promotionAllowed, false);
+assert.ok(multiWater.items[0]?.reasonCodes.includes('multi_water_profile_review_required'));
+
+const partialTerminalReport = {
+  pages: [{
+    results: [{
+      researchKey: 'Partial terminal taxon',
+      scientificName: 'Partial terminal taxon',
+      catalogObjects: [{ speciesId: 'sp_partial_terminal', name: 'Partial terminal', scientificName: 'Partial terminal taxon', isVariant: false, isExactBaseTaxon: true }],
+      requestedGapFields: ['ph', 'tank_size'],
+      researchScope: { unresolvedFields: ['ph'], complete: false },
+      workItem: { queue: 'terminal_hold', reasonCodes: ['field_conflict_ph'] },
+      packet: { sources: [{
+        id: 'source-partial-terminal',
+        url: 'https://example.edu/partial-terminal',
+        title: 'Partial terminal husbandry',
+        publisher: 'Example University',
+        sourceType: 'university',
+        contentVerified: true,
+      }] },
+      reviewPacket: { fields: [
+        {
+          field: 'ph',
+          status: 'conflicted',
+          proposedValue: null,
+          sourceIds: ['source-partial-terminal'],
+          notes: ['Direct pH ranges conflict materially.'],
+        },
+        {
+          field: 'tank_size',
+          status: 'supported',
+          proposedValue: { liters: 120, lengthCm: null },
+          sourceIds: ['source-partial-terminal'],
+          notes: ['Direct minimum aquarium volume is 120 L.'],
+          draftReview: { confidence: 'high' },
+        },
+      ] },
+      resumeBundle: { documents: [{
+        url: 'https://example.edu/partial-terminal',
+        title: 'Partial terminal husbandry',
+        publisher: 'Example University',
+        sourceType: 'university',
+        text: 'raw',
+        contentSha256: 'partial-terminal-hash',
+      }] },
+    }],
+  }],
+};
+const partialTerminal = buildCompatibilityResearchReviewManifest([{ sourcePath: 'partial-terminal.json', report: partialTerminalReport }], '2026-10-16T17:20:00.000Z');
+assert.equal(partialTerminal.summary.terminal_hold, 0, 'one conflicted field must not discard other directly supported requested fields');
+assert.equal(partialTerminal.summary.field_review, 1);
+assert.deepEqual(partialTerminal.items[0]?.fieldCandidates.map(item => item.field), ['tank_size']);
+assert.deepEqual(partialTerminal.items[0]?.unresolvedFields, ['ph']);
+
 const brokenSnapshotReport = {
   pages: [{
     results: [{
@@ -363,8 +530,47 @@ assert.equal(broken.summary.source_snapshot_retry, 1);
 assert.equal(broken.items[0]?.requiresHumanReview, false);
 assert.ok(broken.items[0]?.reasonCodes.includes('review_source_snapshot_missing'));
 
+const resolvedFieldScopes = new Map<string, ReadonlySet<string>>([
+  ['Safeus reviewus', new Set(['tank_size'])],
+]);
+const reconciledReport = reconcileCompatibilityResearchBatchReportToActiveScopes(report, resolvedFieldScopes);
+assert.equal(reconciledReport.pages?.[0]?.results?.length, 0, 'an incoming report that only targets a now-resolved field must be dropped before queue merge');
+const reconciledManifest = reconcileCompatibilityResearchReviewManifestToActiveScopes(manifest, resolvedFieldScopes);
+assert.equal(reconciledManifest.items.length, 0, 'a persisted review item that only targets a now-resolved field must be pruned even when the taxon still has other active gaps');
+
+const partialScopeReport = {
+  pages: [{
+    results: [{
+      researchKey: 'Partial scope taxon',
+      scientificName: 'Partial scope taxon',
+      catalogObjects: [{ speciesId: 'sp_partial_scope', name: 'Partial scope', scientificName: 'Partial scope taxon', isVariant: false, isExactBaseTaxon: true }],
+      requestedGapFields: ['ph', 'tank_size'],
+      researchScope: { unresolvedFields: [], complete: true },
+      workItem: { queue: 'gap_review', reasonCodes: ['field_missing_ph', 'field_missing_tank_size'] },
+      reviewPacket: {
+        reasonCodes: ['field_missing_ph', 'field_missing_tank_size'],
+        fields: [
+          { field: 'ph', status: 'supported', proposedValue: { min: 6, max: 8 }, sourceIds: ['source-partial'], notes: ['Direct pH evidence.'], draftReview: { confidence: 'high' } },
+          { field: 'tank_size', status: 'supported', proposedValue: { liters: 80, lengthCm: null }, sourceIds: ['source-partial'], notes: ['Direct minimum aquarium volume evidence.'], draftReview: { confidence: 'high' } },
+        ],
+      },
+    }],
+  }],
+};
+const partialScopes = new Map<string, ReadonlySet<string>>([
+  ['Partial scope taxon', new Set(['tank_size'])],
+]);
+const reconciledPartial = reconcileCompatibilityResearchBatchReportToActiveScopes(partialScopeReport, partialScopes);
+assert.deepEqual(reconciledPartial.pages?.[0]?.results?.[0]?.requestedGapFields, ['tank_size']);
+assert.deepEqual(reconciledPartial.pages?.[0]?.results?.[0]?.reviewPacket?.fields.map((field: { field: string }) => field.field), ['tank_size']);
+assert.deepEqual(reconciledPartial.pages?.[0]?.results?.[0]?.workItem?.reasonCodes, ['field_missing_tank_size']);
+
 const queueBuilderSource = readFileSync('scripts/build-compatibility-research-review-queue.ts', 'utf8');
 assert.match(queueBuilderSource, /selectCompatibilityResearchBatchJobs\('active_completion'\)/, 'canonical review queue builder must reconcile the persisted queue against the current active research plan');
 assert.match(queueBuilderSource, /staleResolvedItemsPruned/, 'queue regeneration must report how many resolved stale items were removed');
+assert.match(queueBuilderSource, /staleResolvedFieldsPruned/, 'queue regeneration must report field-level reconciliation, not only taxon-level pruning');
+assert.match(queueBuilderSource, /resolveReviewedCatalogResearchIdentity/, 'canonical queue rebuild must recover reviewed catalog identity before preserving stale external identity holds');
+assert.match(queueBuilderSource, /identityRecoveredBaseManifest/, 'reviewed identity recovery must happen before active-scope reconciliation');
+assert.match(queueBuilderSource, /explicitInput \?\? \(basePath \? '' : 'evaluation\/reports\/compatibility-active-completion-batch\.json'\)/, 'base-only queue rebuilds must not silently replay a stale default report');
 
 console.log('Compatibility research review queue PASS: valid field candidates remain draft-only, evidence gaps become targeted expansion work, temporary identity-provider failures retry automatically, and raw source text is excluded.');

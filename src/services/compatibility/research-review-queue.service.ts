@@ -4,6 +4,8 @@ import { hasExhaustedCompatibilitySpecializedRoutes } from './source-strategy-re
 
 export type CompatibilityResearchReviewQueueKind =
   | 'field_review'
+  | 'variant_bridge_review'
+  | 'multi_water_review'
   | 'targeted_source_expansion'
   | 'source_strategy_review'
   | 'evidence_ceiling_review'
@@ -16,7 +18,7 @@ export type CompatibilityResearchReviewQueueKind =
   | 'onboarding_review';
 
 type BatchResult = Record<string, any>;
-type BatchReport = {
+export type CompatibilityResearchBatchReport = {
   generatedAt?: string;
   providerPreflight?: { providerId?: string; model?: string; status?: string };
   pages?: Array<{ results?: BatchResult[] }>;
@@ -128,7 +130,14 @@ const queueFor = (result: BatchResult): CompatibilityResearchReviewQueueKind | n
   }
   if (current === 'extraction_retry') return 'extraction_retry';
   if (current === 'provider_retry') return 'provider_retry';
-  if (current === 'terminal_hold') return 'terminal_hold';
+  if (current === 'terminal_hold') {
+    const requested = new Set(stringArray(result.requestedGapFields));
+    const fields = Array.isArray(result.reviewPacket?.fields) ? result.reviewPacket.fields : [];
+    const hasSupportedRequestedField = fields.some((field: Record<string, unknown>) => (
+      field.status === 'supported' && requested.has(String(field.field || ''))
+    ));
+    return hasSupportedRequestedField ? 'field_review' : 'terminal_hold';
+  }
   if (current === 'manual_review') return 'onboarding_review';
   return null;
 };
@@ -236,8 +245,13 @@ const normalizeQueueItem = (
   const sourceStrategyQueue = shouldEscalateSourceStrategy(item.queue, researchHistory)
     ? 'source_strategy_review' as const
     : item.queue;
-  const queue = sourceStrategyQueue === 'source_strategy_review'
-    && hasExhaustedCompatibilitySpecializedRoutes(item.unresolvedFields, researchHistory.attemptedRouteIds)
+  const specializedFields = item.unresolvedFields.length > 0
+    ? item.unresolvedFields
+    : item.requestedGapFields;
+  const exhaustedSpecializedRoutes = specializedFields.length > 0
+    && item.fieldCandidates.length === 0
+    && hasExhaustedCompatibilitySpecializedRoutes(specializedFields, researchHistory.attemptedRouteIds);
+  const queue = exhaustedSpecializedRoutes
     ? 'evidence_ceiling_review' as const
     : sourceStrategyQueue;
   return {
@@ -296,8 +310,102 @@ const buildResearchHistory = (
   };
 };
 
+
+export type CompatibilityResearchActiveScopes = ReadonlyMap<string, ReadonlySet<string>>;
+
+const activeFieldSet = (
+  scopes: CompatibilityResearchActiveScopes,
+  researchKey: string,
+) => scopes.get(researchKey);
+
+const filterReasonCodesToActiveFields = (
+  value: unknown,
+  activeFields: ReadonlySet<string>,
+) => stringArray(value).filter(code => (
+  !code.startsWith('field_missing_')
+  || activeFields.has(code.slice('field_missing_'.length))
+));
+
+export const reconcileCompatibilityResearchReviewManifestToActiveScopes = (
+  manifest: CompatibilityResearchReviewManifest,
+  scopes: CompatibilityResearchActiveScopes,
+): CompatibilityResearchReviewManifest => ({
+  ...manifest,
+  items: manifest.items.flatMap(item => {
+    const activeFields = activeFieldSet(scopes, item.researchKey);
+    if (!activeFields) return [];
+    const requestedGapFields = item.requestedGapFields.filter(field => activeFields.has(field));
+    const unresolvedFields = item.unresolvedFields.filter(field => activeFields.has(field));
+    const fieldCandidates = item.fieldCandidates.filter(candidate => activeFields.has(candidate.field));
+    const nextResearch = item.nextResearch
+      ? {
+        ...item.nextResearch,
+        targetFields: item.nextResearch.targetFields.filter(field => activeFields.has(field)),
+      }
+      : null;
+    if (
+      requestedGapFields.length === 0
+      && unresolvedFields.length === 0
+      && fieldCandidates.length === 0
+      && (!nextResearch || nextResearch.targetFields.length === 0)
+    ) return [];
+    return [{
+      ...item,
+      requestedGapFields,
+      unresolvedFields,
+      fieldCandidates,
+      nextResearch: nextResearch && nextResearch.targetFields.length > 0 ? nextResearch : null,
+      reasonCodes: filterReasonCodesToActiveFields(item.reasonCodes, activeFields),
+    }];
+  }),
+});
+
+export const reconcileCompatibilityResearchBatchReportToActiveScopes = (
+  report: CompatibilityResearchBatchReport,
+  scopes: CompatibilityResearchActiveScopes,
+): CompatibilityResearchBatchReport => ({
+  ...report,
+  pages: (report.pages || []).map(page => ({
+    ...page,
+    results: (page.results || []).flatMap(result => {
+      const researchKey = String(result.researchKey || result.scientificName || '');
+      const activeFields = researchKey ? activeFieldSet(scopes, researchKey) : undefined;
+      if (!activeFields) return [];
+      const requested = stringArray(result.requestedGapFields);
+      const requestedGapFields = requested.filter(field => activeFields.has(field));
+      if (requested.length > 0 && requestedGapFields.length === 0) return [];
+      const unresolvedFields = stringArray(result.researchScope?.unresolvedFields)
+        .filter(field => activeFields.has(field));
+      const reviewFields = Array.isArray(result.reviewPacket?.fields)
+        ? result.reviewPacket.fields.filter((field: Record<string, unknown>) => (
+          typeof field.field !== 'string' || requestedGapFields.includes(field.field)
+        ))
+        : [];
+      return [{
+        ...result,
+        requestedGapFields,
+        researchScope: result.researchScope ? {
+          ...result.researchScope,
+          unresolvedFields,
+          complete: unresolvedFields.length === 0,
+        } : result.researchScope,
+        workItem: result.workItem ? {
+          ...result.workItem,
+          reasonCodes: filterReasonCodesToActiveFields(result.workItem.reasonCodes, activeFields),
+        } : result.workItem,
+        reviewPacket: result.reviewPacket ? {
+          ...result.reviewPacket,
+          reasonCodes: filterReasonCodesToActiveFields(result.reviewPacket.reasonCodes, activeFields),
+          fields: reviewFields,
+        } : result.reviewPacket,
+        reasonCodes: filterReasonCodesToActiveFields(result.reasonCodes, activeFields),
+      }];
+    }),
+  })),
+});
+
 export const buildCompatibilityResearchReviewManifest = (
-  reports: Array<{ sourcePath: string; report: BatchReport }>,
+  reports: Array<{ sourcePath: string; report: CompatibilityResearchBatchReport }>,
   generatedAt = new Date().toISOString(),
   baseManifest?: CompatibilityResearchReviewManifest,
 ): CompatibilityResearchReviewManifest => {
@@ -350,6 +458,20 @@ export const buildCompatibilityResearchReviewManifest = (
       const candidateSourceIds = new Set<string>(fieldCandidates.flatMap(candidate => candidate.sourceIds as string[]));
       const sourceSnapshotsComplete = fieldCandidates.length > 0
         && [...candidateSourceIds].every(sourceId => verifiedSourceIds.has(sourceId));
+      const requiresVariantBridgeReview = result.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'
+        && catalogObjects.some(item => item.isVariant);
+      const requiresMultiWaterReview = fieldCandidates.some(candidate => (
+        candidate.field === 'water'
+        && (() => {
+          const evidence = candidate.notes.join(' ').toLowerCase();
+          const directlyNamedWaterTypes = [
+            evidence.includes('freshwater') ? 'freshwater' : null,
+            evidence.includes('brackish') ? 'brackish' : null,
+            evidence.includes('saltwater') || evidence.includes('marine') ? 'saltwater' : null,
+          ].filter(Boolean);
+          return new Set(directlyNamedWaterTypes).size > 1;
+        })()
+      ));
       const reviewCandidateRejected = (queue === 'field_review' || queue === 'onboarding_review')
         && fieldCandidates.length === 0;
       const preEscalationQueue = reviewCandidateRejected
@@ -357,9 +479,18 @@ export const buildCompatibilityResearchReviewManifest = (
         : (queue === 'field_review' || queue === 'onboarding_review') && !sourceSnapshotsComplete
           ? 'source_snapshot_retry' as const
           : queue;
-      const sourceStrategyQueue = shouldEscalateSourceStrategy(preEscalationQueue, researchHistory)
+      const bridgeAwareQueue = preEscalationQueue === 'field_review'
+        && sourceSnapshotsComplete
+        && requiresVariantBridgeReview
+        ? 'variant_bridge_review' as const
+        : preEscalationQueue === 'field_review'
+          && sourceSnapshotsComplete
+          && requiresMultiWaterReview
+          ? 'multi_water_review' as const
+          : preEscalationQueue;
+      const sourceStrategyQueue = shouldEscalateSourceStrategy(bridgeAwareQueue, researchHistory)
         ? 'source_strategy_review' as const
-        : preEscalationQueue;
+        : bridgeAwareQueue;
       const remainingFields = researchScopeUnresolved.length > 0 ? researchScopeUnresolved : requestedGapFields;
       const effectiveQueue = sourceStrategyQueue === 'source_strategy_review'
         && hasExhaustedCompatibilitySpecializedRoutes(remainingFields, researchHistory.attemptedRouteIds)
@@ -381,7 +512,11 @@ export const buildCompatibilityResearchReviewManifest = (
         sourceReportGeneratedAt: typeof report.generatedAt === 'string' ? report.generatedAt : null,
         sourceQueue: String(result.workItem?.queue || ''),
         queue: effectiveQueue,
-        reasonCodes: effectiveQueue === 'evidence_ceiling_review'
+        reasonCodes: effectiveQueue === 'variant_bridge_review'
+          ? [...new Set([...reasonCodes, 'variant_bridge_required'])]
+          : effectiveQueue === 'multi_water_review'
+            ? [...new Set([...reasonCodes, 'multi_water_profile_review_required'])]
+            : effectiveQueue === 'evidence_ceiling_review'
           ? [...new Set([
             ...reasonCodes,
             ...(reviewCandidateRejected ? ['review_candidate_scope_rejected'] : []),
@@ -414,7 +549,7 @@ export const buildCompatibilityResearchReviewManifest = (
           preferredSourceTypes: researchHistory.preferredNextSourceTypes,
           excludeAttemptedUrlCount: researchHistory.attemptedUrls.length,
         } : null,
-        requiresHumanReview: effectiveQueue === 'field_review' || effectiveQueue === 'identity_review' || effectiveQueue === 'onboarding_review',
+        requiresHumanReview: effectiveQueue === 'field_review' || effectiveQueue === 'variant_bridge_review' || effectiveQueue === 'multi_water_review' || effectiveQueue === 'identity_review' || effectiveQueue === 'onboarding_review',
         promotionAllowed: false,
         writesAuthority: false,
       };
@@ -435,6 +570,8 @@ export const buildCompatibilityResearchReviewManifest = (
   const summary = {
     total: items.length,
     field_review: 0,
+    variant_bridge_review: 0,
+    multi_water_review: 0,
     targeted_source_expansion: 0,
     source_strategy_review: 0,
     evidence_ceiling_review: 0,

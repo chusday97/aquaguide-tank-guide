@@ -4,48 +4,10 @@
   "uses_real_user_telemetry": false,
   "species_gaps": [
     {
-      "species_id": "sp_0224",
-      "common_name": "白金雷龙",
-      "scientific_name": "Channa argus var. Platinum",
-      "score": 26,
-      "gap_kinds": [
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_supported",
-        "space": "reviewed_supported",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "identity_boundary": null,
-      "evidence_ceiling": {
-        "field": "social",
-        "code": "variant_husbandry_not_established",
-        "source_ids": [
-          "batch03-fishbase-channa-argus",
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012"
-        ],
-        "note": "Reviewed Channa argus sources establish the base species ecology, predation risk and diet, but targeted review did not establish a Platinum-morph-specific stable social profile. Do not promote base-species behavior to the ornamental morph without an explicit reviewed bridge.",
-        "reviewed_at": "2026-09-22"
-      },
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "variant_authority_review",
-      "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 3
-    },
-    {
       "species_id": "sp_0002",
       "common_name": "水晶虾",
       "scientific_name": "Caridina cantonensis var.",
-      "score": 25,
+      "score": 23,
       "gap_kinds": [
         "environment",
         "space",
@@ -81,13 +43,13 @@
       "resolution_mode": "identity_review",
       "resolution_note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
+      "blocked_pair_count": 0
     },
     {
       "species_id": "sp_0428",
       "common_name": "斑马螺",
       "scientific_name": "Neritina natalensis",
-      "score": 25,
+      "score": 23,
       "gap_kinds": [
         "environment",
         "space",
@@ -121,7 +83,45 @@
       "resolution_mode": "identity_review",
       "resolution_note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
+      "blocked_pair_count": 0
+    },
+    {
+      "species_id": "sp_0224",
+      "common_name": "白金雷龙",
+      "scientific_name": "Channa argus var. Platinum",
+      "score": 20,
+      "gap_kinds": [
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [
+        "variant_authority_not_promotable",
+        "variant_husbandry_not_established"
+      ],
+      "identity_boundary": null,
+      "evidence_ceiling": {
+        "field": "social",
+        "code": "variant_husbandry_not_established",
+        "source_ids": [
+          "batch03-fishbase-channa-argus",
+          "northern-snakehead-fws-erss-2024",
+          "northern-snakehead-usgs-diet-2012"
+        ],
+        "note": "Reviewed Channa argus sources establish the base species ecology, predation risk and diet, but targeted review did not establish a Platinum-morph-specific stable social profile. Do not promote base-species behavior to the ornamental morph without an explicit reviewed bridge.",
+        "reviewed_at": "2026-09-22"
+      },
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "variant_authority_review",
+      "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 0
     },
     {
       "species_id": "sp_0021",
@@ -199,153 +199,14 @@
       "blocked_pair_count": 0
     }
   ],
-  "pair_gaps": [
-    {
-      "species_a_id": "sp_0002",
-      "species_a_name": "水晶虾",
-      "species_b_id": "sp_0224",
-      "species_b_name": "白金雷龙",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed"
-      ],
-      "warning_codes": [
-        "minimum_group_not_met",
-        "predation_vulnerability_context"
-      ],
-      "score": 28,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "trade_name_taxon_ambiguous",
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "pair_evidence_ceiling": {
-        "code": "prey_trade_identity_not_resolved",
-        "source_ids": [
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012",
-          "identity-zootaxa-caridina-logemanni",
-          "identity-worms-caridina-logemanni"
-        ],
-        "note": "Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions.",
-        "reviewed_at": "2026-09-22"
-      },
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "evidence_ceiling",
-      "resolution_note": "Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions."
-    },
-    {
-      "species_a_id": "sp_0224",
-      "species_a_name": "白金雷龙",
-      "species_b_id": "sp_0428",
-      "species_b_name": "斑马螺",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed"
-      ],
-      "warning_codes": [],
-      "score": 28,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "accepted_taxon_alias_trade_ambiguous",
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "pair_evidence_ceiling": {
-        "code": "gastropod_predation_not_established",
-        "source_ids": [
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012",
-          "batch03-obis-neritina-natalensis"
-        ],
-        "note": "Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods.",
-        "reviewed_at": "2026-09-22"
-      },
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "evidence_ceiling",
-      "resolution_note": "Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods."
-    },
-    {
-      "species_a_id": "sp_0224",
-      "species_a_name": "白金雷龙",
-      "species_b_id": "sp_0451",
-      "species_b_name": "地图鱼",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed"
-      ],
-      "warning_codes": [],
-      "score": 28,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "pair_evidence_ceiling": {
-        "code": "large_fish_outside_supported_prey_window",
-        "source_ids": [
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012",
-          "batch03-fishbase-astronotus-ocellatus",
-          "seriouslyfish-astronotus-ocellatus"
-        ],
-        "note": "USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted.",
-        "reviewed_at": "2026-09-22"
-      },
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "evidence_ceiling",
-      "resolution_note": "USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted."
-    }
-  ],
+  "pair_gaps": [],
   "actionable_species_queue": [],
   "terminal_species_holds": [
-    {
-      "species_id": "sp_0224",
-      "common_name": "白金雷龙",
-      "scientific_name": "Channa argus var. Platinum",
-      "score": 26,
-      "gap_kinds": [
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_supported",
-        "space": "reviewed_supported",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "identity_boundary": null,
-      "evidence_ceiling": {
-        "field": "social",
-        "code": "variant_husbandry_not_established",
-        "source_ids": [
-          "batch03-fishbase-channa-argus",
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012"
-        ],
-        "note": "Reviewed Channa argus sources establish the base species ecology, predation risk and diet, but targeted review did not establish a Platinum-morph-specific stable social profile. Do not promote base-species behavior to the ornamental morph without an explicit reviewed bridge.",
-        "reviewed_at": "2026-09-22"
-      },
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "variant_authority_review",
-      "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 3
-    },
     {
       "species_id": "sp_0002",
       "common_name": "水晶虾",
       "scientific_name": "Caridina cantonensis var.",
-      "score": 25,
+      "score": 23,
       "gap_kinds": [
         "environment",
         "space",
@@ -381,13 +242,13 @@
       "resolution_mode": "identity_review",
       "resolution_note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
+      "blocked_pair_count": 0
     },
     {
       "species_id": "sp_0428",
       "common_name": "斑马螺",
       "scientific_name": "Neritina natalensis",
-      "score": 25,
+      "score": 23,
       "gap_kinds": [
         "environment",
         "space",
@@ -421,7 +282,45 @@
       "resolution_mode": "identity_review",
       "resolution_note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
+      "blocked_pair_count": 0
+    },
+    {
+      "species_id": "sp_0224",
+      "common_name": "白金雷龙",
+      "scientific_name": "Channa argus var. Platinum",
+      "score": 20,
+      "gap_kinds": [
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [
+        "variant_authority_not_promotable",
+        "variant_husbandry_not_established"
+      ],
+      "identity_boundary": null,
+      "evidence_ceiling": {
+        "field": "social",
+        "code": "variant_husbandry_not_established",
+        "source_ids": [
+          "batch03-fishbase-channa-argus",
+          "northern-snakehead-fws-erss-2024",
+          "northern-snakehead-usgs-diet-2012"
+        ],
+        "note": "Reviewed Channa argus sources establish the base species ecology, predation risk and diet, but targeted review did not establish a Platinum-morph-specific stable social profile. Do not promote base-species behavior to the ornamental morph without an explicit reviewed bridge.",
+        "reviewed_at": "2026-09-22"
+      },
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "variant_authority_review",
+      "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 0
     },
     {
       "species_id": "sp_0021",
@@ -500,107 +399,6 @@
     }
   ],
   "actionable_pair_queue": [],
-  "terminal_pair_holds": [
-    {
-      "species_a_id": "sp_0002",
-      "species_a_name": "水晶虾",
-      "species_b_id": "sp_0224",
-      "species_b_name": "白金雷龙",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed"
-      ],
-      "warning_codes": [
-        "minimum_group_not_met",
-        "predation_vulnerability_context"
-      ],
-      "score": 28,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "trade_name_taxon_ambiguous",
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "pair_evidence_ceiling": {
-        "code": "prey_trade_identity_not_resolved",
-        "source_ids": [
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012",
-          "identity-zootaxa-caridina-logemanni",
-          "identity-worms-caridina-logemanni"
-        ],
-        "note": "Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions.",
-        "reviewed_at": "2026-09-22"
-      },
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "evidence_ceiling",
-      "resolution_note": "Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions."
-    },
-    {
-      "species_a_id": "sp_0224",
-      "species_a_name": "白金雷龙",
-      "species_b_id": "sp_0428",
-      "species_b_name": "斑马螺",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed"
-      ],
-      "warning_codes": [],
-      "score": 28,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "accepted_taxon_alias_trade_ambiguous",
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "pair_evidence_ceiling": {
-        "code": "gastropod_predation_not_established",
-        "source_ids": [
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012",
-          "batch03-obis-neritina-natalensis"
-        ],
-        "note": "Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods.",
-        "reviewed_at": "2026-09-22"
-      },
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "evidence_ceiling",
-      "resolution_note": "Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods."
-    },
-    {
-      "species_a_id": "sp_0224",
-      "species_a_name": "白金雷龙",
-      "species_b_id": "sp_0451",
-      "species_b_name": "地图鱼",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed"
-      ],
-      "warning_codes": [],
-      "score": 28,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "pair_evidence_ceiling": {
-        "code": "large_fish_outside_supported_prey_window",
-        "source_ids": [
-          "northern-snakehead-fws-erss-2024",
-          "northern-snakehead-usgs-diet-2012",
-          "batch03-fishbase-astronotus-ocellatus",
-          "seriouslyfish-astronotus-ocellatus"
-        ],
-        "note": "USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted.",
-        "reviewed_at": "2026-09-22"
-      },
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "evidence_ceiling",
-      "resolution_note": "USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted."
-    }
-  ],
+  "terminal_pair_holds": [],
   "next_wave_species_queue": []
 }

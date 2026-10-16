@@ -49,4 +49,13 @@ const bitterling = getReviewedSpeciesKnowledge('sp_0475');
 assert.deepEqual(bitterling?.environment?.waterTypes, ['freshwater', 'brackish']);
 assert.equal(bitterling?.environment?.waterType, 'unknown');
 
+
+for (const speciesId of ['sp_0037', 'sp_0041', 'sp_0362']) {
+  const knowledge = getReviewedSpeciesKnowledge(speciesId);
+  assert.deepEqual(knowledge?.environment?.waterTypes, ['freshwater', 'brackish'], speciesId + ' must preserve reviewed freshwater + brackish authority');
+  assert.equal(knowledge?.environment?.waterType, 'unknown', speciesId + ' must not collapse multi-water authority into one legacy water type');
+  assert.equal(knowledge?.environment?.evidence.reviewStatus, 'reviewed');
+  assert.equal(knowledge?.environment?.evidence.confidence, 'verified');
+}
+
 console.log('Multi-water authority passed');

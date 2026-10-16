@@ -5,24 +5,23 @@ import {
   selectCompatibilityResearchBatchJobs,
   resolveReviewedCatalogResearchIdentity,
 } from '../apps/api/src/compatibility-research-batch';
-import {
-  buildCompatibilityCoreFieldCoverage,
-  buildCompatibilityTaxonResearchPlan,
-} from '../src/services/compatibility/compatibility-field-coverage.service';
+import { buildCompatibilityTaxonResearchPlan } from '../src/services/compatibility/compatibility-field-coverage.service';
 import type { CompatibilityOnboardingReviewPacket } from '../src/services/compatibility/onboarding-review-packet.service';
 import { isCompatibilityResearchClaimScopeEligible } from '../src/services/compatibility/species-onboarding-research.service';
 import { buildCompatibilityResearchSourceStrategy } from '../apps/api/src/compatibility-species-research-provider';
 
 const fullPlan = buildCompatibilityTaxonResearchPlan();
-const coverage = buildCompatibilityCoreFieldCoverage();
-const rows = new Map(coverage.rows.map(row => [row.speciesId, row]));
-const expectedActive = fullPlan.filter(job => job.catalogObjects.every(object => (
-  (rows.get(object.speciesId)?.terminalGapCount ?? 0) === 0
-)));
 const selected = selectCompatibilityResearchBatchJobs('active_completion');
 assert.equal(selected.sourcePlanJobs, fullPlan.length);
-assert.deepEqual(selected.jobs.map(job => job.researchKey), expectedActive.map(job => job.researchKey));
-assert.ok(selected.jobs.length > 0, 'active completion queue should contain current non-terminal research work');
+assert.deepEqual(selected.jobs.map(job => job.researchKey), fullPlan.map(job => job.researchKey));
+assert.ok(selected.jobs.length > 0, 'active completion queue should contain current actionable research work');
+
+const bettaJob = selected.jobs.find(job => job.researchKey === 'Betta splendens');
+assert.ok(bettaJob, 'field-scoped active completion must not suppress Betta environment/size gaps because variant social fields are terminal-held');
+assert.deepEqual(bettaJob!.combinedGapFields, ['temperature', 'ph', 'adult_size', 'tank_size']);
+assert.equal(bettaJob!.combinedGapFields.includes('social_behavior'), false);
+assert.equal(bettaJob!.combinedGapFields.includes('territoriality'), false);
+assert.equal(bettaJob!.combinedGapFields.includes('predation'), false);
 
 const petitellaJob = fullPlan.find(job => job.catalogObjects.some(object => object.speciesId === 'sp_0433'));
 assert.ok(petitellaJob, 'Petitella rhodostoma should exist in the compatibility research plan');
@@ -39,9 +38,7 @@ const excluded = selectCompatibilityResearchBatchJobs(
   [selected.jobs[0].researchKey],
 );
 assert.equal(excluded.jobs.some(job => job.researchKey === selected.jobs[0].researchKey), false, 'persisted evidence ceiling keys must be excludable from future active completion runs');
-assert.ok(selected.jobs.every(job => job.catalogObjects.every(object => (
-  (rows.get(object.speciesId)?.terminalGapCount ?? 0) === 0
-))), 'terminal-held catalog objects must never enter active completion research');
+assert.ok(selected.jobs.every(job => job.combinedGapFields.length > 0), 'active completion must remain scoped to actionable fields only');
 
 const packet = (gate: CompatibilityOnboardingReviewPacket['gate'], reasonCodes: string[] = []): CompatibilityOnboardingReviewPacket => ({
   kind: 'compatibility_onboarding',

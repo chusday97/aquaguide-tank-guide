@@ -14,9 +14,9 @@
   "launch_pair_count": 435,
   "launch_pair_status_counts": {
     "compatible": 15,
-    "caution": 302,
+    "caution": 305,
     "not_recommended": 115,
-    "insufficient_data": 3
+    "insufficient_data": 0
   },
   "compatibility_critical_fields": [
     "environment",
@@ -61,58 +61,12 @@
   "research_actionable_species_count": 0,
   "terminal_species_hold_count": 5,
   "evidence_ceiling_species_gap_count": 1,
-  "priority_pair_gap_count": 3,
+  "priority_pair_gap_count": 0,
   "research_actionable_pair_count": 0,
-  "terminal_pair_hold_count": 3,
+  "terminal_pair_hold_count": 0,
   "next_wave_species_count": 0,
   "evidence_research_pair_gap_count": 0,
-  "evidence_ceiling_pair_gap_count": 3,
+  "evidence_ceiling_pair_gap_count": 0,
   "boundary_blocked_pair_gap_count": 0,
-  "top_pair_gap_root_species": [
-    {
-      "species_id": "sp_0224",
-      "common_name": "白金雷龙",
-      "blocked_pair_count": 3,
-      "gap_kinds": [
-        "social",
-        "compatibility_profile"
-      ],
-      "boundary_codes": [
-        "variant_authority_not_promotable",
-        "variant_husbandry_not_established"
-      ],
-      "resolution_mode": "variant_authority_review",
-      "score": 26
-    },
-    {
-      "species_id": "sp_0002",
-      "common_name": "水晶虾",
-      "blocked_pair_count": 1,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "boundary_codes": [
-        "trade_name_taxon_ambiguous"
-      ],
-      "resolution_mode": "identity_review",
-      "score": 25
-    },
-    {
-      "species_id": "sp_0428",
-      "common_name": "斑马螺",
-      "blocked_pair_count": 1,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "boundary_codes": [
-        "accepted_taxon_alias_trade_ambiguous"
-      ],
-      "resolution_mode": "identity_review",
-      "score": 25
-    }
-  ]
+  "top_pair_gap_root_species": []
 }

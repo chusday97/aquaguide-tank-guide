@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 74,
-  "totalResearchJobs": 34,
+  "catalogObjects": 69,
+  "totalResearchJobs": 29,
   "variantBridgeJobs": 16,
   "items": [
     {
@@ -199,33 +199,6 @@
       ]
     },
     {
-      "researchKey": "Pomacanthus annularis",
-      "baseScientificName": "Pomacanthus annularis",
-      "priorityScore": 176,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "ph"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0185",
-          "name": "蓝环神仙",
-          "scientificName": "Pomacanthus annularis",
-          "gaps": [
-            "ph"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Betta splendens",
       "baseScientificName": "Betta splendens",
       "priorityScore": 173,
@@ -405,114 +378,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Abbottina rivularis",
-      "baseScientificName": "Abbottina rivularis",
-      "priorityScore": 142,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0041",
-          "name": "棒花鱼",
-          "scientificName": "Abbottina rivularis",
-          "gaps": [
-            "water"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Acheilognathus macropterus",
-      "baseScientificName": "Acheilognathus macropterus",
-      "priorityScore": 142,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0037",
-          "name": "大鳍鱊",
-          "scientificName": "Acheilognathus macropterus",
-          "gaps": [
-            "water"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Hemigrammus rodwayi",
-      "baseScientificName": "Hemigrammus rodwayi",
-      "priorityScore": 142,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0362",
-          "name": "黄金灯",
-          "scientificName": "Hemigrammus rodwayi",
-          "gaps": [
-            "water"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Nannostomus beckfordi",
-      "baseScientificName": "Nannostomus beckfordi",
-      "priorityScore": 142,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0473",
-          "name": "红肚铅笔鱼",
-          "scientificName": "Nannostomus beckfordi",
-          "gaps": [
-            "water"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },

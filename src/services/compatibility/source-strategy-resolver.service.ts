@@ -43,6 +43,24 @@ const routesByField: Partial<Record<CompatibilityOnboardingCoreField, Compatibil
       evidenceRule: 'Use only direct exact-taxon evidence that identifies fish/fry/juvenile fish as prey or explicitly describes attacks on such fish.',
     },
   ],
+  temperature: [
+    {
+      id: 'temperature_institutional_husbandry',
+      field: 'temperature',
+      sourceTypes: ['government', 'university', 'professional_association'],
+      domainHints: ['.gov', '.edu', '.ac.uk', 'aza.org'],
+      queryHints: ['husbandry', 'care manual', 'aquarium', 'maintenance temperature', 'temperature range', 'captive care'],
+      evidenceRule: 'Require an explicit numeric routine maintenance/husbandry temperature range for the exact taxon. Seasonal field extremes, thermal-tolerance limits, or short experimental exposures do not define normal aquarium care.',
+    },
+    {
+      id: 'temperature_peer_reviewed_husbandry',
+      field: 'temperature',
+      sourceTypes: ['peer_reviewed'],
+      domainHints: ['pubmed.ncbi.nlm.nih.gov', 'pmc.ncbi.nlm.nih.gov', 'jstage.jst.go.jp', 'journals.plos.org', 'frontiersin.org'],
+      queryHints: ['captive husbandry', 'aquaculture', 'maintenance temperature', 'rearing temperature', 'water temperature'],
+      evidenceRule: 'Require an exact-taxon routine rearing or husbandry temperature. Do not promote lethal limits, acute challenge temperatures, or transient experiment settings as normal maintenance.',
+    },
+  ],
   ph: [
     {
       id: 'ph_institutional_husbandry',

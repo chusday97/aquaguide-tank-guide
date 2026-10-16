@@ -25,6 +25,22 @@ const makeKnowledge = (subject: Subject): SpeciesKnowledgeProfile['knowledge'] =
   spaceAndGrowth: { activityLevel: 'unknown', evidence: evidence(subject, 'space and growth') },
 });
 
+const multiWaterKnowledge = (subject: Subject): SpeciesKnowledgeProfile['knowledge'] => ({
+  ...makeKnowledge(subject),
+  environment: {
+    waterType: 'unknown',
+    waterTypes: ['freshwater', 'brackish'],
+    notes: ['FishBase explicitly records the exact accepted taxon in both freshwater and brackish water. The single legacy waterType stays unknown to avoid collapsing reviewed multi-water authority.'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: [subject.source],
+      reviewedAt,
+      note: 'Exact-taxon FishBase ecology records both Freshwater and brackish; both reviewed habitats are preserved explicitly.',
+    },
+  },
+});
+
 const wildTypeNeocaridinaKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   ...makeKnowledge(phase2Batch24Subjects.sp_0459),
   environment: {
@@ -65,7 +81,7 @@ const wildTypeNeocaridinaKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 
 export const phase2Batch24Knowledge = Object.fromEntries(Object.entries(phase2Batch24Subjects).map(([id, subject]) => [
   id,
-  id === 'sp_0459' ? wildTypeNeocaridinaKnowledge : makeKnowledge(subject),
+  id === 'sp_0459' ? wildTypeNeocaridinaKnowledge : (id === 'sp_0037' || id === 'sp_0041') ? multiWaterKnowledge(subject) : makeKnowledge(subject),
 ])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch24Authority = Object.fromEntries(Object.entries(phase2Batch24Subjects).map(([id, subject]) => [id, {
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },

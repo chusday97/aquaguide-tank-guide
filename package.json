@@ -376,6 +376,8 @@
     "build:compatibility-resume-review": "node --import tsx scripts/build-compatibility-resume-review-manifest.ts",
     "test:compatibility-resume-review": "node --import tsx scripts/test-compatibility-resume-review-manifest.ts",
     "build:compatibility-research-review": "node --import tsx scripts/build-compatibility-research-review-queue.ts",
+    "build:compatibility-variant-bridge-review": "node --import tsx scripts/build-compatibility-variant-bridge-review.ts",
+    "test:compatibility-variant-bridge-review": "node --import tsx scripts/test-compatibility-variant-bridge-review.ts",
     "test:compatibility-research-review": "node --import tsx scripts/test-compatibility-research-review-queue.ts",
     "run:compatibility-targeted-expansion": "node --import tsx scripts/run-compatibility-targeted-expansion.ts",
     "run:compatibility-source-strategy-review": "node --import tsx scripts/run-compatibility-source-strategy-review.ts",
