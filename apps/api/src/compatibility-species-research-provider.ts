@@ -84,6 +84,29 @@ type VerifiedDocument = {
   text: string;
 };
 
+export type CompatibilityVerifiedDocumentSnapshot = VerifiedDocument & {
+  contentSha256: string;
+};
+
+export type CompatibilityResearchResumeBundle = {
+  providerId: string;
+  catalogKey: string;
+  commonName: string;
+  scientificName: string;
+  targetFields: CompatibilityOnboardingCoreField[];
+  documents: CompatibilityVerifiedDocumentSnapshot[];
+};
+
+export type CompatibilityResearchProviderPreflight = {
+  status: 'ready' | 'not_configured' | 'transport_unavailable' | 'credential_rejected' | 'http_error' | 'invalid_response';
+  configured: boolean;
+  providerId: string;
+  host: string | null;
+  model: string;
+  httpStatus: number | null;
+  reasonCode: string | null;
+};
+
 export type CompatibilitySourceFetchDiagnosticStatus =
   | 'verified'
   | 'invalid_or_untrusted_url'
@@ -227,6 +250,32 @@ const trustedTemplateCandidates = (scientificName: string): string[] => {
 const sourceMentionsScientificName = (text: string, scientificName: string) => (
   normalizeScientificName(text).includes(normalizeScientificName(scientificName))
 );
+
+
+const verifiedDocumentSnapshot = (document: VerifiedDocument): CompatibilityVerifiedDocumentSnapshot => ({
+  ...document,
+  contentSha256: createHash('sha256').update(document.text).digest('hex'),
+});
+
+const verifiedDocumentsFromResume = (
+  bundle: CompatibilityResearchResumeBundle,
+): VerifiedDocument[] => bundle.documents.flatMap(snapshot => {
+  const safeUrl = safePublicSourceUrl(snapshot.url);
+  if (!safeUrl) return [];
+  const sourceClass = classifyTrustedSource(safeUrl);
+  if (!sourceClass) return [];
+  if (sourceClass.publisher !== snapshot.publisher || sourceClass.sourceType !== snapshot.sourceType) return [];
+  if (!sourceMentionsScientificName(snapshot.text, bundle.scientificName)) return [];
+  const digest = createHash('sha256').update(snapshot.text).digest('hex');
+  if (digest !== snapshot.contentSha256) return [];
+  return [{
+    url: canonicalSourceUrl(snapshot.url) ?? snapshot.url,
+    title: snapshot.title,
+    publisher: snapshot.publisher,
+    sourceType: snapshot.sourceType,
+    text: snapshot.text,
+  }];
+});
 
 const cleanJsonText = (value: string) => {
   const cleaned = value
@@ -963,53 +1012,189 @@ export const getCompatibilitySpeciesResearchProviderReadiness = (
   sourceVerification: 'server_fetch_required',
 });
 
+const buildResearchPacketFromDocuments = async ({
+  input,
+  documents,
+  config,
+  fetchImpl,
+  skipAiExtraction = false,
+}: {
+  input: { catalogKey: string; scientificName: string; commonName?: string; targetFields?: CompatibilityOnboardingCoreField[] };
+  documents: VerifiedDocument[];
+  config: CompatibilityResearchProviderConfig;
+  fetchImpl: FetchLike;
+  skipAiExtraction?: boolean;
+}) => {
+  const targetFields = input.targetFields ?? [];
+  const deterministicExtraction = deterministicClaimsFromDocuments(documents, targetFields);
+  let extraction: ExtractionOutput = deterministicExtraction;
+  let extractionStatus: 'ok' | 'not_attempted' | 'partial_transport_unavailable' | 'transport_unavailable' = documents.length > 0 ? 'ok' : 'not_attempted';
+  let transportErrorCode: 'retryable_network_error' | undefined;
+  if (documents.length > 0 && !skipAiExtraction) {
+    const extracted = await extractedClaims(config, fetchImpl, input.scientificName, documents, targetFields);
+    extraction = mergeExtractionOutputs(deterministicExtraction, extracted.output);
+    if (extracted.transportFailures > 0) {
+      extractionStatus = extracted.successfulDocuments > 0 ? 'partial_transport_unavailable' : 'transport_unavailable';
+      transportErrorCode = 'retryable_network_error';
+    }
+  } else if (documents.length > 0 && skipAiExtraction) {
+    extractionStatus = 'transport_unavailable';
+    transportErrorCode = 'retryable_network_error';
+  }
+  const sources = sourcesFromDocuments(documents);
+  const claims = claimsFromExtraction(extraction, documents, targetFields);
+  const packet: CompatibilitySpeciesResearchPacket = {
+    packetId: providerId + '-' + createHash('sha256')
+      .update(input.catalogKey + '|' + input.scientificName + '|' + sources.map(source => source.url).join('|'))
+      .digest('hex')
+      .slice(0, 20),
+    providerId,
+    catalogKey: input.catalogKey,
+    commonName: input.commonName || input.scientificName,
+    scientificName: input.scientificName,
+    identityStatus: 'verified',
+    sources,
+    claims,
+    diagnostics: {
+      extractionStatus,
+      verifiedSourceCount: sources.length,
+      ...(transportErrorCode ? { transportErrorCode } : {}),
+    },
+  };
+  return packet;
+};
+
+export const probeCompatibilityResearchProvider = async (
+  config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
+  fetchImpl: FetchLike = fetch,
+): Promise<CompatibilityResearchProviderPreflight> => {
+  const readiness = getCompatibilitySpeciesResearchProviderReadiness(config);
+  const base = {
+    configured: readiness.configured,
+    providerId,
+    host: readiness.host,
+    model: readiness.model,
+  };
+  if (!readiness.configured) return { ...base, status: 'not_configured', httpStatus: null, reasonCode: 'provider_not_configured' };
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), Math.min(config.timeoutMs, 5_000));
+  try {
+    const response = await fetchImpl(config.baseUrl.replace(/\/$/, '') + '/chat/completions', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + config.apiKey,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: config.model,
+        stream: false,
+        temperature: 0,
+        max_tokens: 24,
+        enable_thinking: false,
+        response_format: { type: 'json_object' },
+        messages: [{ role: 'user', content: 'Return JSON only: {"ok":true}' }],
+      }),
+      signal: controller.signal,
+    });
+    if (response.status === 401 || response.status === 403) {
+      return { ...base, status: 'credential_rejected', httpStatus: response.status, reasonCode: 'provider_credential_rejected' };
+    }
+    if (!response.ok) {
+      return { ...base, status: 'http_error', httpStatus: response.status, reasonCode: `provider_http_${response.status}` };
+    }
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch {
+      return { ...base, status: 'invalid_response', httpStatus: response.status, reasonCode: 'provider_invalid_json' };
+    }
+    const content = (payload as { choices?: Array<{ message?: { content?: unknown } }> })?.choices?.[0]?.message?.content;
+    if (typeof content !== 'string' || !content.trim()) {
+      return { ...base, status: 'invalid_response', httpStatus: response.status, reasonCode: 'provider_empty_response' };
+    }
+    return { ...base, status: 'ready', httpStatus: response.status, reasonCode: null };
+  } catch (error) {
+    if (isRetryableProviderNetworkError(error)) {
+      return { ...base, status: 'transport_unavailable', httpStatus: null, reasonCode: 'retryable_network_error' };
+    }
+    return { ...base, status: 'invalid_response', httpStatus: null, reasonCode: error instanceof Error ? error.message : 'provider_preflight_failed' };
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
+export const researchCompatibilitySpeciesWithResume = async (
+  input: { catalogKey: string; scientificName: string; commonName?: string; targetFields?: CompatibilityOnboardingCoreField[] },
+  options: {
+    config?: CompatibilityResearchProviderConfig;
+    fetchImpl?: FetchLike;
+    skipAiExtraction?: boolean;
+    skipModelDiscovery?: boolean;
+  } = {},
+): Promise<{ packet: CompatibilitySpeciesResearchPacket; resumeBundle: CompatibilityResearchResumeBundle }> => {
+  const config = options.config ?? buildCompatibilityResearchProviderConfig();
+  const fetchImpl = options.fetchImpl ?? fetch;
+  if (!options.skipAiExtraction) {
+    const readiness = getCompatibilitySpeciesResearchProviderReadiness(config);
+    if (!readiness.configured) throw new Error('compatibility_research_provider_not_configured');
+  }
+  const targetFields = input.targetFields ?? [];
+  const candidates = options.skipModelDiscovery
+    ? trustedTemplateCandidates(input.scientificName)
+    : await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName, targetFields);
+  const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
+  const packet = await buildResearchPacketFromDocuments({
+    input,
+    documents,
+    config,
+    fetchImpl,
+    skipAiExtraction: options.skipAiExtraction,
+  });
+  return {
+    packet,
+    resumeBundle: {
+      providerId,
+      catalogKey: input.catalogKey,
+      commonName: input.commonName || input.scientificName,
+      scientificName: input.scientificName,
+      targetFields,
+      documents: documents.map(verifiedDocumentSnapshot),
+    },
+  };
+};
+
+export const retryCompatibilityExtractionFromResume = async (
+  bundle: CompatibilityResearchResumeBundle,
+  config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
+  fetchImpl: FetchLike = fetch,
+): Promise<CompatibilitySpeciesResearchPacket> => {
+  const readiness = getCompatibilitySpeciesResearchProviderReadiness(config);
+  if (!readiness.configured) throw new Error('compatibility_research_provider_not_configured');
+  const documents = verifiedDocumentsFromResume(bundle);
+  if (documents.length !== bundle.documents.length || documents.length === 0) {
+    throw new Error('compatibility_research_resume_bundle_invalid');
+  }
+  return buildResearchPacketFromDocuments({
+    input: {
+      catalogKey: bundle.catalogKey,
+      scientificName: bundle.scientificName,
+      commonName: bundle.commonName,
+      targetFields: bundle.targetFields,
+    },
+    documents,
+    config,
+    fetchImpl,
+  });
+};
+
 export const createBailianCompatibilitySpeciesResearchProvider = (
   config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
   fetchImpl: FetchLike = fetch,
 ): CompatibilitySpeciesResearchProvider => ({
   id: providerId,
-  research: async input => {
-    const readiness = getCompatibilitySpeciesResearchProviderReadiness(config);
-    if (!readiness.configured) throw new Error('compatibility_research_provider_not_configured');
-
-    const targetFields = input.targetFields ?? [];
-    const candidates = await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName, targetFields);
-    const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
-    const deterministicExtraction = deterministicClaimsFromDocuments(documents, targetFields);
-    let extraction: ExtractionOutput = deterministicExtraction;
-    let extractionStatus: 'ok' | 'not_attempted' | 'partial_transport_unavailable' | 'transport_unavailable' = documents.length > 0 ? 'ok' : 'not_attempted';
-    let transportErrorCode: 'retryable_network_error' | undefined;
-    if (documents.length > 0) {
-      const extracted = await extractedClaims(config, fetchImpl, input.scientificName, documents, targetFields);
-      extraction = mergeExtractionOutputs(deterministicExtraction, extracted.output);
-      if (extracted.transportFailures > 0) {
-        extractionStatus = extracted.successfulDocuments > 0 ? 'partial_transport_unavailable' : 'transport_unavailable';
-        transportErrorCode = 'retryable_network_error';
-      }
-    }
-    const sources = sourcesFromDocuments(documents);
-    const claims = claimsFromExtraction(extraction, documents, targetFields);
-
-    const packet: CompatibilitySpeciesResearchPacket = {
-      packetId: providerId + '-' + createHash('sha256')
-        .update(input.catalogKey + '|' + input.scientificName + '|' + sources.map(source => source.url).join('|'))
-        .digest('hex')
-        .slice(0, 20),
-      providerId,
-      catalogKey: input.catalogKey,
-      commonName: input.commonName || input.scientificName,
-      scientificName: input.scientificName,
-      identityStatus: 'verified',
-      sources,
-      claims,
-      diagnostics: {
-        extractionStatus,
-        verifiedSourceCount: sources.length,
-        ...(transportErrorCode ? { transportErrorCode } : {}),
-      },
-    };
-    return packet;
-  },
+  research: async input => (
+    await researchCompatibilitySpeciesWithResume(input, { config, fetchImpl })
+  ).packet,
 });
 
 export const compatibilitySpeciesResearchProvider = createBailianCompatibilitySpeciesResearchProvider(

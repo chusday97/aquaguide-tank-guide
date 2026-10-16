@@ -370,7 +370,9 @@
     "dryrun:compatibility-active-completion": "node --import tsx scripts/run-compatibility-active-completion-batch.ts",
     "test:compatibility-active-completion-batch": "node --import tsx scripts/test-compatibility-active-completion-batch.ts",
     "test:compatibility-decision-audit-freshness": "node --import tsx scripts/test-compatibility-decision-audit-freshness.ts",
-    "test:compatibility-decision-impact-queue": "node --import tsx scripts/test-compatibility-decision-impact-queue.ts"
+    "test:compatibility-decision-impact-queue": "node --import tsx scripts/test-compatibility-decision-impact-queue.ts",
+    "test:compatibility-extraction-resume": "node --import tsx scripts/test-compatibility-extraction-resume.ts",
+    "dryrun:compatibility-extraction-retry": "node --import tsx scripts/run-compatibility-extraction-retry.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

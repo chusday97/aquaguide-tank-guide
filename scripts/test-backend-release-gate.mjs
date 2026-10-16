@@ -29,6 +29,7 @@ const gates = [
   ['Compatibility Decision Audit Freshness', 'npm', ['run', 'test:compatibility-decision-audit-freshness']],
   ['Compatibility Decision Impact Queue', 'npm', ['run', 'test:compatibility-decision-impact-queue']],
   ['Compatibility Active Completion Batch', 'npm', ['run', 'test:compatibility-active-completion-batch']],
+  ['Compatibility Extraction Resume', 'npm', ['run', 'test:compatibility-extraction-resume']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
   ['Compatibility V4 AI Shadow', 'npm', ['run', 'test:compatibility-v4-ai-shadow']],
   ['Compatibility V4 Shadow Eval', 'npm', ['run', 'test:compatibility-v4-shadow-eval']],

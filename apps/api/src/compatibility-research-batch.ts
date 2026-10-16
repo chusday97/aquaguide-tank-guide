@@ -1,7 +1,9 @@
 import {
   compatibilitySpeciesResearchProvider,
   getCompatibilitySpeciesResearchProviderReadiness,
+  researchCompatibilitySpeciesWithResume,
   type CompatibilityResearchProviderReadiness,
+  type CompatibilityResearchResumeBundle,
 } from './compatibility-species-research-provider';
 import { createGbifSpeciesIdentityResolver } from '../../../src/services/compatibility/gbif-species-identity.service';
 import {
@@ -42,6 +44,8 @@ export type CompatibilityResearchBatchPreviewInput = {
   limit: number;
   concurrency: number;
   queueMode?: CompatibilityResearchQueueMode;
+  extractionMode?: 'normal' | 'source_only';
+  captureResume?: boolean;
 };
 
 export type CompatibilityResearchBatchPreviewResult = {
@@ -76,6 +80,27 @@ const emptyWorkQueues = (): Record<CompatibilityResearchWorkQueue, number> => ({
   provider_retry: 0,
   terminal_hold: 0,
 });
+
+
+const mergeResumeBundles = (
+  existing: CompatibilityResearchResumeBundle | null,
+  next: CompatibilityResearchResumeBundle,
+): CompatibilityResearchResumeBundle => {
+  if (!existing) return next;
+  const documents = [...existing.documents];
+  const seen = new Set(documents.map(document => `${document.url}|${document.contentSha256}`));
+  for (const document of next.documents) {
+    const key = `${document.url}|${document.contentSha256}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    documents.push(document);
+  }
+  return {
+    ...existing,
+    targetFields: [...new Set([...existing.targetFields, ...next.targetFields])],
+    documents,
+  };
+};
 
 export const selectCompatibilityResearchBatchJobs = (
   queueMode: CompatibilityResearchQueueMode = 'plan',
@@ -195,13 +220,14 @@ export const runCompatibilityResearchBatchPreview = async (
 ): Promise<CompatibilityResearchBatchPreviewResult> => {
   const readiness = getCompatibilitySpeciesResearchProviderReadiness();
   const queueMode = input.queueMode ?? 'plan';
+  const extractionMode = input.extractionMode ?? 'normal';
   const selected = selectCompatibilityResearchBatchJobs(queueMode);
   const allJobs = selected.jobs;
   const offset = Math.min(Math.max(0, input.offset), allJobs.length);
   const limit = Math.max(1, Math.min(4, input.limit));
   const concurrency = Math.max(1, Math.min(2, input.concurrency));
 
-  if (!readiness.configured) {
+  if (!readiness.configured && extractionMode === 'normal') {
     return {
       status: 'provider_unavailable',
       provider: readiness,
@@ -271,8 +297,22 @@ export const runCompatibilityResearchBatchPreview = async (
           continue;
         }
 
+        let resumeBundle: CompatibilityResearchResumeBundle | null = null;
+        const researchProvider = input.captureResume || extractionMode === 'source_only'
+          ? {
+            id: compatibilitySpeciesResearchProvider.id,
+            research: async (researchInput: Parameters<typeof compatibilitySpeciesResearchProvider.research>[0]) => {
+              const result = await researchCompatibilitySpeciesWithResume(researchInput, {
+                skipAiExtraction: extractionMode === 'source_only',
+                skipModelDiscovery: extractionMode === 'source_only',
+              });
+              resumeBundle = mergeResumeBundles(resumeBundle, result.resumeBundle);
+              return result.packet;
+            },
+          }
+          : compatibilitySpeciesResearchProvider;
         const detailed = await researchAndAssessCompatibilitySpeciesDetailed(
-          compatibilitySpeciesResearchProvider,
+          researchProvider,
           {
             catalogKey: job.researchKey.replace(/[^\w.-]+/g, '_').slice(0, 160),
             scientificName: job.baseScientificName,
@@ -295,6 +335,7 @@ export const runCompatibilityResearchBatchPreview = async (
           identity,
           ...detailed,
           ...review,
+          ...(resumeBundle ? { resumeBundle } : {}),
         };
       } catch (error) {
         const reasonCodes = [error instanceof Error ? error.message : 'compatibility_research_failed'];

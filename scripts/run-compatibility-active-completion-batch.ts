@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
+import { probeCompatibilityResearchProvider } from '../apps/api/src/compatibility-species-research-provider';
 import { runCompatibilityResearchBatchPreview, type CompatibilityResearchWorkQueue } from '../apps/api/src/compatibility-research-batch';
 
 const arg = (name: string) => {
@@ -11,6 +12,8 @@ const pageSize = Math.max(1, Math.min(4, Number(arg('page-size') || 4)));
 const concurrency = Math.max(1, Math.min(2, Number(arg('concurrency') || 2)));
 const maxJobs = Math.max(1, Number(arg('max-jobs') || 999));
 const output = arg('output') || 'evaluation/reports/compatibility-active-completion-batch.json';
+const preflight = await probeCompatibilityResearchProvider();
+const extractionMode = preflight.status === 'ready' ? 'normal' as const : 'source_only' as const;
 let offset = 0;
 let processed = 0;
 const pages = [];
@@ -30,8 +33,10 @@ while (processed < maxJobs) {
     limit: Math.min(pageSize, maxJobs - processed),
     concurrency,
     queueMode: 'active_completion',
+    extractionMode,
+    captureResume: true,
   });
-  if (result.status === 'provider_unavailable') {
+  if (result.status === 'provider_unavailable' && extractionMode === 'normal') {
     throw new Error('compatibility_research_provider_not_configured');
   }
   pages.push(result);
@@ -46,19 +51,27 @@ while (processed < maxJobs) {
 const report = {
   generatedAt: new Date().toISOString(),
   queueMode: 'active_completion' as const,
+  extractionMode,
+  providerPreflight: preflight,
   writesAuthority: false as const,
   processedJobs: processed,
   totalActiveJobs: pages[0]?.totalPlanJobs ?? 0,
   sourcePlanJobs: pages[0]?.sourcePlanJobs ?? 0,
   workQueues: totals,
+  resumableJobs: pages.flatMap(page => page.results).filter(result => (
+    result.workItem && (result.workItem as { queue?: string }).queue === 'extraction_retry' && result.resumeBundle
+  )).length,
   pages,
 };
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({
+  providerPreflight: report.providerPreflight,
+  extractionMode: report.extractionMode,
   processedJobs: report.processedJobs,
   totalActiveJobs: report.totalActiveJobs,
   sourcePlanJobs: report.sourcePlanJobs,
+  resumableJobs: report.resumableJobs,
   workQueues: report.workQueues,
   writesAuthority: false,
 }, null, 2));
