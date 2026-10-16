@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 78,
-  "coreFieldCompleteSpecies": 93,
-  "oneFieldGapSpecies": 9,
+  "genericOnboardingReadySpecies": 79,
+  "coreFieldCompleteSpecies": 94,
+  "oneFieldGapSpecies": 8,
   "runtimeReviewedProfileSpecies": 145,
   "domainOrIdentityHeldSpecies": 282,
   "fieldCounts": {
@@ -75,8 +75,8 @@
     },
     "predation": {
       "reviewed_supported": 71,
-      "reviewed_neutral_or_negative": 29,
-      "reviewed_unknown": 93,
+      "reviewed_neutral_or_negative": 30,
+      "reviewed_unknown": 92,
       "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -105,7 +105,7 @@
     },
     {
       "field": "predation",
-      "count": 8
+      "count": 7
     },
     {
       "field": "territoriality",
@@ -949,9 +949,9 @@
       "scientificName": "Xiphophorus maculatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1023,13 +1023,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

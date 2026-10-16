@@ -634,9 +634,16 @@ for (const speciesId of ['sp_0052', 'sp_0151']) {
   assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, speciesId + ' must become 8/8 after narrow fry-predation authority closes the final gap');
   assert.equal(rowOf(speciesId)?.genericOnboardingReady, true, speciesId + ' must become generic-ready after the final reviewed field closes');
 }
-for (const speciesId of ['sp_0011', 'sp_0062', 'sp_0125', 'sp_0433']) {
-  assert.equal(approvedValue(speciesId, 'predation'), undefined, speciesId + ' predation must remain fail-closed after Wave16 because direct scope is still conflicting or incomplete');
-  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 7, speciesId + ' must remain exactly 7/8 after Wave16');
+assert.deepEqual(
+  approvedValue('sp_0011', 'predation'),
+  { targets: [] },
+  'sp_0011 historical Wave16 unknown may be superseded only by the later Wave26 direct no-fry-predation authority',
+);
+assert.equal(rowOf('sp_0011')?.authoritativeFieldCount, 8, 'sp_0011 must become 8/8 only after the later direct predation review');
+assert.equal(rowOf('sp_0011')?.genericOnboardingReady, true, 'sp_0011 may enter generic onboarding only after all eight reviewed facts are declared');
+for (const speciesId of ['sp_0062', 'sp_0125', 'sp_0433']) {
+  assert.equal(approvedValue(speciesId, 'predation'), undefined, speciesId + ' predation must remain fail-closed because direct scope is still conflicting or incomplete');
+  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 7, speciesId + ' must remain exactly 7/8');
   assert.equal(rowOf(speciesId)?.genericOnboardingReady, false, speciesId + ' must stay out of generic onboarding until predation is directly resolved');
 }
 const predationWave16SourceIds = [
@@ -789,9 +796,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 47, '318 actionable field gaps should collapse to 47 base-taxon research jobs after Chrysiptera cyanea closes its final two exact-taxon gaps');
+assert.equal(taxonResearchPlan.length, 46, '306 actionable field gaps should collapse to 46 base-taxon research jobs after Xiphophorus maculatus closes its direct predation gap');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 89, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 88, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
@@ -845,13 +852,12 @@ assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
   [
     ['sp_0185', 'ph'],
-    ['sp_0011', 'predation'],
     ['sp_0023', 'predation'],
     ['sp_0062', 'predation'],
     ['sp_0125', 'predation'],
     ['sp_0433', 'predation'],
     ['sp_0475', 'predation'],
   ],
-  'Fast Lane must retain unresolved one-field cases, including Rhodeus ocellatus and Zebrasoma flavescens predation after Wave25 closes only their directly sourced non-predation core facts',
+  'Fast Lane must retain unresolved one-field cases, after Wave26 closes only Xiphophorus maculatus from direct no-fry-predation evidence while the remaining pH/predation cases stay fail-closed',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "kind": "compatibility_wave26_fast_lane_predation_review",
+  "reviewedFastLaneCases": 7,
+  "promotedFields": 1,
+  "promotedSpecies": 1,
+  "newEvidenceSourceCount": 0,
+  "writesProductionAuthority": false,
+  "modelGuessingAllowed": false,
+  "promotion": {
+    "speciesId": "sp_0011",
+    "scientificName": "Xiphophorus maculatus",
+    "field": "predation",
+    "value": {
+      "targets": []
+    },
+    "sourceId": "seriouslyfish-xiphophorus-maculatus",
+    "sourceUrl": "https://www.seriouslyfish.com/species/xiphophorus-maculatus",
+    "snapshotSha256": "678e886cdab44bc3cfe4c5266d81d0537edbe5a7f9ccd6775cf7eeb9b91572a6",
+    "directEvidence": "Adult fish explicitly stated not to eat their young; reviewed as direct negative fry-predation evidence."
+  },
+  "keptFailClosed": [
+    {
+      "speciesId": "sp_0185",
+      "scientificName": "Pomacanthus annularis",
+      "field": "ph",
+      "reason": "ADW gives only optimal pH 8; no accepted exact-taxon source supplied a tolerated min-max pH range."
+    },
+    {
+      "speciesId": "sp_0023",
+      "scientificName": "Zebrasoma flavescens",
+      "field": "predation",
+      "reason": "Exact-taxon sources describe algae/seaweed/zooplankton diet and predators of the tang, but do not directly establish fish/fry predation or explicit absence of it."
+    },
+    {
+      "speciesId": "sp_0062",
+      "scientificName": "Moenkhausia sanctaefilomenae",
+      "field": "predation",
+      "reason": "Seriously Fish explicitly states adults eat eggs, but that is egg predation rather than compatibility-relevant fish/fry prey scope; no fish/fry predation statement was found."
+    },
+    {
+      "speciesId": "sp_0125",
+      "scientificName": "Hypancistrus inspector",
+      "field": "predation",
+      "reason": "Exact-taxon sources provide diet/spawning information without direct fish/fry prey or no-prey evidence."
+    },
+    {
+      "speciesId": "sp_0433",
+      "scientificName": "Hemigrammus rhodostomus",
+      "field": "predation",
+      "reason": "Accepted-alias husbandry source describes a small mouth and omnivorous diet, but provides no direct fish/fry predation or explicit no-prey statement."
+    },
+    {
+      "speciesId": "sp_0475",
+      "scientificName": "Rhodeus ocellatus",
+      "field": "predation",
+      "reason": "Exact-taxon sources describe spawning inside mussels and general ecology, but no direct fish/fry predation or explicit no-prey statement was found."
+    }
+  ]
+}

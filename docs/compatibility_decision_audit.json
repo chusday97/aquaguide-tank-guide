@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 78,
-  "genericReadyUniquePairs": 3003,
+  "genericOnboardingReadySpecies": 79,
+  "genericReadyUniquePairs": 3081,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 397,
@@ -28,16 +28,6 @@
   "leverageQueues": {
     "policy": "Prioritize reviewed evidence work by actual UNKNOWN-pair impact. affectedUnknownPairs means the taxon participates in that many current UNKNOWN pairs; it is not a guarantee that resolving the taxon alone will unlock every pair because the opposite species or non-core facts can remain blocking.",
     "highestLeverageEvidenceTargets": [
-      {
-        "speciesId": "sp_0011",
-        "name": "月光鱼",
-        "scientificName": "Xiphophorus maculatus",
-        "unknownPairs": 168,
-        "actionableFields": [
-          "predation"
-        ],
-        "terminalReasons": []
-      },
       {
         "speciesId": "sp_0062",
         "name": "红眼灯",
@@ -109,24 +99,6 @@
       {
         "researchKey": "Petitella rhodostoma",
         "baseScientificName": "Petitella rhodostoma",
-        "completionEligible": true,
-        "affectedUnknownPairs": 168,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 168,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 191
-      },
-      {
-        "researchKey": "Xiphophorus maculatus",
-        "baseScientificName": "Xiphophorus maculatus",
         "completionEligible": true,
         "affectedUnknownPairs": 168,
         "gapInstances": 1,
@@ -1043,24 +1015,6 @@
         "existingCoveragePriorityScore": 191
       },
       {
-        "researchKey": "Xiphophorus maculatus",
-        "baseScientificName": "Xiphophorus maculatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 168,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 168,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 191
-      },
-      {
         "researchKey": "Pomacanthus annularis",
         "baseScientificName": "Pomacanthus annularis",
         "completionEligible": true,
@@ -1908,10 +1862,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 47,
-      "completionEligibleJobs": 10,
+      "totalResearchJobs": 46,
+      "completionEligibleJobs": 9,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 10,
+      "completionEligibleCatalogObjects": 9,
       "terminalBlockedCatalogObjects": 79
     },
     "terminalReasonCounts": [
@@ -1996,7 +1950,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 307,
+    "actionableGaps": 306,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2020,7 +1974,7 @@
       },
       {
         "field": "predation",
-        "count": 8
+        "count": 7
       },
       {
         "field": "territoriality",

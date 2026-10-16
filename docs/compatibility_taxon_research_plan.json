@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 89,
-  "totalResearchJobs": 47,
+  "catalogObjects": 88,
+  "totalResearchJobs": 46,
   "variantBridgeJobs": 16,
   "items": [
     {
@@ -105,33 +105,6 @@
           "speciesId": "sp_0475",
           "name": "高体鳑鲏",
           "scientificName": "Rhodeus ocellatus",
-          "gaps": [
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Xiphophorus maculatus",
-      "baseScientificName": "Xiphophorus maculatus",
-      "priorityScore": 191,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0011",
-          "name": "月光鱼",
-          "scientificName": "Xiphophorus maculatus",
           "gaps": [
             "predation"
           ],
