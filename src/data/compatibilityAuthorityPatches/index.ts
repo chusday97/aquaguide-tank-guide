@@ -222,6 +222,13 @@ import {
   compatibilityWaterDirectWave27Sources,
   compatibilityWaterDirectWave27VerifiedSourceIds,
 } from './water-direct-wave27-20261016';
+import {
+  compatibilityEnvironmentDirectWave28AuthorityPatch,
+  compatibilityEnvironmentDirectWave28FieldReviews,
+  compatibilityEnvironmentDirectWave28ProfilePatches,
+  compatibilityEnvironmentDirectWave28Sources,
+  compatibilityEnvironmentDirectWave28VerifiedSourceIds,
+} from './environment-direct-wave28-20261016';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -256,6 +263,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityResearchDirectWave25Sources,
   ...compatibilityPredationNegativeWave26Sources,
   ...compatibilityWaterDirectWave27Sources,
+  ...compatibilityEnvironmentDirectWave28Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -291,6 +299,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityResearchDirectWave25FieldReviews,
   ...compatibilityPredationNegativeWave26FieldReviews,
   ...compatibilityWaterDirectWave27FieldReviews,
+  ...compatibilityEnvironmentDirectWave28FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -326,6 +335,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityResearchDirectWave25VerifiedSourceIds,
   ...compatibilityPredationNegativeWave26VerifiedSourceIds,
   ...compatibilityWaterDirectWave27VerifiedSourceIds,
+  ...compatibilityEnvironmentDirectWave28VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -361,6 +371,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityResearchDirectWave25ProfilePatches,
   ...compatibilityPredationNegativeWave26ProfilePatches,
   ...compatibilityWaterDirectWave27ProfilePatches,
+  ...compatibilityEnvironmentDirectWave28ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -396,4 +407,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityResearchDirectWave25AuthorityPatch,
   compatibilityPredationNegativeWave26AuthorityPatch,
   compatibilityWaterDirectWave27AuthorityPatch,
+  compatibilityEnvironmentDirectWave28AuthorityPatch,
 ] as const;

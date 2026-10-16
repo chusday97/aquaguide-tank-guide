@@ -281,25 +281,6 @@
         "existingCoveragePriorityScore": 124
       },
       {
-        "researchKey": "Thayeria boehlkei",
-        "baseScientificName": "Thayeria boehlkei",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 2,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 114,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "ph"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 134
-      },
-      {
         "researchKey": "Cobitis sinensis",
         "baseScientificName": "Cobitis sinensis",
         "completionEligible": false,
@@ -985,25 +966,6 @@
         "existingCoveragePriorityScore": 124
       },
       {
-        "researchKey": "Thayeria boehlkei",
-        "baseScientificName": "Thayeria boehlkei",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 2,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 114,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "ph"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 134
-      },
-      {
         "researchKey": "Cobitis sinensis",
         "baseScientificName": "Cobitis sinensis",
         "completionEligible": false,
@@ -1466,11 +1428,11 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 35,
+      "totalResearchJobs": 34,
       "completionEligibleJobs": 9,
-      "terminalBlockedJobs": 26,
+      "terminalBlockedJobs": 25,
       "completionEligibleCatalogObjects": 9,
-      "terminalBlockedCatalogObjects": 66
+      "terminalBlockedCatalogObjects": 65
     },
     "terminalReasonCounts": [
       {
@@ -1538,7 +1500,7 @@
     },
     {
       "code": "missing_ph",
-      "count": 40546
+      "count": 40350
     },
     {
       "code": "missing_hardness",
@@ -1550,15 +1512,15 @@
     },
     {
       "code": "water_type_unknown",
-      "count": 153
+      "count": 155
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 293,
+    "actionableGaps": 291,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 65
+        "count": 64
       },
       {
         "field": "tank_size",
@@ -1574,7 +1536,7 @@
       },
       {
         "field": "water",
-        "count": 48
+        "count": 47
       },
       {
         "field": "predation",

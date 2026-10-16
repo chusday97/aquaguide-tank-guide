@@ -18,9 +18,9 @@
   "domainOrIdentityHeldSpecies": 282,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 145,
+      "reviewed_supported": 146,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 48,
+      "reviewed_unknown": 47,
       "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -34,10 +34,10 @@
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 128,
+      "reviewed_supported": 129,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 6,
-      "needs_research": 59,
+      "needs_research": 58,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
@@ -85,7 +85,7 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 65
+      "count": 64
     },
     {
       "field": "tank_size",
@@ -101,7 +101,7 @@
     },
     {
       "field": "water",
-      "count": 48
+      "count": 47
     },
     {
       "field": "predation",
@@ -39151,18 +39151,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch38-fishbase-thayeria-boehlkei"
+            "fishipedia-thayeria-boehlkei-environment-wave28"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -39174,11 +39174,14 @@
           "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-thayeria-boehlkei-numeric-husbandry",
+            "fishipedia-thayeria-boehlkei-environment-wave28"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",

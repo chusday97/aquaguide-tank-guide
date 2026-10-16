@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 75,
-  "totalResearchJobs": 35,
+  "catalogObjects": 74,
+  "totalResearchJobs": 34,
   "variantBridgeJobs": 16,
   "items": [
     {
@@ -572,35 +572,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Thayeria boehlkei",
-      "baseScientificName": "Thayeria boehlkei",
-      "priorityScore": 134,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "ph"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0472",
-          "name": "企鹅灯",
-          "scientificName": "Thayeria boehlkei",
-          "gaps": [
-            "water",
-            "ph"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },

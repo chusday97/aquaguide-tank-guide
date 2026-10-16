@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "kind": "compatibility_wave28_direct_environment_review",
+  "reviewedCandidates": 5,
+  "promotedFields": 2,
+  "promotedSpecies": 1,
+  "writesProductionAuthority": false,
+  "modelGuessingAllowed": false,
+  "promotionSpeciesIds": ["sp_0472"],
+  "evidence": {
+    "scientificName": "Thayeria boehlkei",
+    "water": {
+      "value": "freshwater",
+      "source": "Fishipedia exact-taxon introduction",
+      "snapshotSha256": "c30eec8f5448a6f53d1d8ae12f29d72a8d1cc47c538dfcf98d6f22b567352ad0"
+    },
+    "ph": {
+      "value": {"min": 6, "max": 8},
+      "sources": [
+        {"publisher": "Seriously Fish", "directRange": "5.5-8.0", "snapshotSha256": "569d18d642e873b22a6277e95ca4f52b6519806f9cc0af260f7ba12e7ca83ca8"},
+        {"publisher": "Fishipedia", "directRange": "6-8", "snapshotSha256": "c30eec8f5448a6f53d1d8ae12f29d72a8d1cc47c538dfcf98d6f22b567352ad0"}
+      ],
+      "reconciliation": "conservative direct-source overlap"
+    }
+  },
+  "keptFailClosed": [
+    {"speciesId": "sp_0047", "scientificName": "Pseudobagrus fulvidraco", "fields": ["ph", "tank_size"], "reason": "No verified exact-taxon source document yielded direct husbandry values in this review."},
+    {"speciesId": "sp_0186", "scientificName": "Chaetodon auriga", "fields": ["ph", "tank_size"], "reason": "Verified exact-taxon Fishipedia/ADW pages did not yield direct pH or minimum-tank husbandry figures."},
+    {"speciesId": "sp_0452", "scientificName": "Amphiprion ocellaris", "fields": ["ph"], "reason": "Exact sources did not yield a direct pH range; existing minimum-volume authority is not the current gap."},
+    {"speciesId": "sp_0024", "scientificName": "Paracanthurus hepatus", "fields": ["ph"], "reason": "Exact Fishipedia source yielded minimum aquarium volume but no direct pH range."}
+  ],
+  "separateRejectedObservation": {
+    "speciesId": "sp_0185",
+    "scientificName": "Pomacanthus annularis",
+    "field": "ph",
+    "reason": "Animal Diversity Web gives an aquarium optimum point of pH 8, not an acceptable pH range. Compatibility uses pH ranges for overlap, so the point value is not promoted as {8,8}."
+  }
+}

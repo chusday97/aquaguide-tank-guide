@@ -305,8 +305,8 @@ assert.deepEqual(approvedValue('sp_0107', 'water'), 'freshwater', 'sp_0107 histo
 assert.deepEqual(approvedValue('sp_0472', 'temperature'), { min: 22, max: 28 });
 assert.deepEqual(approvedValue('sp_0472', 'adult_size'), { min: null, max: 3.6 });
 assert.deepEqual(approvedValue('sp_0472', 'tank_size'), { liters: 68, lengthCm: 60 });
-assert.equal(approvedValue('sp_0472', 'ph'), undefined, 'conflicting/not-recorded Thayeria pH must remain unresolved');
-assert.equal(approvedValue('sp_0472', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0472', 'ph'), { min: 6, max: 8 }, 'Thayeria historical pH unknown is superseded only by Wave28 concordant exact-taxon direct evidence');
+assert.deepEqual(approvedValue('sp_0472', 'water'), 'freshwater', 'Thayeria historical water unknown is superseded only by Wave28 direct exact-taxon freshwater evidence');
 
 const numericWave4SourceIds = [
   'seriouslyfish-erpetoichthys-calabaricus-numeric-husbandry',
@@ -796,9 +796,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 35, '293 actionable field gaps should collapse to 35 base-taxon research jobs after Wave27 direct freshwater authority removes 13 water gaps');
+assert.equal(taxonResearchPlan.length, 34, '291 actionable field gaps should collapse to 34 base-taxon research jobs after Wave28 closes Thayeria water + pH');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 75, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 74, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
