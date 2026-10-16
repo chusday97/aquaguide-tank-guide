@@ -46,6 +46,7 @@ export type CompatibilityResearchBatchPreviewInput = {
   queueMode?: CompatibilityResearchQueueMode;
   extractionMode?: 'normal' | 'source_only';
   captureResume?: boolean;
+  researchKeys?: string[];
 };
 
 export type CompatibilityResearchBatchPreviewResult = {
@@ -104,13 +105,19 @@ const mergeResumeBundles = (
 
 export const selectCompatibilityResearchBatchJobs = (
   queueMode: CompatibilityResearchQueueMode = 'plan',
+  researchKeys: readonly string[] = [],
 ): { sourcePlanJobs: number; jobs: CompatibilityTaxonResearchPlanItem[] } => {
   const plan = buildCompatibilityTaxonResearchPlan();
-  if (queueMode === 'plan') return { sourcePlanJobs: plan.length, jobs: plan };
   const rows = new Map(buildCompatibilityCoreFieldCoverage().rows.map(row => [row.speciesId, row]));
-  const jobs = plan.filter(job => job.catalogObjects.every(object => (
-    (rows.get(object.speciesId)?.terminalGapCount ?? 0) === 0
-  )));
+  const queueJobs = queueMode === 'plan'
+    ? plan
+    : plan.filter(job => job.catalogObjects.every(object => (
+      (rows.get(object.speciesId)?.terminalGapCount ?? 0) === 0
+    )));
+  const requested = new Set(researchKeys.filter(Boolean));
+  const jobs = requested.size > 0
+    ? queueJobs.filter(job => requested.has(job.researchKey))
+    : queueJobs;
   return { sourcePlanJobs: plan.length, jobs };
 };
 
@@ -221,7 +228,7 @@ export const runCompatibilityResearchBatchPreview = async (
   const readiness = getCompatibilitySpeciesResearchProviderReadiness();
   const queueMode = input.queueMode ?? 'plan';
   const extractionMode = input.extractionMode ?? 'normal';
-  const selected = selectCompatibilityResearchBatchJobs(queueMode);
+  const selected = selectCompatibilityResearchBatchJobs(queueMode, input.researchKeys);
   const allJobs = selected.jobs;
   const offset = Math.min(Math.max(0, input.offset), allJobs.length);
   const limit = Math.max(1, Math.min(4, input.limit));

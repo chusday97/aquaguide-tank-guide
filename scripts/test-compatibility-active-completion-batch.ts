@@ -9,6 +9,7 @@ import {
   buildCompatibilityTaxonResearchPlan,
 } from '../src/services/compatibility/compatibility-field-coverage.service';
 import type { CompatibilityOnboardingReviewPacket } from '../src/services/compatibility/onboarding-review-packet.service';
+import { isCompatibilityResearchClaimScopeEligible } from '../src/services/compatibility/species-onboarding-research.service';
 
 const fullPlan = buildCompatibilityTaxonResearchPlan();
 const coverage = buildCompatibilityCoreFieldCoverage();
@@ -20,6 +21,8 @@ const selected = selectCompatibilityResearchBatchJobs('active_completion');
 assert.equal(selected.sourcePlanJobs, fullPlan.length);
 assert.deepEqual(selected.jobs.map(job => job.researchKey), expectedActive.map(job => job.researchKey));
 assert.ok(selected.jobs.length > 0, 'active completion queue should contain current non-terminal research work');
+const filtered = selectCompatibilityResearchBatchJobs('active_completion', [selected.jobs[0].researchKey]);
+assert.deepEqual(filtered.jobs.map(job => job.researchKey), [selected.jobs[0].researchKey], 'targeted expansion must select only manifest-requested research keys');
 assert.ok(selected.jobs.every(job => job.catalogObjects.every(object => (
   (rows.get(object.speciesId)?.terminalGapCount ?? 0) === 0
 ))), 'terminal-held catalog objects must never enter active completion research');
@@ -63,6 +66,32 @@ assert.equal(buildCompatibilityResearchBatchWorkItem({
   status: 'research_assessed', resourceLabel: 'A', reviewPacket: packet('terminal_hold', ['identity_conflict']),
   queueMode: 'active_completion', researchScopeComplete: false, requestedGapFields: ['predation'],
 }).queue, 'terminal_hold');
+
+assert.equal(isCompatibilityResearchClaimScopeEligible({
+  field: 'predation',
+  proposedValue: { targets: ['small_fish'] },
+  note: 'Adults may attack and swallow small fish that fit into the mouth in an aquarium.',
+}), true, 'direct predation BY the researched species should remain eligible');
+assert.equal(isCompatibilityResearchClaimScopeEligible({
+  field: 'predation',
+  proposedValue: { targets: ['larger fish', 'crabs', 'octopi'] },
+  note: 'Predators of Zebrasoma flavescens include larger fish and predatory invertebrates such as crabs and octopi.',
+}), false, 'predators OF the researched species must never be inverted into predation targets');
+assert.equal(isCompatibilityResearchClaimScopeEligible({
+  field: 'predation',
+  proposedValue: { targets: ['crustacés', 'poissons de grande taille'] },
+  note: "The species would become a preferred prey of crustaceans or large fish.",
+}), false, 'prey-vulnerability evidence must never be inverted into predator authority');
+assert.equal(isCompatibilityResearchClaimScopeEligible({
+  field: 'predation',
+  proposedValue: { targets: ['eggs'] },
+  note: 'Adults will eat the eggs given the chance.',
+}), false, 'non-runtime egg predation must not falsely close the Compatibility predation field');
+assert.equal(isCompatibilityResearchClaimScopeEligible({
+  field: 'predation',
+  proposedValue: { targets: ['fish_fry'] },
+  note: 'Adults will eat fish fry and should not be housed with fry.',
+}), true, 'canonical fish-fry predation evidence should remain eligible');
 
 const runnerSource = readFileSync('scripts/run-compatibility-active-completion-batch.ts', 'utf8');
 assert.match(runnerSource, /arg\('offset'\)/, 'active completion runner must support offset-based resume without replaying completed research jobs');

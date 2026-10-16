@@ -29,6 +29,8 @@ export type CompatibilityResearchFieldClaim = {
   note?: string;
 };
 
+const researchPredationTargetVocabulary = new Set(['fish_fry', 'very_small_fish', 'small_fish', 'fish_unspecified_size']);
+
 export const isCompatibilityResearchClaimScopeEligible = (
   claim: Pick<CompatibilityResearchFieldClaim, 'field' | 'note' | 'proposedValue'>,
 ) => {
@@ -54,12 +56,20 @@ export const isCompatibilityResearchClaimScopeEligible = (
   if (claim.field === 'predation') {
     if (!note) return false;
     const targets = (claim.proposedValue as { targets?: unknown } | null)?.targets;
-    if (Array.isArray(targets) && targets.length === 0) {
+    if (!Array.isArray(targets) || targets.some(target => typeof target !== 'string')) return false;
+    if (targets.length === 0) {
       const explicitNoPreyRisk = /\bnot predatory\b|\bno (?:known )?(?:fish(?:es)?|tankmate) prey\b|\bdo(?:es)? not (?:treat|regard|see).*\b(?:fish(?:es)?|tankmates?)\b.*\bprey\b|\b(?:fish(?:es)?|tankmates?)\b.*\bnot (?:treated|regarded|seen) as prey\b/i.test(note);
       const evidenceDisclaimer = /\bno direct (?:statement|evidence|information)\b|\bnot (?:stated|recorded|described)\b|\bunknown\b/i.test(note);
       if (!explicitNoPreyRisk || evidenceDisclaimer) return false;
+    } else {
+      const normalizedTargets = targets.map(target => target.trim().toLowerCase());
+      if (normalizedTargets.some(target => !researchPredationTargetVocabulary.has(target))) return false;
+      const reversedDirection = /\bpredators? of\b|\bpreyed (?:upon|on) by\b|\b(?:is|are|was|were|be|become|becomes|became|would become) (?:an? |the )?(?:preferred )?prey\b|\bprey (?:for|of|to)\b|\bvulnerable to predation\b|\bpredation on\b.{0,120}\bby\b/i.test(note);
+      if (reversedDirection) return false;
+      const subjectActsAsPredator = /\b(?:eat|eats|eating|ate|consume|consumes|consuming|attack|attacks|attacking|hunt|hunts|hunting|swallow|swallows|swallowing)\b.{0,140}\b(?:fish|fry|juvenile|tankmate|prey)\b|\bpreys?\s+(?:on|upon)\b|\btreats?.{0,100}\bas prey\b|\bfit\s+(?:in|into)\s+.*mouth\b|\bmouth.*fit\b/i.test(note);
+      if (!subjectActsAsPredator) return false;
     }
-    const compatibilityContext = /tank\s*mate|community|aquarium|fit\s+(?:in|into)\s+.*mouth|mouth.*fit|swallow|attack|hunt|predat/i.test(note);
+    const compatibilityContext = /tank\s*mate|community|aquarium|fit\s+(?:in|into)\s+.*mouth|mouth.*fit|swallow|attack|hunt|predat|preys?\s+(?:on|upon)/i.test(note);
     const dietOnlyContext = /\b(feed|feeds|feeding|diet|food|zooplankton|plankton|algae|detritus)\b/i.test(note);
     if (dietOnlyContext && !compatibilityContext) return false;
   }

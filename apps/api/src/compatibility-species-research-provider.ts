@@ -382,7 +382,7 @@ const fieldSearchHints: Record<CompatibilityOnboardingCoreField, string> = {
   tank_size: 'explicit aquarium minimum volume, footprint or tank length',
   social_behavior: 'normal aquarium shoaling, schooling, solitary, pair or group husbandry; exclude breeding cohorts',
   territoriality: 'aquarium territoriality, aggression, territory defense, conspecific aggression or explicit non-territorial behaviour',
-  predation: 'tankmate prey risk, small fish or shrimp risk, fit-in-mouth, swallowing or predatory aquarium behaviour; exclude diet-only prey',
+  predation: 'prey risk caused BY this species to aquarium tankmates, especially fish fry/small fish/fit-in-mouth risk; exclude predators OF this species and diet-only prey',
 };
 
 const searchPromptFor = (
@@ -700,7 +700,7 @@ const extractionPromptFor = (
   'tank_size: {"liters":number|null,"lengthCm":number|null}. Only explicit aquarium minimums; never infer from adult size.',
   'social_behavior: {"mode":"solitary"|"pair"|"group"|"colony"|"variable"|"unknown","minimumGroupSize":number|null}. Only explicit normal husbandry/social grouping evidence qualifies. Do NOT use breeding/reproduction group sizes, grow-out cohorts, sampling groups, or statements such as raising N juveniles to find a breeding pair as minimumGroupSize.',
   'territoriality: {"traits":[string,...]}. Empty traits are allowed ONLY when the source directly supports non-territorial behavior; do not infer from "peaceful".',
-  'predation: {"targets":[string,...]}. Targets are compatibility prey/tankmate risks only. Do NOT list zooplankton, algae, detritus, routine foods, or dietary prey unless the page explicitly says those animals are aquarium tankmates or animals at risk. Diet statements alone produce no predation claim. Empty targets are allowed ONLY when direct tankmate/community evidence supports no generic fish-prey target.',
+  'predation: {"targets":[string,...]}. Direction is always FROM this taxon TO animals it attacks/eats as aquarium tankmates. NEVER record predators OF this taxon, animals that eat this taxon, or statements that this taxon becomes prey/vulnerable. For non-empty targets use ONLY canonical labels fish_fry, very_small_fish, small_fish, fish_unspecified_size. Eggs, larger predators, crustaceans that prey on this taxon, routine foods, zooplankton, algae and detritus do not close this field. Diet statements alone produce no predation claim. Empty targets are allowed ONLY when direct tankmate/community evidence supports no generic fish-prey target.',
   'Do not combine two sources into one claim. Do not invent numeric conversions except standard unit conversion to C/cm/L.',
   'If a source does not directly establish a field, omit that claim.',
   'SOURCE_DOCUMENTS:',
