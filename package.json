@@ -377,7 +377,9 @@
     "test:compatibility-resume-review": "node --import tsx scripts/test-compatibility-resume-review-manifest.ts",
     "test:compatibility-research-coverage-wave23": "node --import tsx scripts/test-compatibility-research-coverage-wave23.ts",
     "test:compatibility-chrysiptera-production-reconciliation-guard": "node scripts/test-compatibility-chrysiptera-production-reconciliation-guard.mjs",
-    "guard:compatibility-chrysiptera-production-reconciliation": "node scripts/compatibility-chrysiptera-production-reconciliation-guard.mjs"
+    "guard:compatibility-chrysiptera-production-reconciliation": "node scripts/compatibility-chrysiptera-production-reconciliation-guard.mjs",
+    "guard:chrysiptera-content-republish": "node scripts/chrysiptera-content-republish-guard.mjs",
+    "test:chrysiptera-content-republish-guard": "node scripts/test-chrysiptera-content-republish-guard.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
