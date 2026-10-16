@@ -11,8 +11,8 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 77,
-  "coreFieldCompleteSpecies": 92,
+  "genericOnboardingReadySpecies": 78,
+  "coreFieldCompleteSpecies": 93,
   "oneFieldGapSpecies": 6,
   "runtimeReviewedProfileSpecies": 145,
   "domainOrIdentityHeldSpecies": 282,
@@ -42,17 +42,17 @@
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 138,
+      "reviewed_supported": 139,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 1,
+      "reviewed_unknown": 0,
       "needs_research": 54,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 124,
+      "reviewed_supported": 125,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 11,
+      "reviewed_unknown": 10,
       "needs_research": 58,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -89,7 +89,7 @@
     },
     {
       "field": "tank_size",
-      "count": 65
+      "count": 64
     },
     {
       "field": "water",
@@ -101,7 +101,7 @@
     },
     {
       "field": "adult_size",
-      "count": 55
+      "count": 54
     },
     {
       "field": "predation",
@@ -15656,9 +15656,9 @@
       "scientificName": "Chrysiptera cyanea",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -15690,24 +15690,22 @@
           "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch11-fishbase-chrysiptera-cyanea",
-            "atlarium-chrysiptera-cyanea"
+            "research-wave21-fishipedia-chrysiptera-cyanea"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch11-fishbase-chrysiptera-cyanea",
-            "atlarium-chrysiptera-cyanea"
+            "research-wave21-fishipedia-chrysiptera-cyanea"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",

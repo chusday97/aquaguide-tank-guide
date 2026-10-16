@@ -372,7 +372,12 @@
     "test:compatibility-decision-audit-freshness": "node --import tsx scripts/test-compatibility-decision-audit-freshness.ts",
     "test:compatibility-decision-impact-queue": "node --import tsx scripts/test-compatibility-decision-impact-queue.ts",
     "test:compatibility-extraction-resume": "node --import tsx scripts/test-compatibility-extraction-resume.ts",
-    "dryrun:compatibility-extraction-retry": "node --import tsx scripts/run-compatibility-extraction-retry.ts"
+    "dryrun:compatibility-extraction-retry": "node --import tsx scripts/run-compatibility-extraction-retry.ts",
+    "build:compatibility-resume-review": "node --import tsx scripts/build-compatibility-resume-review-manifest.ts",
+    "test:compatibility-resume-review": "node --import tsx scripts/test-compatibility-resume-review-manifest.ts",
+    "test:compatibility-research-coverage-wave23": "node --import tsx scripts/test-compatibility-research-coverage-wave23.ts",
+    "test:compatibility-chrysiptera-production-reconciliation-guard": "node scripts/test-compatibility-chrysiptera-production-reconciliation-guard.mjs",
+    "guard:compatibility-chrysiptera-production-reconciliation": "node scripts/compatibility-chrysiptera-production-reconciliation-guard.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

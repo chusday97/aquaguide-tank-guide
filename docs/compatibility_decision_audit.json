@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 77,
-  "genericReadyUniquePairs": 2926,
+  "genericOnboardingReadySpecies": 78,
+  "genericReadyUniquePairs": 3003,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 397,
@@ -16,7 +16,7 @@
     "insufficient_data": 26214
   },
   "decisionCoveragePct": 45.27,
-  "fullyInformedPairs": 6941,
+  "fullyInformedPairs": 7060,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
@@ -141,25 +141,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 191
-      },
-      {
-        "researchKey": "Chrysiptera cyanea",
-        "baseScientificName": "Chrysiptera cyanea",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 178
       },
       {
         "researchKey": "Pomacanthus annularis",
@@ -1091,25 +1072,6 @@
         "existingCoveragePriorityScore": 191
       },
       {
-        "researchKey": "Chrysiptera cyanea",
-        "baseScientificName": "Chrysiptera cyanea",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 178
-      },
-      {
         "researchKey": "Pomacanthus annularis",
         "baseScientificName": "Pomacanthus annularis",
         "completionEligible": true,
@@ -1968,10 +1930,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 48,
-      "completionEligibleJobs": 11,
+      "totalResearchJobs": 47,
+      "completionEligibleJobs": 10,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 11,
+      "completionEligibleCatalogObjects": 10,
       "terminalBlockedCatalogObjects": 79
     },
     "terminalReasonCounts": [
@@ -2056,7 +2018,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 320,
+    "actionableGaps": 318,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2064,7 +2026,7 @@
       },
       {
         "field": "tank_size",
-        "count": 65
+        "count": 64
       },
       {
         "field": "water",
@@ -2076,7 +2038,7 @@
       },
       {
         "field": "adult_size",
-        "count": 55
+        "count": 54
       },
       {
         "field": "predation",

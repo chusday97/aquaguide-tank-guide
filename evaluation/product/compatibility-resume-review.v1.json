@@ -1,0 +1,449 @@
+{
+  "version": 1,
+  "kind": "compatibility_extraction_resume_review_manifest",
+  "generatedFrom": "evaluation/reports/compatibility-active-completion-batch.json",
+  "sourceReportGeneratedAt": "2026-10-16T05:00:38.955Z",
+  "sourceQueueMode": "active_completion",
+  "sourceExtractionMode": "source_only",
+  "providerStatusAtCapture": "transport_unavailable",
+  "providerModelAtCapture": "qwen3.7-flash-2026-07-15",
+  "rawSourceTextCommitted": false,
+  "writesAuthority": false,
+  "resumableJobs": 9,
+  "verifiedDocumentSnapshots": 22,
+  "jobs": [
+    {
+      "researchKey": "Hypancistrus inspector",
+      "scientificName": "Hypancistrus inspector",
+      "commonName": "雪球异型 (L102)",
+      "targetFields": [
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 3,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.fishbase.se/summary/Hypancistrus-inspector.html",
+          "title": "Hypancistrus inspector : fisheries, aquarium",
+          "publisher": "FishBase",
+          "sourceType": "professional_association",
+          "contentSha256": "13caf1533b5c16751b2c2636fc14b534dae60e28d854ebd2f2924544b4e2644d"
+        },
+        {
+          "url": "https://www.seriouslyfish.com/species/hypancistrus-inspector",
+          "title": "Hypancistrus inspector (L102) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "cfed198cf153ee6f5f0cecb33c5a175d596a0a38236dfe21a216f85bae5957e7"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/hypancistrus-inspector",
+          "title": "Hypancistrus inspector • Poisson-chat • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "9b99abdef57b2a2a59595f86887598f2e82935f5a5837949a1ff70f13f678a0f"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Moenkhausia sanctaefilomenae",
+      "scientificName": "Moenkhausia sanctaefilomenae",
+      "commonName": "红眼灯",
+      "targetFields": [
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 2,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.seriouslyfish.com/species/bario-sanctaefilomenae",
+          "title": "Bario sanctaefilomenae (Red-eye Tetra) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "f637628d8a9ba1033313f09b64a5bb918a248904be0a45656f2073b148a56ac3"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/moenkhausia-sanctaefilomenae",
+          "title": "Tétra yeux rouges • Moenkhausia sanctaefilomenae • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "f60531f2cf8924b833b6c0ed55d3a3d8678937b72c749c85ac8fdb1f8b66a02f"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Xiphophorus maculatus",
+      "scientificName": "Xiphophorus maculatus",
+      "commonName": "月光鱼",
+      "targetFields": [
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 3,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.fishbase.se/summary/Xiphophorus-maculatus.html",
+          "title": "Xiphophorus maculatus, Southern platyfish : aquarium",
+          "publisher": "FishBase",
+          "sourceType": "professional_association",
+          "contentSha256": "62130c3f27fa710eab506ee492ef312b24ba07da3d8658bb8825e6cee3797286"
+        },
+        {
+          "url": "https://www.seriouslyfish.com/species/xiphophorus-maculatus",
+          "title": "Xiphophorus maculatus (Platy) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "678e886cdab44bc3cfe4c5266d81d0537edbe5a7f9ccd6775cf7eeb9b91572a6"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/xiphophorus-maculatus",
+          "title": "Platy • Xiphophorus maculatus • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "aabc51d67a405daa9647280c05310080761993a026554dc9dbd020f6563968a2"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Pomacanthus annularis",
+      "scientificName": "Pomacanthus annularis",
+      "commonName": "蓝环神仙",
+      "targetFields": [
+        "ph",
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 3,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.fishbase.se/summary/Pomacanthus-annularis.html",
+          "title": "Pomacanthus annularis, Bluering angelfish : aquarium",
+          "publisher": "FishBase",
+          "sourceType": "professional_association",
+          "contentSha256": "ce26768143aab6bac47643e32be85cce4fff5c53cd4530d701c174b8ae33bede"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/pomacanthus-annularis",
+          "title": "Poisson-ange à anneau • Pomacanthus annularis • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "63074b6140e4781d335723091f693d8e0e90a8101525529a210160ded130fed3"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Pomacanthus_annularis",
+          "title": "Pomacanthus annularis (Blue ring angelfish) | INFORMATION | Animal Diversity Web",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "sourceType": "university",
+          "contentSha256": "02c71aba4a34e748d9904d12bcabd9264d1743b8898f10bc6ee4b0cbb9482606"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Rhodeus ocellatus",
+      "scientificName": "Rhodeus ocellatus",
+      "commonName": "高体鳑鲏",
+      "targetFields": [
+        "territoriality",
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 2,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.fishbase.se/summary/Rhodeus-ocellatus.html",
+          "title": "Rhodeus ocellatus, Rosy bitterling : fisheries, aquarium",
+          "publisher": "FishBase",
+          "sourceType": "professional_association",
+          "contentSha256": "99c28670ad0f4a94a46cfbec6dd951ebdaa7cc7b4e6b2db5e9356644a153fcfa"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/rhodeus-ocellatus",
+          "title": "Bouvière asiatique • Rhodeus ocellatus • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "867c72f468017280559d60c769f30d1ff67f22f5f474bf830d12ac405c0a4bee"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Amphiprion ocellaris",
+      "scientificName": "Amphiprion ocellaris",
+      "commonName": "公子小丑",
+      "targetFields": [
+        "ph",
+        "territoriality",
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 3,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.seriouslyfish.com/not-covered",
+          "title": "Pond fish, marine fish and invertebrates · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "8b887c9750eb317d1702e8e790a32a835efa8e892c2ce7e1b8b25e7f932db192"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/amphiprion-ocellaris",
+          "title": "Poisson-clown (némo) • Amphiprion ocellaris • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "da9eae11b0515bf52259caea3a4591fcc3de4e05ad5d0b91e756414c7e3a4dbc"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Amphiprion_ocellaris",
+          "title": "Amphiprion ocellaris (Clown anemonefish) | INFORMATION | Animal Diversity Web",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "sourceType": "university",
+          "contentSha256": "89e6019b6c1a16947832861f43a8c958661ca6ec8447ba177b31f9d2061ae25c"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Zacco platypus",
+      "scientificName": "Zacco platypus",
+      "commonName": "宽鳍鱲 (溪流之王)",
+      "targetFields": [
+        "ph",
+        "tank_size",
+        "territoriality"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 2,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.fishbase.se/summary/Zacco-platypus.html",
+          "title": "Zacco platypus, Freshwater minnow : fisheries",
+          "publisher": "FishBase",
+          "sourceType": "professional_association",
+          "contentSha256": "9dbdab3b92ce4b8bc4ef0f4c4a85d63d1ac27e38c5442dfe184f9f811619e948"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/zacco-platypus",
+          "title": "Poisson dragon • Zacco platypus • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "b12ad9bf788c60434399a481bb5b46733e5bbb8cfb663d945329374155c71f14"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Paracanthurus hepatus",
+      "scientificName": "Paracanthurus hepatus",
+      "commonName": "蓝倒吊",
+      "targetFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "territoriality",
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 2,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus",
+          "title": "Chirurgien bleu (Dory) • Paracanthurus hepatus • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "0066fb7432908ff25378f7e33446628b7c9154ab40b46aa797b23b37a03e0d81"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Paracanthurus_hepatus",
+          "title": "Paracanthurus hepatus (Flagtail surgeonfish) | INFORMATION | Animal Diversity Web",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "sourceType": "university",
+          "contentSha256": "9e439e384eaa4faadf87bd454c045398f1929f8248914096df36e736676a3e7e"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    },
+    {
+      "researchKey": "Zebrasoma flavescens",
+      "scientificName": "Zebrasoma flavescens",
+      "commonName": "黄倒吊",
+      "targetFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "territoriality",
+        "predation"
+      ],
+      "currentQueue": "extraction_retry",
+      "reasonCodes": [
+        "provider_extraction_transport_unavailable",
+        "field_missing_water",
+        "field_missing_adult_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation"
+      ],
+      "verifiedDocumentCount": 2,
+      "verifiedDocuments": [
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens",
+          "title": "Chirurgien jaune • Zebrasoma flavescens • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "712c74e12c2fb30a3acf6d04b6c41f790338fc212c5b0a8a4021af5afe374592"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Zebrasoma_flavescens",
+          "title": "Zebrasoma flavescens (Lemon sailfin) | INFORMATION | Animal Diversity Web",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "sourceType": "university",
+          "contentSha256": "4bf3dd9786a11ab3e6c146fb876574b2d6435772073ebf142bb2a4e95d1f7934"
+        }
+      ],
+      "retry": {
+        "status": "pending_provider_recovery",
+        "repeatsIdentityLookup": false,
+        "repeatsSourceDiscovery": false,
+        "repeatsSourceFetch": false,
+        "writesAuthority": false
+      }
+    }
+  ]
+}

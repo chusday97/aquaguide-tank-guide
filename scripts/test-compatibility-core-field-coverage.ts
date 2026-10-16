@@ -71,8 +71,9 @@ for (const field of ['temperature', 'ph', 'adult_size', 'predation'] as const) a
 assert.equal(rowOf('sp_0218')?.genericOnboardingReady, true);
 assert.equal(rowOf('sp_0218')?.fields.territoriality.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0218')?.fields.predation.status, 'reviewed_neutral_or_negative');
-assert.equal(rowOf('sp_0187')?.fields.adult_size.status, 'reviewed_unknown', 'do not promote new Chrysiptera adult-size authority from the migration-owned AI-generated page');
-assert.equal(rowOf('sp_0187')?.fields.tank_size.status, 'reviewed_unknown', 'do not promote new Chrysiptera tank-size authority from the migration-owned AI-generated page');
+assert.equal(rowOf('sp_0187')?.fields.adult_size.status, 'reviewed_supported', 'Chrysiptera adult size may close only from the reviewed exact-taxon Fishipedia page, not the older AI-generated migration page');
+assert.equal(rowOf('sp_0187')?.fields.tank_size.status, 'reviewed_supported', 'Chrysiptera tank size may close only from the reviewed exact-taxon Fishipedia maintenance recommendation, not the older AI-generated migration page');
+assert.equal(rowOf('sp_0187')?.genericOnboardingReady, true, 'Chrysiptera becomes generic-ready only after both verified numeric gaps are source-reviewed');
 assert.equal(rowOf('sp_0057')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0057')?.fields.predation.status, 'reviewed_neutral_or_negative');
 assert.equal(rowOf('sp_0057')?.authoritativeFieldCount, 8);
@@ -100,6 +101,8 @@ assert.deepEqual(approvedValue('sp_0062', 'social_behavior'), { mode: 'group', m
 assert.deepEqual(approvedValue('sp_0184', 'temperature'), { min: 24, max: 28 });
 assert.deepEqual(approvedValue('sp_0184', 'ph'), { min: 8.1, max: 8.4 });
 assert.deepEqual(approvedValue('sp_0184', 'adult_size'), { min: null, max: 10 });
+assert.deepEqual(approvedValue('sp_0187', 'adult_size'), { min: null, max: 8 });
+assert.deepEqual(approvedValue('sp_0187', 'tank_size'), { liters: 200, lengthCm: null });
 assert.deepEqual(approvedValue('sp_0218', 'social_behavior'), { mode: 'group', minimumGroupSize: 8 });
 assert.deepEqual(approvedValue('sp_0057', 'tank_size'), { liters: 250, lengthCm: null });
 assert.deepEqual(approvedValue('sp_0057', 'predation'), { targets: [] });
@@ -786,9 +789,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 48, '320 actionable field gaps should collapse to 48 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 47, '318 actionable field gaps should collapse to 47 base-taxon research jobs after Chrysiptera cyanea closes its final two exact-taxon gaps');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 90, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 89, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
