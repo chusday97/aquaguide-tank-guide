@@ -27,17 +27,27 @@ for (const row of matrix.rows) {
   assert.deepEqual(row.reviewed_unknown_fields, matrix.fields.filter(field => row.field_status[field] === 'reviewed_unknown'), `${row.species_id} reviewed_unknown fields must be derived from statuses`);
   assert.deepEqual(row.reviewed_unknown_resolutions.map(item => item.field).sort(), row.reviewed_unknown_fields.slice().sort(), `${row.species_id} every reviewed_unknown field must have one resolution mode`);
 }
-const backlog = JSON.parse(readFileSync('docs/species_knowledge_research_backlog.json', 'utf8')) as { items: Array<{ rank: number; species_id: string; gap_fields: string[]; reviewed_unknown_fields: string[]; reviewed_unknown_resolutions: Array<{ field: string; mode: string; reason: string; code: string | null }>; field_status: Record<string, string>; research_reason: string[] }> };
+const backlog = JSON.parse(readFileSync('docs/species_knowledge_research_backlog.json', 'utf8')) as {
+  items: Array<{ rank: number; species_id: string; gap_fields: string[]; reviewed_unknown_fields: string[]; reviewed_unknown_resolutions: Array<{ field: string; mode: string; reason: string; code: string | null }>; field_status: Record<string, string>; research_reason: string[] }>;
+  terminal_holds: Array<{ species_id: string; reviewed_unknown_resolutions: Array<{ field: string; mode: string; reason: string; code: string | null }> }>;
+};
 assert.equal((backlog as unknown as Record<string, unknown>).generated_at, undefined, 'source-controlled research backlog must not embed a runtime timestamp');
 assert.equal((backlog as unknown as Record<string, unknown>).generation_policy, 'deterministic_source_controlled_artifact');
 assert.equal(backlog.items.length, 40, 'research backlog must contain the requested 30–50 candidates');
 assert.deepEqual(backlog.items.map(item => item.rank), Array.from({ length: 40 }, (_, index) => index + 1));
 for (const item of backlog.items) {
-  assert.ok(item.gap_fields.length > 0 || item.reviewed_unknown_fields.length > 0, `${item.species_id} backlog item must expose an actionable gap or reviewed evidence limit`);
+  const hasTargetedExpansion = item.reviewed_unknown_resolutions.some(resolution => resolution.mode === 'targeted_source_expansion');
+  assert.ok(item.gap_fields.length > 0 || hasTargetedExpansion, `${item.species_id} active backlog item must expose an actionable gap or targeted source expansion`);
   assert.ok(item.gap_fields.every(field => ['needs_research', 'template_only'].includes(item.field_status[field])), `${item.species_id} actionable gaps must remain explicit`);
   assert.ok(item.reviewed_unknown_fields.every(field => item.field_status[field] === 'reviewed_unknown'), `${item.species_id} reviewed_unknown fields must be derived from field status`);
   assert.ok(item.research_reason.length > 0, `${item.species_id} backlog item must explain why it is queued`);
 }
+assert.ok(backlog.terminal_holds.length > 0, 'fully blocked evidence/identity holds must remain explicitly auditable outside the active queue');
+for (const hold of backlog.terminal_holds) {
+  assert.ok(hold.reviewed_unknown_resolutions.length > 0, `${hold.species_id} terminal hold must retain reviewed unknown resolutions`);
+  assert.ok(hold.reviewed_unknown_resolutions.every(resolution => resolution.mode === 'do_not_repeat_ordinary_research'), `${hold.species_id} terminal hold must contain only do-not-repeat resolutions`);
+}
+assert.ok(backlog.terminal_holds.some(hold => hold.species_id === 'sp_0002'), 'crystal shrimp identity boundary must be kept as a terminal hold instead of consuming active backlog capacity');
 const neonTetra = matrix.rows.find(row => row.species_id === 'sp_0431');
 assert.equal(neonTetra?.field_status.feeding, 'reviewed_supported', 'neon tetra feeding must use the reviewed husbandry expansion source');
 assert.equal(neonTetra?.field_status.care, 'reviewed_supported', 'neon tetra care must use the reviewed husbandry expansion source');

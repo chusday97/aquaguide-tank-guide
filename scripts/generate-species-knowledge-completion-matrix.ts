@@ -267,8 +267,18 @@ const rows = fishData.map((fish) => {
   };
 });
 
+const isActionableResearchRow = (row: typeof rows[number]) => (
+  row.gap_fields.length > 0
+  || row.reviewed_unknown_resolutions.some(item => item.mode === 'targeted_source_expansion')
+);
+const isTerminalEvidenceHold = (row: typeof rows[number]) => (
+  row.gap_fields.length === 0
+  && row.reviewed_unknown_resolutions.length > 0
+  && row.reviewed_unknown_resolutions.every(item => item.mode === 'do_not_repeat_ordinary_research')
+);
+
 const backlog = rows
-  .filter(row => row.life_type !== 'hardscape' && (row.gap_fields.length > 0 || row.reviewed_unknown_fields.length > 0))
+  .filter(row => row.life_type !== 'hardscape' && isActionableResearchRow(row))
   .sort((a, b) => b.priority_score - a.priority_score || a.species_id.localeCompare(b.species_id))
   .slice(0, 40)
   .map((row, index) => ({
@@ -280,15 +290,31 @@ const backlog = rows
     ],
   }));
 
+const terminalHolds = rows
+  .filter(row => row.life_type !== 'hardscape' && isTerminalEvidenceHold(row))
+  .sort((a, b) => b.priority_score - a.priority_score || a.species_id.localeCompare(b.species_id))
+  .map(row => ({
+    species_id: row.species_id,
+    common_name: row.common_name,
+    scientific_name: row.scientific_name,
+    reviewed_unknown_resolutions: row.reviewed_unknown_resolutions,
+    hold_reason: 'All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity.',
+  }));
+
 const counts = Object.fromEntries(fields.map(field => [field, Object.fromEntries((['reviewed_supported', 'reviewed_unknown', 'inherited_reviewed', 'not_applicable', 'needs_research', 'template_only'] as FieldStatus[]).map(status => [status, rows.filter(row => row.field_status[field] === status).length]))]));
-const matrix = { catalog_object_count: rows.length, fields, rows, status_counts: counts, source_conflicts: reviewedSourceConflicts, backlog_size: backlog.length, backlog_scope: 'Top 40 research candidates; reviewed authority is recorded in source-controlled modules and this backlog is regenerated after each batch.', generation_policy: 'deterministic_source_controlled_artifact' };
+const matrix = { catalog_object_count: rows.length, fields, rows, status_counts: counts, source_conflicts: reviewedSourceConflicts, backlog_size: backlog.length, terminal_hold_count: terminalHolds.length, backlog_scope: 'Top 40 actionable research candidates only; do-not-repeat evidence/identity holds are tracked separately and do not consume active research capacity.', generation_policy: 'deterministic_source_controlled_artifact' };
 writeFileSync(`${outputDir}/species_knowledge_completion_matrix.json`, `${JSON.stringify(matrix, null, 2)}\n`);
 const csvEscape = (value: unknown) => `"${String(value ?? '').replaceAll('"', '""')}"`;
 const csvHeader = ['species_id', 'common_name', 'scientific_name', 'life_type', 'category', ...fields.flatMap(field => fields.includes(field) ? [`${field}_status`] : []), 'gap_fields', 'commonness_proxy', 'risk_proxy', 'priority_score'];
 const csv = [csvHeader.join(','), ...rows.map(row => [row.species_id, row.common_name, row.scientific_name, row.life_type, row.category, ...fields.map(field => row.field_status[field]), row.gap_fields.join('|'), row.commonness_proxy, row.risk_proxy, row.priority_score].map(csvEscape).join(','))].join('\n');
 writeFileSync(`${outputDir}/species_knowledge_completion_matrix.csv`, `${csv}\n`);
-writeFileSync(`${outputDir}/species_knowledge_research_backlog.json`, `${JSON.stringify({ generation_policy: 'deterministic_source_controlled_artifact', selection: 'Queue separates actionable needs_research/template_only gaps from reviewed_unknown. Each reviewed_unknown field is classified as targeted_source_expansion or do_not_repeat_ordinary_research using explicit evidence-ceiling and catalog-identity authorities. targeted_source_expansion means the current reviewed source was insufficient and a different field-specific source class should be researched; evidence-ceiling/identity-blocked unknowns remain visible without being rewarded for repeated research. No user telemetry was inferred.', items: backlog }, null, 2)}\n`);
-const markdown = ['# Species Knowledge Research Backlog', '', `Generated from ${rows.length} catalog objects. Reviewed authority is recorded in source-controlled modules; this queue distinguishes actionable gaps from evidence-limited reviewed unknowns.`, '', '> `reviewed_unknown` is a valid reviewed terminal state. `targeted_source_expansion` means the source reviewed so far was insufficient, so research should switch to a different field-specific authority rather than repeat the same source class. `do_not_repeat_ordinary_research` means an explicit evidence ceiling or catalog identity boundary already blocks ordinary repeated searching.', '', '| Rank | Species | Life type | Open / evidence-limited fields | Commonness proxy | Risk proxy | Score |', '|---:|---|---|---|---|---|---:|', ...backlog.map(item => `| ${item.rank} | ${item.common_name} (${item.species_id}) | ${item.life_type} | ${item.research_reason.join(', ')} | ${item.commonness_proxy} | ${item.risk_proxy} | ${item.priority_score} |`), '', 'Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Evidence-limited items remain visible for planning, but only actionable gaps and targeted source-expansion candidates increase research priority.'].join('\n');
+writeFileSync(`${outputDir}/species_knowledge_research_backlog.json`, `${JSON.stringify({
+  generation_policy: 'deterministic_source_controlled_artifact',
+  selection: 'Active queue contains only actionable needs_research/template_only gaps or reviewed_unknown fields that require targeted_source_expansion. Fully blocked do_not_repeat_ordinary_research rows are tracked separately as terminal holds so they remain visible without consuming active research capacity. No user telemetry was inferred.',
+  items: backlog,
+  terminal_holds: terminalHolds,
+}, null, 2)}\n`);
+const markdown = ['# Species Knowledge Research Backlog', '', `Generated from ${rows.length} catalog objects. Active research capacity is reserved for actionable gaps and targeted source expansion; ${terminalHolds.length} fully blocked evidence/identity holds are tracked separately.`, '', '> `reviewed_unknown` is a valid reviewed terminal state. `targeted_source_expansion` means the source reviewed so far was insufficient, so research should switch to a different field-specific authority rather than repeat the same source class. `do_not_repeat_ordinary_research` means an explicit evidence ceiling or catalog identity boundary already blocks ordinary repeated searching and is excluded from the active Top 40 when no actionable field remains.', '', '| Rank | Species | Life type | Actionable / evidence-limited fields | Commonness proxy | Risk proxy | Score |', '|---:|---|---|---|---|---|---:|', ...backlog.map(item => `| ${item.rank} | ${item.common_name} (${item.species_id}) | ${item.life_type} | ${item.research_reason.join(', ')} | ${item.commonness_proxy} | ${item.risk_proxy} | ${item.priority_score} |`), '', `Terminal holds excluded from active queue: ${terminalHolds.length}.`, '', 'Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Fully blocked do-not-repeat rows stay auditable in JSON but do not displace actionable research candidates.'].join('\n');
 writeFileSync(`${outputDir}/species_knowledge_research_backlog.md`, `${markdown}\n`);
 console.log(`species knowledge completion matrix: ${rows.length} catalog objects, ${backlog.length} prioritized research candidates`);
 console.log(JSON.stringify(counts, null, 2));
