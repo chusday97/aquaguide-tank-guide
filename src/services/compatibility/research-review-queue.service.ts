@@ -1,10 +1,12 @@
 import { createHash } from 'node:crypto';
 import { isCompatibilityResearchClaimScopeEligible } from './species-onboarding-research.service';
+import { hasExhaustedCompatibilitySpecializedRoutes } from './source-strategy-resolver.service';
 
 export type CompatibilityResearchReviewQueueKind =
   | 'field_review'
   | 'targeted_source_expansion'
   | 'source_strategy_review'
+  | 'evidence_ceiling_review'
   | 'identity_review'
   | 'identity_provider_retry'
   | 'source_snapshot_retry'
@@ -34,6 +36,7 @@ export type CompatibilityResearchHistory = {
   attemptedUrls: string[];
   attemptedSourceTypes: string[];
   preferredNextSourceTypes: string[];
+  attemptedRouteIds: string[];
 };
 
 const sourceExpansionPriority = [
@@ -108,7 +111,14 @@ const stringArray = (value: unknown) => Array.isArray(value)
 const queueFor = (result: BatchResult): CompatibilityResearchReviewQueueKind | null => {
   const current = result.workItem?.queue;
   if (current === 'gap_review') return 'field_review';
-  if (current === 'evidence_gap') return 'targeted_source_expansion';
+  if (current === 'evidence_gap') {
+    const requested = new Set(stringArray(result.requestedGapFields));
+    const fields = Array.isArray(result.reviewPacket?.fields) ? result.reviewPacket.fields : [];
+    const hasSupportedRequestedField = fields.some((field: Record<string, unknown>) => (
+      field.status === 'supported' && requested.has(String(field.field || ''))
+    ));
+    return hasSupportedRequestedField ? 'field_review' : 'targeted_source_expansion';
+  }
   if (current === 'identity_review') {
     const status = result.identity?.status;
     const reasons = stringArray(result.reasonCodes ?? result.workItem?.reasonCodes);
@@ -206,6 +216,7 @@ const historyFromItem = (
     preferredNextSourceTypes: preferredNextSourceTypes.length > 0
       ? [...preferredNextSourceTypes]
       : [...sourceExpansionPriority],
+    attemptedRouteIds: [...new Set(item.researchHistory?.attemptedRouteIds || [])],
   };
 };
 
@@ -222,15 +233,21 @@ const normalizeQueueItem = (
   item: CompatibilityResearchReviewQueueItem,
 ): CompatibilityResearchReviewQueueItem => {
   const researchHistory = historyFromItem(item);
-  const queue = shouldEscalateSourceStrategy(item.queue, researchHistory)
+  const sourceStrategyQueue = shouldEscalateSourceStrategy(item.queue, researchHistory)
     ? 'source_strategy_review' as const
     : item.queue;
+  const queue = sourceStrategyQueue === 'source_strategy_review'
+    && hasExhaustedCompatibilitySpecializedRoutes(item.unresolvedFields, researchHistory.attemptedRouteIds)
+    ? 'evidence_ceiling_review' as const
+    : sourceStrategyQueue;
   return {
     ...item,
     queue,
-    reasonCodes: queue === 'source_strategy_review'
-      ? [...new Set([...item.reasonCodes, 'generic_source_strategy_exhausted'])]
-      : item.reasonCodes,
+    reasonCodes: queue === 'evidence_ceiling_review'
+      ? [...new Set([...item.reasonCodes, 'generic_source_strategy_exhausted', 'specialized_source_routes_exhausted'])]
+      : queue === 'source_strategy_review'
+        ? [...new Set([...item.reasonCodes, 'generic_source_strategy_exhausted'])]
+        : item.reasonCodes,
     researchHistory,
     nextResearch: queue === 'targeted_source_expansion' ? {
       mode: 'targeted_source_expansion',
@@ -259,6 +276,10 @@ const buildResearchHistory = (
     ...(previous?.verifiedSources || []).map(source => source.sourceType),
     ...verifiedSources.map(source => source.sourceType),
   ])];
+  const attemptedRouteIds = [...new Set([
+    ...(previous?.researchHistory?.attemptedRouteIds || []),
+    ...stringArray(acquisition?.attemptedRouteIds),
+  ])];
   const preferredNextSourceTypes = sourceExpansionPriority
     .filter(sourceType => !attemptedSourceTypes.includes(sourceType));
   return {
@@ -271,6 +292,7 @@ const buildResearchHistory = (
     preferredNextSourceTypes: preferredNextSourceTypes.length > 0
       ? [...preferredNextSourceTypes]
       : [...sourceExpansionPriority],
+    attemptedRouteIds,
   };
 };
 
@@ -335,11 +357,18 @@ export const buildCompatibilityResearchReviewManifest = (
         : (queue === 'field_review' || queue === 'onboarding_review') && !sourceSnapshotsComplete
           ? 'source_snapshot_retry' as const
           : queue;
-      const effectiveQueue = shouldEscalateSourceStrategy(preEscalationQueue, researchHistory)
+      const sourceStrategyQueue = shouldEscalateSourceStrategy(preEscalationQueue, researchHistory)
         ? 'source_strategy_review' as const
         : preEscalationQueue;
-      const effectiveUnresolvedFields = effectiveQueue === 'targeted_source_expansion' || effectiveQueue === 'source_strategy_review'
-        ? (researchScopeUnresolved.length > 0 ? researchScopeUnresolved : requestedGapFields)
+      const remainingFields = researchScopeUnresolved.length > 0 ? researchScopeUnresolved : requestedGapFields;
+      const effectiveQueue = sourceStrategyQueue === 'source_strategy_review'
+        && hasExhaustedCompatibilitySpecializedRoutes(remainingFields, researchHistory.attemptedRouteIds)
+        ? 'evidence_ceiling_review' as const
+        : sourceStrategyQueue;
+      const effectiveUnresolvedFields = effectiveQueue === 'targeted_source_expansion'
+        || effectiveQueue === 'source_strategy_review'
+        || effectiveQueue === 'evidence_ceiling_review'
+        ? remainingFields
         : unresolvedFields;
       const item: CompatibilityResearchReviewQueueItem = {
         id,
@@ -352,13 +381,20 @@ export const buildCompatibilityResearchReviewManifest = (
         sourceReportGeneratedAt: typeof report.generatedAt === 'string' ? report.generatedAt : null,
         sourceQueue: String(result.workItem?.queue || ''),
         queue: effectiveQueue,
-        reasonCodes: effectiveQueue === 'source_strategy_review'
+        reasonCodes: effectiveQueue === 'evidence_ceiling_review'
           ? [...new Set([
             ...reasonCodes,
             ...(reviewCandidateRejected ? ['review_candidate_scope_rejected'] : []),
             'generic_source_strategy_exhausted',
+            'specialized_source_routes_exhausted',
           ])]
-          : reviewCandidateRejected
+          : effectiveQueue === 'source_strategy_review'
+            ? [...new Set([
+              ...reasonCodes,
+              ...(reviewCandidateRejected ? ['review_candidate_scope_rejected'] : []),
+              'generic_source_strategy_exhausted',
+            ])]
+            : reviewCandidateRejected
             ? [...new Set([...reasonCodes, 'review_candidate_scope_rejected'])]
             : effectiveQueue === 'source_snapshot_retry'
               ? [...new Set([...reasonCodes, 'review_source_snapshot_missing'])]
@@ -401,6 +437,7 @@ export const buildCompatibilityResearchReviewManifest = (
     field_review: 0,
     targeted_source_expansion: 0,
     source_strategy_review: 0,
+    evidence_ceiling_review: 0,
     identity_review: 0,
     identity_provider_retry: 0,
     source_snapshot_retry: 0,

@@ -274,6 +274,75 @@ assert.equal(strategyReview.requiresHumanReview, false, 'source-strategy review 
 assert.ok(strategyReview.reasonCodes.includes('generic_source_strategy_exhausted'));
 assert.deepEqual(strategyReview.unresolvedFields, ['predation']);
 
+assert.deepEqual(strategyReview.researchHistory.attemptedRouteIds, []);
+
+const exhaustedSpecializedBase = JSON.parse(JSON.stringify(exhaustedGenericSearch));
+exhaustedSpecializedBase.items[0].researchHistory.attemptedRouteIds = [
+  'predation_peer_reviewed_diet',
+  'predation_government_ecology',
+  'predation_university_ecology',
+];
+const evidenceCeiling = buildCompatibilityResearchReviewManifest([], '2026-10-16T16:10:00.000Z', exhaustedSpecializedBase);
+assert.equal(evidenceCeiling.summary.source_strategy_review, 0);
+assert.equal(evidenceCeiling.summary.evidence_ceiling_review, 1);
+assert.equal(evidenceCeiling.items[0]?.queue, 'evidence_ceiling_review');
+assert.equal(evidenceCeiling.items[0]?.requiresHumanReview, false);
+assert.equal(evidenceCeiling.items[0]?.nextResearch, null);
+assert.ok(evidenceCeiling.items[0]?.reasonCodes.includes('specialized_source_routes_exhausted'));
+
+const partialSpecializedResult = buildCompatibilityResearchReviewManifest([{
+  sourcePath: 'partial-specialized.json',
+  report: {
+    pages: [{
+      results: [{
+        researchKey: 'Partialus evidence',
+        scientificName: 'Partialus evidence',
+        catalogObjects: [{ speciesId: 'sp_partial', name: 'Partial', scientificName: 'Partialus evidence', isVariant: false, isExactBaseTaxon: true }],
+        requestedGapFields: ['ph', 'predation'],
+        researchScope: { unresolvedFields: ['predation'], complete: false },
+        identity: { status: 'verified', canonicalName: 'Partialus evidence', reasonCode: 'gbif_exact_accepted_species' },
+        workItem: { queue: 'evidence_gap', reasonCodes: ['field_missing_predation'] },
+        packet: { sources: [{ id: 'source-ph', url: 'https://example.edu/ph', title: 'pH', publisher: 'Example University', sourceType: 'university', contentVerified: true }] },
+        reviewPacket: { fields: [{
+          field: 'ph',
+          status: 'supported',
+          proposedValue: { min: 7, max: 8 },
+          sourceIds: ['source-ph'],
+          notes: ['The exact taxon is maintained at pH 7.0-8.0 in routine captive husbandry.'],
+          draftReview: { confidence: 'high' },
+        }, {
+          field: 'predation',
+          status: 'missing',
+          sourceIds: [],
+          notes: [],
+        }] },
+        resumeBundle: {
+          acquisition: {
+            attemptedUrls: ['https://example.edu/ph'],
+            round: 3,
+            preferredSourceTypes: ['peer_reviewed'],
+            attemptedRouteIds: ['ph_institutional_husbandry'],
+          },
+          documents: [{
+            id: 'source-ph',
+            url: 'https://example.edu/ph',
+            title: 'pH',
+            publisher: 'Example University',
+            sourceType: 'university',
+            text: 'raw',
+            contentSha256: 'ph-hash',
+          }],
+        },
+      }],
+    }],
+  },
+}], '2026-10-16T16:20:00.000Z');
+assert.equal(partialSpecializedResult.summary.field_review, 1, 'supported requested fields must survive even when another requested field remains unresolved');
+assert.deepEqual(partialSpecializedResult.items[0]?.fieldCandidates.map(item => item.field), ['ph']);
+assert.deepEqual(partialSpecializedResult.items[0]?.unresolvedFields, ['predation']);
+assert.deepEqual(partialSpecializedResult.items[0]?.researchHistory.attemptedRouteIds, ['ph_institutional_husbandry']);
+
+
 const brokenSnapshotReport = {
   pages: [{
     results: [{

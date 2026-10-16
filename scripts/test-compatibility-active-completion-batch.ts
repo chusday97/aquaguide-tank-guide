@@ -24,6 +24,12 @@ assert.deepEqual(selected.jobs.map(job => job.researchKey), expectedActive.map(j
 assert.ok(selected.jobs.length > 0, 'active completion queue should contain current non-terminal research work');
 const filtered = selectCompatibilityResearchBatchJobs('active_completion', [selected.jobs[0].researchKey]);
 assert.deepEqual(filtered.jobs.map(job => job.researchKey), [selected.jobs[0].researchKey], 'targeted expansion must select only manifest-requested research keys');
+const excluded = selectCompatibilityResearchBatchJobs(
+  'active_completion',
+  [],
+  [selected.jobs[0].researchKey],
+);
+assert.equal(excluded.jobs.some(job => job.researchKey === selected.jobs[0].researchKey), false, 'persisted evidence ceiling keys must be excludable from future active completion runs');
 assert.ok(selected.jobs.every(job => job.catalogObjects.every(object => (
   (rows.get(object.speciesId)?.terminalGapCount ?? 0) === 0
 ))), 'terminal-held catalog objects must never enter active completion research');
@@ -116,5 +122,8 @@ assert.deepEqual(sourceStrategy.preferredSourceTypes.slice(0, 3), ['government',
 const runnerSource = readFileSync('scripts/run-compatibility-active-completion-batch.ts', 'utf8');
 assert.match(runnerSource, /arg\('offset'\)/, 'active completion runner must support offset-based resume without replaying completed research jobs');
 assert.match(runnerSource, /ACTIVE_COMPLETION_CHECKPOINT/, 'active completion runner must persist and expose page checkpoints during long research batches');
+assert.match(runnerSource, /evidence_ceiling_review/, 'active completion runner must report persisted evidence ceilings so exhausted taxa are not silently reopened');
+assert.match(runnerSource, /persistedReviewResearchKeys/, 'active completion runner must exclude all persisted review-state taxa from generic research');
+assert.match(runnerSource, /include-persisted-review/, 'reopening persisted review-state research must require an explicit runner override');
 
 console.log('Compatibility active-completion batch PASS: queue membership is derived from current non-terminal coverage, scoped gap research is reviewed without redoing existing authority, and all retry/hold outcomes stay fail-closed.');

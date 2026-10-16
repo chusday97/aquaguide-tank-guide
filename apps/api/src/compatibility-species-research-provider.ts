@@ -11,6 +11,7 @@ import {
   type CompatibilitySpeciesResearchPacket,
   type CompatibilitySpeciesResearchProvider,
 } from '../../../src/services/compatibility/species-onboarding-research.service';
+import type { CompatibilitySpecializedSourceRoute } from '../../../src/services/compatibility/source-strategy-resolver.service';
 
 type FetchLike = typeof fetch;
 
@@ -80,6 +81,7 @@ export type CompatibilityResearchDiscoveryContext = {
   attemptedUrls?: string[];
   attemptedSourceTypes?: CatalogEvidenceSource['sourceType'][];
   round?: number;
+  specializedRoutes?: CompatibilitySpecializedSourceRoute[];
 };
 
 export type CompatibilityResearchSourceStrategy = {
@@ -121,6 +123,7 @@ export type CompatibilityResearchResumeBundle = {
     attemptedUrls: string[];
     round: number;
     preferredSourceTypes: CatalogEvidenceSource['sourceType'][];
+    attemptedRouteIds?: string[];
   };
 };
 
@@ -173,6 +176,14 @@ const DEFAULT_TRUSTED_DOMAIN_TYPES: Array<{
   { domain: 'animaldiversity.org', sourceType: 'university', publisher: 'Animal Diversity Web, University of Michigan' },
   { domain: 'fishipedia.fr', sourceType: 'curated_husbandry', publisher: 'Fishipedia' },
   { domain: 'iucnredlist.org', sourceType: 'professional_association', publisher: 'IUCN Red List' },
+  { domain: 'pubmed.ncbi.nlm.nih.gov', sourceType: 'peer_reviewed', publisher: 'PubMed / NCBI' },
+  { domain: 'pmc.ncbi.nlm.nih.gov', sourceType: 'peer_reviewed', publisher: 'PubMed Central / NCBI' },
+  { domain: 'jstage.jst.go.jp', sourceType: 'peer_reviewed', publisher: 'J-STAGE' },
+  { domain: 'journals.plos.org', sourceType: 'peer_reviewed', publisher: 'PLOS' },
+  { domain: 'frontiersin.org', sourceType: 'peer_reviewed', publisher: 'Frontiers' },
+  { domain: 'academic.oup.com', sourceType: 'peer_reviewed', publisher: 'Oxford Academic' },
+  { domain: 'link.springer.com', sourceType: 'peer_reviewed', publisher: 'Springer' },
+  { domain: 'aza.org', sourceType: 'professional_association', publisher: 'Association of Zoos and Aquariums' },
 ];
 
 const normalizeHost = (host: string) => host.toLowerCase().replace(/^www\./, '');
@@ -195,6 +206,20 @@ const isAllowedPlanetCatfishPath = (url: URL) => {
   return /^\/[a-z0-9][a-z0-9_-]*\/?$/.test(path);
 };
 
+const isAllowedPeerReviewedLandingPage = (url: URL) => {
+  const host = normalizeHost(url.hostname);
+  const path = url.pathname;
+
+  if (domainMatches(host, 'pubmed.ncbi.nlm.nih.gov')) return /^\/\d+\/?$/.test(path);
+  if (domainMatches(host, 'pmc.ncbi.nlm.nih.gov')) return /^\/articles\/PMC\d+\/?$/i.test(path);
+  if (domainMatches(host, 'jstage.jst.go.jp')) return path.startsWith('/article/') && /\/_article\/?$/.test(path);
+  if (domainMatches(host, 'journals.plos.org')) return /\/article\/?$/.test(path) && /^10\./.test(url.searchParams.get('id') || '');
+  if (domainMatches(host, 'frontiersin.org')) return path.includes('/articles/');
+  if (domainMatches(host, 'academic.oup.com')) return path.includes('/article/');
+  if (domainMatches(host, 'link.springer.com')) return path.startsWith('/article/');
+  return true;
+};
+
 const classifyTrustedSource = (url: URL): {
   sourceType: CatalogEvidenceSource['sourceType'];
   publisher: string;
@@ -205,7 +230,10 @@ const classifyTrustedSource = (url: URL): {
     return { sourceType: 'curated_husbandry', publisher: 'PlanetCatfish' };
   }
   const explicit = DEFAULT_TRUSTED_DOMAIN_TYPES.find(item => domainMatches(host, item.domain));
-  if (explicit) return { sourceType: explicit.sourceType, publisher: explicit.publisher };
+  if (explicit) {
+    if (explicit.sourceType === 'peer_reviewed' && !isAllowedPeerReviewedLandingPage(url)) return null;
+    return { sourceType: explicit.sourceType, publisher: explicit.publisher };
+  }
 
   if (host.endsWith('.gov') || host.includes('.gov.')) {
     return { sourceType: 'government', publisher: url.hostname };
@@ -251,6 +279,11 @@ const canonicalSourceUrl = (raw: string) => {
   url.hash = '';
   if (url.pathname.length > 1) url.pathname = url.pathname.replace(/\/+$/, '');
   return url.toString();
+};
+
+export const classifyCompatibilityTrustedSourceUrl = (raw: string) => {
+  const url = safePublicSourceUrl(raw);
+  return url ? classifyTrustedSource(url) : null;
 };
 
 export const buildCompatibilityResearchSourceStrategy = (
@@ -435,6 +468,7 @@ const searchPromptFor = (
   commonName?: string,
   targetFields: CompatibilityOnboardingCoreField[] = [],
   discoveryContext: CompatibilityResearchDiscoveryContext = {},
+  specializedRoute?: CompatibilitySpecializedSourceRoute,
 ) => {
   const strategy = buildCompatibilityResearchSourceStrategy(discoveryContext);
   return [
@@ -443,6 +477,13 @@ const searchPromptFor = (
     : 'Find exact-taxon sources for aquarium Compatibility research.',
   'Scientific name: ' + scientificName,
   commonName ? 'Common name: ' + commonName : '',
+  specializedRoute ? 'SPECIALIZED SOURCE ROUTE: ' + specializedRoute.id : '',
+  specializedRoute ? 'Route field: ' + specializedRoute.field : '',
+  specializedRoute ? 'Route source classes: ' + specializedRoute.sourceTypes.join(', ') : '',
+  specializedRoute ? 'Preferred domains: ' + specializedRoute.domainHints.join(', ') : '',
+  specializedRoute ? 'Search concepts: ' + specializedRoute.queryHints.join(', ') : '',
+  specializedRoute ? 'Direct evidence rule: ' + specializedRoute.evidenceRule : '',
+  specializedRoute ? 'Do not return generic FishBase / Seriously Fish / Fishipedia / Animal Diversity pages already covered by ordinary research unless the exact URL is new and directly satisfies this route.' : '',
   targetFields.length > 0 ? 'Target evidence fields: ' + targetFields.join(', ') : '',
   ...targetFields.map(field => field + ': ' + fieldSearchHints[field]),
   targetFields.length > 0
@@ -472,43 +513,58 @@ const discoveryCandidates = async (
 ): Promise<string[]> => {
   const strategy = buildCompatibilityResearchSourceStrategy(discoveryContext);
   const attempted = new Set(strategy.attemptedUrls);
-  const trustedCandidates = trustedTemplateCandidates(scientificName)
+  const specializedRoutes = discoveryContext.specializedRoutes || [];
+  const trustedCandidates = specializedRoutes.length > 0 ? [] : trustedTemplateCandidates(scientificName)
     .filter(raw => {
       const canonical = canonicalSourceUrl(raw);
       return canonical && !attempted.has(canonical);
     });
-  let modelCandidates: string[] = [];
+  const modelCandidateBatches: string[][] = [];
+  const searchRoutes: Array<CompatibilitySpecializedSourceRoute | undefined> = specializedRoutes.length > 0
+    ? specializedRoutes
+    : [undefined];
 
-  try {
-    const output = await postJson<SearchOutput>(searchOutputSchema, {
-      ...config,
-      timeoutMs: Math.min(config.timeoutMs, 5_000),
-    }, fetchImpl, {
-      stream: false,
-      temperature: 0,
-      max_tokens: 1200,
-      enable_thinking: false,
-      enable_search: true,
-      search_options: {
-        forced_search: true,
-        search_strategy: 'max',
-      },
-      response_format: { type: 'json_object' },
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a source-discovery worker. Web search is mandatory. Return candidate source URLs only as strict JSON. Never fabricate a URL.',
+  for (const specializedRoute of searchRoutes) {
+    try {
+      const routeFields = specializedRoute ? [specializedRoute.field] : targetFields;
+      const output = await postJson<SearchOutput>(searchOutputSchema, {
+        ...config,
+        timeoutMs: Math.min(config.timeoutMs, 7_000),
+      }, fetchImpl, {
+        stream: false,
+        temperature: 0,
+        max_tokens: 1200,
+        enable_thinking: false,
+        enable_search: true,
+        search_options: {
+          forced_search: true,
+          search_strategy: 'max',
         },
-        {
-          role: 'user',
-          content: searchPromptFor(scientificName, commonName, targetFields, discoveryContext),
-        },
-      ],
-    });
-    modelCandidates = output.candidates.map(item => item.url);
-  } catch {
-    // Model search is supplementary discovery only. Deterministic trusted templates
-    // must remain usable when search is empty, malformed, unavailable, or slow.
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a source-discovery worker. Web search is mandatory. Return candidate source URLs only as strict JSON. Never fabricate a URL. When a specialized route is provided, stay within its evidence question and preferred source channels.',
+          },
+          {
+            role: 'user',
+            content: searchPromptFor(scientificName, commonName, routeFields, discoveryContext, specializedRoute),
+          },
+        ],
+      });
+      modelCandidateBatches.push(output.candidates.slice(0, 3).map(item => item.url));
+    } catch {
+      // Each route is independent. One empty/malformed/slow route must not block the others.
+    }
+  }
+
+  const modelCandidates: string[] = [];
+  const maxBatchLength = Math.max(0, ...modelCandidateBatches.map(batch => batch.length));
+  for (let candidateIndex = 0; candidateIndex < maxBatchLength; candidateIndex += 1) {
+    for (const batch of modelCandidateBatches) {
+      const candidate = batch[candidateIndex];
+      if (candidate) modelCandidates.push(candidate);
+    }
   }
 
   const deduped: string[] = [];
@@ -1216,10 +1272,13 @@ export const researchCompatibilitySpeciesWithResume = async (
   const targetFields = input.targetFields ?? [];
   const strategy = buildCompatibilityResearchSourceStrategy(options.discoveryContext);
   const attempted = new Set(strategy.attemptedUrls);
+  const specializedRoutes = options.discoveryContext?.specializedRoutes || [];
   const candidates = options.skipModelDiscovery
-    ? trustedTemplateCandidates(input.scientificName)
-      .map(canonicalSourceUrl)
-      .filter((value): value is string => Boolean(value) && !attempted.has(value))
+    ? specializedRoutes.length > 0
+      ? []
+      : trustedTemplateCandidates(input.scientificName)
+        .map(canonicalSourceUrl)
+        .filter((value): value is string => Boolean(value) && !attempted.has(value))
     : await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName, targetFields, options.discoveryContext);
   const acquisition = await verifiedDocumentsDetailed(candidates, input.scientificName, config, fetchImpl);
   const documents = acquisition.documents;
@@ -1243,6 +1302,7 @@ export const researchCompatibilitySpeciesWithResume = async (
         attemptedUrls: [...new Set(acquisition.diagnostics.map(item => canonicalSourceUrl(item.requestedUrl) ?? item.requestedUrl))],
         round: strategy.round + 1,
         preferredSourceTypes: strategy.preferredSourceTypes,
+        attemptedRouteIds: specializedRoutes.map(route => route.id),
       },
     },
   };

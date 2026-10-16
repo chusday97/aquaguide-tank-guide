@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { probeCompatibilityResearchProvider } from '../apps/api/src/compatibility-species-research-provider';
 import { runCompatibilityResearchBatchPreview, type CompatibilityResearchWorkQueue } from '../apps/api/src/compatibility-research-batch';
@@ -13,6 +13,21 @@ const concurrency = Math.max(1, Math.min(2, Number(arg('concurrency') || 2)));
 const maxJobs = Math.max(1, Number(arg('max-jobs') || 999));
 const startOffset = Math.max(0, Number(arg('offset') || 0));
 const output = arg('output') || 'evaluation/reports/compatibility-active-completion-batch.json';
+const reviewQueuePath = arg('review-queue') || 'evaluation/product/compatibility-research-review-queue.v1.json';
+const includePersistedReview = arg('include-persisted-review') === 'true';
+type PersistedReviewQueueItem = { queue?: string; researchKey?: string };
+const persistedReviewItems: PersistedReviewQueueItem[] = existsSync(reviewQueuePath)
+  ? (JSON.parse(readFileSync(reviewQueuePath, 'utf8')).items || []) as PersistedReviewQueueItem[]
+  : [];
+const evidenceCeilingResearchKeys = [...new Set(persistedReviewItems
+  .filter(item => item.queue === 'evidence_ceiling_review')
+  .map(item => item.researchKey)
+  .filter((value): value is string => typeof value === 'string' && value.length > 0))];
+const persistedReviewResearchKeys = includePersistedReview
+  ? []
+  : [...new Set(persistedReviewItems
+    .map(item => item.researchKey)
+    .filter((value): value is string => typeof value === 'string' && value.length > 0))];
 const preflight = await probeCompatibilityResearchProvider();
 const extractionMode = preflight.status === 'ready' ? 'normal' as const : 'source_only' as const;
 let offset = startOffset;
@@ -33,6 +48,9 @@ const buildReport = (complete: boolean) => ({
   generatedAt: new Date().toISOString(),
   queueMode: 'active_completion' as const,
   extractionMode,
+  reviewQueuePath,
+  evidenceCeilingExcluded: evidenceCeilingResearchKeys.length,
+  persistedReviewExcluded: persistedReviewResearchKeys.length,
   startOffset,
   nextOffset: complete ? null : offset,
   complete,
@@ -56,6 +74,7 @@ while (processed < maxJobs) {
     queueMode: 'active_completion',
     extractionMode,
     captureResume: true,
+    excludeResearchKeys: persistedReviewResearchKeys,
   });
   if (result.status === 'provider_unavailable' && extractionMode === 'normal') {
     throw new Error('compatibility_research_provider_not_configured');
@@ -77,6 +96,8 @@ writeFileSync(output, JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify({
   providerPreflight: report.providerPreflight,
   extractionMode: report.extractionMode,
+  evidenceCeilingExcluded: report.evidenceCeilingExcluded,
+  persistedReviewExcluded: report.persistedReviewExcluded,
   startOffset: report.startOffset,
   processedJobs: report.processedJobs,
   totalActiveJobs: report.totalActiveJobs,
