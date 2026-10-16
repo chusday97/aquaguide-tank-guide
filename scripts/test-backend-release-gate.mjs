@@ -37,6 +37,7 @@ const gates = [
   ['Compatibility Predation Wave24', 'npm', ['run', 'test:compatibility-predation-wave24']],
   ['Compatibility Research Direct Wave25', 'npm', ['run', 'test:compatibility-research-direct-wave25']],
   ['Compatibility Predation Negative Wave26', 'npm', ['run', 'test:compatibility-predation-negative-wave26']],
+  ['Compatibility Direct Water Wave27', 'npm', ['run', 'test:compatibility-water-wave27']],
   ['Compatibility Chrysiptera Production Reconciliation Guard', 'npm', ['run', 'test:compatibility-chrysiptera-production-reconciliation-guard']],
   ['Chrysiptera Content Republish Guard', 'npm', ['run', 'test:chrysiptera-content-republish-guard']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],

@@ -18,9 +18,9 @@
   "domainOrIdentityHeldSpecies": 282,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 132,
+      "reviewed_supported": 145,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 61,
+      "reviewed_unknown": 48,
       "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -92,16 +92,16 @@
       "count": 62
     },
     {
-      "field": "water",
-      "count": 61
-    },
-    {
       "field": "temperature",
       "count": 57
     },
     {
       "field": "adult_size",
       "count": 54
+    },
+    {
+      "field": "water",
+      "count": 48
     },
     {
       "field": "predation",
@@ -5182,18 +5182,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch31-fishbase-sphaerichthys-osphromenoides"
+            "batch32-fishbase-sphaerichthys-osphromenoides"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -5267,18 +5267,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch31-fishbase-semaprochilodus-insignis"
+            "fishipedia-semaprochilodus-insignis-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -8635,18 +8635,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch31-fishbase-erpetichthys-calabaricus"
+            "fishipedia-erpetoichthys-calabaricus-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -8720,18 +8720,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch31-fishbase-semaprochilodus-taeniurus"
+            "fishbase-semaprochilodus-taeniurus-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -9064,18 +9064,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch27-fishbase-sawbwa-resplendens"
+            "fishbase-sawbwa-resplendens-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -9234,18 +9234,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch31-fishbase-epiplatys-annulatus"
+            "fishbase-epiplatys-annulatus-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -10572,18 +10572,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch32-fishbase-beaufortia-kweichowensis"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -11183,18 +11183,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch32-fishbase-pseudomugil-furcatus"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -11268,18 +11268,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch32-fishbase-sphaerichthys-osphromenoides"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -11353,18 +11353,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch32-fishbase-semaprochilodus-insignis"
+            "fishipedia-semaprochilodus-insignis-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -38720,18 +38720,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch38-fishbase-hyphessobrycon-megalopterus"
+            "fishipedia-hyphessobrycon-megalopterus-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -38981,18 +38981,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch38-fishbase-hyphessobrycon-herbertaxelrodi"
+            "batch06-fishbase-hyphessobrycon-herbertaxelrodi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -39066,18 +39066,18 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch38-fishbase-moenkhausia-pittieri"
+            "fishipedia-makunaima-pittieri-water-wave27"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",

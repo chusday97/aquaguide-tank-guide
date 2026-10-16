@@ -215,6 +215,13 @@ import {
   compatibilityPredationNegativeWave26Sources,
   compatibilityPredationNegativeWave26VerifiedSourceIds,
 } from './predation-negative-wave26-20261016';
+import {
+  compatibilityWaterDirectWave27AuthorityPatch,
+  compatibilityWaterDirectWave27FieldReviews,
+  compatibilityWaterDirectWave27ProfilePatches,
+  compatibilityWaterDirectWave27Sources,
+  compatibilityWaterDirectWave27VerifiedSourceIds,
+} from './water-direct-wave27-20261016';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -248,6 +255,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityPredationWave24Sources,
   ...compatibilityResearchDirectWave25Sources,
   ...compatibilityPredationNegativeWave26Sources,
+  ...compatibilityWaterDirectWave27Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -282,6 +290,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityPredationWave24FieldReviews,
   ...compatibilityResearchDirectWave25FieldReviews,
   ...compatibilityPredationNegativeWave26FieldReviews,
+  ...compatibilityWaterDirectWave27FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -316,6 +325,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityPredationWave24VerifiedSourceIds,
   ...compatibilityResearchDirectWave25VerifiedSourceIds,
   ...compatibilityPredationNegativeWave26VerifiedSourceIds,
+  ...compatibilityWaterDirectWave27VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -350,6 +360,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityPredationWave24ProfilePatches,
   ...compatibilityResearchDirectWave25ProfilePatches,
   ...compatibilityPredationNegativeWave26ProfilePatches,
+  ...compatibilityWaterDirectWave27ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -384,4 +395,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityPredationWave24AuthorityPatch,
   compatibilityResearchDirectWave25AuthorityPatch,
   compatibilityPredationNegativeWave26AuthorityPatch,
+  compatibilityWaterDirectWave27AuthorityPatch,
 ] as const;

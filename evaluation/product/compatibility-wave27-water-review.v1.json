@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "kind": "compatibility_wave27_direct_water_review",
+  "reviewedCandidates": 16,
+  "promotedFields": 13,
+  "promotedSpecies": 13,
+  "uniqueEvidencePages": 11,
+  "reusedEvidenceSourceIds": [
+    "batch06-fishbase-hyphessobrycon-herbertaxelrodi",
+    "batch32-fishbase-pseudomugil-furcatus",
+    "batch32-fishbase-sphaerichthys-osphromenoides",
+    "batch32-fishbase-beaufortia-kweichowensis"
+  ],
+  "newEvidenceSourceCount": 7,
+  "writesProductionAuthority": false,
+  "modelGuessingAllowed": false,
+  "promotionSpeciesIds": [
+    "sp_0470",
+    "sp_0471",
+    "sp_0111",
+    "sp_0113",
+    "sp_0135",
+    "sp_0060",
+    "sp_0136",
+    "sp_0106",
+    "sp_0061",
+    "sp_0137",
+    "sp_0107",
+    "sp_0128",
+    "sp_0467"
+  ],
+  "keptFailClosed": [
+    {
+      "speciesId": "sp_0037",
+      "scientificName": "Acheilognathus macropterus",
+      "field": "water",
+      "reason": "FishBase exact-taxon environment is Freshwater; brackish. Wave27 refuses to collapse a reviewed multi-water environment into freshwater-only authority.",
+      "snapshotSha256": "9aeeabf721d4166575348861e815f49131390082e9901ffc362b24047a7abffe"
+    },
+    {
+      "speciesId": "sp_0041",
+      "scientificName": "Abbottina rivularis",
+      "field": "water",
+      "reason": "FishBase exact-taxon environment is Freshwater; brackish. Wave27 refuses to collapse a reviewed multi-water environment into freshwater-only authority.",
+      "snapshotSha256": "46fd1f36000deff0c27bf133b86a2fd8a4fe95ba9d839926cf11b7aaeaf04d18"
+    },
+    {
+      "speciesId": "sp_0473",
+      "scientificName": "Nannostomus beckfordi",
+      "field": "water",
+      "reason": "Captured Fishipedia freshwater wording is generic site/maintenance template context rather than an unambiguous exact-species environment assertion; keep fail-closed.",
+      "snapshotSha256": "f16c54fe37965da375d3be5dccd0791a4eaf7ce23026660240c29d13b2766bd5"
+    }
+  ]
+}

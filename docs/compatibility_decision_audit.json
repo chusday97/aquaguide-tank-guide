@@ -226,78 +226,6 @@
         "existingCoveragePriorityScore": 173
       },
       {
-        "researchKey": "Erpetoichthys calabaricus",
-        "baseScientificName": "Erpetoichthys calabaricus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 247,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 247,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Semaprochilodus taeniurus",
-        "baseScientificName": "Semaprochilodus taeniurus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 247,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 247,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Semaprochilodus insignis",
-        "baseScientificName": "Semaprochilodus insignis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 493,
-        "gapInstances": 2,
-        "terminalGapInstances": 6,
-        "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 246.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Epiplatys annulatus",
-        "baseScientificName": "Epiplatys annulatus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
         "researchKey": "Hemigrammus rodwayi",
         "baseScientificName": "Hemigrammus rodwayi",
         "completionEligible": false,
@@ -316,80 +244,8 @@
         "existingCoveragePriorityScore": 142
       },
       {
-        "researchKey": "Hyphessobrycon herbertaxelrodi",
-        "baseScientificName": "Hyphessobrycon herbertaxelrodi",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Hyphessobrycon megalopterus",
-        "baseScientificName": "Hyphessobrycon megalopterus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Moenkhausia pittieri",
-        "baseScientificName": "Moenkhausia pittieri",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
         "researchKey": "Nannostomus beckfordi",
         "baseScientificName": "Nannostomus beckfordi",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Pseudomugil furcatus",
-        "baseScientificName": "Pseudomugil furcatus",
         "completionEligible": false,
         "affectedUnknownPairs": 228,
         "gapInstances": 1,
@@ -775,60 +631,6 @@
         "impactPerGap": 0,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Beaufortia kweichowensis",
-        "baseScientificName": "Beaufortia kweichowensis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Sawbwa resplendens",
-        "baseScientificName": "Sawbwa resplendens",
-        "completionEligible": false,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Sphaerichthys osphromenoides",
-        "baseScientificName": "Sphaerichthys osphromenoides",
-        "completionEligible": false,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 2,
-        "terminalGapInstances": 6,
-        "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
         "combinedGapFields": [
           "water"
         ],
@@ -1128,78 +930,6 @@
     ],
     "terminalBlockedTaxonQueue": [
       {
-        "researchKey": "Erpetoichthys calabaricus",
-        "baseScientificName": "Erpetoichthys calabaricus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 247,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 247,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Semaprochilodus taeniurus",
-        "baseScientificName": "Semaprochilodus taeniurus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 247,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 247,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Semaprochilodus insignis",
-        "baseScientificName": "Semaprochilodus insignis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 493,
-        "gapInstances": 2,
-        "terminalGapInstances": 6,
-        "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 246.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Epiplatys annulatus",
-        "baseScientificName": "Epiplatys annulatus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
         "researchKey": "Hemigrammus rodwayi",
         "baseScientificName": "Hemigrammus rodwayi",
         "completionEligible": false,
@@ -1218,80 +948,8 @@
         "existingCoveragePriorityScore": 142
       },
       {
-        "researchKey": "Hyphessobrycon herbertaxelrodi",
-        "baseScientificName": "Hyphessobrycon herbertaxelrodi",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Hyphessobrycon megalopterus",
-        "baseScientificName": "Hyphessobrycon megalopterus",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Moenkhausia pittieri",
-        "baseScientificName": "Moenkhausia pittieri",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
         "researchKey": "Nannostomus beckfordi",
         "baseScientificName": "Nannostomus beckfordi",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 228,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Pseudomugil furcatus",
-        "baseScientificName": "Pseudomugil furcatus",
         "completionEligible": false,
         "affectedUnknownPairs": 228,
         "gapInstances": 1,
@@ -1685,60 +1343,6 @@
         "existingCoveragePriorityScore": 142
       },
       {
-        "researchKey": "Beaufortia kweichowensis",
-        "baseScientificName": "Beaufortia kweichowensis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Sawbwa resplendens",
-        "baseScientificName": "Sawbwa resplendens",
-        "completionEligible": false,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 1,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
-        "researchKey": "Sphaerichthys osphromenoides",
-        "baseScientificName": "Sphaerichthys osphromenoides",
-        "completionEligible": false,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 2,
-        "terminalGapInstances": 6,
-        "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
-        "combinedGapFields": [
-          "water"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 142
-      },
-      {
         "researchKey": "Chaetodon auriga",
         "baseScientificName": "Chaetodon auriga",
         "completionEligible": false,
@@ -1862,11 +1466,11 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 46,
+      "totalResearchJobs": 35,
       "completionEligibleJobs": 9,
-      "terminalBlockedJobs": 37,
+      "terminalBlockedJobs": 26,
       "completionEligibleCatalogObjects": 9,
-      "terminalBlockedCatalogObjects": 79
+      "terminalBlockedCatalogObjects": 66
     },
     "terminalReasonCounts": [
       {
@@ -1946,11 +1550,11 @@
     },
     {
       "code": "water_type_unknown",
-      "count": 135
+      "count": 153
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 306,
+    "actionableGaps": 293,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -1961,16 +1565,16 @@
         "count": 62
       },
       {
-        "field": "water",
-        "count": 61
-      },
-      {
         "field": "temperature",
         "count": 57
       },
       {
         "field": "adult_size",
         "count": 54
+      },
+      {
+        "field": "water",
+        "count": 48
       },
       {
         "field": "predation",

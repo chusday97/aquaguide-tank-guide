@@ -194,22 +194,22 @@ assert.deepEqual(approvedValue('sp_0128', 'temperature'), { min: 16, max: 24 });
 assert.deepEqual(approvedValue('sp_0128', 'ph'), { min: 6.5, max: 8 });
 assert.deepEqual(approvedValue('sp_0128', 'adult_size'), { min: null, max: 7.5 });
 assert.deepEqual(approvedValue('sp_0128', 'tank_size'), { liters: 54, lengthCm: 60 });
-assert.equal(approvedValue('sp_0128', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0128', 'water'), 'freshwater', 'sp_0128 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 assert.deepEqual(approvedValue('sp_0113', 'temperature'), { min: 20, max: 26 });
 assert.deepEqual(approvedValue('sp_0113', 'ph'), { min: 4, max: 7 });
 assert.deepEqual(approvedValue('sp_0113', 'adult_size'), { min: null, max: 3.5 });
 assert.deepEqual(approvedValue('sp_0113', 'tank_size'), { liters: 41, lengthCm: 45 });
-assert.equal(approvedValue('sp_0113', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0113', 'water'), 'freshwater', 'sp_0113 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 assert.deepEqual(approvedValue('sp_0470', 'temperature'), { min: 20, max: 28 });
 assert.deepEqual(approvedValue('sp_0470', 'ph'), { min: 5, max: 7.5 });
 assert.deepEqual(approvedValue('sp_0470', 'adult_size'), { min: null, max: 3.5 });
 assert.deepEqual(approvedValue('sp_0470', 'tank_size'), { liters: 72, lengthCm: 80 });
-assert.equal(approvedValue('sp_0470', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0470', 'water'), 'freshwater', 'sp_0470 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 assert.deepEqual(approvedValue('sp_0467', 'temperature'), { min: 20, max: 28 });
 assert.deepEqual(approvedValue('sp_0467', 'ph'), { min: 5, max: 7 });
 assert.deepEqual(approvedValue('sp_0467', 'adult_size'), { min: null, max: 3.6 });
 assert.deepEqual(approvedValue('sp_0467', 'tank_size'), { liters: 72, lengthCm: 80 });
-assert.equal(approvedValue('sp_0467', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0467', 'water'), 'freshwater', 'sp_0467 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 const numericWave2SourceIds = [
   'seriouslyfish-abbottina-rivularis-numeric-husbandry',
   'seriouslyfish-acheilognathus-macropterus-numeric-husbandry',
@@ -227,13 +227,13 @@ assert.deepEqual(approvedValue('sp_0135', 'temperature'), { min: 24, max: 28 });
 assert.deepEqual(approvedValue('sp_0135', 'ph'), { min: 7, max: 8 });
 assert.deepEqual(approvedValue('sp_0135', 'adult_size'), { min: null, max: 6 });
 assert.deepEqual(approvedValue('sp_0135', 'tank_size'), { liters: 54, lengthCm: 60 });
-assert.equal(approvedValue('sp_0135', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0135', 'water'), 'freshwater', 'sp_0135 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 
 assert.deepEqual(approvedValue('sp_0111', 'temperature'), { min: 18, max: 22 });
 assert.deepEqual(approvedValue('sp_0111', 'ph'), { min: 6, max: 8 });
 assert.deepEqual(approvedValue('sp_0111', 'adult_size'), { min: null, max: 3.5 });
 assert.deepEqual(approvedValue('sp_0111', 'tank_size'), { liters: 54, lengthCm: 60 });
-assert.equal(approvedValue('sp_0111', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0111', 'water'), 'freshwater', 'sp_0111 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 
 assert.deepEqual(approvedValue('sp_0132', 'water'), 'freshwater');
 assert.deepEqual(approvedValue('sp_0132', 'temperature'), { min: 20, max: 30 });
@@ -245,14 +245,14 @@ assert.deepEqual(approvedValue('sp_0471', 'temperature'), { min: 24, max: 28 });
 assert.deepEqual(approvedValue('sp_0471', 'ph'), { min: 5.5, max: 7 });
 assert.deepEqual(approvedValue('sp_0471', 'adult_size'), { min: null, max: 6 });
 assert.deepEqual(approvedValue('sp_0471', 'tank_size'), { liters: 68, lengthCm: 60 });
-assert.equal(approvedValue('sp_0471', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0471', 'water'), 'freshwater', 'sp_0471 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 
 for (const chocolateId of ['sp_0060', 'sp_0136']) {
   assert.deepEqual(approvedValue(chocolateId, 'temperature'), { min: 26, max: 31 });
   assert.deepEqual(approvedValue(chocolateId, 'ph'), { min: 4, max: 6.5 });
   assert.deepEqual(approvedValue(chocolateId, 'adult_size'), { min: null, max: 5 });
   assert.deepEqual(approvedValue(chocolateId, 'tank_size'), { liters: 54, lengthCm: 60 });
-  assert.equal(approvedValue(chocolateId, 'water'), undefined);
+  assert.deepEqual(approvedValue(chocolateId, 'water'), 'freshwater', chocolateId + ' historical water unknown is superseded only by Wave27 direct FishBase evidence');
 }
 
 const numericWave3SourceIds = [
@@ -286,21 +286,21 @@ assert.deepEqual(approvedValue('sp_0106', 'temperature'), { min: 23, max: 30 });
 assert.deepEqual(approvedValue('sp_0106', 'ph'), { min: 6, max: 7.5 });
 assert.deepEqual(approvedValue('sp_0106', 'adult_size'), { min: null, max: 90 });
 assert.deepEqual(approvedValue('sp_0106', 'tank_size'), { liters: 540, lengthCm: 150 });
-assert.equal(approvedValue('sp_0106', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0106', 'water'), 'freshwater', 'sp_0106 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 
 for (const insignisId of ['sp_0061', 'sp_0137']) {
   assert.deepEqual(approvedValue(insignisId, 'temperature'), { min: 23, max: 29 });
   assert.deepEqual(approvedValue(insignisId, 'ph'), { min: 5.5, max: 7.2 });
   assert.deepEqual(approvedValue(insignisId, 'adult_size'), { min: null, max: 35 });
   assert.deepEqual(approvedValue(insignisId, 'tank_size'), { liters: 540, lengthCm: 150 });
-  assert.equal(approvedValue(insignisId, 'water'), undefined);
+  assert.deepEqual(approvedValue(insignisId, 'water'), 'freshwater', insignisId + ' historical water unknown is superseded only by Wave27 direct Fishipedia evidence');
 }
 
 assert.deepEqual(approvedValue('sp_0107', 'temperature'), { min: 23, max: 29 });
 assert.deepEqual(approvedValue('sp_0107', 'ph'), { min: 5.5, max: 7.5 });
 assert.deepEqual(approvedValue('sp_0107', 'adult_size'), { min: null, max: 30 });
 assert.deepEqual(approvedValue('sp_0107', 'tank_size'), { liters: 540, lengthCm: 150 });
-assert.equal(approvedValue('sp_0107', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0107', 'water'), 'freshwater', 'sp_0107 historical water unknown is superseded only by Wave27 direct exact-taxon freshwater evidence');
 
 assert.deepEqual(approvedValue('sp_0472', 'temperature'), { min: 22, max: 28 });
 assert.deepEqual(approvedValue('sp_0472', 'adult_size'), { min: null, max: 3.6 });
@@ -796,9 +796,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 46, '306 actionable field gaps should collapse to 46 base-taxon research jobs after Xiphophorus maculatus closes its direct predation gap');
+assert.equal(taxonResearchPlan.length, 35, '293 actionable field gaps should collapse to 35 base-taxon research jobs after Wave27 direct freshwater authority removes 13 water gaps');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 88, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 75, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
