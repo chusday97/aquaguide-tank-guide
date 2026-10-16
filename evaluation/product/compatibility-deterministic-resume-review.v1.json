@@ -1,0 +1,612 @@
+{
+  "version": 1,
+  "kind": "compatibility_deterministic_resume_review",
+  "generatedFrom": "evaluation/reports/compatibility-active-completion-batch.json",
+  "resumableJobs": 9,
+  "targetFields": 23,
+  "deterministicSupportedFields": 10,
+  "modelOrManualRequiredFields": 13,
+  "fullyReviewableJobs": 0,
+  "repeatedIdentityLookup": false,
+  "repeatedSourceDiscovery": false,
+  "repeatedSourceFetch": false,
+  "modelCalls": 0,
+  "writesAuthority": false,
+  "jobs": [
+    {
+      "researchKey": "Hypancistrus inspector",
+      "scientificName": "Hypancistrus inspector",
+      "targetFields": [
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.fishbase.se/summary/Hypancistrus-inspector.html",
+          "publisher": "FishBase",
+          "contentSha256": "13caf1533b5c16751b2c2636fc14b534dae60e28d854ebd2f2924544b4e2644d"
+        },
+        {
+          "url": "https://www.seriouslyfish.com/species/hypancistrus-inspector",
+          "publisher": "Seriously Fish",
+          "contentSha256": "cfed198cf153ee6f5f0cecb33c5a175d596a0a38236dfe21a216f85bae5957e7"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/hypancistrus-inspector",
+          "publisher": "Fishipedia",
+          "contentSha256": "9b99abdef57b2a2a59595f86887598f2e82935f5a5837949a1ff70f13f678a0f"
+        }
+      ],
+      "deterministicSupportedFields": [],
+      "modelOrManualRequiredFields": [
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Moenkhausia sanctaefilomenae",
+      "scientificName": "Moenkhausia sanctaefilomenae",
+      "targetFields": [
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.seriouslyfish.com/species/bario-sanctaefilomenae",
+          "publisher": "Seriously Fish",
+          "contentSha256": "f637628d8a9ba1033313f09b64a5bb918a248904be0a45656f2073b148a56ac3"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/moenkhausia-sanctaefilomenae",
+          "publisher": "Fishipedia",
+          "contentSha256": "f60531f2cf8924b833b6c0ed55d3a3d8678937b72c749c85ac8fdb1f8b66a02f"
+        }
+      ],
+      "deterministicSupportedFields": [],
+      "modelOrManualRequiredFields": [
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Xiphophorus maculatus",
+      "scientificName": "Xiphophorus maculatus",
+      "targetFields": [
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.fishbase.se/summary/Xiphophorus-maculatus.html",
+          "publisher": "FishBase",
+          "contentSha256": "62130c3f27fa710eab506ee492ef312b24ba07da3d8658bb8825e6cee3797286"
+        },
+        {
+          "url": "https://www.seriouslyfish.com/species/xiphophorus-maculatus",
+          "publisher": "Seriously Fish",
+          "contentSha256": "678e886cdab44bc3cfe4c5266d81d0537edbe5a7f9ccd6775cf7eeb9b91572a6"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/xiphophorus-maculatus",
+          "publisher": "Fishipedia",
+          "contentSha256": "aabc51d67a405daa9647280c05310080761993a026554dc9dbd020f6563968a2"
+        }
+      ],
+      "deterministicSupportedFields": [],
+      "modelOrManualRequiredFields": [
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Pomacanthus annularis",
+      "scientificName": "Pomacanthus annularis",
+      "targetFields": [
+        "ph",
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.fishbase.se/summary/Pomacanthus-annularis.html",
+          "publisher": "FishBase",
+          "contentSha256": "ce26768143aab6bac47643e32be85cce4fff5c53cd4530d701c174b8ae33bede"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/pomacanthus-annularis",
+          "publisher": "Fishipedia",
+          "contentSha256": "63074b6140e4781d335723091f693d8e0e90a8101525529a210160ded130fed3"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Pomacanthus_annularis",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "contentSha256": "02c71aba4a34e748d9904d12bcabd9264d1743b8898f10bc6ee4b0cbb9482606"
+        }
+      ],
+      "deterministicSupportedFields": [],
+      "modelOrManualRequiredFields": [
+        "ph",
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "ph",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        },
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Rhodeus ocellatus",
+      "scientificName": "Rhodeus ocellatus",
+      "targetFields": [
+        "territoriality",
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.fishbase.se/summary/Rhodeus-ocellatus.html",
+          "publisher": "FishBase",
+          "contentSha256": "99c28670ad0f4a94a46cfbec6dd951ebdaa7cc7b4e6b2db5e9356644a153fcfa"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/rhodeus-ocellatus",
+          "publisher": "Fishipedia",
+          "contentSha256": "867c72f468017280559d60c769f30d1ff67f22f5f474bf830d12ac405c0a4bee"
+        }
+      ],
+      "deterministicSupportedFields": [
+        "territoriality"
+      ],
+      "modelOrManualRequiredFields": [
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "territoriality",
+          "status": "supported",
+          "proposedValue": {
+            "traits": []
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/rhodeus-ocellatus"
+          ],
+          "notes": [
+            "Fishipedia explicitly labels this species as non-territorial."
+          ]
+        },
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Amphiprion ocellaris",
+      "scientificName": "Amphiprion ocellaris",
+      "targetFields": [
+        "ph",
+        "territoriality",
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.seriouslyfish.com/not-covered",
+          "publisher": "Seriously Fish",
+          "contentSha256": "8b887c9750eb317d1702e8e790a32a835efa8e892c2ce7e1b8b25e7f932db192"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/amphiprion-ocellaris",
+          "publisher": "Fishipedia",
+          "contentSha256": "da9eae11b0515bf52259caea3a4591fcc3de4e05ad5d0b91e756414c7e3a4dbc"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Amphiprion_ocellaris",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "contentSha256": "89e6019b6c1a16947832861f43a8c958661ca6ec8447ba177b31f9d2061ae25c"
+        }
+      ],
+      "deterministicSupportedFields": [
+        "territoriality"
+      ],
+      "modelOrManualRequiredFields": [
+        "ph",
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "ph",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        },
+        {
+          "field": "territoriality",
+          "status": "supported",
+          "proposedValue": {
+            "traits": [
+              "territorial"
+            ]
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/amphiprion-ocellaris"
+          ],
+          "notes": [
+            "Fishipedia explicitly labels this species as territorial."
+          ]
+        },
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Zacco platypus",
+      "scientificName": "Zacco platypus",
+      "targetFields": [
+        "ph",
+        "tank_size",
+        "territoriality"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.fishbase.se/summary/Zacco-platypus.html",
+          "publisher": "FishBase",
+          "contentSha256": "9dbdab3b92ce4b8bc4ef0f4c4a85d63d1ac27e38c5442dfe184f9f811619e948"
+        },
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/zacco-platypus",
+          "publisher": "Fishipedia",
+          "contentSha256": "b12ad9bf788c60434399a481bb5b46733e5bbb8cfb663d945329374155c71f14"
+        }
+      ],
+      "deterministicSupportedFields": [
+        "territoriality"
+      ],
+      "modelOrManualRequiredFields": [
+        "ph",
+        "tank_size"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "ph",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        },
+        {
+          "field": "tank_size",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        },
+        {
+          "field": "territoriality",
+          "status": "supported",
+          "proposedValue": {
+            "traits": []
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/zacco-platypus"
+          ],
+          "notes": [
+            "Fishipedia explicitly labels this species as non-territorial."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Paracanthurus hepatus",
+      "scientificName": "Paracanthurus hepatus",
+      "targetFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "territoriality",
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus",
+          "publisher": "Fishipedia",
+          "contentSha256": "0066fb7432908ff25378f7e33446628b7c9154ab40b46aa797b23b37a03e0d81"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Paracanthurus_hepatus",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "contentSha256": "9e439e384eaa4faadf87bd454c045398f1929f8248914096df36e736676a3e7e"
+        }
+      ],
+      "deterministicSupportedFields": [
+        "temperature",
+        "tank_size",
+        "territoriality"
+      ],
+      "modelOrManualRequiredFields": [
+        "ph",
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "temperature",
+          "status": "supported",
+          "proposedValue": {
+            "min": 23,
+            "max": 27
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus"
+          ],
+          "notes": [
+            "Deterministic parser matched an explicit labelled temperature range on the verified exact-taxon source."
+          ]
+        },
+        {
+          "field": "ph",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        },
+        {
+          "field": "tank_size",
+          "status": "supported",
+          "proposedValue": {
+            "liters": 1000,
+            "lengthCm": null
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus"
+          ],
+          "notes": [
+            "Deterministic parser matched an explicit minimum aquarium-volume label on the verified exact-taxon source."
+          ]
+        },
+        {
+          "field": "territoriality",
+          "status": "supported",
+          "proposedValue": {
+            "traits": []
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus"
+          ],
+          "notes": [
+            "Fishipedia explicitly labels this species as non-territorial."
+          ]
+        },
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    },
+    {
+      "researchKey": "Zebrasoma flavescens",
+      "scientificName": "Zebrasoma flavescens",
+      "targetFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "territoriality",
+        "predation"
+      ],
+      "verifiedDocumentSnapshots": [
+        {
+          "url": "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens",
+          "publisher": "Fishipedia",
+          "contentSha256": "712c74e12c2fb30a3acf6d04b6c41f790338fc212c5b0a8a4021af5afe374592"
+        },
+        {
+          "url": "https://animaldiversity.org/accounts/Zebrasoma_flavescens",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "contentSha256": "4bf3dd9786a11ab3e6c146fb876574b2d6435772073ebf142bb2a4e95d1f7934"
+        }
+      ],
+      "deterministicSupportedFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "territoriality"
+      ],
+      "modelOrManualRequiredFields": [
+        "predation"
+      ],
+      "reviewReady": false,
+      "resolutions": [
+        {
+          "field": "temperature",
+          "status": "supported",
+          "proposedValue": {
+            "min": 23,
+            "max": 27
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens"
+          ],
+          "notes": [
+            "Deterministic parser matched an explicit labelled temperature range on the verified exact-taxon source."
+          ]
+        },
+        {
+          "field": "ph",
+          "status": "supported",
+          "proposedValue": {
+            "min": 8.2,
+            "max": 8.4
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens"
+          ],
+          "notes": [
+            "Deterministic parser matched an explicit labelled pH range on the verified exact-taxon source."
+          ]
+        },
+        {
+          "field": "tank_size",
+          "status": "supported",
+          "proposedValue": {
+            "liters": 600,
+            "lengthCm": null
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens"
+          ],
+          "notes": [
+            "Deterministic parser matched an explicit minimum aquarium-volume label on the verified exact-taxon source."
+          ]
+        },
+        {
+          "field": "territoriality",
+          "status": "supported",
+          "proposedValue": {
+            "traits": []
+          },
+          "sourceUrls": [
+            "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens"
+          ],
+          "notes": [
+            "Fishipedia explicitly labels this species as non-territorial."
+          ]
+        },
+        {
+          "field": "predation",
+          "status": "missing",
+          "proposedValue": null,
+          "sourceUrls": [],
+          "notes": [
+            "No direct evidence claim was supplied for this required field."
+          ]
+        }
+      ],
+      "reviewGate": "research_incomplete",
+      "repeatedIdentityLookup": false,
+      "repeatedSourceDiscovery": false,
+      "repeatedSourceFetch": false,
+      "modelCalls": 0,
+      "writesAuthority": false
+    }
+  ]
+}

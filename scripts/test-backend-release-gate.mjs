@@ -30,6 +30,8 @@ const gates = [
   ['Compatibility Decision Impact Queue', 'npm', ['run', 'test:compatibility-decision-impact-queue']],
   ['Compatibility Active Completion Batch', 'npm', ['run', 'test:compatibility-active-completion-batch']],
   ['Compatibility Extraction Resume', 'npm', ['run', 'test:compatibility-extraction-resume']],
+  ['Compatibility Deterministic Resume', 'npm', ['run', 'test:compatibility-deterministic-resume']],
+  ['Compatibility Extraction Retry Runner', 'npm', ['run', 'test:compatibility-extraction-retry-runner']],
   ['Compatibility Resume Review Manifest', 'npm', ['run', 'test:compatibility-resume-review']],
   ['Compatibility Research Coverage Wave23', 'npm', ['run', 'test:compatibility-research-coverage-wave23']],
   ['Compatibility Chrysiptera Production Reconciliation Guard', 'npm', ['run', 'test:compatibility-chrysiptera-production-reconciliation-guard']],

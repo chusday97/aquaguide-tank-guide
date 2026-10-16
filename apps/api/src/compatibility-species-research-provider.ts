@@ -712,12 +712,13 @@ const extractionPromptFor = (
   }))),
 ].join('\n');
 
-const deterministicNumericFields = new Set<CompatibilityOnboardingCoreField>([
+const deterministicFields = new Set<CompatibilityOnboardingCoreField>([
   'water',
   'temperature',
   'ph',
   'adult_size',
   'tank_size',
+  'territoriality',
 ]);
 
 const normalizedEvidenceText = (value: string) => value
@@ -798,13 +799,23 @@ const explicitTankSizeFromDocument = (document: VerifiedDocument) => {
   return liters === null ? null : { liters, lengthCm: null };
 };
 
+const explicitTerritorialityFromDocument = (document: VerifiedDocument) => {
+  if (document.publisher !== 'Fishipedia') return null;
+  const text = normalizedEvidenceText(document.text);
+  const match = text.match(/\bterritorialit[eé]\s*:?\s*(oui|non)\b/i);
+  if (!match) return null;
+  return match[1].toLowerCase() === 'oui'
+    ? { value: { traits: ['territorial'] }, note: 'Fishipedia explicitly labels this species as territorial.' }
+    : { value: { traits: [] }, note: 'Fishipedia explicitly labels this species as non-territorial.' };
+};
+
 const deterministicClaimsFromDocuments = (
   documents: VerifiedDocument[],
   targetFields: CompatibilityOnboardingCoreField[] = [],
 ): ExtractionOutput => {
   const targetSet = new Set(targetFields);
   const allows = (field: CompatibilityOnboardingCoreField) => (
-    deterministicNumericFields.has(field) && (targetSet.size === 0 || targetSet.has(field))
+    deterministicFields.has(field) && (targetSet.size === 0 || targetSet.has(field))
   );
   const claims: ExtractionOutput['claims'] = [];
 
@@ -831,6 +842,8 @@ const deterministicClaimsFromDocuments = (
 
     push('adult_size', explicitAdultSizeFromDocument(document), 'Deterministic parser matched an explicit maximum adult-length label on the verified exact-taxon source.');
     push('tank_size', explicitTankSizeFromDocument(document), 'Deterministic parser matched an explicit minimum aquarium-volume label on the verified exact-taxon source.');
+    const territoriality = explicitTerritorialityFromDocument(document);
+    if (territoriality) push('territoriality', territoriality.value, territoriality.note);
   }
 
   return { claims };
@@ -1161,6 +1174,27 @@ export const researchCompatibilitySpeciesWithResume = async (
       documents: documents.map(verifiedDocumentSnapshot),
     },
   };
+};
+
+export const retryCompatibilityDeterministicExtractionFromResume = async (
+  bundle: CompatibilityResearchResumeBundle,
+): Promise<CompatibilitySpeciesResearchPacket> => {
+  const documents = verifiedDocumentsFromResume(bundle);
+  if (documents.length !== bundle.documents.length || documents.length === 0) {
+    throw new Error('compatibility_research_resume_bundle_invalid');
+  }
+  return buildResearchPacketFromDocuments({
+    input: {
+      catalogKey: bundle.catalogKey,
+      scientificName: bundle.scientificName,
+      commonName: bundle.commonName,
+      targetFields: bundle.targetFields,
+    },
+    documents,
+    config: buildCompatibilityResearchProviderConfig(),
+    fetchImpl: fetch,
+    skipAiExtraction: true,
+  });
 };
 
 export const retryCompatibilityExtractionFromResume = async (

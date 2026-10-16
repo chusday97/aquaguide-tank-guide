@@ -2,6 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import {
   probeCompatibilityResearchProvider,
+  retryCompatibilityDeterministicExtractionFromResume,
   retryCompatibilityExtractionFromResume,
   type CompatibilityResearchResumeBundle,
 } from '../apps/api/src/compatibility-species-research-provider';
@@ -16,6 +17,7 @@ const arg = (name: string) => {
 const inputPath = arg('input') || 'evaluation/reports/compatibility-active-completion-batch.json';
 const outputPath = arg('output') || 'evaluation/reports/compatibility-extraction-retry.json';
 const maxJobs = Math.max(1, Number(arg('max-jobs') || 999));
+const providerMode = arg('provider-mode') === 'ai' ? 'ai' : 'deterministic';
 const input = JSON.parse(readFileSync(inputPath, 'utf8')) as {
   pages?: Array<{ results?: Array<Record<string, unknown>> }>;
 };
@@ -23,14 +25,25 @@ const candidates = (input.pages || []).flatMap(page => page.results || []).filte
   (result.workItem as { queue?: string } | undefined)?.queue === 'extraction_retry'
   && result.resumeBundle
 )).slice(0, maxJobs);
-const preflight = await probeCompatibilityResearchProvider();
+const preflight = providerMode === 'ai'
+  ? await probeCompatibilityResearchProvider()
+  : {
+      status: 'skipped' as const,
+      configured: false,
+      providerId: 'bailian-web-research-v1',
+      host: null,
+      model: '',
+      httpStatus: null,
+      reasonCode: 'deterministic_mode',
+    };
 const results: Array<Record<string, unknown>> = [];
 
-if (preflight.status === 'ready') {
-  for (const candidate of candidates) {
+for (const candidate of candidates) {
     const resumeBundle = candidate.resumeBundle as CompatibilityResearchResumeBundle;
     try {
-      const packet = await retryCompatibilityExtractionFromResume(resumeBundle);
+      const packet = providerMode === 'ai' && preflight.status === 'ready'
+        ? await retryCompatibilityExtractionFromResume(resumeBundle)
+        : await retryCompatibilityDeterministicExtractionFromResume(resumeBundle);
       const assessment = assessCompatibilitySpeciesResearchPacket(packet);
       const unresolvedFields = resumeBundle.targetFields.filter(field => (
         assessment.fieldResolutions.find(item => item.field === field)?.status !== 'supported'
@@ -81,15 +94,16 @@ if (preflight.status === 'ready') {
       });
     }
   }
-}
 
 const report = {
   generatedAt: new Date().toISOString(),
   sourceReport: inputPath,
   providerPreflight: preflight,
-  status: preflight.status === 'ready' ? 'retry_completed' : 'preflight_blocked',
+  status: providerMode === 'ai' && preflight.status === 'ready' ? 'retry_completed' : 'deterministic_fallback_completed',
   resumableJobs: candidates.length,
   attemptedJobs: results.length,
+  providerMode,
+  modelCallsEnabled: providerMode === 'ai' && preflight.status === 'ready',
   reusedVerifiedDocuments: results.reduce((sum, item) => sum + Number(item.reusedVerifiedDocuments || 0), 0),
   repeatedIdentityLookup: false,
   repeatedSourceDiscovery: false,
