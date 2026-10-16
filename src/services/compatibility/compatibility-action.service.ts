@@ -196,6 +196,8 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   const hasObservedIntervention = codes.has('observed_intervention');
   const hasIdentityUnresolved = codes.has('species_identity_unresolved') || Array.from(codes).some(code => code.startsWith('identity_') && code.endsWith('_unresolved'));
   const hasPublicEvidenceInsufficient = codes.has('species_public_evidence_insufficient') || Array.from(codes).some(code => code.startsWith('public_evidence_') && code.endsWith('_insufficient'));
+  const hasEvidenceCeiling = codes.has('species_evidence_ceiling') || Array.from(codes).some(code => code.startsWith('evidence_ceiling_'));
+  const hasPredationEvidenceCeiling = codes.has('evidence_ceiling_predation');
 
   if (decision.status === 'not_recommended') {
     const fryPredation = codes.has('fry_predation_risk');
@@ -247,6 +249,21 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   }
 
   if (decision.status === 'caution') {
+    if (hasEvidenceCeiling) {
+      return {
+        verdict: 'add_with_conditions',
+        headline: hasPredationEvidenceCeiling ? '可以继续判断，但先按可能捕食处理' : '可以继续判断，但要保留安全余量',
+        immediateAction: hasPredationEvidenceCeiling
+          ? '不要把明显更小、能入口的鱼直接加入；先按已有审核条件搭配，并准备可以立即分隔的方案。'
+          : '先按已经审核确认的水体、温度、空间和行为条件执行；缺证据的那一项不要当作“没有风险”。',
+        primaryReason: firstText(
+          warningRules.filter(rule => rule.code === 'species_evidence_ceiling' || rule.code.startsWith('evidence_ceiling_')),
+          '有一项风险已达到公开证据上限，本次只能按保守边界继续判断。',
+        ),
+        observeAfterAction: '加入后重点观察持续追逐、躲藏、进食受阻、吞咬或水质应激；出现持续异常立即分隔或撤回，并在获得新证据后重新评估。',
+        detailsLabel: '哪项风险还缺直接证据？',
+      };
+    }
     if (hasObservedIntervention) {
       return {
         verdict: 'add_with_conditions',
@@ -375,6 +392,8 @@ const buildCurrentTankCompatibilityAction = (
   plannedAction: BeginnerCompatibilityActionCore,
 ): BeginnerCompatibilityActionCore => {
   const codes = codesOf(decision);
+  const hasEvidenceCeiling = codes.has('species_evidence_ceiling') || Array.from(codes).some(code => code.startsWith('evidence_ceiling_'));
+  const hasPredationEvidenceCeiling = codes.has('evidence_ceiling_predation');
 
   if (decision.status === 'not_recommended') {
     return {
@@ -413,6 +432,16 @@ const buildCurrentTankCompatibilityAction = (
     };
   }
 
+  if (hasEvidenceCeiling) {
+    return {
+      ...plannedAction,
+      headline: hasPredationEvidenceCeiling ? '当前组合先按可能捕食继续观察' : '当前组合可维持，但要保留安全余量',
+      immediateAction: hasPredationEvidenceCeiling
+        ? '不要继续加入明显更小、能入口的鱼；保持可立即分隔的条件，并优先观察是否出现追捕或吞咬。'
+        : '先维持当前配置，不要因为暂时稳定就扩大组合；缺证据的风险继续按保守边界管理。',
+      observeAfterAction: '重点观察持续追逐、长期躲藏、拒食、吞咬或水质应激；出现持续异常立即分隔或撤回，并重新评估。',
+    };
+  }
   if (codes.has('observed_intervention') || codes.has('observed_emergency')) {
     return {
       ...plannedAction,

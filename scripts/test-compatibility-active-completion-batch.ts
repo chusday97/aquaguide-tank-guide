@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import {
   buildCompatibilityResearchBatchWorkItem,
   selectCompatibilityResearchBatchJobs,
+  resolveReviewedCatalogResearchIdentity,
 } from '../apps/api/src/compatibility-research-batch';
 import {
   buildCompatibilityCoreFieldCoverage,
@@ -22,6 +23,14 @@ const selected = selectCompatibilityResearchBatchJobs('active_completion');
 assert.equal(selected.sourcePlanJobs, fullPlan.length);
 assert.deepEqual(selected.jobs.map(job => job.researchKey), expectedActive.map(job => job.researchKey));
 assert.ok(selected.jobs.length > 0, 'active completion queue should contain current non-terminal research work');
+
+const petitellaJob = fullPlan.find(job => job.catalogObjects.some(object => object.speciesId === 'sp_0433'));
+assert.ok(petitellaJob, 'Petitella rhodostoma should exist in the compatibility research plan');
+const petitellaIdentity = resolveReviewedCatalogResearchIdentity(petitellaJob!);
+assert.equal(petitellaIdentity?.status, 'verified');
+assert.equal(petitellaIdentity?.canonicalName, 'Petitella rhodostoma');
+assert.equal(petitellaIdentity?.reasonCode, 'reviewed_catalog_identity', 'reviewed catalog identity must outrank an ambiguous external synonym match');
+
 const filtered = selectCompatibilityResearchBatchJobs('active_completion', [selected.jobs[0].researchKey]);
 assert.deepEqual(filtered.jobs.map(job => job.researchKey), [selected.jobs[0].researchKey], 'targeted expansion must select only manifest-requested research keys');
 const excluded = selectCompatibilityResearchBatchJobs(

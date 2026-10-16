@@ -3,6 +3,7 @@ import { fishData } from '../src/data/fishData';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getCompatibilityPresentation } from '../src/services/compatibility/compatibility-presentation.service';
+import { buildBeginnerCompatibilityAction } from '../src/services/compatibility/compatibility-action.service';
 import {
   buildCompatibilityDecisionPlan,
   isCompatibilityDecisionFullyInformed,
@@ -87,6 +88,32 @@ assert.equal(presentation.primaryReason, '证据 A');
 assert.equal(presentation.secondaryReason, '证据 B');
 assert.ok(presentation.primaryActionText.length > 0);
 assert.equal(presentation.detailsLabel, '查看依据');
+
+const evidenceCeilingDecision = {
+  ...duplicateWarningDecision,
+  status: 'caution',
+  warningRules: [{
+    code: 'evidence_ceiling_predation',
+    title: '捕食证据边界',
+    evidence: '捕食风险没有足够直接的公开证据；不能当作“没有风险”，本次按保守条件处理。',
+  }],
+  metadata: {
+    domainRuleCodes: ['evidence_ceiling_predation'],
+    decisionReadiness: 'partial',
+    domainStatus: 'caution',
+  },
+  aggregateResult: { status: 'caution' },
+} as unknown as CompatibilityDecision;
+const evidenceCeilingPresentation = getCompatibilityPresentation(evidenceCeilingDecision);
+const evidenceCeilingAction = buildBeginnerCompatibilityAction(evidenceCeilingDecision, 'planned_addition');
+assert.equal(evidenceCeilingPresentation.headline, '有条件可以');
+assert.doesNotMatch(evidenceCeilingPresentation.headline, /暂时无法判断/);
+assert.match(evidenceCeilingPresentation.primaryReason, /没有足够直接|不能当作/);
+assert.equal(evidenceCeilingAction.verdict, 'add_with_conditions');
+assert.match(evidenceCeilingAction.headline, /可能捕食/);
+assert.match(evidenceCeilingAction.immediateAction, /明显更小|能入口/);
+assert.match(evidenceCeilingAction.observeAfterAction, /立即分隔|撤回/);
+
 
 const underGroupedPresentation = getCompatibilityPresentation(underGroupedNeon as unknown as CompatibilityDecision);
 assert.equal(underGroupedPresentation.headline, '有条件可以');

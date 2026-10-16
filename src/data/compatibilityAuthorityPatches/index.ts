@@ -229,6 +229,13 @@ import {
   compatibilityEnvironmentDirectWave28Sources,
   compatibilityEnvironmentDirectWave28VerifiedSourceIds,
 } from './environment-direct-wave28-20261016';
+import {
+  compatibilityReviewClosureAuthorityPatch,
+  compatibilityReviewClosureFieldReviews,
+  compatibilityReviewClosureProfilePatches,
+  compatibilityReviewClosureSources,
+  compatibilityReviewClosureVerifiedSourceIds,
+} from './review-closure-20261016';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -264,6 +271,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityPredationNegativeWave26Sources,
   ...compatibilityWaterDirectWave27Sources,
   ...compatibilityEnvironmentDirectWave28Sources,
+  ...compatibilityReviewClosureSources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -300,6 +308,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityPredationNegativeWave26FieldReviews,
   ...compatibilityWaterDirectWave27FieldReviews,
   ...compatibilityEnvironmentDirectWave28FieldReviews,
+  ...compatibilityReviewClosureFieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -336,6 +345,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityPredationNegativeWave26VerifiedSourceIds,
   ...compatibilityWaterDirectWave27VerifiedSourceIds,
   ...compatibilityEnvironmentDirectWave28VerifiedSourceIds,
+  ...compatibilityReviewClosureVerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -372,6 +382,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityPredationNegativeWave26ProfilePatches,
   ...compatibilityWaterDirectWave27ProfilePatches,
   ...compatibilityEnvironmentDirectWave28ProfilePatches,
+  ...compatibilityReviewClosureProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -408,4 +419,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityPredationNegativeWave26AuthorityPatch,
   compatibilityWaterDirectWave27AuthorityPatch,
   compatibilityEnvironmentDirectWave28AuthorityPatch,
+  compatibilityReviewClosureAuthorityPatch,
 ] as const;

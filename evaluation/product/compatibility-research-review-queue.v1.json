@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_research_review_queue",
-  "generatedAt": "2026-10-16T10:22:59.015Z",
+  "generatedAt": "2026-10-16T11:35:35.384Z",
   "generatedFrom": [
     "evaluation/reports/compatibility-active-completion-direction-guard.json",
     "evaluation/reports/compatibility-active-completion-direction-guard-offset5.json",
@@ -9,18 +9,21 @@
     "evaluation/reports/compatibility-targeted-expansion-round2.json",
     "evaluation/reports/compatibility-targeted-expansion-round3.json",
     "evaluation/reports/compatibility-targeted-expansion-round4.json",
-    "evaluation/reports/compatibility-source-strategy-review-round1.json"
+    "evaluation/reports/compatibility-source-strategy-review-round1.json",
+    "evaluation/reports/compatibility-petitella-closure.json",
+    "evaluation/reports/compatibility-petitella-targeted-round2.json",
+    "evaluation/reports/compatibility-petitella-source-strategy.json"
   ],
   "rawSourceTextCommitted": false,
   "writesAuthority": false,
   "promotionAllowed": false,
   "summary": {
-    "total": 9,
-    "field_review": 1,
+    "total": 8,
+    "field_review": 0,
     "targeted_source_expansion": 0,
     "source_strategy_review": 0,
-    "evidence_ceiling_review": 7,
-    "identity_review": 1,
+    "evidence_ceiling_review": 8,
+    "identity_review": 0,
     "identity_provider_retry": 0,
     "source_snapshot_retry": 0,
     "extraction_retry": 0,
@@ -445,6 +448,102 @@
       "writesAuthority": false
     },
     {
+      "id": "research-review-86c19db222f12b7a61ea",
+      "researchKey": "Petitella rhodostoma",
+      "scientificName": "Petitella rhodostoma",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0433",
+          "name": "红鼻剪刀",
+          "scientificName": "Petitella rhodostoma",
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ],
+      "requestedGapFields": [
+        "predation"
+      ],
+      "unresolvedFields": [
+        "predation"
+      ],
+      "sourceReport": "evaluation/reports/compatibility-petitella-source-strategy.json",
+      "sourceReportGeneratedAt": "2026-10-16T11:35:35.383Z",
+      "sourceQueue": "evidence_gap",
+      "queue": "evidence_ceiling_review",
+      "reasonCodes": [
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation",
+        "generic_source_strategy_exhausted",
+        "specialized_source_routes_exhausted"
+      ],
+      "identity": {
+        "status": "verified",
+        "canonicalName": "Petitella rhodostoma",
+        "reasonCode": "reviewed_catalog_identity"
+      },
+      "fieldCandidates": [],
+      "verifiedSources": [
+        {
+          "id": "research-48a7a735ce06fbf5b0de",
+          "url": "https://www.fishbase.se/summary/Petitella-rhodostoma.html",
+          "title": "Petitella rhodostoma, Rummy-nose tetra : fisheries, aquarium",
+          "publisher": "FishBase",
+          "sourceType": "professional_association",
+          "contentSha256": "638ce6b0b02dd7168f99ed83c917a82a221628532979cc5c437f283b23fd8717"
+        },
+        {
+          "id": "research-b718cbfb76852ec79bd1",
+          "url": "https://www.seriouslyfish.com/species/petitella-rhodostoma",
+          "title": "Petitella rhodostoma (Rummy-nose tetra) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "00af4a08f70f936129f4c26433ed3f03beaebd0a67f6891cebf36402a722fc52"
+        }
+      ],
+      "researchHistory": {
+        "rounds": 3,
+        "attemptedUrls": [
+          "https://www.fishbase.se/summary/Petitella-rhodostoma.html",
+          "https://www.fishbase.org/summary/Petitella-rhodostoma.html",
+          "https://www.seriouslyfish.com/species/petitella-rhodostoma",
+          "https://www.fishipedia.fr/fr/poissons/petitella-rhodostoma",
+          "https://animaldiversity.org/accounts/Petitella_rhodostoma",
+          "https://www.seriouslyfish.com/taxonomy/petitella-rhodostoma",
+          "https://www.fishbase.org/summary/2160",
+          "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086547",
+          "https://www.fws.gov/species/petite-rasbora-petitella-rhodostoma",
+          "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0029688",
+          "https://www.usgs.gov/centers/chesapeake-bay-science-center/science/fish-diet-analysis",
+          "https://academic.oup.com/icb/article/51/s1/145/615688",
+          "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2021.789123/full"
+        ],
+        "attemptedSourceTypes": [
+          "professional_association",
+          "curated_husbandry"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "university"
+        ],
+        "attemptedRouteIds": [
+          "predation_peer_reviewed_diet",
+          "predation_government_ecology",
+          "predation_university_ecology"
+        ]
+      },
+      "nextResearch": null,
+      "requiresHumanReview": false,
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
       "id": "research-review-c1e47f6415815d3381e1",
       "researchKey": "Rhodeus ocellatus",
       "scientificName": "Rhodeus ocellatus",
@@ -744,155 +843,6 @@
       "requiresHumanReview": false,
       "promotionAllowed": false,
       "writesAuthority": false
-    },
-    {
-      "id": "research-review-0542e03f5c54d39d6f4b",
-      "researchKey": "Pomacanthus annularis",
-      "scientificName": "Pomacanthus annularis",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0185",
-          "name": "蓝环神仙",
-          "scientificName": "Pomacanthus annularis",
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ],
-      "requestedGapFields": [
-        "ph"
-      ],
-      "unresolvedFields": [],
-      "sourceReport": "evaluation/reports/compatibility-active-completion-direction-guard-offset5.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:20:55.069Z",
-      "sourceQueue": "gap_review",
-      "queue": "field_review",
-      "reasonCodes": [
-        "field_missing_water",
-        "field_missing_temperature",
-        "field_missing_adult_size",
-        "field_missing_tank_size",
-        "field_missing_social_behavior",
-        "field_missing_territoriality",
-        "field_missing_predation"
-      ],
-      "identity": {
-        "status": "verified",
-        "canonicalName": "Pomacanthus annularis",
-        "reasonCode": "gbif_exact_accepted_species"
-      },
-      "fieldCandidates": [
-        {
-          "field": "ph",
-          "proposedValue": {
-            "min": 8,
-            "max": 8
-          },
-          "sourceIds": [
-            "research-39ca5798b3df8ce99d0b"
-          ],
-          "notes": [
-            "The text states: 'When kept as aquarium fish, optimal temperature is 26 degrees Celsius with a pH of 8 and lots of light.'"
-          ],
-          "confidence": "high"
-        }
-      ],
-      "verifiedSources": [
-        {
-          "id": "research-39dd01cf935367476b6f",
-          "url": "https://www.fishbase.se/summary/Pomacanthus-annularis.html",
-          "title": "Pomacanthus annularis, Bluering angelfish : aquarium",
-          "publisher": "FishBase",
-          "sourceType": "professional_association",
-          "contentSha256": "1cdef384a5b311edf6e2f5b083af8a8c47e498213b8404fccd27e67d3638afbf"
-        },
-        {
-          "id": "research-8a8d80e067c9553b5949",
-          "url": "https://www.fishipedia.fr/fr/poissons/pomacanthus-annularis",
-          "title": "Poisson-ange à anneau • Pomacanthus annularis • Fiche poissons",
-          "publisher": "Fishipedia",
-          "sourceType": "curated_husbandry",
-          "contentSha256": "63074b6140e4781d335723091f693d8e0e90a8101525529a210160ded130fed3"
-        },
-        {
-          "id": "research-39ca5798b3df8ce99d0b",
-          "url": "https://animaldiversity.org/accounts/Pomacanthus_annularis",
-          "title": "Pomacanthus annularis (Blue ring angelfish) | INFORMATION | Animal Diversity Web",
-          "publisher": "Animal Diversity Web, University of Michigan",
-          "sourceType": "university",
-          "contentSha256": "02c71aba4a34e748d9904d12bcabd9264d1743b8898f10bc6ee4b0cbb9482606"
-        }
-      ],
-      "nextResearch": null,
-      "requiresHumanReview": true,
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "researchHistory": {
-        "rounds": 0,
-        "attemptedUrls": [
-          "https://www.fishbase.se/summary/Pomacanthus-annularis.html",
-          "https://www.fishipedia.fr/fr/poissons/pomacanthus-annularis",
-          "https://animaldiversity.org/accounts/Pomacanthus_annularis"
-        ],
-        "attemptedSourceTypes": [
-          "professional_association",
-          "curated_husbandry",
-          "university"
-        ],
-        "preferredNextSourceTypes": [
-          "government",
-          "peer_reviewed"
-        ],
-        "attemptedRouteIds": []
-      }
-    },
-    {
-      "id": "research-review-86c19db222f12b7a61ea",
-      "researchKey": "Petitella rhodostoma",
-      "scientificName": "Petitella rhodostoma",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0433",
-          "name": "红鼻剪刀",
-          "scientificName": "Petitella rhodostoma",
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ],
-      "requestedGapFields": [
-        "predation"
-      ],
-      "unresolvedFields": [],
-      "sourceReport": "evaluation/reports/compatibility-active-completion-direction-guard.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:19:02.240Z",
-      "sourceQueue": "identity_review",
-      "queue": "identity_review",
-      "reasonCodes": [
-        "gbif_match_requires_review"
-      ],
-      "identity": {
-        "status": "ambiguous",
-        "canonicalName": "Petitella rhodostoma",
-        "reasonCode": "gbif_match_requires_review"
-      },
-      "fieldCandidates": [],
-      "verifiedSources": [],
-      "nextResearch": null,
-      "requiresHumanReview": true,
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "researchHistory": {
-        "rounds": 0,
-        "attemptedUrls": [],
-        "attemptedSourceTypes": [],
-        "preferredNextSourceTypes": [
-          "government",
-          "peer_reviewed",
-          "university",
-          "professional_association",
-          "curated_husbandry"
-        ],
-        "attemptedRouteIds": []
-      }
     }
   ]
 }

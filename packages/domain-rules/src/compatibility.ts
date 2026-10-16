@@ -112,7 +112,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v11-fry-prey-scope';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v12-evidence-ceiling-policy';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -270,6 +270,17 @@ const hasConspecificTerritorialTrait = (species: DomainSpeciesFact) => (
   })
 );
 
+const SOFT_EVIDENCE_CEILING_FACTS = new Set<CompatibilityRequiredFact>([
+  'ph',
+  'tank_size',
+  'social_behavior',
+  'territoriality',
+  'predation',
+  'breeding_behavior',
+]);
+
+const isSoftEvidenceCeilingFact = (fact: CompatibilityRequiredFact) => SOFT_EVIDENCE_CEILING_FACTS.has(fact);
+
 export const evaluateCompatibility = ({
   intent,
   tank,
@@ -293,7 +304,11 @@ export const evaluateCompatibility = ({
   const raiseFactGap = (species: DomainSpeciesFact[], fact: CompatibilityRequiredFact, legacyCode: string) => {
     const dispositions = species.map(item => factDispositionFor(item, fact)).filter(Boolean) as CompatibilityFactDisposition[];
     if (dispositions.includes('identity_unresolved')) return raise('insufficient_data', `identity_${fact}_unresolved`);
-    if (dispositions.includes('public_evidence_insufficient')) return raise('insufficient_data', `public_evidence_${fact}_insufficient`);
+    if (dispositions.includes('public_evidence_insufficient')) {
+      return isSoftEvidenceCeilingFact(fact)
+        ? raise('caution', `evidence_ceiling_${fact}`)
+        : raise('insufficient_data', `public_evidence_${fact}_insufficient`);
+    }
     if (dispositions.includes('research_pending')) return raise('caution', `review_pending_${fact}`);
     return raise('insufficient_data', legacyCode);
   };
@@ -307,18 +322,31 @@ export const evaluateCompatibility = ({
     && Boolean(candidateSpecies?.reviewed);
   const hasIdentityUnresolved = participatingSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('identity_unresolved'));
   const unreviewedSpecies = participatingSpecies.filter(species => !species.reviewed);
-  const hasUnreviewedPublicEvidenceInsufficient = unreviewedSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('public_evidence_insufficient'));
+  const unreviewedPublicEvidenceCeilings = unreviewedSpecies.flatMap(species => (
+    Object.entries(species.compatibilityFactDispositions || {})
+      .filter(([, disposition]) => disposition === 'public_evidence_insufficient')
+      .map(([fact]) => fact as CompatibilityRequiredFact)
+  ));
+  const hasUnreviewedHardEvidenceCeiling = unreviewedPublicEvidenceCeilings.some(fact => !isSoftEvidenceCeilingFact(fact));
+  const hasUnreviewedSoftEvidenceCeiling = unreviewedPublicEvidenceCeilings.some(isSoftEvidenceCeilingFact);
   const hasUnreviewedResearchPending = unreviewedSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('research_pending'));
   const hasLegacyUnreviewedSpecies = unreviewedSpecies.some(species => !hasCoverageMetadata(species));
   if (candidateSpecies) {
     if (hasIdentityUnresolved) raise('insufficient_data', 'species_identity_unresolved');
-    else if (hasUnreviewedPublicEvidenceInsufficient) raise('insufficient_data', 'species_public_evidence_insufficient');
+    else if (hasUnreviewedHardEvidenceCeiling) raise('insufficient_data', 'species_public_evidence_insufficient');
     else if (hasLegacyUnreviewedSpecies) raise('insufficient_data', 'species_evidence_unreviewed');
+    else if (hasUnreviewedSoftEvidenceCeiling) raise('caution', 'species_evidence_ceiling');
     else if (hasUnreviewedResearchPending || !allSpeciesReviewed) raise('caution', 'species_review_pending');
   }
   const reviewedSpeciesReadiness = participatingSpecies.filter(species => species.reviewed).map(species => ({ species, readiness: getCompatibilityTraitReadiness(species) }));
   for (const { species, readiness } of reviewedSpeciesReadiness) {
     for (const fact of readiness.missingFacts) raiseFactGap([species], fact, `required_fact_${fact}_missing`);
+    for (const fact of readiness.requiredFacts) {
+      const disposition = factDispositionFor(species, fact);
+      if (!readiness.missingFacts.includes(fact) && (disposition === 'public_evidence_insufficient' || disposition === 'research_pending')) {
+        raiseFactGap([species], fact, `required_fact_${fact}_missing`);
+      }
+    }
   }
   const allRequiredTraitsReady = reviewedSpeciesReadiness.every(item => item.readiness.ready);
 
@@ -563,13 +591,13 @@ export const evaluateCompatibility = ({
   if (ruleCodes.length === 0 && status === 'compatible') ruleCodes.push('compatibility_clear');
 
   // Missing internal research coverage should make the decision conservative,
-  // not erase an otherwise usable verdict. `insufficient_data` is reserved for
-  // user/tank inputs that are genuinely required, unresolved identity, public
-  // evidence ceilings, malformed reviewed authority, or legacy unreviewed data.
-  // Hard safety blocks always remain stronger than either caution or unknown.
+  // not erase an otherwise usable verdict. Exhausted public evidence for
+  // manageable facts (pH/space/behavior/predation scope) stays caution with an
+  // explicit evidence boundary; identity, water, temperature and adult-size
+  // ceilings remain unknown. Hard safety blocks always outrank either state.
   const finalStatus: CompatibilityDecisionStatus = status;
-  const hasDecisionCriticalResearchGap = ruleCodes.some(code => code === 'species_review_pending' || code.startsWith('review_pending_'));
-  const decisionReadiness: CompatibilityDecisionReadiness = hasIdentityUnresolved || hasUnreviewedPublicEvidenceInsufficient || hasLegacyUnreviewedSpecies
+  const hasDecisionCriticalResearchGap = ruleCodes.some(code => code === 'species_review_pending' || code === 'species_evidence_ceiling' || code.startsWith('review_pending_') || code.startsWith('evidence_ceiling_'));
+  const decisionReadiness: CompatibilityDecisionReadiness = hasIdentityUnresolved || hasUnreviewedHardEvidenceCeiling || hasLegacyUnreviewedSpecies
     ? 'unknown'
     : hasDecisionCriticalResearchGap || !allSpeciesReviewed || !allRequiredTraitsReady || isInsufficientData(finalStatus)
       ? 'partial'

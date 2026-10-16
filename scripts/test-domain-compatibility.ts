@@ -562,9 +562,59 @@ const publicEvidenceCeiling = evaluateCompatibility({
     compatibilityFactDispositions: { predation: 'public_evidence_insufficient' },
   },
 });
-assert.equal(publicEvidenceCeiling.status, 'insufficient_data', 'true public evidence ceilings may still return unavailable');
-assert.equal(publicEvidenceCeiling.addPolicy, 'complete_information');
-assert.ok(publicEvidenceCeiling.ruleCodes.includes('species_public_evidence_insufficient'));
+assert.equal(publicEvidenceCeiling.status, 'caution', 'manageable public evidence ceilings should preserve a usable conservative verdict');
+assert.equal(publicEvidenceCeiling.addPolicy, 'confirm');
+assert.equal(publicEvidenceCeiling.decisionReadiness, 'partial');
+assert.ok(publicEvidenceCeiling.ruleCodes.includes('species_evidence_ceiling'));
+
+const reviewedPredationCeiling = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'reviewed-ceiling-existing' }],
+  candidateSpecies: {
+    ...base,
+    id: 'reviewed-predation-ceiling',
+    compatibilityRequiredFacts: ['predation'],
+    compatibilityFactDispositions: { predation: 'public_evidence_insufficient' },
+  },
+});
+assert.equal(reviewedPredationCeiling.status, 'caution');
+assert.equal(reviewedPredationCeiling.addPolicy, 'confirm');
+assert.equal(reviewedPredationCeiling.decisionReadiness, 'partial');
+assert.ok(reviewedPredationCeiling.ruleCodes.includes('evidence_ceiling_predation'));
+
+const hardTemperatureCeiling = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'hard-ceiling-existing' }],
+  candidateSpecies: {
+    ...base,
+    id: 'hard-temperature-ceiling',
+    temperatureMinC: null,
+    temperatureMaxC: null,
+    compatibilityRequiredFacts: ['temperature'],
+    compatibilityFactDispositions: { temperature: 'public_evidence_insufficient' },
+  },
+});
+assert.equal(hardTemperatureCeiling.status, 'insufficient_data', 'temperature evidence ceiling must remain fail-closed');
+assert.equal(hardTemperatureCeiling.addPolicy, 'complete_information');
+assert.ok(hardTemperatureCeiling.ruleCodes.includes('public_evidence_temperature_insufficient'));
+
+const hardBlockBeatsEvidenceCeiling = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'ceiling-hard-block-existing' }],
+  candidateSpecies: {
+    ...base,
+    id: 'ceiling-hard-block-candidate',
+    waterType: 'saltwater',
+    compatibilityRequiredFacts: ['predation'],
+    compatibilityFactDispositions: { predation: 'public_evidence_insufficient' },
+  },
+});
+assert.equal(hardBlockBeatsEvidenceCeiling.status, 'not_recommended');
+assert.ok(hardBlockBeatsEvidenceCeiling.ruleCodes.includes('water_type_conflict'));
+assert.ok(hardBlockBeatsEvidenceCeiling.ruleCodes.includes('evidence_ceiling_predation'));
 
 const unresolvedIdentity = evaluateCompatibility({
   intent: 'planned_addition',

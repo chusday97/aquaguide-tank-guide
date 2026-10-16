@@ -126,9 +126,14 @@ const plainRuleText = (
   if (code === 'species_review_pending') return '主要风险已经可以判断，但仍有资料待补充，本次按保守结论处理。';
   if (code === 'species_identity_unresolved') return '这个商品名或变体还不能可靠对应到明确物种。';
   if (code === 'species_public_evidence_insufficient') return '公开可靠资料不足以确认这个组合的一项关键风险。';
+  if (code === 'species_evidence_ceiling') return '部分风险缺少足够直接的公开证据；这不等于安全，本次按保守条件继续判断。';
   if (code.startsWith('review_pending_')) {
     const fact = code.slice('review_pending_'.length);
     return `${factLabels[fact] || '一项资料'}仍在补充，本次按保守结论处理。`;
+  }
+  if (code.startsWith('evidence_ceiling_')) {
+    const fact = code.slice('evidence_ceiling_'.length);
+    return `${factLabels[fact] || '一项风险'}没有足够直接的公开证据；不能当作“没有风险”，本次按保守条件处理。`;
   }
   if (code.startsWith('public_evidence_') && code.endsWith('_insufficient')) {
     const fact = code.slice('public_evidence_'.length, -'_insufficient'.length);

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { buildCompatibilityResearchReviewManifest } from '../src/services/compatibility/research-review-queue.service';
 
 const report = {
@@ -361,5 +362,9 @@ const broken = buildCompatibilityResearchReviewManifest([{ sourcePath: 'broken.j
 assert.equal(broken.summary.source_snapshot_retry, 1);
 assert.equal(broken.items[0]?.requiresHumanReview, false);
 assert.ok(broken.items[0]?.reasonCodes.includes('review_source_snapshot_missing'));
+
+const queueBuilderSource = readFileSync('scripts/build-compatibility-research-review-queue.ts', 'utf8');
+assert.match(queueBuilderSource, /selectCompatibilityResearchBatchJobs\('active_completion'\)/, 'canonical review queue builder must reconcile the persisted queue against the current active research plan');
+assert.match(queueBuilderSource, /staleResolvedItemsPruned/, 'queue regeneration must report how many resolved stale items were removed');
 
 console.log('Compatibility research review queue PASS: valid field candidates remain draft-only, evidence gaps become targeted expansion work, temporary identity-provider failures retry automatically, and raw source text is excluded.');
