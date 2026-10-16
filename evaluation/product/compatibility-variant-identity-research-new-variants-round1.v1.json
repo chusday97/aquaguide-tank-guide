@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_identity_research",
+  "generatedAt": "2026-10-16T16:38:44.879Z",
+  "generatedFrom": "evaluation/product/compatibility-variant-bridge-review-new-variants.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 2,
+    "objectCount": 4,
+    "candidateCount": 0,
+    "unresolvedCount": 4
+  },
+  "groups": [
+    {
+      "baseScientificName": "Synchiropus splendidus",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0406"
+      ],
+      "attemptedUrls": [
+        "https://www.seriouslyfish.com/species/synchiropus-splendidus"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Trichopodus leerii",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [
+        {
+          "id": "research-f6488e99d0fa9b18d50a",
+          "title": "Trichopodus leerii (Pearl Gourami) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/trichopodus-leerii",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "572ed8d0bb91bd09667ded2c95be7bd8689363b28f866b6ccb4b57e7f52f7c08"
+        }
+      ],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0153",
+        "sp_0233",
+        "sp_0267"
+      ],
+      "attemptedUrls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3045687/",
+        "https://www.seriouslyfish.com/species/trichopodus-leerii",
+        "https://www.frontiersin.org/articles/10.3389/fgene.2021.638381/full",
+        "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0245678"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    }
+  ]
+}

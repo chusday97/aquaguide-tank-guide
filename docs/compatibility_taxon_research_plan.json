@@ -1,9 +1,9 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 32,
-  "totalResearchJobs": 20,
-  "variantBridgeJobs": 7,
+  "catalogObjects": 28,
+  "totalResearchJobs": 18,
+  "variantBridgeJobs": 5,
   "items": [
     {
       "researchKey": "Hypancistrus inspector",
@@ -596,41 +596,6 @@
       ]
     },
     {
-      "researchKey": "Synchiropus splendidus",
-      "baseScientificName": "Synchiropus splendidus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 0,
-      "variantObjectCount": 1,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0406",
-          "name": "五彩青蛙 (大规格改良)",
-          "scientificName": "Synchiropus splendidus var. XL",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
       "researchKey": "Synodontis nigriventris",
       "baseScientificName": "Synodontis nigriventris",
       "priorityScore": 110,
@@ -716,69 +681,6 @@
           "speciesId": "sp_0426",
           "name": "极地白云金丝",
           "scientificName": "Tanichthys albonubes var. Polar",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Trichopodus leerii",
-      "baseScientificName": "Trichopodus leerii",
-      "priorityScore": 110,
-      "catalogObjectCount": 3,
-      "exactObjectCount": 0,
-      "variantObjectCount": 3,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0153",
-          "name": "球形珍珠马甲",
-          "scientificName": "Trichopodus leerii var. Balloon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0233",
-          "name": "球形珍珠马甲 (红眼)",
-          "scientificName": "Trichopodus leerii var. Albino Balloon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0267",
-          "name": "红头珍珠马甲",
-          "scientificName": "Trichopodus leerii var. Red Head",
           "gaps": [
             "water",
             "temperature",

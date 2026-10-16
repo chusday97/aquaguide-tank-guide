@@ -28,32 +28,32 @@
     "temperature": {
       "reviewed_supported": 135,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 36,
-      "needs_research": 22,
+      "reviewed_unknown": 40,
+      "needs_research": 18,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "ph": {
       "reviewed_supported": 130,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 40,
-      "needs_research": 23,
+      "reviewed_unknown": 44,
+      "needs_research": 19,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "adult_size": {
       "reviewed_supported": 139,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 35,
-      "needs_research": 19,
+      "reviewed_unknown": 39,
+      "needs_research": 15,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "tank_size": {
       "reviewed_supported": 127,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 43,
-      "needs_research": 23,
+      "reviewed_unknown": 47,
+      "needs_research": 19,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
@@ -85,23 +85,23 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 27
+      "count": 23
     },
     {
       "field": "tank_size",
-      "count": 25
+      "count": 21
     },
     {
       "field": "temperature",
-      "count": 22
+      "count": 18
     },
     {
       "field": "water",
-      "count": 19
+      "count": 15
     },
     {
       "field": "adult_size",
-      "count": 19
+      "count": 15
     },
     {
       "field": "predation",
@@ -12702,45 +12702,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch32-fishbase-trichopodus-leerii-balloon"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -19568,45 +19566,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch34-fishbase-trichopodus-leerii-albino-balloon"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -22403,45 +22399,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch34-fishbase-trichopodus-leerii-red-head"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -33574,45 +33568,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch37-fishbase-synchiropus-splendidus-xl"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",

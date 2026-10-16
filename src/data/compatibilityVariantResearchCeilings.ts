@@ -108,6 +108,20 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {
+    "speciesId": "sp_0153",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Trichopodus leerii",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-new-variants-terminal.v1.json"
+  },
+  {
     "speciesId": "sp_0180",
     "status": "identity_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
@@ -171,6 +185,20 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     ],
     "reasonCode": "variant_identity_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
+  },
+  {
+    "speciesId": "sp_0233",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Trichopodus leerii",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-new-variants-terminal.v1.json"
   },
   {
     "speciesId": "sp_0254",
@@ -247,6 +275,20 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     ],
     "reasonCode": "variant_identity_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
+  },
+  {
+    "speciesId": "sp_0267",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Trichopodus leerii",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-new-variants-terminal.v1.json"
   },
   {
     "speciesId": "sp_0289",
@@ -482,6 +524,20 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     ],
     "reasonCode": "variant_identity_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
+  },
+  {
+    "speciesId": "sp_0406",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Synchiropus splendidus",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-new-variants-terminal.v1.json"
   },
   {
     "speciesId": "sp_0413",

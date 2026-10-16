@@ -1,0 +1,407 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_bridge_review",
+  "generatedAt": "2026-10-16T16:41:36.816Z",
+  "generatedFrom": "evaluation/product/compatibility-research-review-queue-new-variants.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 2,
+    "objectCount": 4,
+    "fieldBridgeReviewRequired": 0,
+    "fieldBridgeEvidenceCeiling": 0,
+    "identityReviewRequired": 0,
+    "identityEvidenceCeiling": 4,
+    "identityBoundaryHold": 0
+  },
+  "groups": [
+    {
+      "researchKey": "Synchiropus splendidus",
+      "baseScientificName": "Synchiropus splendidus",
+      "objects": [
+        {
+          "speciesId": "sp_0406",
+          "name": "五彩青蛙 (大规格改良)",
+          "scientificName": "Synchiropus splendidus var. XL",
+          "baseScientificName": "Synchiropus splendidus",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "saltwater",
+              "sourceIds": [
+                "research-46e565dd3df78d881acf"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 24,
+                "max": 28
+              },
+              "sourceIds": [
+                "research-20b154ca8fe831a4dbab"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 8.2,
+                "max": 8.4
+              },
+              "sourceIds": [
+                "research-20b154ca8fe831a4dbab"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": null,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-46e565dd3df78d881acf",
+                "research-20b154ca8fe831a4dbab"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 100,
+                "lengthCm": null
+              },
+              "sourceIds": [
+                "research-20b154ca8fe831a4dbab"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch37-fishbase-synchiropus-splendidus-xl",
+              "title": "Synchiropus splendidus XL variant species review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/12644",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        }
+      ]
+    },
+    {
+      "researchKey": "Trichopodus leerii",
+      "baseScientificName": "Trichopodus leerii",
+      "objects": [
+        {
+          "speciesId": "sp_0153",
+          "name": "球形珍珠马甲",
+          "scientificName": "Trichopodus leerii var. Balloon",
+          "baseScientificName": "Trichopodus leerii",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-1838f99a1e9f10cc4531"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 23,
+                "max": 28
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": null,
+                "max": 13
+              },
+              "sourceIds": [
+                "research-1838f99a1e9f10cc4531",
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 200,
+                "lengthCm": null
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch32-fishbase-trichopodus-leerii-balloon",
+              "title": "Trichopodus leerii Balloon variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/search.php",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0233",
+          "name": "球形珍珠马甲 (红眼)",
+          "scientificName": "Trichopodus leerii var. Albino Balloon",
+          "baseScientificName": "Trichopodus leerii",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-1838f99a1e9f10cc4531"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 23,
+                "max": 28
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": null,
+                "max": 13
+              },
+              "sourceIds": [
+                "research-1838f99a1e9f10cc4531",
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 200,
+                "lengthCm": null
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch34-fishbase-trichopodus-leerii-albino-balloon",
+              "title": "Trichopodus leerii Albino Balloon variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/search.php",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0267",
+          "name": "红头珍珠马甲",
+          "scientificName": "Trichopodus leerii var. Red Head",
+          "baseScientificName": "Trichopodus leerii",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-1838f99a1e9f10cc4531"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 23,
+                "max": 28
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": null,
+                "max": 13
+              },
+              "sourceIds": [
+                "research-1838f99a1e9f10cc4531",
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 200,
+                "lengthCm": null
+              },
+              "sourceIds": [
+                "research-29abcf08dae11c9b7f4e"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch34-fishbase-trichopodus-leerii-red-head",
+              "title": "Trichopodus leerii Red Head variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/search.php",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        }
+      ]
+    }
+  ]
+}

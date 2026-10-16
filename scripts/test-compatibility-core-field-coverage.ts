@@ -796,16 +796,16 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 20, '119 actionable field gaps should collapse to 20 current taxon research jobs after terminalized variant evidence gaps are excluded');
+assert.equal(taxonResearchPlan.length, 18, '99 actionable field gaps should collapse to 18 current taxon research jobs after terminalized variant evidence gaps are excluded');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 32, 'terminalized variant evidence gaps must leave only currently actionable catalog objects in the taxon research plan');
+assert.equal(plannedCatalogObjects.size, 28, 'terminalized variant evidence gaps must leave only currently actionable catalog objects in the taxon research plan');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
 assert.ok(taxonResearchPlan.filter(item => item.unresolvedObjectCount > 0).every(item => item.researchDisposition === 'identity_resolution_required' && item.baseScientificName === null));
-for (const closedVariantTaxon of ['Carassius auratus', 'Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii']) {
+for (const closedVariantTaxon of ['Carassius auratus', 'Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii', 'Synchiropus splendidus', 'Trichopodus leerii']) {
   assert.equal(taxonResearchPlan.find(item => item.baseScientificName === closedVariantTaxon), undefined, `${closedVariantTaxon} must not re-enter ordinary research after reviewed variant evidence ceiling`);
 }
 const opsariichthysTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Opsariichthys bidens');
