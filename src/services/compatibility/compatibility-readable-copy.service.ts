@@ -290,6 +290,12 @@ const deterministicActionsFor = (
       : '先不要加入；补齐缺失信息后再重新判断。'];
   }
 
+  if (decision.status === 'caution' && codes.has('predation_scope_uncertain')) {
+    return [assessmentMode === 'current_tank'
+      ? '已确认存在食鱼行为，但猎物尺寸边界未明确；先避免明显体型悬殊，并准备出现追捕或吞咬时立即分隔。'
+      : '先不要把明显更小、能入口的鱼直接加入；先核对双方成体体型和口裂，并准备可立即分隔的方案。'];
+  }
+
   return [fallback];
 };
 

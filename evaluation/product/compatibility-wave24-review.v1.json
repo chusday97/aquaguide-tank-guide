@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "kind": "compatibility_wave24_evidence_boundary_review",
+  "generatedFrom": "evaluation/reports/compatibility-active-completion-batch.json",
+  "originalUnresolvedFields": 13,
+  "promotedFields": 1,
+  "remainingFields": 12,
+  "modelGuessingAllowed": false,
+  "writesProductionAuthority": false,
+  "promotions": [
+    {
+      "speciesId": "sp_0185",
+      "scientificName": "Pomacanthus annularis",
+      "field": "predation",
+      "resolution": "supported",
+      "value": {
+        "targets": [
+          "fish_unspecified_size"
+        ]
+      },
+      "reason": "Exact-taxon ADW directly records fish prey/piscivory but does not define prey size; runtime scope is caution-only.",
+      "sourceUrl": "https://animaldiversity.org/accounts/Pomacanthus_annularis",
+      "contentSha256": "02c71aba4a34e748d9904d12bcabd9264d1743b8898f10bc6ee4b0cbb9482606"
+    }
+  ],
+  "remaining": [
+    {
+      "species": "Hypancistrus inspector",
+      "field": "predation",
+      "classification": "needs_new_direct_source",
+      "reason": "Omnivory/invertebrate diet is not direct fish-predation or explicit no-predation evidence."
+    },
+    {
+      "species": "Moenkhausia sanctaefilomenae",
+      "field": "predation",
+      "classification": "needs_new_direct_source",
+      "reason": "Carnivore/diet wording does not establish compatibility-relevant fish prey scope or explicit absence."
+    },
+    {
+      "species": "Xiphophorus maculatus",
+      "field": "predation",
+      "classification": "needs_new_direct_source",
+      "reason": "Community suitability and general diet are not accepted as explicit no-predation evidence."
+    },
+    {
+      "species": "Pomacanthus annularis",
+      "field": "ph",
+      "classification": "range_semantics_insufficient",
+      "reason": "ADW gives an aquarium optimum pH of 8, not a tolerated min-max range; encoding 8-8 would overconstrain compatibility."
+    },
+    {
+      "species": "Rhodeus ocellatus",
+      "field": "predation",
+      "classification": "needs_new_direct_source",
+      "reason": "Omnivore/carnivore-tendency label is diet-only evidence."
+    },
+    {
+      "species": "Amphiprion ocellaris",
+      "field": "ph",
+      "classification": "needs_new_direct_source",
+      "reason": "Cached verified snapshots do not provide a direct accepted pH range."
+    },
+    {
+      "species": "Amphiprion ocellaris",
+      "field": "predation",
+      "classification": "needs_new_direct_source",
+      "reason": "Carnivore label is diet-only; ADW predation text describes clownfish as prey, not fish predation by clownfish."
+    },
+    {
+      "species": "Zacco platypus",
+      "field": "ph",
+      "classification": "needs_new_direct_source",
+      "reason": "Cached verified snapshots do not provide a direct pH range."
+    },
+    {
+      "species": "Zacco platypus",
+      "field": "tank_size",
+      "classification": "needs_new_direct_source",
+      "reason": "Cached verified snapshots do not provide an explicit minimum aquarium volume or length."
+    },
+    {
+      "species": "Paracanthurus hepatus",
+      "field": "ph",
+      "classification": "needs_new_direct_source",
+      "reason": "Cached verified snapshots do not provide a direct pH range."
+    },
+    {
+      "species": "Paracanthurus hepatus",
+      "field": "predation",
+      "classification": "needs_new_direct_source",
+      "reason": "Omnivory plus anti-predator behavior does not establish fish predation by this species."
+    },
+    {
+      "species": "Zebrasoma flavescens",
+      "field": "predation",
+      "classification": "needs_new_direct_source",
+      "reason": "Herbivory/zooplankton diet and predators-of-species text do not establish fish predation or explicit absence."
+    }
+  ]
+}

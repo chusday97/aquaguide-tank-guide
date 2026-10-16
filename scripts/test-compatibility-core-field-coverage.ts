@@ -844,11 +844,12 @@ for (const speciesId of ['sp_0105', 'sp_0468', 'sp_0197', 'sp_0447', 'sp_0451', 
 assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
   [
+    ['sp_0185', 'ph'],
     ['sp_0011', 'predation'],
     ['sp_0062', 'predation'],
     ['sp_0125', 'predation'],
     ['sp_0433', 'predation'],
   ],
-  'Fast Lane must retain only the four predation cases that Wave16 cannot close without conflicting or incomplete scope evidence',
+  'Fast Lane must retain the four unresolved predation cases plus Pomacanthus annularis pH after Wave24 safely closes only its direct fish-prey fact',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

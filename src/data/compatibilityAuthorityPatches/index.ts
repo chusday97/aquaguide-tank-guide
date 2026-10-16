@@ -194,6 +194,13 @@ import {
   compatibilityResearchCoverageWave23Sources,
   compatibilityResearchCoverageWave23VerifiedSourceIds,
 } from './research-coverage-wave23-20261016';
+import {
+  compatibilityPredationWave24AuthorityPatch,
+  compatibilityPredationWave24FieldReviews,
+  compatibilityPredationWave24ProfilePatches,
+  compatibilityPredationWave24Sources,
+  compatibilityPredationWave24VerifiedSourceIds,
+} from './predation-wave24-20261016';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -224,6 +231,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityResearchCoverageWave21Sources,
   ...compatibilityPredationWave22Sources,
   ...compatibilityResearchCoverageWave23Sources,
+  ...compatibilityPredationWave24Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -255,6 +263,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityResearchCoverageWave21FieldReviews,
   ...compatibilityPredationWave22FieldReviews,
   ...compatibilityResearchCoverageWave23FieldReviews,
+  ...compatibilityPredationWave24FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -286,6 +295,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityResearchCoverageWave21VerifiedSourceIds,
   ...compatibilityPredationWave22VerifiedSourceIds,
   ...compatibilityResearchCoverageWave23VerifiedSourceIds,
+  ...compatibilityPredationWave24VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -317,6 +327,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityResearchCoverageWave21ProfilePatches,
   ...compatibilityPredationWave22ProfilePatches,
   ...compatibilityResearchCoverageWave23ProfilePatches,
+  ...compatibilityPredationWave24ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -348,4 +359,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityResearchCoverageWave21AuthorityPatch,
   compatibilityPredationWave22AuthorityPatch,
   compatibilityResearchCoverageWave23AuthorityPatch,
+  compatibilityPredationWave24AuthorityPatch,
 ] as const;

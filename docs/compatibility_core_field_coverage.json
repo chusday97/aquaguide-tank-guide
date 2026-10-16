@@ -13,7 +13,7 @@
   ],
   "genericOnboardingReadySpecies": 78,
   "coreFieldCompleteSpecies": 93,
-  "oneFieldGapSpecies": 6,
+  "oneFieldGapSpecies": 7,
   "runtimeReviewedProfileSpecies": 145,
   "domainOrIdentityHeldSpecies": 282,
   "fieldCounts": {
@@ -74,9 +74,9 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 70,
+      "reviewed_supported": 71,
       "reviewed_neutral_or_negative": 29,
-      "reviewed_unknown": 94,
+      "reviewed_unknown": 93,
       "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -105,7 +105,7 @@
     },
     {
       "field": "predation",
-      "count": 9
+      "count": 8
     },
     {
       "field": "territoriality",
@@ -15487,8 +15487,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -15558,14 +15558,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-pomacanthus-annularis",
-            "reefapp-pomacanthus-annularis"
+            "adw-pomacanthus-annularis-predation-wave24"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

@@ -244,7 +244,10 @@ const predationTargetMatch = (
   if (targets.length > 0) {
     if (targets.includes(prey.id)) return prey.id;
     if (targets.includes('fish_fry') && prey.lifeType === 'fish' && preyContext?.lifeStage === 'fry') return 'fish_fry';
+    if (targets.includes('fish_unspecified_size') && prey.lifeType === 'fish' && predator.id !== prey.id) return 'fish_unspecified_size';
     if (targets.includes('small_fish') && prey.lifeType === 'fish' && prey.size === 'Small') return 'small_fish';
+    // `fish_unspecified_size` records direct fish-prey evidence without inventing
+    // a prey-size threshold. It is handled as a caution below, not a hard block.
     // `very_small_fish` intentionally has no generic size mapping yet: the
     // reviewed evidence does not define a numeric threshold that Domain can
     // safely infer from the coarse Small/Medium/Large catalogue class.
@@ -341,6 +344,8 @@ export const evaluateCompatibility = ({
           : existingPreyContext;
         if (matchedTarget === 'fish_fry') {
           raise('not_recommended', 'fry_predation_risk');
+        } else if (matchedTarget === 'fish_unspecified_size') {
+          raise('caution', 'predation_scope_uncertain');
         } else {
           const juvenile = preyContext?.lifeStage === 'fry'
             || preyContext?.lifeStage === 'juvenile'

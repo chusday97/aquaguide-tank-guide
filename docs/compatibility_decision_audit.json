@@ -147,19 +147,18 @@
         "baseScientificName": "Pomacanthus annularis",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
-        "gapInstances": 2,
+        "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
         "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
+        "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "ph",
-          "predation"
+          "ph"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
+        "existingCoveragePriorityScore": 176
       },
       {
         "researchKey": "Rhodeus ocellatus",
@@ -1076,19 +1075,18 @@
         "baseScientificName": "Pomacanthus annularis",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
-        "gapInstances": 2,
+        "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
         "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
+        "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "ph",
-          "predation"
+          "ph"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
+        "existingCoveragePriorityScore": 176
       },
       {
         "researchKey": "Rhodeus ocellatus",
@@ -2018,7 +2016,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 318,
+    "actionableGaps": 317,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2042,7 +2040,7 @@
       },
       {
         "field": "predation",
-        "count": 9
+        "count": 8
       },
       {
         "field": "territoriality",

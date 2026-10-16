@@ -86,6 +86,7 @@ const RULE_PRIORITY: Record<string, number> = {
   candidate_tank_water_type_conflict: 10,
   fry_predation_risk: 19,
   predation_risk: 20,
+  predation_scope_uncertain: 45,
   species_tank_required: 22,
   single_housing_required: 25,
   temperature_range_conflict: 30,
@@ -189,6 +190,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   const hasGroupSizeGap = codes.has('minimum_group_not_met') || codes.has('group_requirement_gap');
   const hasFinNippingGroupPressure = codes.has('fin_nipping_group_pressure');
   const hasFinNippingTargetVulnerability = codes.has('fin_nipping_target_vulnerability');
+  const hasPredationScopeUncertain = codes.has('predation_scope_uncertain');
   const hasPredationVulnerability = codes.has('predation_vulnerability_context');
   const hasTerritorialPressure = Array.from(codes).some(code => TERRITORIAL_CODES.has(code));
   const hasObservedIntervention = codes.has('observed_intervention');
@@ -253,6 +255,16 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         primaryReason: firstText(warningRules.filter(rule => rule.code === 'observed_intervention'), '当前鱼缸已经出现需要干预的现实异常。'),
         observeAfterAction: '调整或分隔后先确认追逐、躲藏和进食恢复稳定，再考虑继续新增。',
         detailsLabel: '为什么现实问题优先？',
+      };
+    }
+    if (hasPredationScopeUncertain) {
+      return {
+        verdict: 'add_with_conditions',
+        headline: '先核对体型差，再决定是否混养',
+        immediateAction: '已确认该物种会取食鱼类，但来源没有给出猎物尺寸边界。不要把明显更小、能入口的鱼直接混入；先比较双方成体体型和口裂，并准备可立即分隔的方案。',
+        primaryReason: firstText(warningRules.filter(rule => rule.code === 'predation_scope_uncertain'), '已确认存在食鱼行为，但猎物尺寸范围尚未被可靠来源界定。'),
+        observeAfterAction: '重点看持续尾随、追捕、试图吞咬、被追鱼长期躲藏或拒食；出现任一持续异常就立即分隔。',
+        detailsLabel: '为什么不是直接判定不能混？',
       };
     }
     if (hasPredationVulnerability) {

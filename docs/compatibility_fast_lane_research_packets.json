@@ -1,8 +1,38 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 4,
+  "totalPackets": 5,
   "packets": [
+    {
+      "speciesId": "sp_0185",
+      "name": "蓝环神仙",
+      "scientificName": "Pomacanthus annularis",
+      "missingField": "ph",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch21-fishbase-pomacanthus-annularis",
+        "reefapp-pomacanthus-annularis"
+      ],
+      "existingSources": [
+        {
+          "id": "batch21-fishbase-pomacanthus-annularis",
+          "title": "Pomacanthus annularis species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Pomacanthus_annularis.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "reefapp-pomacanthus-annularis",
+          "title": "Pomacanthus annularis",
+          "publisher": "Reef App",
+          "url": "https://reefapp.net/en/encyclopedia/pomacanthus-annularis",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed long-term husbandry pH range for this exact taxon.",
+      "resolutionConstraint": "Promote only an exact-taxon reviewed fact with source provenance; otherwise keep reviewed_unknown."
+    },
     {
       "speciesId": "sp_0011",
       "name": "月光鱼",

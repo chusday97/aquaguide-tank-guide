@@ -45,6 +45,9 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   predation_risk: {
     code: 'predation_risk', title: '捕食或吞食风险', evidence: '已审核资料显示组合存在捕食或吞食风险。', severity: 'high', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  predation_scope_uncertain: {
+    code: 'predation_scope_uncertain', title: '已确认食鱼，但猎物体型范围未确认', evidence: '已审核资料确认该物种会取食鱼类，但可靠来源没有给出猎物尺寸边界；因此不能直接判定所有鱼都不适合混养，也不能把明显更小的鱼当作已证实安全。', severity: 'medium', basis: 'species_trait', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   fry_predation_risk: {
     code: 'fry_predation_risk', title: '鱼苗阶段存在已知捕食风险', evidence: '已审核资料明确记录该物种会取食鱼卵或鱼苗；该风险只在对应幼体阶段触发，不外推为对成鱼的普遍捕食。', severity: 'high', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
@@ -209,7 +212,7 @@ export const applyCanonicalCompatibilityDecision = (
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
   const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'fry_predation_risk', 'predation_risk', 'species_tank_required', 'single_housing_required', 'observed_emergency']);
-  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'ph_range_edge_overlap', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
+  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'ph_range_edge_overlap', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'predation_scope_uncertain', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
   const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context']);

@@ -114,35 +114,6 @@
       ]
     },
     {
-      "researchKey": "Pomacanthus annularis",
-      "baseScientificName": "Pomacanthus annularis",
-      "priorityScore": 183,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "ph",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0185",
-          "name": "蓝环神仙",
-          "scientificName": "Pomacanthus annularis",
-          "gaps": [
-            "ph",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Rhodeus ocellatus",
       "baseScientificName": "Rhodeus ocellatus",
       "priorityScore": 183,
@@ -165,6 +136,33 @@
           "gaps": [
             "territoriality",
             "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Pomacanthus annularis",
+      "baseScientificName": "Pomacanthus annularis",
+      "priorityScore": 176,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "ph"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0185",
+          "name": "蓝环神仙",
+          "scientificName": "Pomacanthus annularis",
+          "gaps": [
+            "ph"
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
