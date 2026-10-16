@@ -3,6 +3,7 @@ import { z } from 'zod';
 import './config';
 
 import type { CatalogEvidenceSource } from '../../../packages/contracts/src';
+import { classifyProviderHttpFailure, ProviderError } from './ai/provider';
 import {
   isCompatibilityResearchClaimScopeEligible,
   type CompatibilityOnboardingCoreField,
@@ -19,6 +20,7 @@ export type CompatibilityResearchProviderConfig = {
   apiKey: string;
   baseUrl: string;
   model: string;
+  fallbackModels: string[];
   timeoutMs: number;
   maxSearchCandidates: number;
   maxVerifiedSources: number;
@@ -30,6 +32,7 @@ export type CompatibilityResearchProviderReadiness = {
   providerId: string;
   host: string | null;
   model: string;
+  fallbackModels: string[];
   searchMode: 'bailian_web_search';
   sourceVerification: 'server_fetch_required';
 };
@@ -398,14 +401,52 @@ const providerFetchWithRetry = async (
   throw lastError;
 };
 
-const completionContent = async (
+export const buildCompatibilityResearchModelPool = (
+  primaryModel: string,
+  fallbackModels: readonly string[] = [],
+) => [...new Set([primaryModel, ...fallbackModels].map(model => model.trim()).filter(Boolean))];
+
+export const shouldFallbackCompatibilityResearchModel = (error: unknown) => (
+  error instanceof ProviderError
+  && (
+    error.reason === 'quota_exhausted'
+    || error.reason === 'rate_limited'
+    || error.reason === 'timeout'
+    || error.reason === 'invalid_response'
+    || (error.reason === 'access_denied' && error.statusCode !== 401)
+    || (error.reason === 'network' && typeof error.statusCode === 'number')
+  )
+);
+
+const normalizeCompatibilityResearchProviderError = (error: unknown) => {
+  if (error instanceof ProviderError) return error;
+  if (error instanceof Error && (error.name === 'AbortError' || error.name === 'TimeoutError')) {
+    return new ProviderError('timeout', 'Compatibility research provider request timed out.');
+  }
+  if (isRetryableProviderNetworkError(error)) {
+    return new ProviderError('network', 'Compatibility research provider request failed.');
+  }
+  return new ProviderError('invalid_response', error instanceof Error ? error.message : 'Compatibility research provider failed.');
+};
+
+const isCompatibilityResearchTransportFailure = (error: unknown) => (
+  isRetryableProviderNetworkError(error)
+  || (error instanceof ProviderError && (
+    error.reason === 'network'
+    || error.reason === 'timeout'
+    || error.reason === 'rate_limited'
+  ))
+);
+
+const completionContentForModel = async (
   config: CompatibilityResearchProviderConfig,
+  model: string,
   fetchImpl: FetchLike,
   body: Record<string, unknown>,
   maxAttempts = 2,
 ) => {
-  if (!config.apiKey || !config.baseUrl || !config.model) {
-    throw new Error('compatibility_research_provider_not_configured');
+  if (!config.apiKey || !config.baseUrl || !model) {
+    throw new ProviderError('not_configured', 'Compatibility research provider is not configured.');
   }
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), config.timeoutMs);
@@ -416,21 +457,75 @@ const completionContent = async (
         authorization: 'Bearer ' + config.apiKey,
         'content-type': 'application/json',
       },
-      body: JSON.stringify({ model: config.model, ...body }),
+      body: JSON.stringify({ model, ...body }),
       signal: controller.signal,
     }, maxAttempts);
-    if (!response.ok) throw new Error('compatibility_research_provider_http_' + response.status);
+    if (!response.ok) {
+      let payload: unknown;
+      try {
+        payload = await response.clone().json();
+      } catch {
+        payload = undefined;
+      }
+      throw new ProviderError(
+        classifyProviderHttpFailure(response.status, payload),
+        'Compatibility research provider returned HTTP ' + response.status + '.',
+        response.status,
+      );
+    }
     const payload = await response.json() as {
       choices?: Array<{ message?: { content?: unknown } }>;
     };
     const content = payload.choices?.[0]?.message?.content;
     if (typeof content !== 'string' || !content.trim()) {
-      throw new Error('compatibility_research_provider_empty_response');
+      throw new ProviderError('invalid_response', 'Compatibility research provider returned an empty response.');
     }
     return content;
+  } catch (error) {
+    throw normalizeCompatibilityResearchProviderError(error);
   } finally {
     clearTimeout(timeout);
   }
+};
+
+const postJsonWithModel = async <T>(
+  schema: z.ZodType<T>,
+  config: CompatibilityResearchProviderConfig,
+  fetchImpl: FetchLike,
+  body: Record<string, unknown>,
+  maxAttempts = 2,
+): Promise<{ data: T; model: string }> => {
+  const models = buildCompatibilityResearchModelPool(config.model, config.fallbackModels);
+  let lastError: unknown;
+
+  for (let index = 0; index < models.length; index += 1) {
+    const model = models[index]!;
+    try {
+      const content = await completionContentForModel(config, model, fetchImpl, body, maxAttempts);
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(cleanJsonText(content));
+      } catch {
+        throw new ProviderError('invalid_response', 'Compatibility research provider returned invalid JSON.');
+      }
+      const validated = schema.safeParse(parsed);
+      if (!validated.success) throw new ProviderError('invalid_response', 'Compatibility research provider returned an invalid schema.');
+      return { data: validated.data, model };
+    } catch (error) {
+      const normalized = normalizeCompatibilityResearchProviderError(error);
+      lastError = normalized;
+      const hasFallback = index < models.length - 1;
+      if (!hasFallback || !shouldFallbackCompatibilityResearchModel(normalized)) throw normalized;
+      console.warn('Aqua Compatibility research model fallback', {
+        fromModel: model,
+        toModel: models[index + 1],
+        reason: normalized.reason,
+        statusCode: normalized.statusCode,
+      });
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new ProviderError('not_configured', 'No Compatibility research model is configured.');
 };
 
 const postJson = async <T>(
@@ -439,18 +534,9 @@ const postJson = async <T>(
   fetchImpl: FetchLike,
   body: Record<string, unknown>,
   maxAttempts = 2,
-): Promise<T> => {
-  const content = await completionContent(config, fetchImpl, body, maxAttempts);
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(cleanJsonText(content));
-  } catch {
-    throw new Error('compatibility_research_provider_invalid_json');
-  }
-  const validated = schema.safeParse(parsed);
-  if (!validated.success) throw new Error('compatibility_research_provider_invalid_schema');
-  return validated.data;
-};
+): Promise<T> => (
+  await postJsonWithModel(schema, config, fetchImpl, body, maxAttempts)
+).data;
 
 const fieldSearchHints: Record<CompatibilityOnboardingCoreField, string> = {
   water: 'freshwater, brackish, marine habitat or aquarium water type',
@@ -1030,7 +1116,7 @@ const extractedClaims = async (
         claims.push(claim);
       }
     } catch (error) {
-      if (!isRetryableProviderNetworkError(error)) throw error;
+      if (!isCompatibilityResearchTransportFailure(error)) throw error;
       transportFailures += 1;
       // A provider transport failure before any successful extraction is treated as
       // a provider outage rather than triggering N identical failures for every source.
@@ -1083,12 +1169,17 @@ const claimsFromExtraction = (
   });
 };
 
+const parseModelList = (value?: string) => [...new Set(
+  (value || '').split(',').map(item => item.trim()).filter(Boolean),
+)];
+
 export const buildCompatibilityResearchProviderConfig = (
   env: NodeJS.ProcessEnv = process.env,
 ): CompatibilityResearchProviderConfig => ({
   apiKey: env.COMPATIBILITY_RESEARCH_AI_API_KEY || env.AI_API_KEY || env.DEEPSEEK_API_KEY || '',
   baseUrl: (env.COMPATIBILITY_RESEARCH_AI_BASE_URL || env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || '').replace(/\/$/, ''),
   model: env.COMPATIBILITY_RESEARCH_AI_MODEL || env.COMPATIBILITY_AI_MODEL || env.AI_MODEL || '',
+  fallbackModels: parseModelList(env.COMPATIBILITY_RESEARCH_AI_FALLBACK_MODELS || env.COMPATIBILITY_AI_FALLBACK_MODELS),
   timeoutMs: Number(env.COMPATIBILITY_RESEARCH_TIMEOUT_MS || env.AI_TIMEOUT_MS || 20_000),
   maxSearchCandidates: Math.max(1, Math.min(12, Number(env.COMPATIBILITY_RESEARCH_MAX_SEARCH_CANDIDATES || 10))),
   maxVerifiedSources: Math.max(1, Math.min(8, Number(env.COMPATIBILITY_RESEARCH_MAX_VERIFIED_SOURCES || 6))),
@@ -1138,6 +1229,7 @@ export const getCompatibilitySpeciesResearchProviderReadiness = (
   providerId,
   host: providerHost(config.baseUrl),
   model: config.model,
+  fallbackModels: [...config.fallbackModels],
   searchMode: 'bailian_web_search',
   sourceVerification: 'server_fetch_required',
 });
@@ -1206,50 +1298,35 @@ export const probeCompatibilityResearchProvider = async (
     model: readiness.model,
   };
   if (!readiness.configured) return { ...base, status: 'not_configured', httpStatus: null, reasonCode: 'provider_not_configured' };
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), Math.min(config.timeoutMs, 5_000));
+
   try {
-    const response = await fetchImpl(config.baseUrl.replace(/\/$/, '') + '/chat/completions', {
-      method: 'POST',
-      headers: {
-        authorization: 'Bearer ' + config.apiKey,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: config.model,
+    const result = await postJsonWithModel(
+      z.object({ ok: z.boolean() }).passthrough(),
+      { ...config, timeoutMs: Math.min(config.timeoutMs, 5_000) },
+      fetchImpl,
+      {
         stream: false,
         temperature: 0,
         max_tokens: 24,
         enable_thinking: false,
         response_format: { type: 'json_object' },
         messages: [{ role: 'user', content: 'Return JSON only: {"ok":true}' }],
-      }),
-      signal: controller.signal,
-    });
-    if (response.status === 401 || response.status === 403) {
-      return { ...base, status: 'credential_rejected', httpStatus: response.status, reasonCode: 'provider_credential_rejected' };
-    }
-    if (!response.ok) {
-      return { ...base, status: 'http_error', httpStatus: response.status, reasonCode: `provider_http_${response.status}` };
-    }
-    let payload: unknown;
-    try {
-      payload = await response.json();
-    } catch {
-      return { ...base, status: 'invalid_response', httpStatus: response.status, reasonCode: 'provider_invalid_json' };
-    }
-    const content = (payload as { choices?: Array<{ message?: { content?: unknown } }> })?.choices?.[0]?.message?.content;
-    if (typeof content !== 'string' || !content.trim()) {
-      return { ...base, status: 'invalid_response', httpStatus: response.status, reasonCode: 'provider_empty_response' };
-    }
-    return { ...base, status: 'ready', httpStatus: response.status, reasonCode: null };
+      },
+      1,
+    );
+    return { ...base, model: result.model, status: 'ready', httpStatus: 200, reasonCode: null };
   } catch (error) {
-    if (isRetryableProviderNetworkError(error)) {
-      return { ...base, status: 'transport_unavailable', httpStatus: null, reasonCode: 'retryable_network_error' };
+    const normalized = normalizeCompatibilityResearchProviderError(error);
+    if (normalized.reason === 'access_denied') {
+      return { ...base, status: 'credential_rejected', httpStatus: normalized.statusCode ?? null, reasonCode: 'provider_credential_rejected' };
     }
-    return { ...base, status: 'invalid_response', httpStatus: null, reasonCode: error instanceof Error ? error.message : 'provider_preflight_failed' };
-  } finally {
-    clearTimeout(timer);
+    if (normalized.reason === 'timeout' || normalized.reason === 'network' || normalized.reason === 'rate_limited') {
+      return { ...base, status: 'transport_unavailable', httpStatus: normalized.statusCode ?? null, reasonCode: normalized.reason };
+    }
+    if (normalized.reason === 'quota_exhausted') {
+      return { ...base, status: 'http_error', httpStatus: normalized.statusCode ?? null, reasonCode: 'provider_quota_exhausted' };
+    }
+    return { ...base, status: 'invalid_response', httpStatus: normalized.statusCode ?? null, reasonCode: normalized.reason };
   }
 };
 

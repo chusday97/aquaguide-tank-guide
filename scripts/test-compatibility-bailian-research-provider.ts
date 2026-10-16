@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import {
   acquireVerifiedCompatibilitySourcesDetailed,
   buildCompatibilityResearchProviderConfig,
+  buildCompatibilityResearchModelPool,
   createBailianCompatibilitySpeciesResearchProvider,
   getCompatibilitySpeciesResearchProviderReadiness,
+  probeCompatibilityResearchProvider,
 } from '../apps/api/src/compatibility-species-research-provider';
 import { assessCompatibilitySpeciesResearchPacket } from '../src/services/compatibility/species-onboarding-research.service';
 
@@ -24,6 +26,7 @@ assert.deepEqual(getCompatibilitySpeciesResearchProviderReadiness(config), {
   providerId: 'bailian-web-research-v1',
   host: 'workspace.cn-beijing.maas.aliyuncs.com',
   model: 'qwen3.7-flash-2026-07-15',
+  fallbackModels: [],
   searchMode: 'bailian_web_search',
   sourceVerification: 'server_fetch_required',
 });
@@ -37,6 +40,7 @@ const dedicatedConfig = buildCompatibilityResearchProviderConfig({
   COMPATIBILITY_RESEARCH_AI_API_KEY: 'dedicated-bailian-key',
   COMPATIBILITY_RESEARCH_AI_BASE_URL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   COMPATIBILITY_RESEARCH_AI_MODEL: 'qwen-dedicated-research',
+  COMPATIBILITY_RESEARCH_AI_FALLBACK_MODELS: 'qwen3.8-27b,deepseek-v4.1-flash,qwen3.8-27b',
   AI_API_KEY: 'generic-deepseek-key',
   AI_BASE_URL: 'https://api.deepseek.com',
   AI_MODEL: 'deepseek-generic',
@@ -44,7 +48,46 @@ const dedicatedConfig = buildCompatibilityResearchProviderConfig({
 assert.equal(dedicatedConfig.apiKey, 'dedicated-bailian-key');
 assert.equal(dedicatedConfig.baseUrl, 'https://dashscope.aliyuncs.com/compatible-mode/v1');
 assert.equal(dedicatedConfig.model, 'qwen-dedicated-research');
+assert.deepEqual(dedicatedConfig.fallbackModels, ['qwen3.8-27b', 'deepseek-v4.1-flash']);
+assert.deepEqual(buildCompatibilityResearchModelPool('qwen3.7-flash-2026-07-15', ['qwen3.8-27b', 'deepseek-v4.1-flash', 'qwen3.8-27b']), ['qwen3.7-flash-2026-07-15', 'qwen3.8-27b', 'deepseek-v4.1-flash']);
 assert.equal(getCompatibilitySpeciesResearchProviderReadiness(dedicatedConfig).configured, true, 'Compatibility research must be able to use Bailian independently from the app-wide DeepSeek provider');
+
+const fallbackModelsSeen: string[] = [];
+const quotaFallbackPreflight = await probeCompatibilityResearchProvider({
+  ...config,
+  model: 'qwen3.7-flash-2026-07-15',
+  fallbackModels: ['qwen3.8-27b'],
+}, async (_input, init) => {
+  const body = JSON.parse(String(init?.body || '{}')) as { model?: string };
+  fallbackModelsSeen.push(body.model || '');
+  if (body.model === 'qwen3.7-flash-2026-07-15') {
+    return new Response(JSON.stringify({ error: { code: 'free_tier_quota_exhausted' } }), {
+      status: 429,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+  return new Response(JSON.stringify({
+    choices: [{ message: { content: '{"ok":true}' } }],
+  }), { status: 200, headers: { 'content-type': 'application/json' } });
+});
+assert.equal(quotaFallbackPreflight.status, 'ready');
+assert.equal(quotaFallbackPreflight.model, 'qwen3.8-27b');
+assert.deepEqual(fallbackModelsSeen, ['qwen3.7-flash-2026-07-15', 'qwen3.8-27b']);
+
+let credentialCalls = 0;
+const credentialFailure = await probeCompatibilityResearchProvider({
+  ...config,
+  fallbackModels: ['qwen3.8-27b'],
+}, async () => {
+  credentialCalls += 1;
+  return new Response(JSON.stringify({ error: { code: 'invalid_api_key' } }), {
+    status: 401,
+    headers: { 'content-type': 'application/json' },
+  });
+});
+assert.equal(credentialFailure.status, 'credential_rejected');
+assert.equal(credentialCalls, 1, 'invalid credentials must not waste requests across the free-model pool');
+
 
 const scientificName = 'Pseudomugil luminatus';
 const sourceUrl = 'https://www.seriouslyfish.com/species/pseudomugil-luminatus';
