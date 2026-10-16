@@ -790,26 +790,35 @@ for (const row of rows) {
     assert.equal(row.genericOnboardingReady, false);
   }
 }
-assert.ok(backlog.length > 0);
+assert.equal(backlog.length, 0, 'persisted variant and exact-taxon research ceilings must leave no repeatedly searchable core-field gaps');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
 assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesId)?.fields[item.field].disposition === 'targeted_source_expansion'));
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 18, '99 actionable field gaps should collapse to 18 current taxon research jobs after terminalized variant evidence gaps are excluded');
+assert.equal(taxonResearchPlan.length, 0, 'all currently exhausted exact-taxon and variant research jobs must be terminalized');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 28, 'terminalized variant evidence gaps must leave only currently actionable catalog objects in the taxon research plan');
+assert.equal(plannedCatalogObjects.size, 0, 'no catalog object should remain in automatic research once all current source strategies are exhausted');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
+assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 0, 'all currently known variant-only taxon jobs must remain terminalized and excluded from active research');
 assert.ok(taxonResearchPlan.filter(item => item.unresolvedObjectCount > 0).every(item => item.researchDisposition === 'identity_resolution_required' && item.baseScientificName === null));
-for (const closedVariantTaxon of ['Carassius auratus', 'Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii', 'Synchiropus splendidus', 'Trichopodus leerii']) {
+for (const closedVariantTaxon of ['Carassius auratus', 'Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii', 'Poecilia latipinna', 'Poecilia sphenops', 'Sahyadria denisonii', 'Synchiropus splendidus', 'Synodontis nigriventris', 'Tanichthys albonubes', 'Trichopodus leerii']) {
   assert.equal(taxonResearchPlan.find(item => item.baseScientificName === closedVariantTaxon), undefined, `${closedVariantTaxon} must not re-enter ordinary research after reviewed variant evidence ceiling`);
 }
 const opsariichthysTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Opsariichthys bidens');
 assert.equal(opsariichthysTaxonJob, undefined, 'Opsariichthys bidens must leave the actionable taxon research plan once its supported fields are promoted and the two remaining fields are terminally classified');
+
+const ocellaris = rowOf('sp_0452');
+assert.equal(ocellaris?.fields.ph.disposition, 'terminal_hold');
+assert.equal(ocellaris?.fields.ph.authoritySource, 'research_evidence_ceiling');
+assert.equal(ocellaris?.fields.ph.reasonCode, 'compatibility_field_source_strategy_exhausted');
+assert.equal(ocellaris?.fields.predation.disposition, 'terminal_hold');
+assert.equal(ocellaris?.fields.predation.authoritySource, 'research_evidence_ceiling');
+assert.equal(ocellaris?.fields.water.status, 'reviewed_supported', 'research ceiling must never override supported reviewed authority');
 
 const koiBetta = rowOf('sp_0258');
 assert.equal(koiBetta?.fields.tank_size.disposition, 'terminal_hold');
@@ -860,13 +869,7 @@ for (const speciesId of ['sp_0105', 'sp_0468', 'sp_0197', 'sp_0447', 'sp_0451', 
 }
 assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
-  [
-    ['sp_0023', 'predation'],
-    ['sp_0062', 'predation'],
-    ['sp_0125', 'predation'],
-    ['sp_0433', 'predation'],
-    ['sp_0475', 'predation'],
-  ],
-  'Fast Lane must retain only currently unresolved one-field predation cases after Pomacanthus annularis pH is closed by reviewed exact-taxon ADW evidence',
+  [],
+  'Fast Lane must be empty once every current researchable core-field gap is either supported or terminally source-exhausted',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

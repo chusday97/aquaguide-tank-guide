@@ -28,32 +28,32 @@
     "temperature": {
       "reviewed_supported": 135,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 40,
-      "needs_research": 18,
+      "reviewed_unknown": 58,
+      "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "ph": {
       "reviewed_supported": 130,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 44,
-      "needs_research": 19,
+      "reviewed_unknown": 63,
+      "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "adult_size": {
       "reviewed_supported": 139,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 39,
-      "needs_research": 15,
+      "reviewed_unknown": 54,
+      "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "tank_size": {
       "reviewed_supported": 127,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 47,
-      "needs_research": 19,
+      "reviewed_unknown": 66,
+      "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
@@ -84,35 +84,35 @@
   },
   "fieldActionableGaps": [
     {
-      "field": "ph",
-      "count": 23
-    },
-    {
-      "field": "tank_size",
-      "count": 21
-    },
-    {
-      "field": "temperature",
-      "count": 18
-    },
-    {
       "field": "water",
-      "count": 15
-    },
-    {
-      "field": "adult_size",
-      "count": 15
-    },
-    {
-      "field": "predation",
-      "count": 7
+      "count": 0
     },
     {
       "field": "territoriality",
       "count": 0
     },
     {
+      "field": "temperature",
+      "count": 0
+    },
+    {
+      "field": "tank_size",
+      "count": 0
+    },
+    {
       "field": "social_behavior",
+      "count": 0
+    },
+    {
+      "field": "predation",
+      "count": 0
+    },
+    {
+      "field": "ph",
+      "count": 0
+    },
+    {
+      "field": "adult_size",
       "count": 0
     }
   ],
@@ -2006,8 +2006,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -2074,12 +2074,12 @@
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "fishbase-zebrasoma-flavescens"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         }
       }
     },
@@ -2091,8 +2091,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 2,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -2114,12 +2114,12 @@
         },
         "ph": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "fishbase-paracanthurus-hepatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -2159,12 +2159,12 @@
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "fishbase-paracanthurus-hepatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         }
       }
     },
@@ -3369,8 +3369,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 2,
-      "actionableGapCount": 3,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 6,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -3382,18 +3382,18 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -3405,11 +3405,11 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -3448,8 +3448,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 2,
-      "actionableGapCount": 3,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 6,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -3461,18 +3461,18 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -3484,11 +3484,11 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -3961,8 +3961,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 2,
-      "actionableGapCount": 3,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 6,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -3974,18 +3974,18 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -3997,11 +3997,11 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -4040,8 +4040,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 3,
-      "actionableGapCount": 2,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 5,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -4065,13 +4065,13 @@
         },
         "ph": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch18-fishbase-tachysurus-fulvidraco",
             "fws-tachysurus-fulvidraco-erss"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -4085,13 +4085,13 @@
         },
         "tank_size": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch18-fishbase-tachysurus-fulvidraco",
             "fws-tachysurus-fulvidraco-erss"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -5353,8 +5353,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -5423,13 +5423,13 @@
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch09-fishbase-moenkhausia-sanctaefilomenae",
             "seriouslyfish-moenkhausia-sanctaefilomenae"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         }
       }
     },
@@ -10293,8 +10293,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -10365,13 +10365,13 @@
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch10-fishbase-hypancistrus-inspector",
             "seriouslyfish-hypancistrus-inspector"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         }
       }
     },
@@ -10654,8 +10654,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 2,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -10679,13 +10679,13 @@
         },
         "ph": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch10-fishbase-zacco-platypus",
             "journal-ethology-zacco-platypus-sociability"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -10699,13 +10699,13 @@
         },
         "tank_size": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch10-fishbase-zacco-platypus",
             "journal-ethology-zacco-platypus-sociability"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -13394,45 +13394,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch28-fishbase-poecilia-sphenops-chocolate"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -13981,45 +13979,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch28-fishbase-poecilia-latipinna-gold"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -14058,45 +14054,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch28-fishbase-poecilia-latipinna-silver"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -14220,45 +14214,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch32-fishbase-tanichthys-albonubes-albino"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -14297,45 +14289,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch32-fishbase-tanichthys-albonubes-longfin"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -15560,8 +15550,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 3,
-      "actionableGapCount": 2,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 5,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -15582,11 +15572,11 @@
           "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -15598,11 +15588,11 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -16407,45 +16397,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch28-fishbase-sahyadria-denisonii-gold"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -17017,45 +17005,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch29-fishbase-poecilia-sphenops-green"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -17535,45 +17521,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch29-fishbase-poecilia-latipinna-blood"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -18011,45 +17995,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch29-fishbase-sahyadria-denisonii-longfin"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -19915,45 +19897,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch29-fishbase-poecilia-latipinna-high-fin-red"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -21182,45 +21162,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch34-fishbase-synodontis-nigriventris-white"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -21259,45 +21237,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch29-fishbase-sahyadria-denisonii-red-line"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -24499,45 +24475,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch30-fishbase-poecilia-latipinna-gold-balloon"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -24576,45 +24550,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch30-fishbase-poecilia-sphenops-black-balloon"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -35194,45 +35166,43 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
-      "terminalGapCount": 3,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [
-            "batch37-fishbase-tanichthys-albonubes-polar"
-          ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "disposition": "terminal_hold",
+          "evidenceIds": [],
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -35765,8 +35735,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -35838,12 +35808,12 @@
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch-02-fishbase-hemigrammus-rhodostomus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         }
       }
     },
@@ -37416,8 +37386,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 2,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -37439,12 +37409,12 @@
         },
         "ph": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch17-fishbase-amphiprion-ocellaris"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -37484,12 +37454,12 @@
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch17-fishbase-amphiprion-ocellaris"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         }
       }
     },
@@ -39347,8 +39317,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -39416,12 +39386,12 @@
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch03-fishbase-rhodeus-ocellatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
         }
       }
     },

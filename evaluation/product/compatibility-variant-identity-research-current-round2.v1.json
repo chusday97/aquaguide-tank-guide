@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_identity_research",
+  "generatedAt": "2026-10-16T17:27:11.823Z",
+  "generatedFrom": "evaluation/product/compatibility-variant-bridge-review-current.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 5,
+    "objectCount": 15,
+    "candidateCount": 0,
+    "unresolvedCount": 15
+  },
+  "groups": [
+    {
+      "baseScientificName": "Poecilia latipinna",
+      "model": "qwen3.8-27b",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0168",
+        "sp_0169",
+        "sp_0209",
+        "sp_0237",
+        "sp_0292"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Poecilia sphenops",
+      "model": "qwen3.8-27b",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0161",
+        "sp_0203",
+        "sp_0293"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Sahyadria denisonii",
+      "model": "qwen3.8-27b",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0196",
+        "sp_0215",
+        "sp_0253"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Synodontis nigriventris",
+      "model": "qwen3.8-27b",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0252"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Tanichthys albonubes",
+      "model": "qwen3.8-27b",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0171",
+        "sp_0172",
+        "sp_0426"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    }
+  ]
+}

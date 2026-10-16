@@ -1,0 +1,1419 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_bridge_review",
+  "generatedAt": "2026-10-16T17:27:42.764Z",
+  "generatedFrom": "evaluation/product/compatibility-research-review-queue-current.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 5,
+    "objectCount": 15,
+    "fieldBridgeReviewRequired": 0,
+    "fieldBridgeEvidenceCeiling": 0,
+    "identityReviewRequired": 0,
+    "identityEvidenceCeiling": 15,
+    "identityBoundaryHold": 0
+  },
+  "groups": [
+    {
+      "researchKey": "Poecilia latipinna",
+      "baseScientificName": "Poecilia latipinna",
+      "objects": [
+        {
+          "speciesId": "sp_0168",
+          "name": "金玛丽",
+          "scientificName": "Poecilia latipinna var. Gold",
+          "baseScientificName": "Poecilia latipinna",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 25,
+                "max": 26
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 7.2,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 10,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 90,
+                "lengthCm": 76
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch28-fishbase-poecilia-latipinna-gold",
+              "title": "Poecilia latipinna Gold variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/3226",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0169",
+          "name": "银玛丽",
+          "scientificName": "Poecilia latipinna var. Silver",
+          "baseScientificName": "Poecilia latipinna",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 25,
+                "max": 26
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 7.2,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 10,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 90,
+                "lengthCm": 76
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch28-fishbase-poecilia-latipinna-silver",
+              "title": "Poecilia latipinna Silver variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/3226",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0209",
+          "name": "血玛丽鱼",
+          "scientificName": "Poecilia latipinna var. Blood",
+          "baseScientificName": "Poecilia latipinna",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 25,
+                "max": 26
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 7.2,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 10,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 90,
+                "lengthCm": 76
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch29-fishbase-poecilia-latipinna-blood",
+              "title": "Poecilia latipinna Blood variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/3226",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0237",
+          "name": "高鳍红玛丽",
+          "scientificName": "Poecilia latipinna var. High Fin Red",
+          "baseScientificName": "Poecilia latipinna",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 25,
+                "max": 26
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 7.2,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 10,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 90,
+                "lengthCm": 76
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch29-fishbase-poecilia-latipinna-high-fin-red",
+              "title": "Poecilia latipinna High Fin Red variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/3226",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0292",
+          "name": "球形金玛丽",
+          "scientificName": "Poecilia latipinna var. Gold Balloon",
+          "baseScientificName": "Poecilia latipinna",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 25,
+                "max": 26
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 7.2,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 10,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-573ea57ffa43a503d94b",
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 90,
+                "lengthCm": 76
+              },
+              "sourceIds": [
+                "research-656ea28b2d5847b08ea9",
+                "research-d16e01c150ce57e5f93b"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch30-fishbase-poecilia-latipinna-gold-balloon",
+              "title": "Poecilia latipinna Gold Balloon variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/3226",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        }
+      ]
+    },
+    {
+      "researchKey": "Poecilia sphenops",
+      "baseScientificName": "Poecilia sphenops",
+      "objects": [
+        {
+          "speciesId": "sp_0161",
+          "name": "巧克力皮球",
+          "scientificName": "Poecilia sphenops var. Chocolate",
+          "baseScientificName": "Poecilia sphenops",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 21,
+                "max": 28
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 6,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 140,
+                "lengthCm": 90
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch28-fishbase-poecilia-sphenops-chocolate",
+              "title": "Poecilia sphenops Chocolate variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/4680",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0203",
+          "name": "绿赏皮球",
+          "scientificName": "Poecilia sphenops var. Green",
+          "baseScientificName": "Poecilia sphenops",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 21,
+                "max": 28
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 6,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 140,
+                "lengthCm": 90
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch29-fishbase-poecilia-sphenops-green",
+              "title": "Poecilia sphenops Green variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/4680",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0293",
+          "name": "球形黑玛丽",
+          "scientificName": "Poecilia sphenops var. Black Balloon",
+          "baseScientificName": "Poecilia sphenops",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "temperature",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 21,
+                "max": 28
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 6,
+                "max": 8
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 140,
+                "lengthCm": 90
+              },
+              "sourceIds": [
+                "research-6900de734849075586a3",
+                "research-cc5599ef88f098af8ba0",
+                "research-161ed76bedaf1cab4ab4"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch30-fishbase-poecilia-sphenops-black-balloon",
+              "title": "Poecilia sphenops Black Balloon variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/4680",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        }
+      ]
+    },
+    {
+      "researchKey": "Sahyadria denisonii",
+      "baseScientificName": "Sahyadria denisonii",
+      "objects": [
+        {
+          "speciesId": "sp_0196",
+          "name": "一眉道人 (黄金型)",
+          "scientificName": "Sahyadria denisonii var. Gold",
+          "baseScientificName": "Sahyadria denisonii",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 20,
+                "max": 25
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6.8,
+                "max": 7.2
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 11,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 350,
+                "lengthCm": 120
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch28-fishbase-sahyadria-denisonii-gold",
+              "title": "Sahyadria denisonii Gold variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/Sahyadria-denisonii.html",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0215",
+          "name": "长鳍一眉道人",
+          "scientificName": "Sahyadria denisonii var. Longfin",
+          "baseScientificName": "Sahyadria denisonii",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 20,
+                "max": 25
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6.8,
+                "max": 7.2
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 11,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 350,
+                "lengthCm": 120
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch29-fishbase-sahyadria-denisonii-longfin",
+              "title": "Sahyadria denisonii Longfin variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/Sahyadria-denisonii.html",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0253",
+          "name": "红纹一眉道人",
+          "scientificName": "Sahyadria denisonii var. Red Line",
+          "baseScientificName": "Sahyadria denisonii",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 20,
+                "max": 25
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6.8,
+                "max": 7.2
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 11,
+                "max": 15
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 350,
+                "lengthCm": 120
+              },
+              "sourceIds": [
+                "research-ccc773de8a3eb2f2bca6",
+                "research-11922e1161fdc6a446c6"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch29-fishbase-sahyadria-denisonii-red-line",
+              "title": "Sahyadria denisonii Red Line variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/Sahyadria-denisonii.html",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        }
+      ]
+    },
+    {
+      "researchKey": "Synodontis nigriventris",
+      "baseScientificName": "Synodontis nigriventris",
+      "objects": [
+        {
+          "speciesId": "sp_0252",
+          "name": "白金反游猫",
+          "scientificName": "Synodontis nigriventris var. White",
+          "baseScientificName": "Synodontis nigriventris",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-4163cb617faa2dba7bb2",
+                "research-b94e08f1fac1a974fe58"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 24,
+                "max": 26
+              },
+              "sourceIds": [
+                "research-4163cb617faa2dba7bb2",
+                "research-b94e08f1fac1a974fe58"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6,
+                "max": 7.5
+              },
+              "sourceIds": [
+                "research-4163cb617faa2dba7bb2",
+                "research-b94e08f1fac1a974fe58"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 10,
+                "max": 10
+              },
+              "sourceIds": [
+                "research-4163cb617faa2dba7bb2",
+                "research-b94e08f1fac1a974fe58"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 70,
+                "lengthCm": 80
+              },
+              "sourceIds": [
+                "research-4163cb617faa2dba7bb2",
+                "research-b94e08f1fac1a974fe58"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch34-fishbase-synodontis-nigriventris-white",
+              "title": "Synodontis nigriventris White variant review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/search.php",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        }
+      ]
+    },
+    {
+      "researchKey": "Tanichthys albonubes",
+      "baseScientificName": "Tanichthys albonubes",
+      "objects": [
+        {
+          "speciesId": "sp_0171",
+          "name": "白玉金丝鱼",
+          "scientificName": "Tanichthys albonubes var. Albino",
+          "baseScientificName": "Tanichthys albonubes",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 14,
+                "max": 22
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6.8,
+                "max": 7.2
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 3,
+                "max": 4
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 54,
+                "lengthCm": 60
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch32-fishbase-tanichthys-albonubes-albino",
+              "title": "Tanichthys albonubes Albino variant review",
+              "publisher": "FishBase",
+              "url": "https://fishbase.se/summary/4758",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0172",
+          "name": "长鳍白云金丝",
+          "scientificName": "Tanichthys albonubes var. Longfin",
+          "baseScientificName": "Tanichthys albonubes",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 14,
+                "max": 22
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6.8,
+                "max": 7.2
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 3,
+                "max": 4
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 54,
+                "lengthCm": 60
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch32-fishbase-tanichthys-albonubes-longfin",
+              "title": "Tanichthys albonubes Longfin variant review",
+              "publisher": "FishBase",
+              "url": "https://fishbase.se/summary/4758",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        },
+        {
+          "speciesId": "sp_0426",
+          "name": "极地白云金丝",
+          "scientificName": "Tanichthys albonubes var. Polar",
+          "baseScientificName": "Tanichthys albonubes",
+          "status": "identity_evidence_ceiling",
+          "unresolvedFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "candidateFields": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "fieldCandidates": [
+            {
+              "field": "water",
+              "proposedValue": "freshwater",
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "temperature",
+              "proposedValue": {
+                "min": 14,
+                "max": 22
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "ph",
+              "proposedValue": {
+                "min": 6.8,
+                "max": 7.2
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "adult_size",
+              "proposedValue": {
+                "min": 3,
+                "max": 4
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            },
+            {
+              "field": "tank_size",
+              "proposedValue": {
+                "liters": 54,
+                "lengthCm": 60
+              },
+              "sourceIds": [
+                "research-d62114c941428efc3f42",
+                "research-580d81074fd5681e91f5"
+              ],
+              "confidence": "high"
+            }
+          ],
+          "reviewedIdentitySourceIds": [],
+          "identitySourceCandidates": [
+            {
+              "id": "batch37-fishbase-tanichthys-albonubes-polar",
+              "title": "Tanichthys albonubes Polar variant species review",
+              "publisher": "FishBase",
+              "url": "https://www.fishbase.se/summary/4758",
+              "sourceType": "professional_association",
+              "reviewStatus": "reviewed"
+            }
+          ],
+          "boundary": null,
+          "reasonCodes": [
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
+          ],
+          "promotionAllowed": false,
+          "writesAuthority": false
+        }
+      ]
+    }
+  ]
+}

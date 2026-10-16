@@ -122,6 +122,76 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-new-variants-terminal.v1.json"
   },
   {
+    "speciesId": "sp_0161",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia sphenops",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0168",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia latipinna",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0169",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia latipinna",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0171",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Tanichthys albonubes",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0172",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Tanichthys albonubes",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
     "speciesId": "sp_0180",
     "status": "identity_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
@@ -136,6 +206,48 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {
+    "speciesId": "sp_0196",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Sahyadria denisonii",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0203",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia sphenops",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0209",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia latipinna",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
     "speciesId": "sp_0213",
     "status": "identity_evidence_ceiling",
     "baseScientificName": "Crossocheilus langei",
@@ -148,6 +260,20 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     ],
     "reasonCode": "variant_identity_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
+  },
+  {
+    "speciesId": "sp_0215",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Sahyadria denisonii",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
   },
   {
     "speciesId": "sp_0222",
@@ -199,6 +325,48 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     ],
     "reasonCode": "variant_identity_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-new-variants-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0237",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia latipinna",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0252",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Synodontis nigriventris",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0253",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Sahyadria denisonii",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
   },
   {
     "speciesId": "sp_0254",
@@ -331,6 +499,34 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     ],
     "reasonCode": "variant_identity_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
+  },
+  {
+    "speciesId": "sp_0292",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia latipinna",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
+  },
+  {
+    "speciesId": "sp_0293",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Poecilia sphenops",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
   },
   {
     "speciesId": "sp_0295",
@@ -566,6 +762,20 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
     ],
     "reasonCode": "variant_identity_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
+  },
+  {
+    "speciesId": "sp_0426",
+    "status": "identity_evidence_ceiling",
+    "baseScientificName": "Tanichthys albonubes",
+    "fields": [
+      "adult_size",
+      "ph",
+      "tank_size",
+      "temperature",
+      "water"
+    ],
+    "reasonCode": "variant_identity_research_exhausted",
+    "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json"
   }
 ];
 

@@ -14,7 +14,7 @@ const fullPlan = buildCompatibilityTaxonResearchPlan();
 const selected = selectCompatibilityResearchBatchJobs('active_completion');
 assert.equal(selected.sourcePlanJobs, fullPlan.length);
 assert.deepEqual(selected.jobs.map(job => job.researchKey), fullPlan.map(job => job.researchKey));
-assert.ok(selected.jobs.length > 0, 'active completion queue should contain current actionable research work');
+assert.equal(selected.jobs.length, 0, 'active completion queue must stay empty once all current automatic research paths are terminalized');
 
 const bettaJob = selected.jobs.find(job => job.researchKey === 'Betta splendens');
 assert.equal(bettaJob, undefined, 'Betta variant gaps must not re-enter active completion after reviewed identity/field evidence ceilings terminalize the remaining unresolved fields');
@@ -22,22 +22,26 @@ for (const closedVariantTaxon of ['Carassius auratus', 'Channa argus', 'Channa a
   assert.equal(selected.jobs.find(job => job.researchKey === closedVariantTaxon), undefined, `${closedVariantTaxon} must remain excluded from repeated ordinary active-completion research`);
 }
 
-const petitellaJob = fullPlan.find(job => job.catalogObjects.some(object => object.speciesId === 'sp_0433'));
-assert.ok(petitellaJob, 'Petitella rhodostoma should exist in the compatibility research plan');
-const petitellaIdentity = resolveReviewedCatalogResearchIdentity(petitellaJob!);
+const petitellaIdentity = resolveReviewedCatalogResearchIdentity({
+  baseScientificName: 'Petitella rhodostoma',
+  catalogObjects: [{
+    speciesId: 'sp_0433',
+    name: '红鼻剪刀',
+    scientificName: 'Petitella rhodostoma',
+    gaps: [],
+    isVariant: false,
+    isExactBaseTaxon: true,
+  }],
+});
 assert.equal(petitellaIdentity?.status, 'verified');
 assert.equal(petitellaIdentity?.canonicalName, 'Petitella rhodostoma');
 assert.equal(petitellaIdentity?.reasonCode, 'reviewed_catalog_identity', 'reviewed catalog identity must outrank an ambiguous external synonym match');
 
-const filtered = selectCompatibilityResearchBatchJobs('active_completion', [selected.jobs[0].researchKey]);
-assert.deepEqual(filtered.jobs.map(job => job.researchKey), [selected.jobs[0].researchKey], 'targeted expansion must select only manifest-requested research keys');
-const excluded = selectCompatibilityResearchBatchJobs(
-  'active_completion',
-  [],
-  [selected.jobs[0].researchKey],
-);
-assert.equal(excluded.jobs.some(job => job.researchKey === selected.jobs[0].researchKey), false, 'persisted evidence ceiling keys must be excludable from future active completion runs');
-assert.ok(selected.jobs.every(job => job.combinedGapFields.length > 0), 'active completion must remain scoped to actionable fields only');
+const filtered = selectCompatibilityResearchBatchJobs('active_completion', ['Petitella rhodostoma']);
+assert.deepEqual(filtered.jobs, [], 'targeted expansion must not resurrect a terminalized research key');
+const excluded = selectCompatibilityResearchBatchJobs('active_completion', [], ['Petitella rhodostoma']);
+assert.deepEqual(excluded.jobs, [], 'persisted evidence ceiling keys must remain excluded from future active completion runs');
+assert.ok(selected.jobs.every(job => job.combinedGapFields.length > 0), 'any future active completion job must remain scoped to actionable fields only');
 
 const packet = (gate: CompatibilityOnboardingReviewPacket['gate'], reasonCodes: string[] = []): CompatibilityOnboardingReviewPacket => ({
   kind: 'compatibility_onboarding',

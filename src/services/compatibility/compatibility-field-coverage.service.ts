@@ -7,6 +7,7 @@ import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdent
 import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getCompatibilityVariantResearchCeiling } from '../../data/compatibilityVariantResearchCeilings';
+import { getCompatibilityFieldResearchCeiling } from '../../data/compatibilityFieldResearchCeilings';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../../modules/knowledge/speciesKnowledge';
 import { resolveKnowledgeSources } from '../../modules/knowledge/knowledgeSources';
@@ -21,7 +22,7 @@ export type CompatibilityFieldCoverageCell = {
   status: CompatibilityFieldCoverageStatus;
   disposition: CompatibilityResearchDisposition;
   evidenceIds: string[];
-  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'variant_evidence_ceiling' | 'none';
+  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'variant_evidence_ceiling' | 'research_evidence_ceiling' | 'none';
   reasonCode: string | null;
 };
 export type CompatibilityFieldCoverageRow = {
@@ -235,6 +236,7 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   const identityBoundary = getCatalogIdentityBoundary(fish.id);
   if (identityBoundary) return { status: 'missing_identity_or_domain', disposition: 'terminal_hold', evidenceIds: identityBoundary.sourceIds, authoritySource: 'identity_boundary', reasonCode: identityBoundary.code };
   const variantResearchCeiling = getCompatibilityVariantResearchCeiling(fish.id, field);
+  const fieldResearchCeiling = getCompatibilityFieldResearchCeiling(fish.id, field);
 
   const exactReviews = reviewedFieldReviews(fish.id, field);
   const supported = [...exactReviews].reverse().find(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id)));
@@ -259,13 +261,18 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   const unknown = exactReviews.find(review => review.resolution === 'unknown');
   if (unknown) {
     const ceiling = evidenceCeilingForField(fish, field);
-    return { status: 'reviewed_unknown', disposition: ceiling ? 'terminal_hold' : 'targeted_source_expansion', evidenceIds: unique([...(unknown.citationIds || []), ...(ceiling?.sourceIds || [])]), authoritySource: ceiling ? 'evidence_ceiling' : 'catalog_field_review', reasonCode: ceiling?.code ?? 'reviewed_field_unknown' };
+    if (ceiling) return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: unique([...(unknown.citationIds || []), ...ceiling.sourceIds]), authoritySource: 'evidence_ceiling', reasonCode: ceiling.code };
+    if (fieldResearchCeiling) return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: [...(unknown.citationIds || [])], authoritySource: 'research_evidence_ceiling', reasonCode: fieldResearchCeiling.reasonCode };
+    return { status: 'reviewed_unknown', disposition: 'targeted_source_expansion', evidenceIds: [...(unknown.citationIds || [])], authoritySource: 'catalog_field_review', reasonCode: 'reviewed_field_unknown' };
   }
   if (knowledge) {
     const ceiling = evidenceCeilingForField(fish, field);
-    return ceiling ? { ...knowledge, disposition: 'terminal_hold', evidenceIds: unique([...knowledge.evidenceIds, ...ceiling.sourceIds]), authoritySource: 'evidence_ceiling', reasonCode: ceiling.code } : knowledge;
+    if (ceiling) return { ...knowledge, disposition: 'terminal_hold', evidenceIds: unique([...knowledge.evidenceIds, ...ceiling.sourceIds]), authoritySource: 'evidence_ceiling', reasonCode: ceiling.code };
+    if (fieldResearchCeiling && knowledge.status === 'reviewed_unknown') return { ...knowledge, disposition: 'terminal_hold', authoritySource: 'research_evidence_ceiling', reasonCode: fieldResearchCeiling.reasonCode };
+    return knowledge;
   }
   if (profile) return profile;
+  if (fieldResearchCeiling) return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: [], authoritySource: 'research_evidence_ceiling', reasonCode: fieldResearchCeiling.reasonCode };
   const ceiling = evidenceCeilingForField(fish, field);
   if (ceiling) return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: ceiling.sourceIds, authoritySource: 'evidence_ceiling', reasonCode: ceiling.code };
   return { status: 'needs_research', disposition: 'targeted_source_expansion', evidenceIds: [], authoritySource: 'none', reasonCode: 'missing_reviewed_field_authority' };
