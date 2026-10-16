@@ -1,15 +1,17 @@
 {
   "version": 1,
   "kind": "compatibility_variant_bridge_review",
-  "generatedAt": "2026-10-16T13:48:09.730Z",
+  "generatedAt": "2026-10-16T15:13:29.345Z",
   "generatedFrom": "evaluation/product/compatibility-research-review-queue.v1.json",
   "promotionAllowed": false,
   "writesAuthority": false,
   "summary": {
     "groupCount": 9,
     "objectCount": 37,
-    "fieldBridgeReviewRequired": 2,
-    "identityReviewRequired": 35,
+    "fieldBridgeReviewRequired": 0,
+    "fieldBridgeEvidenceCeiling": 1,
+    "identityReviewRequired": 0,
+    "identityEvidenceCeiling": 36,
     "identityBoundaryHold": 0
   },
   "groups": [
@@ -22,7 +24,7 @@
           "name": "蓝宝鹦鹉鱼",
           "scientificName": "Amatitlania nigrofasciata var. Blue",
           "baseScientificName": "Amatitlania nigrofasciata",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -97,7 +99,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -107,7 +110,7 @@
           "name": "雪玉鹦鹉鱼",
           "scientificName": "Amatitlania nigrofasciata var. White",
           "baseScientificName": "Amatitlania nigrofasciata",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -182,7 +185,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -192,7 +196,7 @@
           "name": "蓝宝鹦鹉 (球形)",
           "scientificName": "Amatitlania nigrofasciata var. Jellybean",
           "baseScientificName": "Amatitlania nigrofasciata",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -267,7 +271,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -283,7 +288,7 @@
           "name": "糖果KOI斗鱼",
           "scientificName": "Betta splendens var. Koi",
           "baseScientificName": "Betta splendens",
-          "status": "field_bridge_review_required",
+          "status": "field_bridge_evidence_ceiling",
           "unresolvedFields": [
             "tank_size"
           ],
@@ -335,7 +340,7 @@
           "boundary": null,
           "reasonCodes": [
             "reviewed_variant_identity_bridge",
-            "field_bridge_still_requires_review"
+            "variant_field_bridge_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -345,7 +350,7 @@
           "name": "半月斗鱼 (蓝蝴蝶)",
           "scientificName": "Betta splendens var. Halfmoon",
           "baseScientificName": "Betta splendens",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -424,7 +429,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -434,7 +440,7 @@
           "name": "狮王斗鱼 (红黑)",
           "scientificName": "Betta splendens var. Crowntail",
           "baseScientificName": "Betta splendens",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -513,7 +519,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -523,7 +530,7 @@
           "name": "大耳半月斗鱼",
           "scientificName": "Betta splendens var. Dumbo Halfmoon",
           "baseScientificName": "Betta splendens",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -602,7 +609,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -612,7 +620,7 @@
           "name": "将军斗鱼 (蓝龙)",
           "scientificName": "Betta splendens var. Dragon",
           "baseScientificName": "Betta splendens",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -691,7 +699,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -701,7 +710,7 @@
           "name": "白金半月斗鱼",
           "scientificName": "Betta splendens var. Platinum",
           "baseScientificName": "Betta splendens",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -780,7 +789,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -790,7 +800,7 @@
           "name": "红白狮头斗鱼",
           "scientificName": "Betta splendens var. Kohaku Crown",
           "baseScientificName": "Betta splendens",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -869,7 +879,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -879,7 +890,7 @@
           "name": "蓝龙将军斗鱼",
           "scientificName": "Betta splendens var. Blue Dragon",
           "baseScientificName": "Betta splendens",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -958,7 +969,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -974,7 +986,7 @@
           "name": "兰寿金鱼",
           "scientificName": "Carassius auratus var. Ranchu",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1060,7 +1072,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1070,7 +1083,7 @@
           "name": "泰狮金鱼",
           "scientificName": "Carassius auratus var. Oranda",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1156,7 +1169,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1166,7 +1180,7 @@
           "name": "熊猫金鱼",
           "scientificName": "Carassius auratus var. Panda",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1252,7 +1266,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1262,7 +1277,7 @@
           "name": "短尾狮头金鱼",
           "scientificName": "Carassius auratus var. Oranda",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1348,7 +1363,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1358,7 +1374,7 @@
           "name": "龙睛金鱼",
           "scientificName": "Carassius auratus var. Telescopes",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1444,7 +1460,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1454,7 +1471,7 @@
           "name": "红白虎头金鱼",
           "scientificName": "Carassius auratus var. Tigerhead",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1540,7 +1557,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1550,7 +1568,7 @@
           "name": "蓝寿 (五花)",
           "scientificName": "Carassius auratus var. Calico Ranchu",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1636,7 +1654,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1646,7 +1665,7 @@
           "name": "黑狮头金鱼",
           "scientificName": "Carassius auratus var. Black Oranda",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1732,7 +1751,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1742,7 +1762,7 @@
           "name": "红白蝶尾",
           "scientificName": "Carassius auratus var. Butterfly Tail",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1828,7 +1848,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1838,7 +1859,7 @@
           "name": "雪白金金鱼 (改良)",
           "scientificName": "Carassius auratus var. White Gold",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -1924,7 +1945,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -1934,7 +1956,7 @@
           "name": "黑金刚龙睛",
           "scientificName": "Carassius auratus var. Black Moor",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2020,7 +2042,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2030,7 +2053,7 @@
           "name": "熊猫蝶尾 (极品)",
           "scientificName": "Carassius auratus var. Panda Butterfly",
           "baseScientificName": "Carassius auratus",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2116,7 +2139,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2132,7 +2156,7 @@
           "name": "白金雷龙",
           "scientificName": "Channa argus var. Platinum",
           "baseScientificName": "Channa argus",
-          "status": "field_bridge_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "ph",
             "tank_size"
@@ -2165,9 +2189,7 @@
               "confidence": "high"
             }
           ],
-          "reviewedIdentitySourceIds": [
-            "batch03-fishbase-channa-argus"
-          ],
+          "reviewedIdentitySourceIds": [],
           "identitySourceCandidates": [
             {
               "id": "batch03-fishbase-channa-argus",
@@ -2180,8 +2202,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "reviewed_variant_identity_bridge",
-            "field_bridge_still_requires_review"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2197,7 +2219,7 @@
           "name": "红眼白子雷龙",
           "scientificName": "Channa asiatica var. Albino",
           "baseScientificName": "Channa asiatica",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "temperature",
             "ph",
@@ -2275,7 +2297,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2291,7 +2314,7 @@
           "name": "黑线飞狐 (金型)",
           "scientificName": "Crossocheilus langei var. Gold",
           "baseScientificName": "Crossocheilus langei",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2375,7 +2398,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2385,7 +2409,7 @@
           "name": "白金黑线飞狐",
           "scientificName": "Crossocheilus langei var. Platinum",
           "baseScientificName": "Crossocheilus langei",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2469,7 +2493,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2479,7 +2504,7 @@
           "name": "黄金大帆飞狐",
           "scientificName": "Crossocheilus langei var. Gold Longfin",
           "baseScientificName": "Crossocheilus langei",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2563,7 +2588,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2579,7 +2605,7 @@
           "name": "荧光斑马鱼",
           "scientificName": "Danio rerio var. GloFish",
           "baseScientificName": "Danio rerio",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2669,7 +2695,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2679,7 +2706,7 @@
           "name": "荧光红斑马",
           "scientificName": "Danio rerio var. Glo Red",
           "baseScientificName": "Danio rerio",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2769,7 +2796,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2779,7 +2807,7 @@
           "name": "荧光绿斑马",
           "scientificName": "Danio rerio var. Glo Green",
           "baseScientificName": "Danio rerio",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2869,7 +2897,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2879,7 +2908,7 @@
           "name": "荧光橙斑马",
           "scientificName": "Danio rerio var. Glo Orange",
           "baseScientificName": "Danio rerio",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -2969,7 +2998,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -2979,7 +3009,7 @@
           "name": "荧光紫斑马",
           "scientificName": "Danio rerio var. Glo Purple",
           "baseScientificName": "Danio rerio",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -3069,7 +3099,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -3079,7 +3110,7 @@
           "name": "荧光粉斑马",
           "scientificName": "Danio rerio var. Glo Pink",
           "baseScientificName": "Danio rerio",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -3169,7 +3200,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -3179,7 +3211,7 @@
           "name": "荧光橙斑马 (长鳍)",
           "scientificName": "Danio rerio var. Glo Orange Longfin",
           "baseScientificName": "Danio rerio",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -3269,7 +3301,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -3285,7 +3318,7 @@
           "name": "长鳍电光美人",
           "scientificName": "Melanotaenia praecox var. Longfin",
           "baseScientificName": "Melanotaenia praecox",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -3362,7 +3395,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false
@@ -3378,7 +3412,7 @@
           "name": "黄金眼镜蛇蛇鱼 (长鳍)",
           "scientificName": "Pangio kuhlii var. Longfin",
           "baseScientificName": "Pangio kuhlii",
-          "status": "identity_review_required",
+          "status": "identity_evidence_ceiling",
           "unresolvedFields": [
             "water",
             "temperature",
@@ -3451,7 +3485,8 @@
           ],
           "boundary": null,
           "reasonCodes": [
-            "variant_identity_bridge_missing"
+            "variant_identity_bridge_missing",
+            "variant_identity_research_exhausted"
           ],
           "promotionAllowed": false,
           "writesAuthority": false

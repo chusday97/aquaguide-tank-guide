@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_identity_research",
+  "generatedAt": "2026-10-16T15:07:22.666Z",
+  "generatedFrom": "evaluation/product/compatibility-variant-bridge-review.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 1,
+    "objectCount": 1,
+    "candidateCount": 0,
+    "unresolvedCount": 1
+  },
+  "groups": [
+    {
+      "baseScientificName": "Channa argus",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [
+        {
+          "id": "research-3f32ebcd5f870b3a4d55",
+          "title": "Channa argus (Northern Snakehead) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/channa-argus",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "be2875d83ea6f59b94dff50a19d4c4783ad92737bd0a53f8a82ef74ace54f830"
+        }
+      ],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0224"
+      ],
+      "attemptedUrls": [
+        "https://www.seriouslyfish.com/species/channa-argus"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    }
+  ]
+}

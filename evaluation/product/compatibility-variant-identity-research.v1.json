@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_identity_research",
+  "generatedAt": "2026-10-16T14:28:44.895Z",
+  "generatedFrom": "evaluation/product/compatibility-variant-bridge-review.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 8,
+    "objectCount": 35,
+    "candidateCount": 0,
+    "unresolvedCount": 35
+  },
+  "groups": [
+    {
+      "baseScientificName": "Amatitlania nigrofasciata",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0147",
+        "sp_0148",
+        "sp_0222"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Betta splendens",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0259",
+        "sp_0260",
+        "sp_0261",
+        "sp_0262",
+        "sp_0389",
+        "sp_0390",
+        "sp_0391"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Carassius auratus",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0063",
+        "sp_0064",
+        "sp_0149",
+        "sp_0150",
+        "sp_0180",
+        "sp_0348",
+        "sp_0349",
+        "sp_0350",
+        "sp_0351",
+        "sp_0385",
+        "sp_0386",
+        "sp_0387"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Channa asiatica",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0223"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Crossocheilus langei",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0213",
+        "sp_0254",
+        "sp_0395"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Danio rerio",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0152",
+        "sp_0289",
+        "sp_0290",
+        "sp_0291",
+        "sp_0363",
+        "sp_0364",
+        "sp_0419"
+      ],
+      "attemptedUrls": [
+        "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3041685"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Melanotaenia praecox",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0295"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Pangio kuhlii",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0413"
+      ],
+      "attemptedUrls": [],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    }
+  ]
+}

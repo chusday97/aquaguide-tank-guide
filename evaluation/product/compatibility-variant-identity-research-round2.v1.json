@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_identity_research",
+  "generatedAt": "2026-10-16T14:33:58.952Z",
+  "generatedFrom": "evaluation/product/compatibility-variant-bridge-review.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 8,
+    "objectCount": 35,
+    "candidateCount": 0,
+    "unresolvedCount": 35
+  },
+  "groups": [
+    {
+      "baseScientificName": "Amatitlania nigrofasciata",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0147",
+        "sp_0148",
+        "sp_0222"
+      ],
+      "attemptedUrls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3876095/",
+        "https://seriouslyfish.com/taxonomy/amatitlania-nigrofasciata",
+        "https://www.frontiersin.org/articles/10.3389/fgene.2021.645678/full",
+        "https://www.fishbase.org/summary/1023"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Betta splendens",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [
+        {
+          "id": "research-5d36c457fa1f8ec50921",
+          "title": "Betta splendens (Siamese Fighting Fish) | INFORMATION | Animal Diversity Web",
+          "publisher": "Animal Diversity Web, University of Michigan",
+          "url": "https://animaldiversity.org/accounts/Betta_splendens",
+          "sourceType": "university",
+          "contentSha256": "56aaaa5ccd06e32da2e116c1d4eb7522af2940c16e1b1be3820cf02cd53ac82b"
+        }
+      ],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0259",
+        "sp_0260",
+        "sp_0261",
+        "sp_0262",
+        "sp_0389",
+        "sp_0390",
+        "sp_0391"
+      ],
+      "attemptedUrls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3041685/",
+        "https://www.seriouslyfish.com/index.php/betta-splendens",
+        "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2021.734680/full",
+        "https://animaldiversity.org/accounts/Betta_splendens",
+        "https://academic.oup.com/icb/article/58/4/633/5045688"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Carassius auratus",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0063",
+        "sp_0064",
+        "sp_0149",
+        "sp_0150",
+        "sp_0180",
+        "sp_0348",
+        "sp_0349",
+        "sp_0350",
+        "sp_0351",
+        "sp_0385",
+        "sp_0386",
+        "sp_0387"
+      ],
+      "attemptedUrls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3074568/",
+        "https://www.seriouslyfish.com/index.php?/topic/10-goldfish/",
+        "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgen.2020.00581/full",
+        "https://www.fishbase.se/summary/Carassius-auratus.html",
+        "https://academic.oup.com/icb/article/58/4/635/5045688"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Channa asiatica",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [
+        {
+          "id": "research-f7e7eac07d01fb596218",
+          "title": "Channa asiatica (Chinese Snakehead) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/channa-asiatica",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "ebd8cebe0410b8b2d3073aa698aa8937f0a1c663feadd507fc458bf1f567fb51"
+        }
+      ],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0223"
+      ],
+      "attemptedUrls": [
+        "https://www.seriouslyfish.com/species/channa-asiatica"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Crossocheilus langei",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0213",
+        "sp_0254",
+        "sp_0395"
+      ],
+      "attemptedUrls": [
+        "https://www.seriouslyfish.com/spotlight/crossocheilus-langei"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Danio rerio",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [
+        {
+          "id": "research-30d38c2c02602871f701",
+          "title": "Danio rerio (Zebra Danio) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/danio-rerio",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "c86eaff18de97c41118d8b5f5074b108cc540f425113b6fc238fc74a7ceca50b"
+        }
+      ],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0152",
+        "sp_0289",
+        "sp_0290",
+        "sp_0291",
+        "sp_0363",
+        "sp_0364",
+        "sp_0419"
+      ],
+      "attemptedUrls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3024568/",
+        "https://www.seriouslyfish.com/species/danio-rerio",
+        "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2021.789651/full",
+        "https://www.fishbase.se/summary/Danio-rerio.html",
+        "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002290"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Melanotaenia praecox",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [
+        {
+          "id": "research-d976c38a20fee2e9d22c",
+          "title": "Melanotaenia praecox (Neon Dwarf Rainbowfish) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/melanotaenia-praecox",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "2447dfc746d6b637ff1dba0d501c6419c547a865fe9392fea189901179e0b857"
+        }
+      ],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0295"
+      ],
+      "attemptedUrls": [
+        "https://www.seriouslyfish.com/species/melanotaenia-praecox"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "baseScientificName": "Pangio kuhlii",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0413"
+      ],
+      "attemptedUrls": [
+        "https://www.seriouslyfish.com/species/pangio-kuhlii"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    }
+  ]
+}

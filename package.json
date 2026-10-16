@@ -378,6 +378,8 @@
     "build:compatibility-research-review": "node --import tsx scripts/build-compatibility-research-review-queue.ts",
     "build:compatibility-variant-bridge-review": "node --import tsx scripts/build-compatibility-variant-bridge-review.ts",
     "test:compatibility-variant-bridge-review": "node --import tsx scripts/test-compatibility-variant-bridge-review.ts",
+    "run:compatibility-variant-identity-research": "node --import tsx scripts/run-compatibility-variant-identity-research.ts",
+    "test:compatibility-variant-identity-research": "node --import tsx scripts/test-compatibility-variant-identity-research.ts",
     "test:compatibility-research-review": "node --import tsx scripts/test-compatibility-research-review-queue.ts",
     "run:compatibility-targeted-expansion": "node --import tsx scripts/run-compatibility-targeted-expansion.ts",
     "run:compatibility-source-strategy-review": "node --import tsx scripts/run-compatibility-source-strategy-review.ts",

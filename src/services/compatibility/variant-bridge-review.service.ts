@@ -11,7 +11,9 @@ import type {
 
 export type CompatibilityVariantBridgeObjectStatus =
   | 'field_bridge_review_required'
+  | 'field_bridge_evidence_ceiling'
   | 'identity_review_required'
+  | 'identity_evidence_ceiling'
   | 'identity_boundary_hold';
 
 export type CompatibilityVariantBridgeCandidate = {
@@ -55,6 +57,22 @@ export type CompatibilityVariantBridgeReviewGroup = {
   objects: CompatibilityVariantBridgeReviewObject[];
 };
 
+export type CompatibilityVariantIdentityResearchReport = {
+  groups?: Array<{
+    baseScientificName?: string;
+    candidates?: Array<{ speciesId?: string }>;
+    unresolvedSpeciesIds?: string[];
+    attemptedUrls?: string[];
+  }>;
+};
+
+export type CompatibilityVariantFieldResearchReport = {
+  speciesId?: string;
+  field?: string;
+  packet?: { sources?: unknown[] };
+  resumeBundle?: { acquisition?: { round?: number; attemptedUrls?: string[] } };
+};
+
 export type CompatibilityVariantBridgeReviewManifest = {
   version: 1;
   kind: 'compatibility_variant_bridge_review';
@@ -66,7 +84,9 @@ export type CompatibilityVariantBridgeReviewManifest = {
     groupCount: number;
     objectCount: number;
     fieldBridgeReviewRequired: number;
+    fieldBridgeEvidenceCeiling: number;
     identityReviewRequired: number;
+    identityEvidenceCeiling: number;
     identityBoundaryHold: number;
   };
   groups: CompatibilityVariantBridgeReviewGroup[];
@@ -78,9 +98,11 @@ const reviewedIdentityBridgeFor = (speciesId: string, baseScientificName: string
   const target = normalizeScientificName(baseScientificName);
   return getApprovedCatalogFieldReviews(speciesId).find(review => {
     if (review.field !== 'identity' || typeof review.proposedValue !== 'object' || review.proposedValue === null) return false;
-    const value = review.proposedValue as { baseSpeciesKey?: unknown };
-    return typeof value.baseSpeciesKey === 'string'
-      && normalizeScientificName(value.baseSpeciesKey) === target;
+    const value = review.proposedValue as { baseSpeciesKey?: unknown; variantKey?: unknown };
+    if (typeof value.baseSpeciesKey !== 'string' || normalizeScientificName(value.baseSpeciesKey) !== target) return false;
+    if (typeof value.variantKey !== 'string' || !value.variantKey.trim()) return false;
+    const variantToken = value.variantKey.trim().toLowerCase();
+    return review.conflictNotes.some(note => note.toLowerCase().includes(variantToken));
   }) ?? null;
 };
 
@@ -108,6 +130,46 @@ const collectKnowledgeSourceIds = (value: unknown, out = new Set<string>()): Set
   return out;
 };
 
+const identityEvidenceCeilingSpeciesIds = (
+  reports: readonly CompatibilityVariantIdentityResearchReport[],
+) => {
+  const unresolvedCount = new Map<string, number>();
+  const resolved = new Set<string>();
+  for (const report of reports) {
+    for (const group of report.groups || []) {
+      for (const candidate of group.candidates || []) {
+        if (candidate.speciesId) resolved.add(candidate.speciesId);
+      }
+      for (const speciesId of group.unresolvedSpeciesIds || []) {
+        unresolvedCount.set(speciesId, (unresolvedCount.get(speciesId) || 0) + 1);
+      }
+    }
+  }
+  return new Set([...unresolvedCount.entries()]
+    .filter(([speciesId, count]) => count >= 2 && !resolved.has(speciesId))
+    .map(([speciesId]) => speciesId));
+};
+
+const fieldBridgeEvidenceCeilings = (
+  reports: readonly CompatibilityVariantFieldResearchReport[],
+) => {
+  const roundsByKey = new Map<string, number>();
+  const supported = new Set<string>();
+  for (const report of reports) {
+    if (!report.speciesId || !report.field) continue;
+    const key = `${report.speciesId}:${report.field}`;
+    if ((report.packet?.sources?.length || 0) > 0) {
+      supported.add(key);
+      continue;
+    }
+    const round = report.resumeBundle?.acquisition?.round || 0;
+    roundsByKey.set(key, Math.max(roundsByKey.get(key) || 0, round));
+  }
+  return new Set([...roundsByKey.entries()]
+    .filter(([key, round]) => round >= 2 && !supported.has(key))
+    .map(([key]) => key));
+};
+
 const identitySourceCandidatesFor = (speciesId: string) => {
   const catalogSources = getCatalogReviewSourceCandidates(speciesId);
   const knowledge = getReviewedSpeciesKnowledge(speciesId);
@@ -131,8 +193,12 @@ export const buildCompatibilityVariantBridgeReviewManifest = (
   plan: readonly CompatibilityTaxonResearchPlanItem[],
   generatedAt = new Date().toISOString(),
   generatedFrom = 'evaluation/product/compatibility-research-review-queue.v1.json',
+  identityResearchReports: readonly CompatibilityVariantIdentityResearchReport[] = [],
+  fieldResearchReports: readonly CompatibilityVariantFieldResearchReport[] = [],
 ): CompatibilityVariantBridgeReviewManifest => {
   const planByKey = new Map(plan.map(item => [item.researchKey, item] as const));
+  const identityCeilings = identityEvidenceCeilingSpeciesIds(identityResearchReports);
+  const fieldCeilings = fieldBridgeEvidenceCeilings(fieldResearchReports);
   const groups: CompatibilityVariantBridgeReviewGroup[] = [];
 
   for (const queueItem of queue.items.filter(item => item.queue === 'variant_bridge_review')) {
@@ -146,17 +212,27 @@ export const buildCompatibilityVariantBridgeReviewManifest = (
         const boundary = getCatalogIdentityBoundary(object.speciesId);
         const reviewedIdentity = reviewedIdentityBridgeFor(object.speciesId, baseScientificName);
         const fieldCandidates = candidateFieldsForObject(queueItem, object.gaps);
+        const allCandidateFieldsCeiling = fieldCandidates.length > 0
+          && fieldCandidates.every(candidate => fieldCeilings.has(`${object.speciesId}:${candidate.field}`));
         const status: CompatibilityVariantBridgeObjectStatus = boundary
           ? 'identity_boundary_hold'
           : reviewedIdentity
-            ? 'field_bridge_review_required'
-            : 'identity_review_required';
+            ? allCandidateFieldsCeiling
+              ? 'field_bridge_evidence_ceiling'
+              : 'field_bridge_review_required'
+            : identityCeilings.has(object.speciesId)
+              ? 'identity_evidence_ceiling'
+              : 'identity_review_required';
 
         const reasonCodes = boundary
           ? ['catalog_identity_boundary']
           : reviewedIdentity
-            ? ['reviewed_variant_identity_bridge', 'field_bridge_still_requires_review']
-            : ['variant_identity_bridge_missing'];
+            ? allCandidateFieldsCeiling
+              ? ['reviewed_variant_identity_bridge', 'variant_field_bridge_research_exhausted']
+              : ['reviewed_variant_identity_bridge', 'field_bridge_still_requires_review']
+            : identityCeilings.has(object.speciesId)
+              ? ['variant_identity_bridge_missing', 'variant_identity_research_exhausted']
+              : ['variant_identity_bridge_missing'];
 
         return {
           speciesId: object.speciesId,
@@ -204,7 +280,9 @@ export const buildCompatibilityVariantBridgeReviewManifest = (
       groupCount: groups.length,
       objectCount: allObjects.length,
       fieldBridgeReviewRequired: allObjects.filter(item => item.status === 'field_bridge_review_required').length,
+      fieldBridgeEvidenceCeiling: allObjects.filter(item => item.status === 'field_bridge_evidence_ceiling').length,
       identityReviewRequired: allObjects.filter(item => item.status === 'identity_review_required').length,
+      identityEvidenceCeiling: allObjects.filter(item => item.status === 'identity_evidence_ceiling').length,
       identityBoundaryHold: allObjects.filter(item => item.status === 'identity_boundary_hold').length,
     },
     groups,

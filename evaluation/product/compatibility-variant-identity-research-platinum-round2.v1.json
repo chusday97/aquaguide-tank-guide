@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_identity_research",
+  "generatedAt": "2026-10-16T15:07:41.703Z",
+  "generatedFrom": "evaluation/product/compatibility-variant-bridge-review.v1.json",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "summary": {
+    "groupCount": 1,
+    "objectCount": 1,
+    "candidateCount": 0,
+    "unresolvedCount": 1
+  },
+  "groups": [
+    {
+      "baseScientificName": "Channa argus",
+      "model": "qwen3.7-flash-2026-07-15",
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0224"
+      ],
+      "attemptedUrls": [
+        "https://www.seriouslyfish.com/taxonomy/channa-argus"
+      ],
+      "promotionAllowed": false,
+      "writesAuthority": false
+    }
+  ]
+}

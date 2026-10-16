@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_field_research",
+  "generatedAt": "2026-10-16T15:09:59.322Z",
+  "speciesId": "sp_0258",
+  "scientificName": "Betta splendens var. Koi",
+  "field": "tank_size",
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "packet": {
+    "packetId": "bailian-web-research-v1-64c157b88727aad6db6e",
+    "providerId": "bailian-web-research-v1",
+    "catalogKey": "sp_0258",
+    "commonName": "糖果KOI斗鱼",
+    "scientificName": "Betta splendens var. Koi",
+    "identityStatus": "verified",
+    "sources": [],
+    "claims": [],
+    "diagnostics": {
+      "extractionStatus": "not_attempted",
+      "verifiedSourceCount": 0
+    }
+  },
+  "resumeBundle": {
+    "providerId": "bailian-web-research-v1",
+    "catalogKey": "sp_0258",
+    "commonName": "糖果KOI斗鱼",
+    "scientificName": "Betta splendens var. Koi",
+    "targetFields": [
+      "tank_size"
+    ],
+    "documents": [],
+    "acquisition": {
+      "attemptedUrls": [],
+      "round": 2,
+      "preferredSourceTypes": [
+        "government",
+        "peer_reviewed",
+        "university",
+        "professional_association",
+        "curated_husbandry"
+      ],
+      "attemptedRouteIds": []
+    }
+  }
+}
