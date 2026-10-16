@@ -377,6 +377,7 @@
     "test:compatibility-resume-review": "node --import tsx scripts/test-compatibility-resume-review-manifest.ts",
     "build:compatibility-research-review": "node --import tsx scripts/build-compatibility-research-review-queue.ts",
     "build:compatibility-variant-bridge-review": "node --import tsx scripts/build-compatibility-variant-bridge-review.ts",
+    "generate:compatibility-variant-research-ceilings": "node --import tsx scripts/generate-compatibility-variant-research-ceilings.ts",
     "test:compatibility-variant-bridge-review": "node --import tsx scripts/test-compatibility-variant-bridge-review.ts",
     "run:compatibility-variant-identity-research": "node --import tsx scripts/run-compatibility-variant-identity-research.ts",
     "test:compatibility-variant-identity-research": "node --import tsx scripts/test-compatibility-variant-identity-research.ts",

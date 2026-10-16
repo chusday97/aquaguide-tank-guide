@@ -166,7 +166,7 @@ assert.deepEqual(approvedValue('sp_0473', 'temperature'), { min: 24, max: 26 });
 assert.deepEqual(approvedValue('sp_0473', 'ph'), { min: 6, max: 6.8 });
 assert.deepEqual(approvedValue('sp_0473', 'adult_size'), { min: null, max: 6.5 }, 'Nannostomus beckfordi adult size must conservatively retain the larger exact-page maximum');
 assert.deepEqual(approvedValue('sp_0473', 'tank_size'), { liters: 80, lengthCm: null });
-assert.equal(approvedValue('sp_0473', 'water'), undefined, 'Nannostomus beckfordi freshwater authority must remain unresolved until the exact source states it directly');
+assert.deepEqual(approvedValue('sp_0473', 'water'), 'freshwater', 'water-direct-wave29 exact-taxon review must expose Nannostomus beckfordi freshwater authority');
 const numericWave1SourceIds = [
   'fishipedia-poropanchax-normani-numeric-husbandry',
   'fishipedia-hyphessobrycon-amapaensis-numeric-husbandry',
@@ -796,22 +796,32 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 34, '291 actionable field gaps should collapse to 34 base-taxon research jobs after Wave28 closes Thayeria water + pH');
+assert.equal(taxonResearchPlan.length, 20, '119 actionable field gaps should collapse to 20 current taxon research jobs after terminalized variant evidence gaps are excluded');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 74, 'all remaining actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 32, 'terminalized variant evidence gaps must leave only currently actionable catalog objects in the taxon research plan');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
 assert.ok(taxonResearchPlan.filter(item => item.unresolvedObjectCount > 0).every(item => item.researchDisposition === 'identity_resolution_required' && item.baseScientificName === null));
-const goldfishTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus');
-assert.ok(goldfishTaxonJob);
-assert.equal(goldfishTaxonJob.catalogObjectCount, 12);
-assert.equal(goldfishTaxonJob.variantObjectCount, 12);
-assert.equal(goldfishTaxonJob.exactObjectCount, 0);
+for (const closedVariantTaxon of ['Carassius auratus', 'Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii']) {
+  assert.equal(taxonResearchPlan.find(item => item.baseScientificName === closedVariantTaxon), undefined, `${closedVariantTaxon} must not re-enter ordinary research after reviewed variant evidence ceiling`);
+}
 const opsariichthysTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Opsariichthys bidens');
 assert.equal(opsariichthysTaxonJob, undefined, 'Opsariichthys bidens must leave the actionable taxon research plan once its supported fields are promoted and the two remaining fields are terminally classified');
+
+const koiBetta = rowOf('sp_0258');
+assert.equal(koiBetta?.fields.tank_size.disposition, 'terminal_hold');
+assert.equal(koiBetta?.fields.tank_size.authoritySource, 'variant_evidence_ceiling');
+assert.equal(koiBetta?.fields.tank_size.reasonCode, 'variant_field_bridge_research_exhausted');
+const platinumChanna = rowOf('sp_0224');
+assert.equal(platinumChanna?.actionableGapCount, 0);
+assert.equal(platinumChanna?.fields.ph.authoritySource, 'variant_evidence_ceiling');
+assert.equal(platinumChanna?.fields.tank_size.authoritySource, 'variant_evidence_ceiling');
+for (const terminalVariantId of ['sp_0295', 'sp_0413', 'sp_0419']) {
+  assert.equal(rowOf(terminalVariantId)?.actionableGapCount, 0, `${terminalVariantId} variant identity ceiling must suppress repeated ordinary research`);
+}
 
 const matrixArtifact = JSON.parse(readFileSync('docs/compatibility_core_field_coverage.json', 'utf8')) as Record<string, unknown> & { rows: unknown[] };
 const backlogArtifact = JSON.parse(readFileSync('docs/compatibility_core_field_backlog.json', 'utf8')) as Record<string, unknown> & { items: unknown[] };
@@ -851,13 +861,12 @@ for (const speciesId of ['sp_0105', 'sp_0468', 'sp_0197', 'sp_0447', 'sp_0451', 
 assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
   [
-    ['sp_0185', 'ph'],
     ['sp_0023', 'predation'],
     ['sp_0062', 'predation'],
     ['sp_0125', 'predation'],
     ['sp_0433', 'predation'],
     ['sp_0475', 'predation'],
   ],
-  'Fast Lane must retain unresolved one-field cases, after Wave26 closes only Xiphophorus maculatus from direct no-fry-predation evidence while the remaining pH/predation cases stay fail-closed',
+  'Fast Lane must retain only currently unresolved one-field predation cases after Pomacanthus annularis pH is closed by reviewed exact-taxon ADW evidence',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

@@ -6,6 +6,7 @@ import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries
 import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
 import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
+import { getCompatibilityVariantResearchCeiling } from '../../data/compatibilityVariantResearchCeilings';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../../modules/knowledge/speciesKnowledge';
 import { resolveKnowledgeSources } from '../../modules/knowledge/knowledgeSources';
@@ -20,7 +21,7 @@ export type CompatibilityFieldCoverageCell = {
   status: CompatibilityFieldCoverageStatus;
   disposition: CompatibilityResearchDisposition;
   evidenceIds: string[];
-  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'none';
+  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'variant_evidence_ceiling' | 'none';
   reasonCode: string | null;
 };
 export type CompatibilityFieldCoverageRow = {
@@ -233,11 +234,15 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   if (lifeType !== 'fish') return { status: 'missing_identity_or_domain', disposition: 'domain_extension_required', evidenceIds: [], authoritySource: 'domain_boundary', reasonCode: `unsupported_compatibility_domain_${lifeType}` };
   const identityBoundary = getCatalogIdentityBoundary(fish.id);
   if (identityBoundary) return { status: 'missing_identity_or_domain', disposition: 'terminal_hold', evidenceIds: identityBoundary.sourceIds, authoritySource: 'identity_boundary', reasonCode: identityBoundary.code };
+  const variantResearchCeiling = getCompatibilityVariantResearchCeiling(fish.id, field);
 
   const exactReviews = reviewedFieldReviews(fish.id, field);
   const supported = [...exactReviews].reverse().find(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id)));
   if (supported) {
     const status = supportedValueStatus(supported);
+    if (status === 'reviewed_unknown' && variantResearchCeiling) {
+      return { status, disposition: 'terminal_hold', evidenceIds: supported.citationIds, authoritySource: 'variant_evidence_ceiling', reasonCode: variantResearchCeiling.reasonCode };
+    }
     return { status, disposition: status === 'reviewed_unknown' ? 'targeted_source_expansion' : 'ready', evidenceIds: supported.citationIds, authoritySource: 'catalog_field_review', reasonCode: status === 'reviewed_unknown' ? 'reviewed_supported_record_contains_unknown_value' : null };
   }
   // A historical reviewed_unknown means only “this source did not establish the
@@ -247,6 +252,9 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   if (knowledge && knowledge.status !== 'reviewed_unknown') return knowledge;
   const profile = profileCell(fish, field);
   if (profile && profile.status !== 'reviewed_unknown') return profile;
+  if (variantResearchCeiling) {
+    return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: [], authoritySource: 'variant_evidence_ceiling', reasonCode: variantResearchCeiling.reasonCode };
+  }
 
   const unknown = exactReviews.find(review => review.resolution === 'unknown');
   if (unknown) {
