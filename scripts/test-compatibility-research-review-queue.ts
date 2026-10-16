@@ -35,6 +35,11 @@ const report = {
           }],
         },
         resumeBundle: {
+          acquisition: {
+            attemptedUrls: ['https://example.org/a', 'https://example.edu/a'],
+            round: 2,
+            preferredSourceTypes: ['government', 'university'],
+          },
           documents: [{
             id: 'source-a',
             url: 'https://example.org/a',
@@ -89,12 +94,17 @@ assert.equal(review.verifiedSources[0]?.id, 'source-a');
 assert.equal(review.verifiedSources[0]?.contentSha256, 'abc123');
 assert.deepEqual(review.fieldCandidates[0]?.sourceIds, ['source-a']);
 assert.equal('text' in (review.verifiedSources[0] || {}), false, 'raw fetched source text must never be copied into the persistent review manifest');
+assert.equal(review.researchHistory.rounds, 2);
+assert.deepEqual(review.researchHistory.attemptedUrls, ['https://example.org/a', 'https://example.edu/a']);
+assert.ok(review.researchHistory.attemptedSourceTypes.includes('university'));
 
 const gap = manifest.items.find(item => item.queue === 'targeted_source_expansion')!;
 assert.deepEqual(gap.nextResearch, {
   mode: 'targeted_source_expansion',
   targetFields: ['predation'],
   repeatsReviewedFields: false,
+  preferredSourceTypes: ['government', 'peer_reviewed', 'university', 'professional_association', 'curated_husbandry'],
+  excludeAttemptedUrlCount: 0,
 });
 assert.equal(gap.requiresHumanReview, false);
 
@@ -140,6 +150,7 @@ const refreshedFromNewReportOnly = buildCompatibilityResearchReviewManifest([{
 }], '2026-10-16T14:00:00.000Z', persistedBase);
 assert.equal(refreshedFromNewReportOnly.summary.field_review, 1, 'persisted queue state must survive refresh even when prior raw reports are unavailable');
 assert.equal(refreshedFromNewReportOnly.summary.targeted_source_expansion, 1);
+assert.equal(refreshedFromNewReportOnly.items.find(item => item.researchKey === 'Persisted review')?.researchHistory.rounds, 0, 'persisted review without acquisition history remains stable');
 assert.ok(refreshedFromNewReportOnly.items.some(item => item.researchKey === 'Persisted review'));
 assert.ok(refreshedFromNewReportOnly.generatedFrom.includes('base.json'));
 assert.ok(refreshedFromNewReportOnly.generatedFrom.includes('new-only.json'));
@@ -180,6 +191,88 @@ const verifiedThenTransient = buildCompatibilityResearchReviewManifest([
 assert.equal(verifiedThenTransient.items.length, 1);
 assert.equal(verifiedThenTransient.items[0]?.queue, 'targeted_source_expansion', 'temporary GBIF failure must not downgrade an already verified identity/research task');
 assert.equal(verifiedThenTransient.items[0]?.identity?.status, 'verified');
+
+const inferenceBadcase = buildCompatibilityResearchReviewManifest([{
+  sourcePath: 'predation-inference.json',
+  report: {
+    pages: [{
+      results: [{
+        researchKey: 'Moenkhausia sanctaefilomenae',
+        scientificName: 'Moenkhausia sanctaefilomenae',
+        catalogObjects: [{ speciesId: 'sp_inference', name: 'Inference', scientificName: 'Moenkhausia sanctaefilomenae', isVariant: false, isExactBaseTaxon: true }],
+        requestedGapFields: ['predation'],
+        researchScope: { unresolvedFields: [], complete: true },
+        workItem: { queue: 'gap_review', reasonCodes: [] },
+        packet: { sources: [{ id: 'source-inference', url: 'https://example.org/inference', title: 'Inference', publisher: 'Example', sourceType: 'curated_husbandry', contentVerified: true }] },
+        reviewPacket: { fields: [{
+          field: 'predation',
+          status: 'supported',
+          proposedValue: { targets: ['fish_fry'] },
+          sourceIds: ['source-inference'],
+          notes: ["The source states that during spawning, adults will eat the eggs given the chance and fry become free-swimming after hatching; since adults consume their own offspring (eggs/fry), this constitutes predation on fish_fry."],
+          draftReview: { confidence: 'medium' },
+        }] },
+        resumeBundle: { documents: [{ url: 'https://example.org/inference', title: 'Inference', publisher: 'Example', sourceType: 'curated_husbandry', text: 'raw', contentSha256: 'inference-hash' }] },
+      }],
+    }],
+  },
+}], '2026-10-16T15:00:00.000Z');
+assert.equal(inferenceBadcase.summary.field_review, 0);
+assert.equal(inferenceBadcase.summary.targeted_source_expansion, 1);
+assert.equal(inferenceBadcase.items[0]?.fieldCandidates.length, 0);
+assert.ok(inferenceBadcase.items[0]?.reasonCodes.includes('review_candidate_scope_rejected'));
+
+const legacyBase = JSON.parse(JSON.stringify(persistedBase));
+for (const item of legacyBase.items) {
+  delete item.researchHistory;
+  if (item.nextResearch) {
+    delete item.nextResearch.preferredSourceTypes;
+    delete item.nextResearch.excludeAttemptedUrlCount;
+  }
+}
+const normalizedLegacy = buildCompatibilityResearchReviewManifest([], '2026-10-16T15:30:00.000Z', legacyBase);
+const normalizedLegacyItem = normalizedLegacy.items[0]!;
+assert.ok(normalizedLegacyItem.researchHistory.attemptedUrls.includes('https://example.org/persisted'));
+assert.ok(normalizedLegacyItem.researchHistory.attemptedSourceTypes.includes('university'));
+
+const exhaustedGenericSearch = buildCompatibilityResearchReviewManifest([{
+  sourcePath: 'exhausted.json',
+  report: {
+    pages: [{
+      results: [{
+        researchKey: 'Exhaustus genericus',
+        scientificName: 'Exhaustus genericus',
+        catalogObjects: [{ speciesId: 'sp_exhausted', name: 'Exhausted', scientificName: 'Exhaustus genericus', isVariant: false, isExactBaseTaxon: true }],
+        requestedGapFields: ['predation'],
+        researchScope: { unresolvedFields: ['predation'], complete: false },
+        identity: { status: 'verified', canonicalName: 'Exhaustus genericus', reasonCode: 'gbif_exact_accepted_species' },
+        workItem: { queue: 'evidence_gap', reasonCodes: ['field_missing_predation'] },
+        resumeBundle: {
+          acquisition: {
+            attemptedUrls: [
+              'https://example.org/1',
+              'https://example.org/2',
+              'https://example.org/3',
+              'https://example.org/4',
+              'https://example.org/5',
+            ],
+            round: 2,
+            preferredSourceTypes: ['government', 'university'],
+          },
+          documents: [],
+        },
+      }],
+    }],
+  },
+}], '2026-10-16T16:00:00.000Z');
+assert.equal(exhaustedGenericSearch.summary.targeted_source_expansion, 0);
+assert.equal(exhaustedGenericSearch.summary.source_strategy_review, 1);
+const strategyReview = exhaustedGenericSearch.items[0]!;
+assert.equal(strategyReview.queue, 'source_strategy_review');
+assert.equal(strategyReview.nextResearch, null, 'generic runner must stop once source strategy is exhausted');
+assert.equal(strategyReview.requiresHumanReview, false, 'source-strategy review is a research-planning state, not authority approval');
+assert.ok(strategyReview.reasonCodes.includes('generic_source_strategy_exhausted'));
+assert.deepEqual(strategyReview.unresolvedFields, ['predation']);
 
 const brokenSnapshotReport = {
   pages: [{

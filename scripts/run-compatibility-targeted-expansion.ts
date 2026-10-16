@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { probeCompatibilityResearchProvider } from '../apps/api/src/compatibility-species-research-provider';
+import { probeCompatibilityResearchProvider, type CompatibilityResearchDiscoveryContext } from '../apps/api/src/compatibility-species-research-provider';
 import {
   runCompatibilityResearchBatchPreview,
   type CompatibilityResearchWorkQueue,
@@ -22,6 +22,29 @@ const researchKeys = [...new Set((queue.items || [])
   .filter(item => item.queue === 'targeted_source_expansion' || item.queue === 'identity_provider_retry' || item.queue === 'source_snapshot_retry')
   .map(item => item.researchKey)
   .filter((value): value is string => typeof value === 'string' && value.length > 0))];
+
+
+const allowedResearchSourceTypes = new Set([
+  'government',
+  'peer_reviewed',
+  'university',
+  'professional_association',
+  'curated_husbandry',
+] as const);
+const isResearchSourceType = (value: string): value is NonNullable<CompatibilityResearchDiscoveryContext['attemptedSourceTypes']>[number] => (
+  allowedResearchSourceTypes.has(value as NonNullable<CompatibilityResearchDiscoveryContext['attemptedSourceTypes']>[number])
+);
+
+const discoveryContextByResearchKey = Object.fromEntries((queue.items || [])
+  .filter(item => researchKeys.includes(item.researchKey))
+  .map(item => [
+    item.researchKey,
+    {
+      attemptedUrls: item.researchHistory?.attemptedUrls || item.verifiedSources.map(source => source.url),
+      attemptedSourceTypes: (item.researchHistory?.attemptedSourceTypes || item.verifiedSources.map(source => source.sourceType)).filter(isResearchSourceType),
+      round: item.researchHistory?.rounds || 0,
+    },
+  ]));
 
 const preflight = await probeCompatibilityResearchProvider();
 const extractionMode = preflight.status === 'ready' ? 'normal' as const : 'source_only' as const;
@@ -45,6 +68,7 @@ const buildReport = (complete: boolean) => ({
   targetedExpansion: true as const,
   sourceQueue: queuePath,
   researchKeys,
+  discoveryContextByResearchKey,
   extractionMode,
   providerPreflight: preflight,
   writesAuthority: false as const,
@@ -65,6 +89,7 @@ while (processed < researchKeys.length) {
     extractionMode,
     captureResume: true,
     researchKeys,
+    discoveryContextByResearchKey,
   });
   if (result.status === 'provider_unavailable' && extractionMode === 'normal') {
     throw new Error('compatibility_research_provider_not_configured');

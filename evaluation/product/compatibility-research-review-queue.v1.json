@@ -1,11 +1,14 @@
 {
   "version": 1,
   "kind": "compatibility_research_review_queue",
-  "generatedAt": "2026-10-16T09:28:23.552Z",
+  "generatedAt": "2026-10-16T09:59:10.155Z",
   "generatedFrom": [
     "evaluation/reports/compatibility-active-completion-direction-guard.json",
     "evaluation/reports/compatibility-active-completion-direction-guard-offset5.json",
-    "evaluation/reports/compatibility-targeted-expansion-round1.json"
+    "evaluation/reports/compatibility-targeted-expansion-round1.json",
+    "evaluation/reports/compatibility-targeted-expansion-round2.json",
+    "evaluation/reports/compatibility-targeted-expansion-round3.json",
+    "evaluation/reports/compatibility-targeted-expansion-round4.json"
   ],
   "rawSourceTextCommitted": false,
   "writesAuthority": false,
@@ -13,9 +16,10 @@
   "summary": {
     "total": 9,
     "field_review": 1,
-    "targeted_source_expansion": 6,
+    "targeted_source_expansion": 0,
+    "source_strategy_review": 7,
     "identity_review": 1,
-    "identity_provider_retry": 1,
+    "identity_provider_retry": 0,
     "source_snapshot_retry": 0,
     "extraction_retry": 0,
     "provider_retry": 0,
@@ -103,43 +107,24 @@
       "nextResearch": null,
       "requiresHumanReview": true,
       "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
-      "id": "research-review-f55e9b353bf6a1328944",
-      "researchKey": "Moenkhausia sanctaefilomenae",
-      "scientificName": "Moenkhausia sanctaefilomenae",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0062",
-          "name": "红眼灯",
-          "scientificName": "Moenkhausia sanctaefilomenae",
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ],
-      "requestedGapFields": [
-        "predation"
-      ],
-      "unresolvedFields": [],
-      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round1.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:27:02.951Z",
-      "sourceQueue": "identity_review",
-      "queue": "identity_provider_retry",
-      "reasonCodes": [
-        "gbif_request_failed"
-      ],
-      "identity": {
-        "status": "provider_unavailable",
-        "canonicalName": null,
-        "reasonCode": "gbif_request_failed"
-      },
-      "fieldCandidates": [],
-      "verifiedSources": [],
-      "nextResearch": null,
-      "requiresHumanReview": false,
-      "promotionAllowed": false,
-      "writesAuthority": false
+      "writesAuthority": false,
+      "researchHistory": {
+        "rounds": 0,
+        "attemptedUrls": [
+          "https://www.fishbase.se/summary/Pomacanthus-annularis.html",
+          "https://www.fishipedia.fr/fr/poissons/pomacanthus-annularis",
+          "https://animaldiversity.org/accounts/Pomacanthus_annularis"
+        ],
+        "attemptedSourceTypes": [
+          "professional_association",
+          "curated_husbandry",
+          "university"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed"
+        ]
+      }
     },
     {
       "id": "research-review-86c19db222f12b7a61ea",
@@ -175,7 +160,19 @@
       "nextResearch": null,
       "requiresHumanReview": true,
       "promotionAllowed": false,
-      "writesAuthority": false
+      "writesAuthority": false,
+      "researchHistory": {
+        "rounds": 0,
+        "attemptedUrls": [],
+        "attemptedSourceTypes": [],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "university",
+          "professional_association",
+          "curated_husbandry"
+        ]
+      }
     },
     {
       "id": "research-review-a061c422a8e531ed1dc0",
@@ -198,19 +195,20 @@
         "ph",
         "predation"
       ],
-      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round1.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:27:02.951Z",
+      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round3.json",
+      "sourceReportGeneratedAt": "2026-10-16T09:51:19.609Z",
       "sourceQueue": "evidence_gap",
-      "queue": "targeted_source_expansion",
+      "queue": "source_strategy_review",
       "reasonCodes": [
         "field_missing_water",
         "field_missing_temperature",
-        "field_unverified_ph",
+        "field_missing_ph",
         "field_missing_adult_size",
         "field_missing_tank_size",
         "field_missing_social_behavior",
         "field_missing_territoriality",
-        "field_missing_predation"
+        "field_missing_predation",
+        "generic_source_strategy_exhausted"
       ],
       "identity": {
         "status": "verified",
@@ -244,14 +242,29 @@
           "contentSha256": "89e6019b6c1a16947832861f43a8c958661ca6ec8447ba177b31f9d2061ae25c"
         }
       ],
-      "nextResearch": {
-        "mode": "targeted_source_expansion",
-        "targetFields": [
-          "ph",
-          "predation"
+      "researchHistory": {
+        "rounds": 2,
+        "attemptedUrls": [
+          "https://www.seriouslyfish.com/not-covered",
+          "https://www.fishipedia.fr/fr/poissons/amphiprion-ocellaris",
+          "https://animaldiversity.org/accounts/Amphiprion_ocellaris",
+          "https://www.fishbase.se/summary/Amphiprion-ocellaris.html",
+          "https://www.fishbase.org/summary/Amphiprion-ocellaris.html",
+          "https://www.seriouslyfish.com/species/amphiprion-ocellaris",
+          "https://www.fishbase.se/summary/Amphiprion-ocellaris",
+          "https://www.iucnredlist.org/species/190435/20687806"
         ],
-        "repeatsReviewedFields": false
+        "attemptedSourceTypes": [
+          "curated_husbandry",
+          "university"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "professional_association"
+        ]
       },
+      "nextResearch": null,
       "requiresHumanReview": false,
       "promotionAllowed": false,
       "writesAuthority": false
@@ -275,10 +288,10 @@
       "unresolvedFields": [
         "predation"
       ],
-      "sourceReport": "evaluation/reports/compatibility-active-completion-direction-guard.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:19:02.240Z",
+      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round3.json",
+      "sourceReportGeneratedAt": "2026-10-16T09:51:19.609Z",
       "sourceQueue": "evidence_gap",
-      "queue": "targeted_source_expansion",
+      "queue": "source_strategy_review",
       "reasonCodes": [
         "field_missing_water",
         "field_missing_temperature",
@@ -287,7 +300,8 @@
         "field_missing_tank_size",
         "field_missing_social_behavior",
         "field_missing_territoriality",
-        "field_missing_predation"
+        "field_missing_predation",
+        "generic_source_strategy_exhausted"
       ],
       "identity": {
         "status": "verified",
@@ -321,13 +335,109 @@
           "contentSha256": "cfed198cf153ee6f5f0cecb33c5a175d596a0a38236dfe21a216f85bae5957e7"
         }
       ],
-      "nextResearch": {
-        "mode": "targeted_source_expansion",
-        "targetFields": [
-          "predation"
+      "researchHistory": {
+        "rounds": 2,
+        "attemptedUrls": [
+          "https://www.fishbase.se/summary/Hypancistrus-inspector.html",
+          "https://www.fishipedia.fr/fr/poissons/hypancistrus-inspector",
+          "https://www.seriouslyfish.com/species/hypancistrus-inspector",
+          "https://www.fishbase.org/summary/Hypancistrus-inspector.html",
+          "https://animaldiversity.org/accounts/Hypancistrus_inspector"
         ],
-        "repeatsReviewedFields": false
+        "attemptedSourceTypes": [
+          "professional_association",
+          "curated_husbandry"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "university"
+        ]
       },
+      "nextResearch": null,
+      "requiresHumanReview": false,
+      "promotionAllowed": false,
+      "writesAuthority": false
+    },
+    {
+      "id": "research-review-f55e9b353bf6a1328944",
+      "researchKey": "Moenkhausia sanctaefilomenae",
+      "scientificName": "Moenkhausia sanctaefilomenae",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0062",
+          "name": "红眼灯",
+          "scientificName": "Moenkhausia sanctaefilomenae",
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ],
+      "requestedGapFields": [
+        "predation"
+      ],
+      "unresolvedFields": [
+        "predation"
+      ],
+      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round3.json",
+      "sourceReportGeneratedAt": "2026-10-16T09:51:19.609Z",
+      "sourceQueue": "evidence_gap",
+      "queue": "source_strategy_review",
+      "reasonCodes": [
+        "field_missing_water",
+        "field_missing_temperature",
+        "field_missing_ph",
+        "field_missing_adult_size",
+        "field_missing_tank_size",
+        "field_missing_social_behavior",
+        "field_missing_territoriality",
+        "field_missing_predation",
+        "generic_source_strategy_exhausted"
+      ],
+      "identity": {
+        "status": "verified",
+        "canonicalName": "Moenkhausia sanctaefilomenae",
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "fieldCandidates": [],
+      "verifiedSources": [
+        {
+          "id": "research-a559f03781b0e599406a",
+          "url": "https://www.seriouslyfish.com/species/bario-sanctaefilomenae",
+          "title": "Bario sanctaefilomenae (Red-eye Tetra) · Seriously Fish",
+          "publisher": "Seriously Fish",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "f637628d8a9ba1033313f09b64a5bb918a248904be0a45656f2073b148a56ac3"
+        },
+        {
+          "id": "research-640a199751999bd82c92",
+          "url": "https://www.fishipedia.fr/fr/poissons/moenkhausia-sanctaefilomenae",
+          "title": "Tétra yeux rouges • Moenkhausia sanctaefilomenae • Fiche poissons",
+          "publisher": "Fishipedia",
+          "sourceType": "curated_husbandry",
+          "contentSha256": "f60531f2cf8924b833b6c0ed55d3a3d8678937b72c749c85ac8fdb1f8b66a02f"
+        }
+      ],
+      "researchHistory": {
+        "rounds": 2,
+        "attemptedUrls": [
+          "https://www.fishbase.se/summary/Moenkhausia-sanctaefilomenae.html",
+          "https://www.fishbase.org/summary/Moenkhausia-sanctaefilomenae.html",
+          "https://www.seriouslyfish.com/species/moenkhausia-sanctaefilomenae",
+          "https://www.fishipedia.fr/fr/poissons/moenkhausia-sanctaefilomenae",
+          "https://animaldiversity.org/accounts/Moenkhausia_sanctaefilomenae",
+          "https://www.seriouslyfish.com/species/bario-sanctaefilomenae"
+        ],
+        "attemptedSourceTypes": [
+          "curated_husbandry"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "university",
+          "professional_association"
+        ]
+      },
+      "nextResearch": null,
       "requiresHumanReview": false,
       "promotionAllowed": false,
       "writesAuthority": false
@@ -353,19 +463,20 @@
         "ph",
         "predation"
       ],
-      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round1.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:27:02.951Z",
+      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round4.json",
+      "sourceReportGeneratedAt": "2026-10-16T09:55:05.388Z",
       "sourceQueue": "evidence_gap",
-      "queue": "targeted_source_expansion",
+      "queue": "source_strategy_review",
       "reasonCodes": [
         "field_missing_water",
         "field_missing_temperature",
-        "field_unverified_ph",
+        "field_missing_ph",
         "field_missing_adult_size",
         "field_missing_tank_size",
         "field_missing_social_behavior",
         "field_missing_territoriality",
-        "field_missing_predation"
+        "field_missing_predation",
+        "generic_source_strategy_exhausted"
       ],
       "identity": {
         "status": "verified",
@@ -391,14 +502,27 @@
           "contentSha256": "9e439e384eaa4faadf87bd454c045398f1929f8248914096df36e736676a3e7e"
         }
       ],
-      "nextResearch": {
-        "mode": "targeted_source_expansion",
-        "targetFields": [
-          "ph",
-          "predation"
+      "researchHistory": {
+        "rounds": 2,
+        "attemptedUrls": [
+          "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus",
+          "https://animaldiversity.org/accounts/Paracanthurus_hepatus",
+          "https://www.fishbase.se/summary/Paracanthurus-hepatus.html",
+          "https://www.fishbase.org/summary/Paracanthurus-hepatus.html",
+          "https://www.seriouslyfish.com/species/paracanthurus-hepatus",
+          "https://www.iucnredlist.org/species/10263/1945873"
         ],
-        "repeatsReviewedFields": false
+        "attemptedSourceTypes": [
+          "curated_husbandry",
+          "university"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "professional_association"
+        ]
       },
+      "nextResearch": null,
       "requiresHumanReview": false,
       "promotionAllowed": false,
       "writesAuthority": false
@@ -422,10 +546,10 @@
       "unresolvedFields": [
         "predation"
       ],
-      "sourceReport": "evaluation/reports/compatibility-active-completion-direction-guard.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:19:02.240Z",
+      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round3.json",
+      "sourceReportGeneratedAt": "2026-10-16T09:51:19.609Z",
       "sourceQueue": "evidence_gap",
-      "queue": "targeted_source_expansion",
+      "queue": "source_strategy_review",
       "reasonCodes": [
         "field_missing_water",
         "field_missing_temperature",
@@ -434,7 +558,8 @@
         "field_missing_tank_size",
         "field_missing_social_behavior",
         "field_missing_territoriality",
-        "field_missing_predation"
+        "field_missing_predation",
+        "generic_source_strategy_exhausted"
       ],
       "identity": {
         "status": "verified",
@@ -458,15 +583,37 @@
           "publisher": "Fishipedia",
           "sourceType": "curated_husbandry",
           "contentSha256": "867c72f468017280559d60c769f30d1ff67f22f5f474bf830d12ac405c0a4bee"
+        },
+        {
+          "id": "research-17f28e69c94d010c2571",
+          "url": "https://fishbase.se/summary/Rhodeus-ocellatus.html",
+          "title": "Rhodeus ocellatus, Rosy bitterling : fisheries, aquarium",
+          "publisher": "FishBase",
+          "sourceType": "professional_association",
+          "contentSha256": "96cb62251143ed99fbedd0db07ed9a3b5202b0a59150664436081c2e28740869"
         }
       ],
-      "nextResearch": {
-        "mode": "targeted_source_expansion",
-        "targetFields": [
-          "predation"
+      "researchHistory": {
+        "rounds": 2,
+        "attemptedUrls": [
+          "https://www.fishbase.se/summary/Rhodeus-ocellatus.html",
+          "https://www.fishipedia.fr/fr/poissons/rhodeus-ocellatus",
+          "https://www.fishbase.org/summary/Rhodeus-ocellatus.html",
+          "https://www.seriouslyfish.com/species/rhodeus-ocellatus",
+          "https://animaldiversity.org/accounts/Rhodeus_ocellatus",
+          "https://fishbase.se/summary/Rhodeus-ocellatus.html"
         ],
-        "repeatsReviewedFields": false
+        "attemptedSourceTypes": [
+          "professional_association",
+          "curated_husbandry"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "university"
+        ]
       },
+      "nextResearch": null,
       "requiresHumanReview": false,
       "promotionAllowed": false,
       "writesAuthority": false
@@ -492,10 +639,10 @@
         "ph",
         "tank_size"
       ],
-      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round1.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:27:02.951Z",
+      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round4.json",
+      "sourceReportGeneratedAt": "2026-10-16T09:55:05.388Z",
       "sourceQueue": "evidence_gap",
-      "queue": "targeted_source_expansion",
+      "queue": "source_strategy_review",
       "reasonCodes": [
         "field_missing_water",
         "field_missing_temperature",
@@ -504,7 +651,8 @@
         "field_missing_tank_size",
         "field_missing_social_behavior",
         "field_missing_territoriality",
-        "field_missing_predation"
+        "field_missing_predation",
+        "generic_source_strategy_exhausted"
       ],
       "identity": {
         "status": "verified",
@@ -530,14 +678,27 @@
           "contentSha256": "b12ad9bf788c60434399a481bb5b46733e5bbb8cfb663d945329374155c71f14"
         }
       ],
-      "nextResearch": {
-        "mode": "targeted_source_expansion",
-        "targetFields": [
-          "ph",
-          "tank_size"
+      "researchHistory": {
+        "rounds": 2,
+        "attemptedUrls": [
+          "https://www.fishbase.se/summary/Zacco-platypus.html",
+          "https://www.fishipedia.fr/fr/poissons/zacco-platypus",
+          "https://www.fishbase.org/summary/Zacco-platypus.html",
+          "https://www.seriouslyfish.com/species/zacco-platypus",
+          "https://animaldiversity.org/accounts/Zacco_platypus",
+          "https://fishipedia.fr/fr/poissons/zacco-platypus"
         ],
-        "repeatsReviewedFields": false
+        "attemptedSourceTypes": [
+          "professional_association",
+          "curated_husbandry"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "university"
+        ]
       },
+      "nextResearch": null,
       "requiresHumanReview": false,
       "promotionAllowed": false,
       "writesAuthority": false
@@ -561,10 +722,10 @@
       "unresolvedFields": [
         "predation"
       ],
-      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round1.json",
-      "sourceReportGeneratedAt": "2026-10-16T09:27:02.951Z",
+      "sourceReport": "evaluation/reports/compatibility-targeted-expansion-round3.json",
+      "sourceReportGeneratedAt": "2026-10-16T09:51:19.609Z",
       "sourceQueue": "evidence_gap",
-      "queue": "targeted_source_expansion",
+      "queue": "source_strategy_review",
       "reasonCodes": [
         "field_missing_water",
         "field_missing_temperature",
@@ -573,7 +734,8 @@
         "field_missing_tank_size",
         "field_missing_social_behavior",
         "field_missing_territoriality",
-        "field_missing_predation"
+        "field_missing_predation",
+        "generic_source_strategy_exhausted"
       ],
       "identity": {
         "status": "verified",
@@ -599,13 +761,28 @@
           "contentSha256": "4bf3dd9786a11ab3e6c146fb876574b2d6435772073ebf142bb2a4e95d1f7934"
         }
       ],
-      "nextResearch": {
-        "mode": "targeted_source_expansion",
-        "targetFields": [
-          "predation"
+      "researchHistory": {
+        "rounds": 2,
+        "attemptedUrls": [
+          "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens",
+          "https://animaldiversity.org/accounts/Zebrasoma_flavescens",
+          "https://www.fishbase.se/summary/Zebrasoma-flavescens.html",
+          "https://www.fishbase.org/summary/Zebrasoma-flavescens.html",
+          "https://www.seriouslyfish.com/species/zebrasoma-flavescens",
+          "https://www.fishbase.se/summary/1032",
+          "https://www.iucnredlist.org/species/123456/123456"
         ],
-        "repeatsReviewedFields": false
+        "attemptedSourceTypes": [
+          "curated_husbandry",
+          "university"
+        ],
+        "preferredNextSourceTypes": [
+          "government",
+          "peer_reviewed",
+          "professional_association"
+        ]
       },
+      "nextResearch": null,
       "requiresHumanReview": false,
       "promotionAllowed": false,
       "writesAuthority": false

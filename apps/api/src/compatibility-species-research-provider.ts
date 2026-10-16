@@ -76,6 +76,28 @@ const extractionOutputSchema = z.object({
 type SearchOutput = z.infer<typeof searchOutputSchema>;
 type ExtractionOutput = z.infer<typeof extractionOutputSchema>;
 
+export type CompatibilityResearchDiscoveryContext = {
+  attemptedUrls?: string[];
+  attemptedSourceTypes?: CatalogEvidenceSource['sourceType'][];
+  round?: number;
+};
+
+export type CompatibilityResearchSourceStrategy = {
+  round: number;
+  attemptedUrls: string[];
+  attemptedSourceTypes: CatalogEvidenceSource['sourceType'][];
+  preferredSourceTypes: CatalogEvidenceSource['sourceType'][];
+};
+
+const sourceExpansionPriority: CatalogEvidenceSource['sourceType'][] = [
+  'government',
+  'peer_reviewed',
+  'university',
+  'professional_association',
+  'curated_husbandry',
+];
+
+
 type VerifiedDocument = {
   url: string;
   title: string;
@@ -95,6 +117,11 @@ export type CompatibilityResearchResumeBundle = {
   scientificName: string;
   targetFields: CompatibilityOnboardingCoreField[];
   documents: CompatibilityVerifiedDocumentSnapshot[];
+  acquisition?: {
+    attemptedUrls: string[];
+    round: number;
+    preferredSourceTypes: CatalogEvidenceSource['sourceType'][];
+  };
 };
 
 export type CompatibilityResearchProviderPreflight = {
@@ -225,6 +252,24 @@ const canonicalSourceUrl = (raw: string) => {
   if (url.pathname.length > 1) url.pathname = url.pathname.replace(/\/+$/, '');
   return url.toString();
 };
+
+export const buildCompatibilityResearchSourceStrategy = (
+  context: CompatibilityResearchDiscoveryContext = {},
+): CompatibilityResearchSourceStrategy => {
+  const attemptedUrls = [...new Set((context.attemptedUrls || [])
+    .map(canonicalSourceUrl)
+    .filter((value): value is string => Boolean(value)))];
+  const attemptedSourceTypes = [...new Set((context.attemptedSourceTypes || [])
+    .filter(value => sourceExpansionPriority.includes(value)))];
+  const untried = sourceExpansionPriority.filter(value => !attemptedSourceTypes.includes(value));
+  return {
+    round: Math.max(0, Math.floor(context.round || 0)),
+    attemptedUrls,
+    attemptedSourceTypes,
+    preferredSourceTypes: untried.length > 0 ? untried : [...sourceExpansionPriority],
+  };
+};
+
 
 const normalizeScientificName = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase();
 
@@ -389,7 +434,10 @@ const searchPromptFor = (
   scientificName: string,
   commonName?: string,
   targetFields: CompatibilityOnboardingCoreField[] = [],
-) => [
+  discoveryContext: CompatibilityResearchDiscoveryContext = {},
+) => {
+  const strategy = buildCompatibilityResearchSourceStrategy(discoveryContext);
+  return [
   targetFields.length > 0
     ? 'Find exact-taxon sources specifically to close missing aquarium Compatibility evidence fields.'
     : 'Find exact-taxon sources for aquarium Compatibility research.',
@@ -405,8 +453,14 @@ const searchPromptFor = (
   'Prefer direct species pages from FishBase, Seriously Fish, Animal Diversity Web, Fishipedia, IUCN, government, university, primary/peer-reviewed institutional pages, or PlanetCatfish species/Catfish-of-the-Month pages for specialist catfish husbandry.',
   'PlanetCatfish forums and media PDFs are not eligible automatic sources; only exact-taxon species or Catfish-of-the-Month pages may be candidates.',
   'Avoid shops, forums, social media, SEO farms, scraped mirrors, search-result URLs, and generic genus pages.',
+  strategy.round > 0 ? 'This is source-expansion round ' + strategy.round + '; do not repeat already attempted URLs.' : '',
+  strategy.attemptedUrls.length > 0 ? 'Already attempted URLs (exclude these exact URLs): ' + strategy.attemptedUrls.join(' | ') : '',
+  strategy.attemptedSourceTypes.length > 0 ? 'Already covered source classes: ' + strategy.attemptedSourceTypes.join(', ') : '',
+  'Prioritize these source classes next, in order: ' + strategy.preferredSourceTypes.join(', ') + '.',
+  'When curated husbandry pages were already tried without closing the target field, actively search for government, peer-reviewed, university, or professional-association exact-taxon records instead of returning another copy of the same husbandry page.',
   'Return only pages that appear to discuss the exact scientific taxon.',
 ].filter(Boolean).join('\n');
+};
 
 const discoveryCandidates = async (
   config: CompatibilityResearchProviderConfig,
@@ -414,8 +468,15 @@ const discoveryCandidates = async (
   scientificName: string,
   commonName?: string,
   targetFields: CompatibilityOnboardingCoreField[] = [],
+  discoveryContext: CompatibilityResearchDiscoveryContext = {},
 ): Promise<string[]> => {
-  const trustedCandidates = trustedTemplateCandidates(scientificName);
+  const strategy = buildCompatibilityResearchSourceStrategy(discoveryContext);
+  const attempted = new Set(strategy.attemptedUrls);
+  const trustedCandidates = trustedTemplateCandidates(scientificName)
+    .filter(raw => {
+      const canonical = canonicalSourceUrl(raw);
+      return canonical && !attempted.has(canonical);
+    });
   let modelCandidates: string[] = [];
 
   try {
@@ -440,7 +501,7 @@ const discoveryCandidates = async (
         },
         {
           role: 'user',
-          content: searchPromptFor(scientificName, commonName, targetFields),
+          content: searchPromptFor(scientificName, commonName, targetFields, discoveryContext),
         },
       ],
     });
@@ -454,7 +515,7 @@ const discoveryCandidates = async (
   const seen = new Set<string>();
   for (const raw of [...trustedCandidates, ...modelCandidates]) {
     const canonical = canonicalSourceUrl(raw);
-    if (!canonical || seen.has(canonical)) continue;
+    if (!canonical || attempted.has(canonical) || seen.has(canonical)) continue;
     seen.add(canonical);
     deduped.push(canonical);
   }
@@ -700,7 +761,7 @@ const extractionPromptFor = (
   'tank_size: {"liters":number|null,"lengthCm":number|null}. Only explicit aquarium minimums; never infer from adult size.',
   'social_behavior: {"mode":"solitary"|"pair"|"group"|"colony"|"variable"|"unknown","minimumGroupSize":number|null}. Only explicit normal husbandry/social grouping evidence qualifies. Do NOT use breeding/reproduction group sizes, grow-out cohorts, sampling groups, or statements such as raising N juveniles to find a breeding pair as minimumGroupSize.',
   'territoriality: {"traits":[string,...]}. Empty traits are allowed ONLY when the source directly supports non-territorial behavior; do not infer from "peaceful".',
-  'predation: {"targets":[string,...]}. Direction is always FROM this taxon TO animals it attacks/eats as aquarium tankmates. NEVER record predators OF this taxon, animals that eat this taxon, or statements that this taxon becomes prey/vulnerable. For non-empty targets use ONLY canonical labels fish_fry, very_small_fish, small_fish, fish_unspecified_size. Eggs, larger predators, crustaceans that prey on this taxon, routine foods, zooplankton, algae and detritus do not close this field. Diet statements alone produce no predation claim. Empty targets are allowed ONLY when direct tankmate/community evidence supports no generic fish-prey target.',
+  'predation: {"targets":[string,...]}. Direction is always FROM this taxon TO animals it attacks/eats as aquarium tankmates. NEVER record predators OF this taxon, animals that eat this taxon, or statements that this taxon becomes prey/vulnerable. For non-empty targets use ONLY canonical labels fish_fry, very_small_fish, small_fish, fish_unspecified_size. Eggs, larger predators, crustaceans that prey on this taxon, routine foods, zooplankton, algae and detritus do not close this field. NEVER infer fish_fry from egg predation or spawning context: fish_fry requires a direct source statement that this taxon eats, attacks, hunts, swallows, or otherwise preys on fry/juvenile fish. Diet statements alone produce no predation claim. Empty targets are allowed ONLY when direct tankmate/community evidence supports no generic fish-prey target.',
   'Do not combine two sources into one claim. Do not invent numeric conversions except standard unit conversion to C/cm/L.',
   'If a source does not directly establish a field, omit that claim.',
   'SOURCE_DOCUMENTS:',
@@ -1143,6 +1204,7 @@ export const researchCompatibilitySpeciesWithResume = async (
     fetchImpl?: FetchLike;
     skipAiExtraction?: boolean;
     skipModelDiscovery?: boolean;
+    discoveryContext?: CompatibilityResearchDiscoveryContext;
   } = {},
 ): Promise<{ packet: CompatibilitySpeciesResearchPacket; resumeBundle: CompatibilityResearchResumeBundle }> => {
   const config = options.config ?? buildCompatibilityResearchProviderConfig();
@@ -1152,10 +1214,15 @@ export const researchCompatibilitySpeciesWithResume = async (
     if (!readiness.configured) throw new Error('compatibility_research_provider_not_configured');
   }
   const targetFields = input.targetFields ?? [];
+  const strategy = buildCompatibilityResearchSourceStrategy(options.discoveryContext);
+  const attempted = new Set(strategy.attemptedUrls);
   const candidates = options.skipModelDiscovery
     ? trustedTemplateCandidates(input.scientificName)
-    : await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName, targetFields);
-  const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
+      .map(canonicalSourceUrl)
+      .filter((value): value is string => Boolean(value) && !attempted.has(value))
+    : await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName, targetFields, options.discoveryContext);
+  const acquisition = await verifiedDocumentsDetailed(candidates, input.scientificName, config, fetchImpl);
+  const documents = acquisition.documents;
   const packet = await buildResearchPacketFromDocuments({
     input,
     documents,
@@ -1172,6 +1239,11 @@ export const researchCompatibilitySpeciesWithResume = async (
       scientificName: input.scientificName,
       targetFields,
       documents: documents.map(verifiedDocumentSnapshot),
+      acquisition: {
+        attemptedUrls: [...new Set(acquisition.diagnostics.map(item => canonicalSourceUrl(item.requestedUrl) ?? item.requestedUrl))],
+        round: strategy.round + 1,
+        preferredSourceTypes: strategy.preferredSourceTypes,
+      },
     },
   };
 };

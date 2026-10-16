@@ -10,6 +10,7 @@ import {
 } from '../src/services/compatibility/compatibility-field-coverage.service';
 import type { CompatibilityOnboardingReviewPacket } from '../src/services/compatibility/onboarding-review-packet.service';
 import { isCompatibilityResearchClaimScopeEligible } from '../src/services/compatibility/species-onboarding-research.service';
+import { buildCompatibilityResearchSourceStrategy } from '../apps/api/src/compatibility-species-research-provider';
 
 const fullPlan = buildCompatibilityTaxonResearchPlan();
 const coverage = buildCompatibilityCoreFieldCoverage();
@@ -92,6 +93,25 @@ assert.equal(isCompatibilityResearchClaimScopeEligible({
   proposedValue: { targets: ['fish_fry'] },
   note: 'Adults will eat fish fry and should not be housed with fry.',
 }), true, 'canonical fish-fry predation evidence should remain eligible');
+assert.equal(isCompatibilityResearchClaimScopeEligible({
+  field: 'predation',
+  proposedValue: { targets: ['fish_fry'] },
+  note: "The source states that during spawning, adults will eat the eggs given the chance and fry become free-swimming after hatching; since adults consume their own offspring (eggs/fry), this constitutes predation on fish_fry.",
+}), false, 'egg predation plus later fry presence must not be inferred into fish-fry predation');
+
+
+
+const sourceStrategy = buildCompatibilityResearchSourceStrategy({
+  round: 2,
+  attemptedUrls: [
+    'https://www.fishipedia.fr/fr/poissons/zacco-platypus',
+    'https://www.fishipedia.fr/fr/poissons/zacco-platypus#duplicate',
+  ],
+  attemptedSourceTypes: ['curated_husbandry', 'professional_association'],
+});
+assert.equal(sourceStrategy.round, 2);
+assert.equal(sourceStrategy.attemptedUrls.length, 1, 'source expansion must canonicalize/dedupe attempted URLs');
+assert.deepEqual(sourceStrategy.preferredSourceTypes.slice(0, 3), ['government', 'peer_reviewed', 'university'], 'source expansion should upgrade toward untried institutional and peer-reviewed source classes');
 
 const runnerSource = readFileSync('scripts/run-compatibility-active-completion-batch.ts', 'utf8');
 assert.match(runnerSource, /arg\('offset'\)/, 'active completion runner must support offset-based resume without replaying completed research jobs');

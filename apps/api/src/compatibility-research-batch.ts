@@ -2,6 +2,7 @@ import {
   compatibilitySpeciesResearchProvider,
   getCompatibilitySpeciesResearchProviderReadiness,
   researchCompatibilitySpeciesWithResume,
+  type CompatibilityResearchDiscoveryContext,
   type CompatibilityResearchProviderReadiness,
   type CompatibilityResearchResumeBundle,
 } from './compatibility-species-research-provider';
@@ -47,6 +48,7 @@ export type CompatibilityResearchBatchPreviewInput = {
   extractionMode?: 'normal' | 'source_only';
   captureResume?: boolean;
   researchKeys?: string[];
+  discoveryContextByResearchKey?: Record<string, CompatibilityResearchDiscoveryContext>;
 };
 
 export type CompatibilityResearchBatchPreviewResult = {
@@ -100,6 +102,7 @@ const mergeResumeBundles = (
     ...existing,
     targetFields: [...new Set([...existing.targetFields, ...next.targetFields])],
     documents,
+    acquisition: next.acquisition ?? existing.acquisition,
   };
 };
 
@@ -312,6 +315,7 @@ export const runCompatibilityResearchBatchPreview = async (
               const result = await researchCompatibilitySpeciesWithResume(researchInput, {
                 skipAiExtraction: extractionMode === 'source_only',
                 skipModelDiscovery: extractionMode === 'source_only',
+                discoveryContext: input.discoveryContextByResearchKey?.[job.researchKey],
               });
               resumeBundle = mergeResumeBundles(resumeBundle, result.resumeBundle);
               return result.packet;

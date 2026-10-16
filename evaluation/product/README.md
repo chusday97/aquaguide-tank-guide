@@ -27,7 +27,7 @@
 - `scripts/test-product-evaluation.mjs`：校验 Feature State 与 Badcase 基础结构。
 - `scripts/test-golden-path-acceptance.mjs`：校验 Golden Path 里程碑、禁止项与自动化证据映射。
 - `scripts/test-compatibility-evidence-coverage.ts`：用真实图鉴物种验证“可记录组合必须有 reviewed evidence”，并防止和平小型鱼被误判成捕食者。
-- `compatibility-research-review-queue.v1.json`：Compatibility Research 的可续跑审核队列；只保存字段候选、来源元数据与内容哈希，不保存抓取原文，不自动写入 reviewed authority。`field_review` 等待人工审核，`targeted_source_expansion` 继续补直接证据，临时 provider/identity 失败单独重试。
+- `compatibility-research-review-queue.v1.json`：Compatibility Research 的可续跑审核队列；只保存字段候选、来源元数据、内容哈希与已尝试来源历史，不保存抓取原文，不自动写入 reviewed authority。`field_review` 等待人工审核，`targeted_source_expansion` 只补尚未尝试的直接证据；若至少完成 2 轮、尝试至少 5 个不同 URL 仍无法闭合字段，则转为 `source_strategy_review`，停止重复普通 Web Research、保留未解决字段并改走专门来源策略。该状态不等于“无资料”或 authority 结论。
 - `scripts/verify-golden-path-species-to-stocking.mjs`：GP-002 连续 Chromium 验收，从搜索具体物种一直验证到真实入缸后的持久化数量。
 
 ## Golden Path 验收规则

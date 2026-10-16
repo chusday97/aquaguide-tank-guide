@@ -66,6 +66,10 @@ export const isCompatibilityResearchClaimScopeEligible = (
       if (normalizedTargets.some(target => !researchPredationTargetVocabulary.has(target))) return false;
       const reversedDirection = /\bpredators? of\b|\bpreyed (?:upon|on) by\b|\b(?:is|are|was|were|be|become|becomes|became|would become) (?:an? |the )?(?:preferred )?prey\b|\bprey (?:for|of|to)\b|\bvulnerable to predation\b|\bpredation on\b.{0,120}\bby\b/i.test(note);
       if (reversedDirection) return false;
+      const eggToFryInference = /\b(?:eat|eats|eating|ate|consume|consumes|consuming)\b[^.;]{0,120}\beggs?\b/i.test(note)
+        && /\bfry\b/i.test(note)
+        && /\b(?:since|therefore|thus|hence|implies?|suggests?|constitutes?|thereby|so this)\b/i.test(note);
+      if (eggToFryInference) return false;
       const subjectActsAsPredator = /\b(?:eat|eats|eating|ate|consume|consumes|consuming|attack|attacks|attacking|hunt|hunts|hunting|swallow|swallows|swallowing)\b.{0,140}\b(?:fish|fry|juvenile|tankmate|prey)\b|\bpreys?\s+(?:on|upon)\b|\btreats?.{0,100}\bas prey\b|\bfit\s+(?:in|into)\s+.*mouth\b|\bmouth.*fit\b/i.test(note);
       if (!subjectActsAsPredator) return false;
     }

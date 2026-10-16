@@ -1,8 +1,10 @@
 import { createHash } from 'node:crypto';
+import { isCompatibilityResearchClaimScopeEligible } from './species-onboarding-research.service';
 
 export type CompatibilityResearchReviewQueueKind =
   | 'field_review'
   | 'targeted_source_expansion'
+  | 'source_strategy_review'
   | 'identity_review'
   | 'identity_provider_retry'
   | 'source_snapshot_retry'
@@ -26,6 +28,22 @@ export type CompatibilityResearchReviewQueueSource = {
   sourceType: string;
   contentSha256: string;
 };
+
+export type CompatibilityResearchHistory = {
+  rounds: number;
+  attemptedUrls: string[];
+  attemptedSourceTypes: string[];
+  preferredNextSourceTypes: string[];
+};
+
+const sourceExpansionPriority = [
+  'government',
+  'peer_reviewed',
+  'university',
+  'professional_association',
+  'curated_husbandry',
+] as const;
+
 
 export type CompatibilityResearchReviewQueueItem = {
   id: string;
@@ -58,10 +76,13 @@ export type CompatibilityResearchReviewQueueItem = {
     confidence: string | null;
   }>;
   verifiedSources: CompatibilityResearchReviewQueueSource[];
+  researchHistory: CompatibilityResearchHistory;
   nextResearch: {
     mode: 'targeted_source_expansion';
     targetFields: string[];
     repeatsReviewedFields: false;
+    preferredSourceTypes: string[];
+    excludeAttemptedUrlCount: number;
   } | null;
   requiresHumanReview: boolean;
   promotionAllowed: false;
@@ -143,15 +164,114 @@ const fieldCandidatesFor = (result: BatchResult, requestedGapFields: string[]) =
   const requested = new Set(requestedGapFields);
   const fields = Array.isArray(result.reviewPacket?.fields) ? result.reviewPacket.fields : [];
   return fields.flatMap((field: Record<string, any>) => {
-    if (field.status !== 'supported' || !requested.has(String(field.field || ''))) return [];
+    const fieldName = String(field.field || '');
+    if (field.status !== 'supported' || !requested.has(fieldName)) return [];
+    const notes = stringArray(field.notes);
+    const scopeEligible = (notes.length > 0 ? notes : ['']).some(note => (
+      isCompatibilityResearchClaimScopeEligible({
+        field: fieldName as any,
+        proposedValue: field.proposedValue,
+        note,
+      })
+    ));
+    if (!scopeEligible) return [];
     return [{
-      field: String(field.field),
+      field: fieldName,
       proposedValue: field.proposedValue,
       sourceIds: stringArray(field.sourceIds),
-      notes: stringArray(field.notes),
+      notes,
       confidence: typeof field.draftReview?.confidence === 'string' ? field.draftReview.confidence : null,
     }];
   });
+};
+
+
+const historyFromItem = (
+  item: CompatibilityResearchReviewQueueItem,
+): CompatibilityResearchHistory => {
+  const attemptedUrls = [...new Set([
+    ...(item.researchHistory?.attemptedUrls || []),
+    ...item.verifiedSources.map(source => source.url),
+  ])];
+  const attemptedSourceTypes = [...new Set([
+    ...(item.researchHistory?.attemptedSourceTypes || []),
+    ...item.verifiedSources.map(source => source.sourceType),
+  ])];
+  const preferredNextSourceTypes = sourceExpansionPriority
+    .filter(sourceType => !attemptedSourceTypes.includes(sourceType));
+  return {
+    rounds: item.researchHistory?.rounds || 0,
+    attemptedUrls,
+    attemptedSourceTypes,
+    preferredNextSourceTypes: preferredNextSourceTypes.length > 0
+      ? [...preferredNextSourceTypes]
+      : [...sourceExpansionPriority],
+  };
+};
+
+const shouldEscalateSourceStrategy = (
+  queue: CompatibilityResearchReviewQueueKind,
+  history: CompatibilityResearchHistory,
+) => (
+  queue === 'targeted_source_expansion'
+  && history.rounds >= 2
+  && history.attemptedUrls.length >= 5
+);
+
+const normalizeQueueItem = (
+  item: CompatibilityResearchReviewQueueItem,
+): CompatibilityResearchReviewQueueItem => {
+  const researchHistory = historyFromItem(item);
+  const queue = shouldEscalateSourceStrategy(item.queue, researchHistory)
+    ? 'source_strategy_review' as const
+    : item.queue;
+  return {
+    ...item,
+    queue,
+    reasonCodes: queue === 'source_strategy_review'
+      ? [...new Set([...item.reasonCodes, 'generic_source_strategy_exhausted'])]
+      : item.reasonCodes,
+    researchHistory,
+    nextResearch: queue === 'targeted_source_expansion' ? {
+      mode: 'targeted_source_expansion',
+      targetFields: item.nextResearch?.targetFields || item.unresolvedFields,
+      repeatsReviewedFields: false,
+      preferredSourceTypes: researchHistory.preferredNextSourceTypes,
+      excludeAttemptedUrlCount: researchHistory.attemptedUrls.length,
+    } : null,
+  };
+};
+
+const buildResearchHistory = (
+  previous: CompatibilityResearchReviewQueueItem | undefined,
+  result: BatchResult,
+  verifiedSources: CompatibilityResearchReviewQueueSource[],
+): CompatibilityResearchHistory => {
+  const acquisition = result.resumeBundle?.acquisition;
+  const attemptedUrls = [...new Set([
+    ...(previous?.researchHistory?.attemptedUrls || []),
+    ...(previous?.verifiedSources || []).map(source => source.url),
+    ...stringArray(acquisition?.attemptedUrls),
+    ...verifiedSources.map(source => source.url),
+  ])];
+  const attemptedSourceTypes = [...new Set([
+    ...(previous?.researchHistory?.attemptedSourceTypes || []),
+    ...(previous?.verifiedSources || []).map(source => source.sourceType),
+    ...verifiedSources.map(source => source.sourceType),
+  ])];
+  const preferredNextSourceTypes = sourceExpansionPriority
+    .filter(sourceType => !attemptedSourceTypes.includes(sourceType));
+  return {
+    rounds: Math.max(
+      previous?.researchHistory?.rounds || 0,
+      typeof acquisition?.round === 'number' ? acquisition.round : 0,
+    ),
+    attemptedUrls,
+    attemptedSourceTypes,
+    preferredNextSourceTypes: preferredNextSourceTypes.length > 0
+      ? [...preferredNextSourceTypes]
+      : [...sourceExpansionPriority],
+  };
 };
 
 export const buildCompatibilityResearchReviewManifest = (
@@ -160,7 +280,10 @@ export const buildCompatibilityResearchReviewManifest = (
   baseManifest?: CompatibilityResearchReviewManifest,
 ): CompatibilityResearchReviewManifest => {
   const deduped = new Map<string, CompatibilityResearchReviewQueueItem>(
-    (baseManifest?.items || []).map(item => [item.id, item]),
+    (baseManifest?.items || []).map(item => {
+      const normalized = normalizeQueueItem(item);
+      return [normalized.id, normalized];
+    }),
   );
 
   for (const { sourcePath, report } of reports) {
@@ -187,31 +310,59 @@ export const buildCompatibilityResearchReviewManifest = (
       if (!researchKey) continue;
       const id = queueItemId(researchKey, catalogObjects);
       const reasonCodes = stringArray(result.reasonCodes ?? result.reviewPacket?.reasonCodes ?? result.workItem?.reasonCodes);
+      const previous = deduped.get(id);
       const fieldCandidates = queue === 'field_review' || queue === 'onboarding_review'
         ? fieldCandidatesFor(result, requestedGapFields)
         : [];
-      const verifiedSources = verifiedSourcesFor(result);
+      const newVerifiedSources = verifiedSourcesFor(result);
+      const verifiedSources = [...(previous?.verifiedSources || [])];
+      const seenVerifiedSources = new Set(verifiedSources.map(source => source.url + '|' + source.contentSha256));
+      for (const source of newVerifiedSources) {
+        const key = source.url + '|' + source.contentSha256;
+        if (seenVerifiedSources.has(key)) continue;
+        seenVerifiedSources.add(key);
+        verifiedSources.push(source);
+      }
+      const researchHistory = buildResearchHistory(previous, result, newVerifiedSources);
       const verifiedSourceIds = new Set(verifiedSources.map(source => source.id));
       const candidateSourceIds = new Set<string>(fieldCandidates.flatMap(candidate => candidate.sourceIds as string[]));
       const sourceSnapshotsComplete = fieldCandidates.length > 0
         && [...candidateSourceIds].every(sourceId => verifiedSourceIds.has(sourceId));
-      const effectiveQueue = (queue === 'field_review' || queue === 'onboarding_review') && !sourceSnapshotsComplete
-        ? 'source_snapshot_retry' as const
-        : queue;
+      const reviewCandidateRejected = (queue === 'field_review' || queue === 'onboarding_review')
+        && fieldCandidates.length === 0;
+      const preEscalationQueue = reviewCandidateRejected
+        ? 'targeted_source_expansion' as const
+        : (queue === 'field_review' || queue === 'onboarding_review') && !sourceSnapshotsComplete
+          ? 'source_snapshot_retry' as const
+          : queue;
+      const effectiveQueue = shouldEscalateSourceStrategy(preEscalationQueue, researchHistory)
+        ? 'source_strategy_review' as const
+        : preEscalationQueue;
+      const effectiveUnresolvedFields = effectiveQueue === 'targeted_source_expansion' || effectiveQueue === 'source_strategy_review'
+        ? (researchScopeUnresolved.length > 0 ? researchScopeUnresolved : requestedGapFields)
+        : unresolvedFields;
       const item: CompatibilityResearchReviewQueueItem = {
         id,
         researchKey,
         scientificName: typeof result.scientificName === 'string' ? result.scientificName : null,
         catalogObjects,
         requestedGapFields,
-        unresolvedFields,
+        unresolvedFields: effectiveUnresolvedFields,
         sourceReport: sourcePath,
         sourceReportGeneratedAt: typeof report.generatedAt === 'string' ? report.generatedAt : null,
         sourceQueue: String(result.workItem?.queue || ''),
         queue: effectiveQueue,
-        reasonCodes: effectiveQueue === 'source_snapshot_retry'
-          ? [...new Set([...reasonCodes, 'review_source_snapshot_missing'])]
-          : reasonCodes,
+        reasonCodes: effectiveQueue === 'source_strategy_review'
+          ? [...new Set([
+            ...reasonCodes,
+            ...(reviewCandidateRejected ? ['review_candidate_scope_rejected'] : []),
+            'generic_source_strategy_exhausted',
+          ])]
+          : reviewCandidateRejected
+            ? [...new Set([...reasonCodes, 'review_candidate_scope_rejected'])]
+            : effectiveQueue === 'source_snapshot_retry'
+              ? [...new Set([...reasonCodes, 'review_source_snapshot_missing'])]
+              : reasonCodes,
         identity: result.identity ? {
           status: typeof result.identity.status === 'string' ? result.identity.status : null,
           canonicalName: typeof result.identity.canonicalName === 'string' ? result.identity.canonicalName : null,
@@ -219,16 +370,18 @@ export const buildCompatibilityResearchReviewManifest = (
         } : null,
         fieldCandidates,
         verifiedSources,
+        researchHistory,
         nextResearch: effectiveQueue === 'targeted_source_expansion' ? {
           mode: 'targeted_source_expansion',
-          targetFields: unresolvedFields,
+          targetFields: effectiveUnresolvedFields,
           repeatsReviewedFields: false,
+          preferredSourceTypes: researchHistory.preferredNextSourceTypes,
+          excludeAttemptedUrlCount: researchHistory.attemptedUrls.length,
         } : null,
         requiresHumanReview: effectiveQueue === 'field_review' || effectiveQueue === 'identity_review' || effectiveQueue === 'onboarding_review',
         promotionAllowed: false,
         writesAuthority: false,
       };
-      const previous = deduped.get(id);
       if (
         effectiveQueue === 'identity_provider_retry'
         && previous?.identity?.status === 'verified'
@@ -247,6 +400,7 @@ export const buildCompatibilityResearchReviewManifest = (
     total: items.length,
     field_review: 0,
     targeted_source_expansion: 0,
+    source_strategy_review: 0,
     identity_review: 0,
     identity_provider_retry: 0,
     source_snapshot_retry: 0,
