@@ -35,6 +35,7 @@ const gates = [
   ['Compatibility Resume Review Manifest', 'npm', ['run', 'test:compatibility-resume-review']],
   ['Compatibility Research Coverage Wave23', 'npm', ['run', 'test:compatibility-research-coverage-wave23']],
   ['Compatibility Predation Wave24', 'npm', ['run', 'test:compatibility-predation-wave24']],
+  ['Compatibility Research Direct Wave25', 'npm', ['run', 'test:compatibility-research-direct-wave25']],
   ['Compatibility Chrysiptera Production Reconciliation Guard', 'npm', ['run', 'test:compatibility-chrysiptera-production-reconciliation-guard']],
   ['Chrysiptera Content Republish Guard', 'npm', ['run', 'test:chrysiptera-content-republish-guard']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],

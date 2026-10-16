@@ -384,7 +384,8 @@
     "test:compatibility-deterministic-resume": "npm run build:compatibility-deterministic-resume && node --import tsx scripts/test-compatibility-deterministic-resume.ts",
     "test:compatibility-extraction-retry-runner": "node --import tsx scripts/test-compatibility-extraction-retry-runner.ts",
     "dryrun:compatibility-extraction-retry-ai": "node --import tsx scripts/run-compatibility-extraction-retry.ts --provider-mode=ai",
-    "test:compatibility-predation-wave24": "node --import tsx scripts/test-compatibility-predation-wave24.ts"
+    "test:compatibility-predation-wave24": "node --import tsx scripts/test-compatibility-predation-wave24.ts",
+    "test:compatibility-research-direct-wave25": "node --import tsx scripts/test-compatibility-research-direct-wave25.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

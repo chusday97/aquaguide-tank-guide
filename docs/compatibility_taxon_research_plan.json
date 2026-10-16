@@ -87,6 +87,33 @@
       ]
     },
     {
+      "researchKey": "Rhodeus ocellatus",
+      "baseScientificName": "Rhodeus ocellatus",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0475",
+          "name": "高体鳑鲏",
+          "scientificName": "Rhodeus ocellatus",
+          "gaps": [
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Xiphophorus maculatus",
       "baseScientificName": "Xiphophorus maculatus",
       "priorityScore": 191,
@@ -114,15 +141,14 @@
       ]
     },
     {
-      "researchKey": "Rhodeus ocellatus",
-      "baseScientificName": "Rhodeus ocellatus",
-      "priorityScore": 183,
+      "researchKey": "Zebrasoma flavescens",
+      "baseScientificName": "Zebrasoma flavescens",
+      "priorityScore": 191,
       "catalogObjectCount": 1,
       "exactObjectCount": 1,
       "variantObjectCount": 0,
       "unresolvedObjectCount": 0,
       "combinedGapFields": [
-        "territoriality",
         "predation"
       ],
       "requiresVariantBridgeReview": false,
@@ -130,11 +156,68 @@
       "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
       "catalogObjects": [
         {
-          "speciesId": "sp_0475",
-          "name": "高体鳑鲏",
-          "scientificName": "Rhodeus ocellatus",
+          "speciesId": "sp_0023",
+          "name": "黄倒吊",
+          "scientificName": "Zebrasoma flavescens",
           "gaps": [
-            "territoriality",
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Amphiprion ocellaris",
+      "baseScientificName": "Amphiprion ocellaris",
+      "priorityScore": 183,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "ph",
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0452",
+          "name": "公子小丑",
+          "scientificName": "Amphiprion ocellaris",
+          "gaps": [
+            "ph",
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Paracanthurus hepatus",
+      "baseScientificName": "Paracanthurus hepatus",
+      "priorityScore": 183,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "ph",
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0024",
+          "name": "蓝倒吊",
+          "scientificName": "Paracanthurus hepatus",
+          "gaps": [
+            "ph",
             "predation"
           ],
           "isVariant": false,
@@ -163,68 +246,6 @@
           "scientificName": "Pomacanthus annularis",
           "gaps": [
             "ph"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Amphiprion ocellaris",
-      "baseScientificName": "Amphiprion ocellaris",
-      "priorityScore": 175,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "ph",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0452",
-          "name": "公子小丑",
-          "scientificName": "Amphiprion ocellaris",
-          "gaps": [
-            "ph",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Zacco platypus",
-      "baseScientificName": "Zacco platypus",
-      "priorityScore": 175,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "ph",
-        "tank_size",
-        "territoriality"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0129",
-          "name": "宽鳍鱲 (溪流之王)",
-          "scientificName": "Zacco platypus",
-          "gaps": [
-            "ph",
-            "tank_size",
-            "territoriality"
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
@@ -353,69 +374,28 @@
       ]
     },
     {
-      "researchKey": "Paracanthurus hepatus",
-      "baseScientificName": "Paracanthurus hepatus",
-      "priorityScore": 159,
+      "researchKey": "Zacco platypus",
+      "baseScientificName": "Zacco platypus",
+      "priorityScore": 173,
       "catalogObjectCount": 1,
       "exactObjectCount": 1,
       "variantObjectCount": 0,
       "unresolvedObjectCount": 0,
       "combinedGapFields": [
-        "temperature",
         "ph",
-        "tank_size",
-        "territoriality",
-        "predation"
+        "tank_size"
       ],
       "requiresVariantBridgeReview": false,
       "researchDisposition": "exact_taxon_research",
       "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
       "catalogObjects": [
         {
-          "speciesId": "sp_0024",
-          "name": "蓝倒吊",
-          "scientificName": "Paracanthurus hepatus",
+          "speciesId": "sp_0129",
+          "name": "宽鳍鱲 (溪流之王)",
+          "scientificName": "Zacco platypus",
           "gaps": [
-            "temperature",
             "ph",
-            "tank_size",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Zebrasoma flavescens",
-      "baseScientificName": "Zebrasoma flavescens",
-      "priorityScore": 159,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0023",
-          "name": "黄倒吊",
-          "scientificName": "Zebrasoma flavescens",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "territoriality",
-            "predation"
+            "tank_size"
           ],
           "isVariant": false,
           "isExactBaseTaxon": true

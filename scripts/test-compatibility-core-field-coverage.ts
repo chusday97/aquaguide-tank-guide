@@ -846,10 +846,12 @@ assert.deepEqual(
   [
     ['sp_0185', 'ph'],
     ['sp_0011', 'predation'],
+    ['sp_0023', 'predation'],
     ['sp_0062', 'predation'],
     ['sp_0125', 'predation'],
     ['sp_0433', 'predation'],
+    ['sp_0475', 'predation'],
   ],
-  'Fast Lane must retain the four unresolved predation cases plus Pomacanthus annularis pH after Wave24 safely closes only its direct fish-prey fact',
+  'Fast Lane must retain unresolved one-field cases, including Rhodeus ocellatus and Zebrasoma flavescens predation after Wave25 closes only their directly sourced non-predation core facts',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

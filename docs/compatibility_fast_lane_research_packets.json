@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 5,
+  "totalPackets": 7,
   "packets": [
     {
       "speciesId": "sp_0185",
@@ -50,6 +50,28 @@
           "publisher": "FishBase",
           "url": "https://www.fishbase.org/summary/Xiphophorus_maculatus.html",
           "reviewStatus": "draft"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0023",
+      "name": "黄倒吊",
+      "scientificName": "Zebrasoma flavescens",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "fishbase-zebrasoma-flavescens"
+      ],
+      "existingSources": [
+        {
+          "id": "fishbase-zebrasoma-flavescens",
+          "title": "Zebrasoma flavescens species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/6018",
+          "reviewStatus": "reviewed"
         }
       ],
       "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
@@ -131,6 +153,28 @@
           "title": "Hemigrammus rhodostomus species summary",
           "publisher": "FishBase",
           "url": "https://www.fishbase.se/summary/Hemigrammus-rhodostomus.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0475",
+      "name": "高体鳑鲏",
+      "scientificName": "Rhodeus ocellatus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch03-fishbase-rhodeus-ocellatus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch03-fishbase-rhodeus-ocellatus",
+          "title": "Rhodeus ocellatus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Rhodeus-ocellatus.html",
           "reviewStatus": "reviewed"
         }
       ],

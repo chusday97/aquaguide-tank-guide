@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "kind": "compatibility_wave25_direct_source_review",
+  "promotedFields": 10,
+  "promotedSpecies": 5,
+  "writesProductionAuthority": false,
+  "modelGuessingAllowed": false,
+  "promotions": [
+    {
+      "speciesId": "sp_0475",
+      "scientificName": "Rhodeus ocellatus",
+      "field": "territoriality",
+      "value": {
+        "traits": []
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/rhodeus-ocellatus",
+      "snapshotSha256": "867c72f468017280559d60c769f30d1ff67f22f5f474bf830d12ac405c0a4bee"
+    },
+    {
+      "speciesId": "sp_0452",
+      "scientificName": "Amphiprion ocellaris",
+      "field": "territoriality",
+      "value": {
+        "traits": [
+          "territorial"
+        ]
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/amphiprion-ocellaris",
+      "snapshotSha256": "c38a948a596f52e47cb2e0b3a5025319c0ad5a7fb164808fe051f173b3de1a1e"
+    },
+    {
+      "speciesId": "sp_0129",
+      "scientificName": "Zacco platypus",
+      "field": "territoriality",
+      "value": {
+        "traits": []
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/zacco-platypus",
+      "snapshotSha256": "b12ad9bf788c60434399a481bb5b46733e5bbb8cfb663d945329374155c71f14"
+    },
+    {
+      "speciesId": "sp_0024",
+      "scientificName": "Paracanthurus hepatus",
+      "field": "temperature",
+      "value": {
+        "min": 23,
+        "max": 27
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus",
+      "snapshotSha256": "0066fb7432908ff25378f7e33446628b7c9154ab40b46aa797b23b37a03e0d81"
+    },
+    {
+      "speciesId": "sp_0024",
+      "scientificName": "Paracanthurus hepatus",
+      "field": "tank_size",
+      "value": {
+        "liters": 1000,
+        "lengthCm": null
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus",
+      "snapshotSha256": "0066fb7432908ff25378f7e33446628b7c9154ab40b46aa797b23b37a03e0d81"
+    },
+    {
+      "speciesId": "sp_0024",
+      "scientificName": "Paracanthurus hepatus",
+      "field": "territoriality",
+      "value": {
+        "traits": []
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus",
+      "snapshotSha256": "0066fb7432908ff25378f7e33446628b7c9154ab40b46aa797b23b37a03e0d81"
+    },
+    {
+      "speciesId": "sp_0023",
+      "scientificName": "Zebrasoma flavescens",
+      "field": "temperature",
+      "value": {
+        "min": 23,
+        "max": 27
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens",
+      "snapshotSha256": "39617ca264d67378a5b4e727a7997f4202118b0452e84d2d83d8001224ecb38a"
+    },
+    {
+      "speciesId": "sp_0023",
+      "scientificName": "Zebrasoma flavescens",
+      "field": "ph",
+      "value": {
+        "min": 8.2,
+        "max": 8.4
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens",
+      "snapshotSha256": "39617ca264d67378a5b4e727a7997f4202118b0452e84d2d83d8001224ecb38a"
+    },
+    {
+      "speciesId": "sp_0023",
+      "scientificName": "Zebrasoma flavescens",
+      "field": "tank_size",
+      "value": {
+        "liters": 600,
+        "lengthCm": null
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens",
+      "snapshotSha256": "39617ca264d67378a5b4e727a7997f4202118b0452e84d2d83d8001224ecb38a"
+    },
+    {
+      "speciesId": "sp_0023",
+      "scientificName": "Zebrasoma flavescens",
+      "field": "territoriality",
+      "value": {
+        "traits": []
+      },
+      "sourceUrl": "https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens",
+      "snapshotSha256": "39617ca264d67378a5b4e727a7997f4202118b0452e84d2d83d8001224ecb38a"
+    }
+  ],
+  "keptFailClosed": [
+    {
+      "scientificName": "Pomacanthus annularis",
+      "field": "ph",
+      "reason": "ADW provides only an optimum pH point of 8, not a tolerated min-max husbandry range; FishBase/Reef App/Fishipedia did not provide a directly promotable range in this review."
+    },
+    {
+      "scientificName": "Rhodeus ocellatus",
+      "field": "predation",
+      "reason": "Diet/cohabitation wording is not direct compatibility-relevant fish-predation scope."
+    },
+    {
+      "scientificName": "Amphiprion ocellaris",
+      "field": "ph",
+      "reason": "No direct accepted pH range in the verified exact-taxon sources reviewed."
+    },
+    {
+      "scientificName": "Amphiprion ocellaris",
+      "field": "predation",
+      "reason": "Carnivore wording is diet-only and does not establish fish/tankmate predation scope."
+    },
+    {
+      "scientificName": "Zacco platypus",
+      "field": "ph",
+      "reason": "No direct labelled pH range was found in the verified exact-taxon sources."
+    },
+    {
+      "scientificName": "Zacco platypus",
+      "field": "tank_size",
+      "reason": "No explicit minimum aquarium volume or length was found in the verified exact-taxon sources."
+    },
+    {
+      "scientificName": "Paracanthurus hepatus",
+      "field": "ph",
+      "reason": "No direct accepted pH range was found in the verified exact-taxon sources."
+    },
+    {
+      "scientificName": "Paracanthurus hepatus",
+      "field": "predation",
+      "reason": "Omnivory and anti-predator ecology do not establish fish/tankmate predation by this species."
+    },
+    {
+      "scientificName": "Zebrasoma flavescens",
+      "field": "predation",
+      "reason": "Herbivory/zooplankton ecology does not establish fish predation or explicit absence of it."
+    },
+    {
+      "scientificName": "Hypancistrus inspector",
+      "field": "predation",
+      "reason": "Omnivory/invertebrate diet is not direct fish-predation or explicit no-predation evidence."
+    },
+    {
+      "scientificName": "Moenkhausia sanctaefilomenae",
+      "field": "predation",
+      "reason": "Carnivore/diet wording does not establish compatibility-relevant fish prey scope or explicit absence."
+    },
+    {
+      "scientificName": "Xiphophorus maculatus",
+      "field": "predation",
+      "reason": "Community suitability and general diet are not accepted as explicit no-predation evidence."
+    }
+  ]
+}

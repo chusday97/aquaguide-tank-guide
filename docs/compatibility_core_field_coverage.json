@@ -13,7 +13,7 @@
   ],
   "genericOnboardingReadySpecies": 78,
   "coreFieldCompleteSpecies": 93,
-  "oneFieldGapSpecies": 7,
+  "oneFieldGapSpecies": 9,
   "runtimeReviewedProfileSpecies": 145,
   "domainOrIdentityHeldSpecies": 282,
   "fieldCounts": {
@@ -26,17 +26,17 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 133,
+      "reviewed_supported": 135,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 3,
+      "reviewed_unknown": 1,
       "needs_research": 57,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 127,
+      "reviewed_supported": 128,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 7,
+      "reviewed_unknown": 6,
       "needs_research": 59,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -50,9 +50,9 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 125,
+      "reviewed_supported": 127,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 10,
+      "reviewed_unknown": 8,
       "needs_research": 58,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -66,9 +66,9 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 81,
-      "reviewed_neutral_or_negative": 30,
-      "reviewed_unknown": 82,
+      "reviewed_supported": 82,
+      "reviewed_neutral_or_negative": 34,
+      "reviewed_unknown": 77,
       "needs_research": 0,
       "missing_identity_or_domain": 282,
       "not_applicable": 11
@@ -85,11 +85,11 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 66
+      "count": 65
     },
     {
       "field": "tank_size",
-      "count": 64
+      "count": 62
     },
     {
       "field": "water",
@@ -97,7 +97,7 @@
     },
     {
       "field": "temperature",
-      "count": 59
+      "count": 57
     },
     {
       "field": "adult_size",
@@ -109,7 +109,7 @@
     },
     {
       "field": "territoriality",
-      "count": 5
+      "count": 0
     },
     {
       "field": "social_behavior",
@@ -2005,8 +2005,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -2019,22 +2019,22 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-zebrasoma-flavescens"
+            "research-wave25-fishipedia-zebrasoma-flavescens"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-zebrasoma-flavescens"
+            "research-wave25-fishipedia-zebrasoma-flavescens"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -2046,13 +2046,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-zebrasoma-flavescens"
+            "research-wave25-fishipedia-zebrasoma-flavescens"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -2064,13 +2064,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-zebrasoma-flavescens"
+            "research-wave25-fishipedia-zebrasoma-flavescens"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -2090,8 +2090,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -2104,13 +2104,13 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-paracanthurus-hepatus"
+            "research-wave25-fishipedia-paracanthurus-hepatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
           "status": "reviewed_unknown",
@@ -2131,13 +2131,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-paracanthurus-hepatus"
+            "research-wave25-fishipedia-paracanthurus-hepatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -2149,13 +2149,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-paracanthurus-hepatus"
+            "research-wave25-fishipedia-paracanthurus-hepatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -10657,8 +10657,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 3,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -10721,14 +10721,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch10-fishbase-zacco-platypus",
-            "journal-ethology-zacco-platypus-sociability"
+            "research-wave25-fishipedia-zacco-platypus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -37478,8 +37477,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 3,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -37537,13 +37536,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch17-fishbase-amphiprion-ocellaris"
+            "research-wave21-fishipedia-amphiprion-ocellaris"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -39405,8 +39404,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -39465,13 +39464,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-rhodeus-ocellatus"
+            "research-wave21-fishipedia-rhodeus-ocellatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",

@@ -165,6 +165,42 @@
         "baseScientificName": "Rhodeus ocellatus",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Zebrasoma flavescens",
+        "baseScientificName": "Zebrasoma flavescens",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Amphiprion ocellaris",
+        "baseScientificName": "Amphiprion ocellaris",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
         "gapInstances": 2,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
@@ -172,7 +208,7 @@
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "territoriality",
+          "ph",
           "predation"
         ],
         "requiresVariantBridgeReview": false,
@@ -180,11 +216,11 @@
         "existingCoveragePriorityScore": 183
       },
       {
-        "researchKey": "Amphiprion ocellaris",
-        "baseScientificName": "Amphiprion ocellaris",
+        "researchKey": "Paracanthurus hepatus",
+        "baseScientificName": "Paracanthurus hepatus",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
-        "gapInstances": 3,
+        "gapInstances": 2,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
         "impactPerGap": 0,
@@ -192,19 +228,18 @@
         "catalogObjectCount": 1,
         "combinedGapFields": [
           "ph",
-          "territoriality",
           "predation"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 175
+        "existingCoveragePriorityScore": 183
       },
       {
         "researchKey": "Zacco platypus",
         "baseScientificName": "Zacco platypus",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
-        "gapInstances": 3,
+        "gapInstances": 2,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
         "impactPerGap": 0,
@@ -212,56 +247,11 @@
         "catalogObjectCount": 1,
         "combinedGapFields": [
           "ph",
-          "tank_size",
-          "territoriality"
+          "tank_size"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 175
-      },
-      {
-        "researchKey": "Paracanthurus hepatus",
-        "baseScientificName": "Paracanthurus hepatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
-        "researchKey": "Zebrasoma flavescens",
-        "baseScientificName": "Zebrasoma flavescens",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
+        "existingCoveragePriorityScore": 173
       },
       {
         "researchKey": "Erpetoichthys calabaricus",
@@ -1093,6 +1083,42 @@
         "baseScientificName": "Rhodeus ocellatus",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Zebrasoma flavescens",
+        "baseScientificName": "Zebrasoma flavescens",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Amphiprion ocellaris",
+        "baseScientificName": "Amphiprion ocellaris",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
         "gapInstances": 2,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
@@ -1100,7 +1126,7 @@
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "territoriality",
+          "ph",
           "predation"
         ],
         "requiresVariantBridgeReview": false,
@@ -1108,11 +1134,11 @@
         "existingCoveragePriorityScore": 183
       },
       {
-        "researchKey": "Amphiprion ocellaris",
-        "baseScientificName": "Amphiprion ocellaris",
+        "researchKey": "Paracanthurus hepatus",
+        "baseScientificName": "Paracanthurus hepatus",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
-        "gapInstances": 3,
+        "gapInstances": 2,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
         "impactPerGap": 0,
@@ -1120,19 +1146,18 @@
         "catalogObjectCount": 1,
         "combinedGapFields": [
           "ph",
-          "territoriality",
           "predation"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 175
+        "existingCoveragePriorityScore": 183
       },
       {
         "researchKey": "Zacco platypus",
         "baseScientificName": "Zacco platypus",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
-        "gapInstances": 3,
+        "gapInstances": 2,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
         "impactPerGap": 0,
@@ -1140,56 +1165,11 @@
         "catalogObjectCount": 1,
         "combinedGapFields": [
           "ph",
-          "tank_size",
-          "territoriality"
+          "tank_size"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 175
-      },
-      {
-        "researchKey": "Paracanthurus hepatus",
-        "baseScientificName": "Paracanthurus hepatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
-        "researchKey": "Zebrasoma flavescens",
-        "baseScientificName": "Zebrasoma flavescens",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
+        "existingCoveragePriorityScore": 173
       }
     ],
     "terminalBlockedTaxonQueue": [
@@ -2016,15 +1996,15 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 317,
+    "actionableGaps": 307,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 66
+        "count": 65
       },
       {
         "field": "tank_size",
-        "count": 64
+        "count": 62
       },
       {
         "field": "water",
@@ -2032,7 +2012,7 @@
       },
       {
         "field": "temperature",
-        "count": 59
+        "count": 57
       },
       {
         "field": "adult_size",
@@ -2044,7 +2024,7 @@
       },
       {
         "field": "territoriality",
-        "count": 5
+        "count": 0
       },
       {
         "field": "social_behavior",
