@@ -103,6 +103,7 @@
     "test:collection-hub-ui": "node scripts/verify-collection-hub-previews.mjs",
     "test:feedback-rate-limit": "node --import tsx scripts/test-feedback-rate-limit.ts",
     "test:repository-boundary": "node --import tsx scripts/test-repository-boundary.ts",
+    "test:aquarium-delete-repository-boundary": "node --import tsx scripts/test-aquarium-delete-repository-boundary.ts",
     "test:share-report-contract": "node --import tsx scripts/test-share-report-contract.ts",
     "test:share-report-ui": "node scripts/verify-share-report-ui.mjs",
     "test:livestock-memorial-replay": "node --import tsx scripts/test-livestock-memorial-replay.ts",

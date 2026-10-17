@@ -100,6 +100,7 @@ export interface AquaGuideRepository {
   addLivestock(input: LivestockAddCommand): Promise<Aquarium>;
   /** @deprecated Aggregate synchronization retained for legacy profile and batch editors. */
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
+  deleteAquarium(aquariumId: string): Promise<void>;
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
   getFavorites(type: FavoriteMutation['type']): Promise<FavoriteRecord[]>;
   updateFavorite(input: FavoriteMutation): Promise<void>;

@@ -436,6 +436,16 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return this.rememberAquarium(saved);
   }
 
+  async deleteAquarium(aquariumId: string) {
+    const version = this.aquariumVersions.get(aquariumId);
+    if (!version || !isUuid(aquariumId)) throw new Error('鱼缸版本尚未加载，请刷新后重试。');
+    await apiRequest(`/aquariums/${aquariumId}?version=${version}`, {
+      method: 'DELETE',
+      idempotencyKey: createIdempotencyKey('aquarium-delete'),
+    });
+    this.aquariumVersions.delete(aquariumId);
+  }
+
   async removeLivestock(input: LivestockRemovalInput) {
     if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('移出数量必须是正整数。');
     const aquarium = await apiRequest<ApiAquarium>(

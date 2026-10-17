@@ -17,7 +17,7 @@ const iconFor = (eventType: CareTimelineItem['eventType']) => {
   if (eventType === 'water_change') return <Droplets className="h-4 w-4" />;
   if (eventType === 'feeding') return <Utensils className="h-4 w-4" />;
   if (eventType === 'species_added' || eventType === 'species_removed' || eventType === 'life_stage_updated') return <Fish className="h-4 w-4" />;
-  if (eventType === 'settings_updated' || eventType === 'aquarium_created') return <Settings className="h-4 w-4" />;
+  if (eventType === 'settings_updated' || eventType === 'aquarium_created' || eventType === 'aquarium_deleted') return <Settings className="h-4 w-4" />;
   if (eventType === 'daily_check') return <Activity className="h-4 w-4" />;
   return <CheckCircle2 className="h-4 w-4" />;
 };

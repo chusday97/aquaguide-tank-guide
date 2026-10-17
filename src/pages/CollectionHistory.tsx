@@ -13,6 +13,7 @@ type HistoryPayload = {
 
 const eventLabels: Record<string, { zh: string; en: string }> = {
   aquarium_created: { zh: '建立鱼缸', en: 'Aquarium created' },
+  aquarium_deleted: { zh: '结束鱼缸记录', en: 'Aquarium removed' },
   species_added: { zh: '加入生物', en: 'Livestock added' },
   species_removed: { zh: '移出生物', en: 'Livestock removed' },
   feeding: { zh: '喂食记录', en: 'Feeding' },

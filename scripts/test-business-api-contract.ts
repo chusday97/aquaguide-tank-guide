@@ -9,6 +9,7 @@ import {
   aquariumSpeciesBatchMergeSchema,
   aquariumSpeciesBatchRemovalSchema,
   careReminderCreateSchema,
+  careEventCreateSchema,
   diagnosisSaveSchema,
   feedbackCreateSchema,
   feedbackStatusUpdateSchema,
@@ -28,6 +29,7 @@ assert.equal(aquariumSpeciesBatchRemovalSchema.safeParse({ quantity: 2 }).succes
 assert.equal(aquariumSpeciesBatchRemovalSchema.safeParse({ quantity: 1.5 }).success, false);
 assert.equal(aquariumSpeciesBatchRemovalSchema.safeParse({ quantity: 0 }).success, false);
 assert.equal(careReminderCreateSchema.safeParse({ sourceCatalogKey: 'guide_water', title: '换水', reminderType: '换水', scheduledFor: '2026-07-17T08:00:00+08:00' }).success, true);
+assert.equal(careEventCreateSchema.safeParse({ aquariumId: '00000000-0000-4000-8000-000000000001', eventType: 'aquarium_deleted', title: '结束鱼缸记录', payload: {}, occurredAt: '2026-10-17T08:00:00.000Z', sourceType: 'aquarium_lifecycle', sourceId: 'deleted:tank', isInferred: false }).success, true);
 assert.equal(diagnosisSaveSchema.safeParse({ diagnosisKey: 'daily', answers: {}, resultSummary: '正常', riskLevel: '低' }).success, true);
 assert.equal(profilePreferencesUpdateSchema.safeParse({ version: 1, onboarding: { version: 1, status: 'pending', goal: 'build_tank', viewedSpecies: false, taskCardDismissed: false } }).success, true);
 assert.equal(profilePreferencesUpdateSchema.safeParse({ version: 1 }).success, false);

@@ -1671,14 +1671,37 @@ export default function AquariumManager() {
     setPendingDeleteAquariumId(id);
   };
 
-  const confirmDeleteAquarium = () => {
+  const confirmDeleteAquarium = async () => {
     if (!pendingDeleteAquariumId || aquariums.length <= 1) return;
-    const updated = aquariums.filter(a => a.id !== pendingDeleteAquariumId);
-    saveAquariums(updated);
-    if (activeId === pendingDeleteAquariumId) {
-      setActiveId(updated[0]?.id || '');
+    const target = aquariums.find(aquarium => aquarium.id === pendingDeleteAquariumId);
+    if (!target) return;
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.deleteAquarium(target.id);
+      const remaining = await repository.getAquariums();
+      setAquariums(remaining);
+      if (activeId === target.id) setActiveId(remaining[0]?.id || '');
+      try {
+        await repository.saveCareEvent({
+          aquariumId: target.id,
+          eventType: 'aquarium_deleted',
+          title: isEn ? 'Aquarium removed' : '结束鱼缸记录',
+          label: target.name,
+          payload: { aquariumName: target.name },
+          occurredAt: new Date().toISOString(),
+          sourceType: 'aquarium_lifecycle',
+          sourceId: `deleted:${target.id}`,
+          isInferred: false,
+          operationId: `aquarium-delete-history:${target.id}:${Date.now()}`,
+        });
+      } catch {
+        showToast(isEn ? 'Aquarium deleted, but its history marker could not be saved.' : '鱼缸已删除，但结束时间没有写入履历。', 'error');
+      }
+      setPendingDeleteAquariumId(null);
+      showToast(isEn ? 'Aquarium deleted' : '鱼缸已删除');
+    } catch {
+      showToast(isEn ? 'Aquarium could not be deleted.' : '鱼缸没有删除成功。', 'error');
     }
-    setPendingDeleteAquariumId(null);
   };
 
   const openLocalDataManager = () => {

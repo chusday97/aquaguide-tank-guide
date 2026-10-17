@@ -12,6 +12,7 @@ export type CatalogCompleteness = 'verified' | 'partial' | 'unknown';
 export type ComponentType = 'substrate' | 'plant' | 'hardscape';
 export type CareEventType =
   | 'aquarium_created'
+  | 'aquarium_deleted'
   | 'settings_updated'
   | 'species_added'
   | 'species_removed'
