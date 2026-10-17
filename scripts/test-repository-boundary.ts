@@ -61,6 +61,23 @@ const diagnosis = await repository.saveDiagnosis({
 assert.equal(diagnosis.diagnosisId, 'daily-local');
 const reloadedDiagnosis = await repository.getDailyCheck(aquarium.id, '2026-07-16');
 assert.equal(reloadedDiagnosis?.diagnosisId, 'daily-local');
+const issueDiagnosis = await repository.saveDiagnosis({
+  diagnosisId: 'issue-local',
+  createdAt: '2026-07-16T09:00:00.000Z',
+  aquariumId: aquarium.id,
+  problemType: '鱼只异常',
+  answers: { symptom: '呼吸急促' },
+  resultSummary: '需要继续观察',
+  riskLevel: '中风险',
+  riskCode: 'medium',
+  suggestedActions: ['继续观察'],
+  missingInfo: [],
+  followUpNotes: [],
+});
+assert.equal(issueDiagnosis.diagnosisId, 'issue-local');
+const diagnosisHistory = await repository.getDiagnosisRecords(aquarium.id, 10);
+assert.deepEqual(diagnosisHistory.map(record => record.diagnosisId), ['issue-local', 'daily-local']);
+assert.deepEqual((await repository.getDiagnosisRecords(aquarium.id, 1)).map(record => record.diagnosisId), ['issue-local']);
 
 const memorial = await repository.saveMemorial({ speciesCatalogKey: 'sp_0001', date: '2026-07-16', reason: '完成复盘' });
 assert.equal(memorial.fishId, 'sp_0001');

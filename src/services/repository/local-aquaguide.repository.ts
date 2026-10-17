@@ -142,6 +142,13 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     return record;
   }
 
+  async getDiagnosisRecords(aquariumId: string, limit = 100) {
+    return (loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[])
+      .filter(record => record.aquariumId === aquariumId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, Math.max(1, limit));
+  }
+
   async getDailyCheck(aquariumId: string, localDate: string) {
     const records = loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[];
     return findDailyPatrolRecord(records, aquariumId, new Date(`${localDate}T12:00:00`)) || null;

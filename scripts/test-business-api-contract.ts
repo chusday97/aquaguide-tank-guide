@@ -86,6 +86,8 @@ for (const route of [
   '/aquariums/:id/species/:recordId/batches/:batchId/memorial',
   '/aquariums/:id/equipment',
   '/aquariums/:id/daily-checks/:localDate',
+  '/aquariums/:id/diagnosis-records',
+  '/aquariums/:id/diagnosis-records/:localDate',
   '/memorial-records',
   '/care-reminders',
   '/care-events',
@@ -105,6 +107,10 @@ assert.match(routes, /catalogKey: content\.catalog_key/);
 assert.match(routes, /favoritedAt: favorite\.created_at/);
 assert.match(apiRepositorySource, /async getFavorites\(type: FavoriteMutation\['type'\]\)/);
 assert.match(apiRepositorySource, /`\/favorites\/\$\{type\}`/);
+assert.match(routes, /每日巡检请使用 daily-checks 接口/);
+assert.match(routes, /deterministicUuid\(`\$\{userId\}:diagnosis:\$\{parsed\.data\.diagnosisKey\}`\)/);
+assert.match(apiRepositorySource, /async getDiagnosisRecords\(aquariumId: string, limit = 100\)/);
+assert.match(apiRepositorySource, /createIdempotencyKey\('diagnosis-record'\)/);
 assert.match(routes, /这个物种已有多个批次，请调整具体批次的数量/);
 assert.doesNotMatch(routes, /const \{ version, \.\.\.updates \} = parsed\.data;[\s\S]{0,300}from\('aquarium_species'\)\.update\(snakeize\(updates\)\)/);
 assert.match(routes, /MAX_SUBMISSIONS_PER_HOUR = 5/);

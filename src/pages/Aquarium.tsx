@@ -102,7 +102,7 @@ import {
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
-import { findDailyPatrolRecord, persistDiagnosisRecords, upsertDiagnosisRecord } from '../services/diagnosis/diagnosis-records.service';
+import { findDailyPatrolRecord, upsertDiagnosisRecord } from '../services/diagnosis/diagnosis-records.service';
 import { isAquariumTaskAction, taskRoutes } from '../services/navigation/task-routes';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
@@ -1330,11 +1330,9 @@ export default function AquariumManager() {
         const dailyRecords = resolvedMode === 'cloud'
           ? projectCareEventsToDailyRecords(repositoryEvents)
           : { feedingRecords: localState.feedingRecords, observationRecords: localState.observationRecords };
-        const today = format(new Date(), 'yyyy-MM-dd');
-        const repositoryDiagnosisRecords = resolvedMode === 'cloud'
-          ? (await Promise.all(repositoryAquariums.map(aquarium => repository.getDailyCheck(aquarium.id, today))))
-              .filter((record): record is DiagnosisRecord => Boolean(record))
-          : (localState.diagnosisRecords as DiagnosisRecord[]);
+        const repositoryDiagnosisRecords = (await Promise.all(
+          repositoryAquariums.map(aquarium => repository.getDiagnosisRecords(aquarium.id, 100)),
+        )).flat().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         if (!active) return;
         if (resolvedMode === 'cloud') patchLocalAppState({ cloudMigrationConfirmed: true });
         const normalized = normalizeAquariumPlants(repositoryAquariums);
@@ -3247,11 +3245,9 @@ export default function AquariumManager() {
       nextCheckAt: result.nextCheckAt,
       followUpNotes: careDiagnosisContext ? [`来自百科：${careDiagnosisContext.title}`] : [],
     };
-    const nextRecords = upsertDiagnosisRecord(diagnosisRecords, record);
     try {
-      const persistedRecords = problemType === '巡检'
-        ? upsertDiagnosisRecord(diagnosisRecords, await (await getCurrentAquaGuideRepository()).saveDiagnosis(record))
-        : persistDiagnosisRecords(nextRecords);
+      const persistedRecord = await (await getCurrentAquaGuideRepository()).saveDiagnosis(record);
+      const persistedRecords = upsertDiagnosisRecord(diagnosisRecords, persistedRecord);
       setDiagnosisRecords(persistedRecords);
       setDiagnosisSaveMessage(problemType === '巡检'
         ? existingDailyRecord ? '已更新今天的检查记录。' : '已保存今天的检查记录。'

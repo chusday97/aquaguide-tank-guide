@@ -229,13 +229,16 @@ export const loadKeepingHistoryFromRepository = async (repository: AquaGuideRepo
     repository.getCareEvents(),
     repository.getMemorials(),
   ]);
+  const diagnosisRecords = (await Promise.all(
+    aquariums.map(aquarium => repository.getDiagnosisRecords(aquarium.id, 100)),
+  )).flat();
   const appState: LocalAppState = {
     version: 1,
     currentAquariumId: aquariums[0]?.id || '',
     aquariums,
     wishlist: [],
     dismissedRecommendations: [],
-    diagnosisRecords: [],
+    diagnosisRecords,
     compatibilityRecords: [],
     deceasedRecords: memorials,
     feedingRecords: [],

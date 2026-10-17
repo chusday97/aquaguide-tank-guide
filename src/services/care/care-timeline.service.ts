@@ -124,7 +124,7 @@ export const buildAquariumTimeline = ({
     payload: { riskLevel: item.riskLevel },
     occurredAt: asIso(item.createdAt, fallbackDate),
     sourceType: 'diagnosis_record',
-    sourceId: item.id || item.diagnosisId,
+    sourceId: item.diagnosisId,
   }));
 
   reminders.filter(item => item.aquariumId === aquarium.id && item.completedAt).forEach(item => addDerived({

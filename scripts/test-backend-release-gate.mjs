@@ -96,6 +96,7 @@ const gates = [
   ['Collection History Entry', 'npm', ['run', 'test:collection-history-entry']],
   ['Daily Care Cloud State', 'npm', ['run', 'test:daily-care-cloud-state']],
   ['Daily Care Repository Boundary', 'npm', ['run', 'test:daily-care-repository-boundary']],
+  ['Diagnosis Cloud History Boundary', 'npm', ['run', 'test:diagnosis-cloud-history-boundary']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],

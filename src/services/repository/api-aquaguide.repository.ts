@@ -64,7 +64,14 @@ type ApiAquarium = {
   }>;
 };
 
-type ApiDiagnosis = DiagnosisRecord & { id: string; version: number; localDate: string; diagnosisKey: string };
+type ApiDiagnosis = Omit<DiagnosisRecord, 'diagnosisId' | 'source'> & {
+  id: string;
+  version: number;
+  localDate: string;
+  diagnosisKey: string;
+  sourceType?: string;
+  sourceTitle?: string;
+};
 type ApiReminder = {
   id: string;
   sourceCatalogKey: string;
@@ -93,6 +100,40 @@ type ApiMemorial = {
 };
 
 const isUuid = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+
+const isDiagnosisSourceType = (value: string | undefined): value is 'manual' | 'care_article' | 'home' =>
+  value === 'manual' || value === 'care_article' || value === 'home';
+
+const toDiagnosisRecord = (saved: ApiDiagnosis): DiagnosisRecord => ({
+  ...saved,
+  id: saved.id,
+  diagnosisId: saved.diagnosisKey,
+  source: isDiagnosisSourceType(saved.sourceType)
+    ? { type: saved.sourceType, title: saved.sourceTitle }
+    : undefined,
+});
+
+const diagnosisSaveBody = (record: DiagnosisRecord, version?: number) => ({
+  diagnosisKey: record.diagnosisId,
+  problemType: record.problemType,
+  sourceType: record.source?.type,
+  sourceTitle: record.source?.title,
+  answers: record.answers,
+  structuredAnswers: record.structuredAnswers || [],
+  resultSummary: record.resultSummary,
+  riskLevel: record.riskLevel,
+  riskCode: record.riskCode,
+  conclusion: record.conclusion,
+  keyMetrics: record.keyMetrics || [],
+  suggestedActions: record.suggestedActions,
+  avoidActions: record.avoidActions || [],
+  observeItems: record.observeItems || [],
+  missingInfo: record.missingInfo,
+  optionalMissingInfo: record.optionalMissingInfo || [],
+  nextCheckAt: record.nextCheckAt,
+  followUpNotes: record.followUpNotes,
+  ...(version ? { version } : {}),
+});
 
 const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
   const components = record.components || [];
@@ -435,47 +476,34 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     }
   }
 
+  async getDiagnosisRecords(aquariumId: string, limit = 100) {
+    const normalizedLimit = Math.min(100, Math.max(1, Math.trunc(limit)));
+    const response = await apiRequest<{ items: ApiDiagnosis[] }>(`/aquariums/${aquariumId}/diagnosis-records?limit=${normalizedLimit}`);
+    return (response.items || []).map(toDiagnosisRecord);
+  }
+
   async getDailyCheck(aquariumId: string, localDate: string) {
     const saved = await apiRequest<ApiDiagnosis | null>(`/aquariums/${aquariumId}/daily-checks/${localDate}`);
-    if (!saved) return null;
-    const sourceType = (saved as ApiDiagnosis & { sourceType?: 'manual' | 'care_article' | 'home' }).sourceType;
-    const sourceTitle = (saved as ApiDiagnosis & { sourceTitle?: string }).sourceTitle;
-    return {
-      ...saved,
-      diagnosisId: saved.diagnosisKey || saved.diagnosisId,
-      source: sourceType ? { type: sourceType, title: sourceTitle } : saved.source,
-    } satisfies DiagnosisRecord;
+    return saved ? toDiagnosisRecord(saved) : null;
   }
 
   async saveDiagnosis(record: DiagnosisRecord) {
     const date = getLocalDayKey(record.createdAt);
-    const current = await apiRequest<ApiDiagnosis | null>(`/aquariums/${record.aquariumId}/daily-checks/${date}`);
-    const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/daily-checks/${date}`, {
-      method: 'PUT',
-      idempotencyKey: createIdempotencyKey('daily-check'),
-      body: {
-        diagnosisKey: record.diagnosisId,
-        problemType: record.problemType,
-        sourceType: record.source?.type,
-        sourceTitle: record.source?.title,
-        answers: record.answers,
-        structuredAnswers: record.structuredAnswers || [],
-        resultSummary: record.resultSummary,
-        riskLevel: record.riskLevel,
-        riskCode: record.riskCode,
-        conclusion: record.conclusion,
-        keyMetrics: record.keyMetrics || [],
-        suggestedActions: record.suggestedActions,
-        avoidActions: record.avoidActions || [],
-        observeItems: record.observeItems || [],
-        missingInfo: record.missingInfo,
-        optionalMissingInfo: record.optionalMissingInfo || [],
-        nextCheckAt: record.nextCheckAt,
-        followUpNotes: record.followUpNotes,
-        version: current?.version,
-      },
+    if (record.problemType === '巡检') {
+      const current = await apiRequest<ApiDiagnosis | null>(`/aquariums/${record.aquariumId}/daily-checks/${date}`);
+      const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/daily-checks/${date}`, {
+        method: 'PUT',
+        idempotencyKey: createIdempotencyKey('daily-check'),
+        body: diagnosisSaveBody(record, current?.version),
+      });
+      return toDiagnosisRecord(saved);
+    }
+    const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/diagnosis-records/${date}`, {
+      method: 'POST',
+      idempotencyKey: createIdempotencyKey('diagnosis-record'),
+      body: diagnosisSaveBody(record),
     });
-    return { ...record, id: saved.id, diagnosisId: saved.diagnosisKey || record.diagnosisId };
+    return toDiagnosisRecord(saved);
   }
 
   async getMemorials() {
