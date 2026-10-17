@@ -6358,18 +6358,27 @@ export default function AquariumManager() {
               onClick={() => {
                 setObservationChecks([]);
                 markPriorityTask('observeBreathing', '已观察');
-                const nextRecords = [
-                  ...observationRecords,
-                  {
-                    id: Math.random().toString(36).substring(2, 9),
-                    aquariumId: activeId,
-                    createdAt: new Date().toISOString(),
-                    type: 'observation',
-                    note: '未发现明显呼吸异常',
-                  },
-                ];
+                const createdRecord: LocalEventRecord = {
+                  id: Math.random().toString(36).substring(2, 9),
+                  aquariumId: activeId,
+                  createdAt: new Date().toISOString(),
+                  type: 'observation',
+                  note: '未发现明显呼吸异常',
+                };
+                const nextRecords = [...observationRecords, createdRecord];
                 setObservationRecords(nextRecords);
                 patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
+                void persistCareTimelineEvent({
+                  aquariumId: activeId,
+                  eventType: 'observation',
+                  title: isEn ? 'Logged observation' : '记录观察',
+                  label: createdRecord.note,
+                  payload: {},
+                  occurredAt: createdRecord.createdAt,
+                  sourceType: 'observation_record',
+                  sourceId: createdRecord.id,
+                  isInferred: false,
+                }).catch(() => showToast(isEn ? 'Observation history could not be synced.' : '观察履历没有同步成功。', 'error'));
                 setTankActionMessage(`已记录观察：${format(new Date(), 'HH:mm')} 未发现明显呼吸异常`);
                 setIsObservationOpen(false);
               }}
@@ -6380,18 +6389,27 @@ export default function AquariumManager() {
               className="h-10 rounded-full bg-red-600 text-sm font-bold text-white hover:bg-red-700"
               onClick={() => {
                 markPriorityTask('observeBreathing', '已发现异常');
-                const nextRecords = [
-                  ...observationRecords,
-                  {
-                    id: Math.random().toString(36).substring(2, 9),
-                    aquariumId: activeId,
-                    createdAt: new Date().toISOString(),
-                    type: 'observation',
-                    note: observationChecks.length > 0 ? observationChecks.join('、') : '发现异常',
-                  },
-                ];
+                const createdRecord: LocalEventRecord = {
+                  id: Math.random().toString(36).substring(2, 9),
+                  aquariumId: activeId,
+                  createdAt: new Date().toISOString(),
+                  type: 'observation',
+                  note: observationChecks.length > 0 ? observationChecks.join('、') : '发现异常',
+                };
+                const nextRecords = [...observationRecords, createdRecord];
                 setObservationRecords(nextRecords);
                 patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
+                void persistCareTimelineEvent({
+                  aquariumId: activeId,
+                  eventType: 'observation',
+                  title: isEn ? 'Logged observation' : '记录观察',
+                  label: createdRecord.note,
+                  payload: {},
+                  occurredAt: createdRecord.createdAt,
+                  sourceType: 'observation_record',
+                  sourceId: createdRecord.id,
+                  isInferred: false,
+                }).catch(() => showToast(isEn ? 'Observation history could not be synced.' : '观察履历没有同步成功。', 'error'));
                 setTankActionMessage('已记录呼吸异常，建议继续完成鱼只异常诊断。');
                 setIsObservationOpen(false);
                 handleOpenDiagnosisWithType('鱼只异常');

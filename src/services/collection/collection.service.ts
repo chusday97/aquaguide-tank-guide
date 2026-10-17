@@ -21,7 +21,8 @@ import {
 } from '../storage/local-app-state';
 import { taskRoutes } from '../navigation/task-routes';
 import { getCareReminders, subscribeToCareActivity } from '../care/care-activity.service';
-import { buildKeepingHistory } from './keeping-history.service';
+import { buildKeepingHistory, loadKeepingHistoryFromRepository } from './keeping-history.service';
+import { getAquaGuideRepository, resolveRepositoryMode } from '../repository/repository-provider';
 import type { MemorialCauseCode } from '../../types';
 
 const memorialCauseCodes = new Set<MemorialCauseCode>([
@@ -186,6 +187,16 @@ export const getCollectionSnapshot = (): CollectionSnapshot => {
       achievements: achievements.filter(item => item.unlocked).length,
     },
   };
+};
+
+export const loadCurrentKeepingHistory = async () => {
+  const mode = await resolveRepositoryMode();
+  if (mode === 'local') {
+    const snapshot = getCollectionSnapshot();
+    return { source: 'local' as const, memorials: snapshot.memorials, history: snapshot.history };
+  }
+  const result = await loadKeepingHistoryFromRepository(getAquaGuideRepository(mode));
+  return { source: 'cloud' as const, ...result };
 };
 
 export const subscribeToCollection = (listener: () => void) => {

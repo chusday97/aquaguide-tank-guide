@@ -97,6 +97,7 @@ export interface AquaGuideRepository {
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
   saveDiagnosis(record: DiagnosisRecord): Promise<DiagnosisRecord>;
+  getMemorials(): Promise<DeceasedRecord[]>;
   saveMemorial(input: MemorialSaveInput): Promise<DeceasedRecord>;
   saveLivestockMemorial(input: LivestockMemorialSaveInput): Promise<{ record: DeceasedRecord; aquarium: Aquarium }>;
   updateMemorial(input: MemorialUpdateInput): Promise<DeceasedRecord>;

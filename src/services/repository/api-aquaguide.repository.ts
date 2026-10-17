@@ -80,6 +80,16 @@ type ApiReminder = {
   version: number;
 };
 type ApiCareEvent = CareTimelineRecord & { version: number };
+type ApiMemorial = {
+  id: string;
+  speciesCatalogKey: string;
+  memorialDate: string;
+  causeCodes?: DeceasedRecord['causeCodes'];
+  reason?: string;
+  observation?: string;
+  improvement?: string;
+  version: number;
+};
 
 const isUuid = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 
@@ -446,6 +456,20 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       },
     });
     return { ...record, id: saved.id, diagnosisId: saved.diagnosisKey || record.diagnosisId };
+  }
+
+  async getMemorials() {
+    const response = await apiRequest<{ items: ApiMemorial[] }>('/memorial-records?limit=200');
+    return (response.items || []).map(record => ({
+      id: record.id,
+      fishId: record.speciesCatalogKey,
+      date: new Date(`${record.memorialDate}T12:00:00`).toISOString(),
+      causeCodes: record.causeCodes,
+      reason: record.reason,
+      observation: record.observation,
+      improvement: record.improvement,
+      version: record.version,
+    } satisfies DeceasedRecord));
   }
 
   async saveMemorial(input: MemorialSaveInput) {

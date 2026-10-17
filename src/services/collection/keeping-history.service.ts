@@ -11,6 +11,7 @@ import { isCompatibilityRecord } from '../compatibility/compatibility-records.se
 import type { CareReminderRecord } from '../care/care-activity.service';
 import { buildAquariumTimeline } from '../care/care-timeline.service';
 import type { LocalAppState, LocalCareEventRecord } from '../storage/local-app-state';
+import type { AquaGuideRepository } from '../repository/aquaguide.repository';
 
 type BuildKeepingHistoryInput = {
   appState: LocalAppState;
@@ -112,22 +113,27 @@ export const buildKeepingHistory = ({
   // Preserve explicit events even when their aquarium was later removed from the current tank list.
   (appState.careEvents || []).forEach(putCareEvent);
 
-  appState.observationRecords.forEach(record => {
-    events.set(`observation:${record.id}`, {
-      id: `observation:${record.id}`,
-      eventType: 'observation',
-      occurredAt: record.createdAt,
-      title: '记录观察',
-      label: record.note,
-      aquariumId: record.aquariumId,
-      aquariumName: aquariumNames.get(record.aquariumId),
-      speciesIds: [],
-      payload: {},
-      sourceType: 'observation_record',
-      sourceId: record.id,
-      isInferred: false,
+  const explicitObservationSourceIds = new Set((appState.careEvents || [])
+    .filter(event => event.sourceType === 'observation_record' && typeof event.sourceId === 'string')
+    .map(event => event.sourceId as string));
+  appState.observationRecords
+    .filter(record => !explicitObservationSourceIds.has(record.id))
+    .forEach(record => {
+      events.set(`observation:${record.id}`, {
+        id: `observation:${record.id}`,
+        eventType: 'observation',
+        occurredAt: record.createdAt,
+        title: '记录观察',
+        label: record.note,
+        aquariumId: record.aquariumId,
+        aquariumName: aquariumNames.get(record.aquariumId),
+        speciesIds: [],
+        payload: {},
+        sourceType: 'observation_record',
+        sourceId: record.id,
+        isInferred: false,
+      });
     });
-  });
 
   memorials.forEach(record => {
     events.set(`memorial:${record.id}`, {
@@ -213,5 +219,33 @@ export const buildKeepingHistory = ({
     speciesEverKeptIds: [...speciesEverKeptIds].sort(),
     currentSpeciesIds: [...currentSpeciesIds].sort(),
     aquariumIds: [...aquariumIds].sort(),
+  };
+};
+
+export const loadKeepingHistoryFromRepository = async (repository: AquaGuideRepository) => {
+  const [aquariums, reminders, careEvents, memorials] = await Promise.all([
+    repository.getAquariums(),
+    repository.getCareReminders(),
+    repository.getCareEvents(),
+    repository.getMemorials(),
+  ]);
+  const appState: LocalAppState = {
+    version: 1,
+    currentAquariumId: aquariums[0]?.id || '',
+    aquariums,
+    wishlist: [],
+    dismissedRecommendations: [],
+    diagnosisRecords: [],
+    compatibilityRecords: [],
+    deceasedRecords: memorials,
+    feedingRecords: [],
+    observationRecords: [],
+    careEvents,
+    riskReminderState: {},
+    updatedAt: '1970-01-01T00:00:00.000Z',
+  };
+  return {
+    memorials,
+    history: buildKeepingHistory({ appState, memorials, reminders, speciesCatalog: [] }),
   };
 };
