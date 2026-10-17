@@ -36,6 +36,7 @@ export type LocalAppState = {
   dismissedRecommendations: string[];
   diagnosisRecords: unknown[];
   compatibilityRecords: unknown[];
+  riskOverrideRecords?: unknown[];
   deceasedRecords: unknown[];
   feedingRecords: LocalEventRecord[];
   observationRecords: LocalEventRecord[];
@@ -70,6 +71,7 @@ const createEmptyState = (): LocalAppState => ({
   dismissedRecommendations: [],
   diagnosisRecords: [],
   compatibilityRecords: [],
+  riskOverrideRecords: [],
   deceasedRecords: [],
   feedingRecords: [],
   observationRecords: [],
@@ -88,6 +90,7 @@ const normalizeState = (value: Partial<LocalAppState> | null | undefined): Local
     dismissedRecommendations: Array.isArray(value?.dismissedRecommendations) ? value.dismissedRecommendations : fallback.dismissedRecommendations,
     diagnosisRecords: Array.isArray(value?.diagnosisRecords) ? value.diagnosisRecords : fallback.diagnosisRecords,
     compatibilityRecords: Array.isArray(value?.compatibilityRecords) ? value.compatibilityRecords : fallback.compatibilityRecords,
+    riskOverrideRecords: Array.isArray(value?.riskOverrideRecords) ? value.riskOverrideRecords : fallback.riskOverrideRecords,
     deceasedRecords: Array.isArray(value?.deceasedRecords) ? value.deceasedRecords : fallback.deceasedRecords,
     feedingRecords: Array.isArray(value?.feedingRecords) ? value.feedingRecords : fallback.feedingRecords,
     observationRecords: Array.isArray(value?.observationRecords) ? value.observationRecords : fallback.observationRecords,
@@ -204,6 +207,7 @@ export const clearLocalAppState = () => {
       'wishlistFishIds',
       'aquarium_diagnosis_records',
       'deceasedRecords',
+      'aquaguide:risk-overrides:v1',
       'aquapediaDiscoveryDeck',
     ].forEach(key => localStorage.removeItem(key));
   } catch (error) {

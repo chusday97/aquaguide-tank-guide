@@ -38,6 +38,7 @@ const buildPreviewState = (): LocalAppState => ({
   dismissedRecommendations: [],
   diagnosisRecords: [],
   compatibilityRecords: [],
+  riskOverrideRecords: [],
   deceasedRecords: [],
   feedingRecords: [],
   observationRecords: [],

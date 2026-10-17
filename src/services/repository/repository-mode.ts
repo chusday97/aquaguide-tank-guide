@@ -11,6 +11,7 @@ export const selectRepositoryMode = (
     || state.wishlist.length > 0
     || state.diagnosisRecords.length > 0
     || state.compatibilityRecords.length > 0
+    || (state.riskOverrideRecords?.length || 0) > 0
     || state.deceasedRecords.length > 0
     || state.feedingRecords.length > 0
     || state.observationRecords.length > 0

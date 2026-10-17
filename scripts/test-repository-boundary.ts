@@ -31,6 +31,7 @@ assert.equal(selectRepositoryMode(true, stateWithLocalTank), 'local', 'login mus
 assert.equal(selectRepositoryMode(true, { ...stateWithLocalTank, cloudMigrationConfirmed: true }), 'cloud');
 assert.equal(selectRepositoryMode(true, { ...stateWithLocalTank, aquariums: [], feedingRecords: [{ id: 'feed-1' }] }), 'local', 'feeding history must keep the local repository until migration');
 assert.equal(selectRepositoryMode(true, { ...stateWithLocalTank, aquariums: [], observationRecords: [{ id: 'observe-1' }] }), 'local', 'observation history must keep the local repository until migration');
+assert.equal(selectRepositoryMode(true, { ...stateWithLocalTank, aquariums: [], riskOverrideRecords: [{ id: 'risk-1' }] }), 'local', 'risk override history must keep the local repository until migration');
 assert.equal(selectRepositoryMode(true, { ...stateWithLocalTank, aquariums: [] }, true), 'local', 'care data stored under compatibility keys must keep the local repository until migration');
 
 await repository.updateFavorite({ type: 'species', catalogKey: 'sp_0001', favorite: true });
@@ -103,6 +104,31 @@ assert.equal((await repository.getCareEvents(stocked.id))[0].id, careEvent.id);
 await repository.removeCareEventBySource({ aquariumId: stocked.id, sourceType: 'feeding_record', sourceId: 'feed-1', operationId: 'care-event-delete:feed-1' });
 assert.equal((await repository.getCareEvents(stocked.id)).length, 0);
 
+const { getRiskOverrideRecords, recordRiskOverride, LEGACY_RISK_OVERRIDE_STORAGE_KEY } = await import('../src/services/compatibility/risk-override-records.service');
+localStorage.setItem(LEGACY_RISK_OVERRIDE_STORAGE_KEY, JSON.stringify([{
+  id: 'legacy-risk-1',
+  aquariumId: stocked.id,
+  species: [{ fishId: 'sp_0001', name: '测试鱼', quantity: 1 }],
+  status: 'not_recommended',
+  reasons: [{ code: 'legacy-risk', title: '旧风险记录' }],
+  ruleVersion: 'legacy-v1',
+  confirmedAt: '2026-07-17T10:00:00.000Z',
+}]));
+const migratedRiskOverrides = getRiskOverrideRecords();
+assert.equal(migratedRiskOverrides.length, 1);
+assert.equal(migratedRiskOverrides[0].id, 'legacy-risk-1');
+assert.equal(localStorage.getItem(LEGACY_RISK_OVERRIDE_STORAGE_KEY), null, 'legacy risk overrides must migrate into canonical App State');
+assert.equal(JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}').riskOverrideRecords.length, 1);
+
+const recordedRiskOverride = recordRiskOverride({
+  aquariumId: stocked.id,
+  species: [{ fishId: 'sp_0001', name: '测试鱼', quantity: 2 }],
+  status: 'caution',
+  reasons: [{ code: 'manual-risk', title: '明确确认风险' }],
+  ruleVersion: 'test-v1',
+});
+assert.equal(getRiskOverrideRecords()[0].id, recordedRiskOverride.id, 'new risk override must be written through canonical App State');
+
 localStorage.failWrites = true;
 await assert.rejects(
   repository.saveAquarium({ ...aquarium, name: '不应伪成功' }),
@@ -163,6 +189,8 @@ assert.ok(
 );
 assert.match(aquariumPageSource, /getCurrentAquaGuideRepository/);
 assert.match(aquariumPageSource, /recordExistingLivestock/);
+assert.match(aquariumPageSource, /recordRiskOverride/);
+assert.doesNotMatch(aquariumPageSource, /aquaguide:risk-overrides:v1/);
 assert.doesNotMatch(aquariumPageSource, /commitAddFishItems/);
 assert.doesNotMatch(encyclopediaPageSource, /persistAquariums/);
 assert.doesNotMatch(encyclopediaPageSource, /loadAppStateFromStorage/);

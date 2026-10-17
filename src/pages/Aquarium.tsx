@@ -106,6 +106,7 @@ import { findDailyPatrolRecord, persistDiagnosisRecords, upsertDiagnosisRecord }
 import { isAquariumTaskAction, taskRoutes } from '../services/navigation/task-routes';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
+import { recordRiskOverride } from '../services/compatibility/risk-override-records.service';
 import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode, subscribeToRepositoryMode } from '../services/repository/repository-provider';
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import { applyWaterChangeHistory, isFutureWaterChangeDate, toggleWaterChangeDate } from '../services/aquarium/water-change.service';
@@ -2174,11 +2175,7 @@ export default function AquariumManager() {
     if (!addFishCompatibilityReview || !activeAquarium) return;
     const review = addFishCompatibilityReview;
     try {
-      const storageKey = 'aquaguide:risk-overrides:v1';
-      const existing = JSON.parse(window.localStorage.getItem(storageKey) || '[]');
-      const records = Array.isArray(existing) ? existing : [];
-      const riskRecord = {
-        id: crypto.randomUUID(),
+      recordRiskOverride({
         aquariumId: activeAquarium.id,
         species: review.items.map(item => ({
           fishId: item.fishId,
@@ -2186,13 +2183,20 @@ export default function AquariumManager() {
           quantity: item.quantity,
         })),
         status: review.status,
-        reasons: review.keyRules.map(rule => ({ code: rule.code, title: rule.title, evidence: rule.evidence, severity: rule.severity })),
+        reasons: review.keyRules.map(rule => ({
+          code: rule.code,
+          title: rule.title,
+          evidence: rule.evidence,
+          severity: rule.severity,
+        })),
         ruleVersion: review.evaluations[0]?.result.metadata.ruleVersion || 'unknown',
-        confirmedAt: new Date().toISOString(),
-      };
-      window.localStorage.setItem(storageKey, JSON.stringify([riskRecord, ...records].slice(0, 100)));
+      });
     } catch (error) {
       console.warn('AquaGuide risk override audit could not be saved', error);
+      setTankActionMessage(Boolean(i18n.language?.startsWith('en'))
+        ? 'The high-risk confirmation could not be saved, so nothing was added.'
+        : '高风险确认记录未保存成功，本次没有加入鱼缸。');
+      return;
     }
     setAdditionIntent('record_existing');
     setIsRiskOverrideConfirmOpen(false);
