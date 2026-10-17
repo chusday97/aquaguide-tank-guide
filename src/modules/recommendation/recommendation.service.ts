@@ -306,6 +306,7 @@ const buildCandidate = (
     candidateSpecies: fish,
     candidateQuantity: getRecommendedQuantity(fish, profile.load.remainingCapacity),
   });
+  const authorityIncomplete = compatibility.metadata.decisionReadiness !== 'reviewed';
   const singleLoad = Math.max(0.4, getBioLoadLiters(fish));
   const recommendedQuantity = getRecommendedQuantity(fish, profile.load.remainingCapacity);
   const loadAfterAdd = Math.round(((profile.load.currentLoad + singleLoad * recommendedQuantity) / profile.load.capacity) * 100);
@@ -325,6 +326,7 @@ const buildCandidate = (
   if (compatibility.status === 'compatible' && risks.length === 0 && requiredAdjustments.length === 0) status = 'direct';
   if (compatibility.status === 'caution' || (compatibility.status === 'compatible' && (risks.length > 0 || requiredAdjustments.length > 0))) status = 'adjustable';
   if (compatibility.status === 'not_recommended') status = 'blocked';
+  if (authorityIncomplete) status = 'blocked';
   if (profile.load.loadRate >= TANK_LOAD_THRESHOLDS.nearLimit) status = 'blocked';
   if (minGroup > recommendedQuantity && minGroup > 1) status = 'blocked';
 
@@ -335,10 +337,18 @@ const buildCandidate = (
     status,
     recommendedQuantity,
     fitScore: Math.max(0, Math.min(100, evaluation.score - (loadAfterAdd > 75 ? 12 : 0))),
-    reason: getRecommendationReason(fish, aquarium, speciesPool),
+    reason: authorityIncomplete
+      ? '兼容资料尚未完成审核，暂不进入推荐候选。'
+      : getRecommendationReason(fish, aquarium, speciesPool),
     risks: Array.from(new Set([...risks, ...compatibility.warningRules.map(item => item.title), ...compatibility.blockingRules.map(item => item.title)])).slice(0, 5),
-    requiredAdjustments: Array.from(new Set([...requiredAdjustments, ...compatibility.missingData.map(item => item.title)])).slice(0, 5),
-    confidence: compatibility.status === 'insufficient_data' || evaluation.status === 'unknown' || currentFishes.length > 0 && requiredAdjustments.length > 0 ? 'medium' : 'high',
+    requiredAdjustments: Array.from(new Set([
+      ...requiredAdjustments,
+      ...compatibility.missingData.map(item => item.title),
+      ...(authorityIncomplete ? ['兼容资料尚未完成审核，补齐可靠来源后重新评估'] : []),
+    ])).slice(0, 5),
+    confidence: authorityIncomplete
+      ? 'low'
+      : compatibility.status === 'insufficient_data' || evaluation.status === 'unknown' || currentFishes.length > 0 && requiredAdjustments.length > 0 ? 'medium' : 'high',
     loadAfterAdd: Number.isFinite(loadAfterAdd) ? loadAfterAdd : profile.load.loadRate,
   };
 };
@@ -573,7 +583,11 @@ export const recommendationService = {
         candidateSpecies: candidate,
         candidateQuantity: 1,
       }),
-    })).filter(item => item.compatibility.status !== 'not_recommended' && item.compatibility.status !== 'insufficient_data');
+    })).filter(item => (
+      item.compatibility.metadata.decisionReadiness === 'reviewed'
+      && item.compatibility.status !== 'not_recommended'
+      && item.compatibility.status !== 'insufficient_data'
+    ));
 
     const strictCandidates = baseCandidates.filter(({ candidate, compatibility }) => {
       if (compatibility.status !== 'compatible') return false;

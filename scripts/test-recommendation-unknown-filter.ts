@@ -41,5 +41,11 @@ assert.equal(result.direct.length, 0, 'unreviewed species must not be a direct r
 assert.equal(result.adjustable.length, 0, 'unreviewed species must not be an adjustable recommendation');
 assert.equal(result.emptyPlans.length, 0, 'unreviewed species must not form an empty-tank plan');
 assert.deepEqual(result.blocked.map(item => item.speciesId), ['unknown-species']);
+assert.equal(result.blocked[0]?.confidence, 'low');
+assert.match(result.blocked[0]?.reason || '', /资料尚未完成审核/);
+assert.ok(result.blocked[0]?.requiredAdjustments.some(item => /补齐可靠来源/.test(item)));
 
-console.log('recommendation unknown filter: unreviewed candidates stay out of user recommendations');
+const simpleResult = recommendationService.recommendForAquarium(emptyAquarium, [unknownSpecies]);
+assert.equal(simpleResult.items.length, 0, 'partial/unreviewed authority must stay out of the simple recommendation API');
+
+console.log('recommendation unknown filter: unreviewed/partial-authority candidates fail closed across smart and simple recommendations');
