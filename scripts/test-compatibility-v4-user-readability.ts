@@ -27,7 +27,7 @@ const fixtures: Fixture[] = [
   { id: 'R-COMP-04', ids: ['sp_0010', 'sp_0020'], expected: 'compatible', reviewed: true },
   { id: 'R-COMP-05', ids: ['sp_0010', 'sp_0114'], expected: 'compatible', reviewed: true },
 
-  { id: 'R-CAUTION-01', ids: ['sp_0001', 'sp_0002'], expected: 'caution', reviewed: true },
+  { id: 'R-CAUTION-01', ids: ['sp_0001', 'sp_0015'], expected: 'caution', reviewed: true },
   { id: 'R-CAUTION-02', ids: ['sp_0001', 'sp_0010'], expected: 'caution', reviewed: true },
   { id: 'R-CAUTION-03', ids: ['sp_0001', 'sp_0011'], expected: 'caution', reviewed: true },
   { id: 'R-CAUTION-04', ids: ['sp_0001', 'sp_0012'], expected: 'caution', reviewed: true },

@@ -14,7 +14,7 @@
   "genericOnboardingReadySpecies": 81,
   "coreFieldCompleteSpecies": 96,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 147,
+  "runtimeReviewedProfileSpecies": 145,
   "domainOrIdentityHeldSpecies": 280,
   "fieldCounts": {
     "water": {
@@ -191,7 +191,7 @@
       "name": "水晶虾",
       "scientificName": "Caridina cantonensis var.",
       "lifeType": "invertebrate",
-      "reviewedProfile": "inherited",
+      "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "actionableGapCount": 0,
@@ -35358,7 +35358,7 @@
       "name": "斑马螺",
       "scientificName": "Neritina natalensis",
       "lifeType": "invertebrate",
-      "reviewedProfile": "inherited",
+      "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "actionableGapCount": 0,

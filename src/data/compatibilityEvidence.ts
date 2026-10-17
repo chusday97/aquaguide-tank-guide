@@ -33,6 +33,8 @@ import { identityCorrectionsWave27Sources } from './catalogReviewBatches/identit
 import { identityCorrectionsWave28Sources } from './catalogReviewBatches/identity-corrections-wave28';
 import { identityCorrectionsWave29Sources } from './catalogReviewBatches/identity-corrections-wave29';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
+import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
+import { getCatalogIdentityBoundary } from './catalogIdentityBoundaries';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1496,6 +1498,42 @@ const wave04BridgeProfile = (
   };
 };
 
+export const buildCanonicalVariantCompatibilityProfile = (
+  identity: Pick<CatalogCanonicalIdentity, 'catalogSpeciesId' | 'inheritancePolicy'>,
+  base: ReviewedCompatibilityProfile,
+  identityCitations: EvidenceSourceDto[],
+): ReviewedCompatibilityProfile => {
+  const inherited = new Set(identity.inheritancePolicy.inheritedFacts);
+  const inheritBehaviorBundle = ['social_behavior', 'territoriality', 'predation']
+    .every(field => inherited.has(field as CompatibilityRequiredFact));
+  return {
+    speciesId: identity.catalogSpeciesId,
+    ...(inherited.has('water') && base.waterType ? { waterType: base.waterType } : {}),
+    ...(inherited.has('water') && base.waterTypes ? { waterTypes: [...base.waterTypes] } : {}),
+    behaviorTraits: inheritBehaviorBundle ? [...base.behaviorTraits] : [],
+    ...(inherited.has('social_behavior') && base.minimumGroupSize != null
+      ? { minimumGroupSize: base.minimumGroupSize }
+      : {}),
+    predationTargets: inherited.has('predation') ? [...base.predationTargets] : [],
+    confidence: base.confidence,
+    reviewStatus: base.reviewStatus,
+    citations: [
+      ...identityCitations,
+      ...base.citations.filter(source => !identityCitations.some(identitySource => identitySource.id === source.id)),
+    ],
+    requiredFacts: base.requiredFacts?.filter(field => inherited.has(field)),
+    ...(base.stockingGuidance && inherited.has('tank_size') && inherited.has('social_behavior')
+      ? {
+          stockingGuidance: {
+            ...base.stockingGuidance,
+            constraints: [...base.stockingGuidance.constraints],
+            evidenceIds: [...base.stockingGuidance.evidenceIds],
+          },
+        }
+      : {}),
+  };
+};
+
 profiles.sp_0116 = wave04BridgeProfile('sp_0116', 'sp_0103', nextWaveUnified04Sources.scleropagesGreen);
 profiles.sp_0104 = wave04BridgeProfile('sp_0104', 'sp_0103', nextWaveUnified04Sources.scleropagesRed);
 profiles.sp_0146 = wave04BridgeProfile('sp_0146', 'sp_0448', nextWaveUnified04Sources.ramPlatinum);
@@ -1615,61 +1653,36 @@ for (const patch of compatibilityProfileAuthorityPatches) {
 }
 
 /**
- * Reviewed identity-correction bridges are created only after all base Profile
- * authority patches have landed. This guarantees corrected catalog objects
- * inherit the final base behavior, predation, citations, and required-fact
- * contract instead of a stale pre-patch snapshot.
+ * Reviewed canonical-identity bridges are materialized only after all base
+ * Profile authority patches have landed. Catalog variants therefore inherit
+ * from one canonical identity registry instead of hand-authored Profile copies.
+ * Field allowlists are enforced here; blocked fields never leak from the base.
  */
-profiles.sp_0176 = wave04BridgeProfile(
-  'sp_0176',
-  'sp_0446',
-  identityCorrectionsWave21Sources.angelfishColourVarieties,
+const canonicalIdentitySourceById = new Map(
+  [
+    ...Object.values(profiles).flatMap(profile => profile.citations),
+    ...Object.values(identityCorrectionsWave21Sources),
+    ...Object.values(identityCorrectionsWave22Sources),
+    ...Object.values(identityCorrectionsWave23Sources),
+    ...Object.values(identityCorrectionsWave24Sources),
+    ...Object.values(identityCorrectionsWave25Sources),
+    ...Object.values(identityCorrectionsWave26Sources),
+    ...Object.values(identityCorrectionsWave27Sources),
+    ...Object.values(identityCorrectionsWave28Sources),
+    ...Object.values(identityCorrectionsWave29Sources),
+  ].map(source => [source.id, source] as const),
 );
-profiles.sp_0407 = wave04BridgeProfile(
-  'sp_0407',
-  'sp_0103',
-  identityCorrectionsWave22Sources.arowanaBloodRedStrain,
-);
-profiles.sp_0236 = wave04BridgeProfile(
-  'sp_0236',
-  'sp_0438',
-  identityCorrectionsWave23Sources.swordtailAlbinoRedStudy,
-);
-profiles.sp_0229 = wave04BridgeProfile(
-  'sp_0229',
-  'sp_0441',
-  identityCorrectionsWave24Sources.gyrinocheilusAlbinoTetra,
-);
-profiles.sp_0221 = wave04BridgeProfile(
-  'sp_0221',
-  'sp_0017',
-  identityCorrectionsWave25Sources.fireRedAquariumGlaser,
-);
-profiles.sp_0177 = wave04BridgeProfile(
-  'sp_0177',
-  'sp_0446',
-  identityCorrectionsWave26Sources.blueDiamondAquaticArts,
-);
-profiles.sp_0178 = wave04BridgeProfile(
-  'sp_0178',
-  'sp_0446',
-  identityCorrectionsWave27Sources.pandaAquaticArts,
-);
-profiles.sp_0388 = wave04BridgeProfile(
-  'sp_0388',
-  'sp_0446',
-  identityCorrectionsWave28Sources.superRedAquaticArts,
-);
-profiles.sp_0240 = wave04BridgeProfile(
-  'sp_0240',
-  'sp_0446',
-  identityCorrectionsWave29Sources.platinumVeiltailAquaticArts,
-);
-profiles.sp_0272 = wave04BridgeProfile(
-  'sp_0272',
-  'sp_0446',
-  identityCorrectionsWave29Sources.blackVeilPeerReviewed,
-);
+
+for (const identity of Object.values(catalogCanonicalIdentities)) {
+  const base = profiles[identity.canonicalSpeciesId];
+  if (!base) throw new Error('Missing canonical Compatibility base Profile: ' + identity.canonicalSpeciesId);
+  const citations = identity.identityEvidenceSourceIds.map(sourceId => {
+    const source = canonicalIdentitySourceById.get(sourceId);
+    if (!source) throw new Error('Missing canonical identity evidence source: ' + sourceId);
+    return source;
+  });
+  profiles[identity.catalogSpeciesId] = buildCanonicalVariantCompatibilityProfile(identity, base, citations);
+}
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
 
@@ -1888,9 +1901,17 @@ const pairRules: ReviewedPairRule[] = [
 
 export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
 
-export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => (
-  profiles[fish.id] || (getBaseSpeciesScientificName(fish.scientificName) ? baseSpeciesProfiles[getBaseSpeciesScientificName(fish.scientificName)!] : undefined)
-);
+export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
+  // Identity is the outer runtime gate. A direct reviewed Profile cannot make
+  // an unresolved commercial/hybrid object biologically identified.
+  if (getCatalogIdentityBoundary(fish.id)) return undefined;
+  const direct = profiles[fish.id];
+  if (direct) return direct;
+  // Raw scientific-name morphology suffixes are not sufficient authority for
+  // inheritance. Reviewed canonical variants are already materialized above.
+  const baseScientificName = getBaseSpeciesScientificName(fish.scientificName);
+  return baseScientificName ? baseSpeciesProfiles[baseScientificName] : undefined;
+};
 
 export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];
 

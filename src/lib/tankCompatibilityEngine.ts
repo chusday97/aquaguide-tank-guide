@@ -777,7 +777,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   const compatibilityFactDispositions = Object.fromEntries(Object.entries(coverage.fields).map(([field, cell]) => {
     let disposition: CompatibilityFactDisposition;
     if (cell.disposition === 'targeted_source_expansion') disposition = 'research_pending';
-    else if (cell.disposition === 'terminal_hold' && cell.authoritySource === 'identity_boundary') disposition = reviewed ? 'ready' : 'identity_unresolved';
+    else if (cell.disposition === 'terminal_hold' && cell.authoritySource === 'identity_boundary') disposition = 'identity_unresolved';
     else if (cell.disposition === 'terminal_hold') disposition = reviewed?.requiredFacts?.includes(field as CompatibilityRequiredFact) ? 'ready' : 'public_evidence_insufficient';
     else if (cell.disposition === 'domain_extension_required') disposition = reviewed ? 'ready' : 'public_evidence_insufficient';
     else disposition = 'ready';

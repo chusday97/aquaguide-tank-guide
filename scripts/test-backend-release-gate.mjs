@@ -86,6 +86,7 @@ const gates = [
   ['Platinum Snakehead Small Fish Pairs', 'npm', ['run', 'test:platinum-snakehead-small-fish-pairs']],
   ['Platinum Snakehead Remaining Pairs', 'npm', ['run', 'test:platinum-snakehead-remaining-pairs']],
   ['Identity Bound Catalog Bridges', 'npm', ['run', 'test:identity-bound-catalog-bridges']],
+  ['Catalog Canonical Identity Architecture', 'npm', ['run', 'test:catalog-canonical-identity']],
   ['Catalog Identity Boundaries', 'npm', ['run', 'test:catalog-identity-boundaries']],
   ['Compatibility Domain Boundaries', 'npm', ['run', 'test:compatibility-domain-boundaries']],
   ['Knowledge Evidence Ceilings', 'npm', ['run', 'test:knowledge-evidence-ceilings']],

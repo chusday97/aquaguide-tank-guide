@@ -54,16 +54,35 @@ assert.ok(reviewedDecision.warningRules.some(rule => rule.code === 'pair_rule_gr
 
 
 const reviewedShrimp = fishData.find(item => item.id === 'sp_0001');
-const reviewedSnail = fishData.find(item => item.id === 'sp_0428');
-assert.ok(reviewedShrimp && reviewedSnail, 'compatible summary fixture requires reviewed shrimp + snail authority');
-const canonicalCompatible = evaluateTankCompatibility({
+const unresolvedSnail = fishData.find(item => item.id === 'sp_0428');
+assert.ok(reviewedShrimp && unresolvedSnail, 'identity-boundary service fixture requires reviewed shrimp + unresolved snail');
+const identityUnresolvedSnail = evaluateTankCompatibility({
   tank: { ...tank, dimensions: { length: '60', width: '35', height: '35' }, targetTemperature: '24' },
   existingSpecies: [{ species: reviewedShrimp, record: { quantity: 6 } }],
-  candidateSpecies: reviewedSnail,
+  candidateSpecies: unresolvedSnail,
   candidateQuantity: 1,
   intent: 'planned_addition',
 });
+assert.equal(identityUnresolvedSnail.status, 'insufficient_data');
+assert.equal(identityUnresolvedSnail.metadata.domainStatus, 'insufficient_data');
+assert.equal(getCompatibilityDecision(identityUnresolvedSnail).decisionReadiness, 'unknown');
+assert.equal(getCompatibilityDecision(identityUnresolvedSnail).addPolicy, 'complete_information');
+assert.ok(identityUnresolvedSnail.missingData.length > 0);
+assert.doesNotMatch(identityUnresolvedSnail.summary, /没有发现明确.*阻断|未发现明确.*阻断/);
+
+const reviewedPlaty = fishData.find(item => item.id === 'sp_0011');
+const reviewedCherryBarb = fishData.find(item => item.id === 'sp_0012');
+assert.ok(reviewedPlaty && reviewedCherryBarb, 'positive summary fixture requires two fully reviewed identity-ready fish');
+const canonicalCompatible = evaluateTankCompatibility({
+  tank: { ...tank, dimensions: { length: '120', width: '50', height: '50' }, targetTemperature: '25' },
+  existingSpecies: [{ species: reviewedPlaty, record: { quantity: 6 } }],
+  candidateSpecies: reviewedCherryBarb,
+  candidateQuantity: 6,
+  intent: 'planned_addition',
+});
 assert.equal(canonicalCompatible.status, 'compatible');
+assert.equal(getCompatibilityDecision(canonicalCompatible).decisionReadiness, 'reviewed');
+assert.equal(getCompatibilityDecision(canonicalCompatible).addPolicy, 'allow');
 assert.equal(canonicalCompatible.warningRules.length, 0);
 assert.equal(canonicalCompatible.missingData.length, 0);
 assert.match(canonicalCompatible.summary, /没有发现明确.*阻断|未发现明确.*阻断/);

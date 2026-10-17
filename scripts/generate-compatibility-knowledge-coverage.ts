@@ -425,7 +425,7 @@ const speciesGaps = speciesGapCandidates.map(item => {
 
 const actionableSpeciesQueue = speciesGaps.filter(item => item.research_disposition === 'actionable');
 const terminalSpeciesHolds = speciesGaps.filter(item => item.research_disposition === 'terminal_unknown_hold');
-const actionablePairQueue = pairGaps.filter(item => item.research_disposition === 'actionable');
+const actionablePairQueue = pairGaps.filter(item => item.research_disposition === 'actionable' && item.resolution_mode === 'evidence_research');
 const terminalPairHolds = pairGaps.filter(item => item.research_disposition === 'terminal_unknown_hold');
 
 const report = {

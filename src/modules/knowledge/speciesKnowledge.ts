@@ -1,7 +1,7 @@
 import type { Fish } from '../../types';
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
-import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
+import { getCatalogCanonicalIdentity, hasFullGenericCompatibilityInheritance } from '../../data/catalogCanonicalIdentity';
 import { phase2Batch02Knowledge } from './phase2Batch02Authority';
 import { phase2Batch03Knowledge } from './phase2Batch03Authority';
 import { phase2Batch04Knowledge } from './phase2Batch04Authority';
@@ -1770,11 +1770,16 @@ export const getReviewedSpeciesKnowledge = (speciesId: string) => (
 );
 
 export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
-  const correctedBaseSpeciesId = catalogIdentityCorrectionBaseSpeciesIds[
-    fish.id as keyof typeof catalogIdentityCorrectionBaseSpeciesIds
-  ];
-  if (correctedBaseSpeciesId) {
-    return reviewedKnowledgeBySpeciesId[correctedBaseSpeciesId];
+  const canonicalIdentity = getCatalogCanonicalIdentity(fish.id);
+  if (canonicalIdentity) {
+    // Runtime may inherit the complete base Knowledge only when the reviewed
+    // identity policy explicitly allowlists every generic Compatibility fact.
+    // Partial policies stay fail-closed here; field-specific completion is
+    // handled by direct variant authority instead of leaking the whole base.
+    if (hasFullGenericCompatibilityInheritance(fish.id)) {
+      return reviewedKnowledgeBySpeciesId[canonicalIdentity.canonicalSpeciesId];
+    }
+    return reviewedKnowledgeBySpeciesId[fish.id];
   }
   // Channa argus Platinum has a direct Phase 2 completion record, but the
   // existing reviewed Compatibility Profile remains the runtime authority for

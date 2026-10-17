@@ -472,7 +472,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'reviewed territorial fish creates caution for reviewed peaceful platy',
+    name: 'identity-unresolved territorial fish preserves reviewed risk warning without positive readiness',
     run: () => {
       const territorial = makeFish({
         id: 'sp_0021', name: '迷你鹦鹉鱼', scientificName: 'Amatitlania nigrofasciata var.',
@@ -487,7 +487,9 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         tank: makeTank({ targetTemperature: '24', dimensions: { length: '80', width: '40', height: '40' } }),
         items: [{ species: territorial, quantity: 1 }, { species: platy, quantity: 2, origin: 'candidate' }],
       });
-      return result.status === 'caution'
+      return result.status === 'insufficient_data'
+        && result.metadata.decisionReadiness === 'unknown'
+        && result.metadata.domainRuleCodes.includes('species_identity_unresolved')
         && result.warningRules.some(rule => rule.code === 'territorial_pressure_context')
         && result.blockingRules.every(rule => rule.code !== 'territorial_pressure_context');
     },
@@ -1163,7 +1165,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'mini parrot juvenile record is allowed without inventing a safe maximum',
+    name: 'mini parrot juvenile record stays fail-closed while preserving screening-only guidance',
     run: () => {
       const miniParrot = makeFish({
         id: 'sp_0021',
@@ -1179,9 +1181,9 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateContext: { lifeStage: 'juvenile', reproductiveState: 'normal', averageLengthCm: 2.5 },
         intent: 'record_existing',
       });
-      return result.status === 'compatible'
-        && result.metadata.domainStatus === 'compatible'
-        && result.metadata.decisionReadiness === 'reviewed'
+      return result.status === 'insufficient_data'
+        && result.metadata.domainStatus === 'insufficient_data'
+        && result.metadata.decisionReadiness === 'unknown'
         && result.stockingGuidance?.kind === 'screening_only'
         && result.stockingGuidance.recommendedMax === null;
     },

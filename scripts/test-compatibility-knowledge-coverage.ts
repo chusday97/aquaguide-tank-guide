@@ -169,7 +169,12 @@ for (const [leftId, rightId, code, decisionImpact, status] of [
   assert.equal(evaluateSpeciesCombination([left, right]).status, status);
 }
 assert.equal(report.evidence_ceiling_pair_gap_count, 3);
-assert.equal(report.boundary_blocked_pair_gap_count, 0);
+assert.equal(report.boundary_blocked_pair_gap_count, 73);
+assert.equal(
+  queue.pair_gaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
+  73,
+  'identity/domain boundary pair gaps must remain visible without leaking into ordinary evidence research',
+);
 assert.equal(report.research_actionable_pair_count, 0);
 assert.equal(report.terminal_pair_hold_count, 3);
 assert.deepEqual(queue.actionable_pair_queue, []);

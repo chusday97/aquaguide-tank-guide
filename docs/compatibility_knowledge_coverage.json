@@ -8,17 +8,17 @@
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 409,
   "reviewed_compatibility_profiles": 111,
-  "runtime_effective_compatibility_profiles": 147,
-  "inherited_compatibility_profiles": 36,
+  "runtime_effective_compatibility_profiles": 144,
+  "inherited_compatibility_profiles": 33,
   "reviewed_pair_rules": 21,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,
   "launch_pair_count": 435,
   "launch_pair_status_counts": {
-    "compatible": 15,
-    "caution": 303,
+    "compatible": 9,
+    "caution": 236,
     "not_recommended": 115,
-    "insufficient_data": 2
+    "insufficient_data": 75
   },
   "compatibility_critical_fields": [
     "environment",
@@ -63,14 +63,61 @@
   "research_actionable_species_count": 0,
   "terminal_species_hold_count": 5,
   "evidence_ceiling_species_gap_count": 1,
-  "priority_pair_gap_count": 3,
+  "priority_pair_gap_count": 76,
   "research_actionable_pair_count": 0,
   "terminal_pair_hold_count": 3,
   "next_wave_species_count": 0,
   "evidence_research_pair_gap_count": 0,
   "evidence_ceiling_pair_gap_count": 3,
-  "boundary_blocked_pair_gap_count": 0,
+  "boundary_blocked_pair_gap_count": 73,
   "top_pair_gap_root_species": [
+    {
+      "species_id": "sp_0428",
+      "common_name": "斑马螺",
+      "blocked_pair_count": 27,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "resolution_mode": "identity_review",
+      "score": 68
+    },
+    {
+      "species_id": "sp_0002",
+      "common_name": "水晶虾",
+      "blocked_pair_count": 26,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "resolution_mode": "identity_review",
+      "score": 68
+    },
+    {
+      "species_id": "sp_0021",
+      "common_name": "迷你鹦鹉鱼",
+      "blocked_pair_count": 25,
+      "gap_kinds": [
+        "environment",
+        "social",
+        "compatibility_profile"
+      ],
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
+      "score": 64
+    },
     {
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
@@ -85,36 +132,6 @@
       ],
       "resolution_mode": "variant_authority_review",
       "score": 26
-    },
-    {
-      "species_id": "sp_0002",
-      "common_name": "水晶虾",
-      "blocked_pair_count": 1,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "boundary_codes": [
-        "trade_name_taxon_ambiguous"
-      ],
-      "resolution_mode": "identity_review",
-      "score": 25
-    },
-    {
-      "species_id": "sp_0428",
-      "common_name": "斑马螺",
-      "blocked_pair_count": 1,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "boundary_codes": [
-        "accepted_taxon_alias_trade_ambiguous"
-      ],
-      "resolution_mode": "identity_review",
-      "score": 25
     }
   ]
 }

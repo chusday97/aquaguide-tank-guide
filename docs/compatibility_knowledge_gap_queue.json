@@ -4,6 +4,131 @@
   "uses_real_user_telemetry": false,
   "species_gaps": [
     {
+      "species_id": "sp_0428",
+      "common_name": "斑马螺",
+      "scientific_name": "Neritina natalensis",
+      "score": 68,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "identity_boundary": {
+        "code": "accepted_taxon_alias_trade_ambiguous",
+        "resolved_granularity": "accepted_taxon_alias_only",
+        "candidate_taxa": [
+          "Vittina natalensis",
+          "other aquarium-trade zebra nerites"
+        ],
+        "source_ids": [
+          "batch03-obis-neritina-natalensis"
+        ],
+        "note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
+        "reviewed_at": "2026-09-22"
+      },
+      "evidence_ceiling": null,
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "identity_review",
+      "resolution_note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 27
+    },
+    {
+      "species_id": "sp_0002",
+      "common_name": "水晶虾",
+      "scientific_name": "Caridina cantonensis var.",
+      "score": 68,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "identity_boundary": {
+        "code": "trade_name_taxon_ambiguous",
+        "resolved_granularity": "trade_name_only",
+        "candidate_taxa": [
+          "Caridina logemanni",
+          "Caridina cantonensis complex"
+        ],
+        "source_ids": [
+          "batch03-itis-caridina-cantonensis",
+          "identity-zootaxa-caridina-logemanni",
+          "identity-worms-caridina-logemanni"
+        ],
+        "note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
+        "reviewed_at": "2026-09-22"
+      },
+      "evidence_ceiling": null,
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "identity_review",
+      "resolution_note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 26
+    },
+    {
+      "species_id": "sp_0021",
+      "common_name": "迷你鹦鹉鱼",
+      "scientific_name": "Amatitlania nigrofasciata var.",
+      "score": 64,
+      "gap_kinds": [
+        "environment",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "identity_boundary": {
+        "code": "commercial_hybrid_identity_unresolved",
+        "resolved_granularity": "commercial_lineage_only",
+        "candidate_taxa": [
+          "Amatitlania nigrofasciata lineage",
+          "commercial parrot/convict hybrid lineage"
+        ],
+        "source_ids": [
+          "batch03-fishbase-amatitlania-nigrofasciata",
+          "biology-2026-mini-parrot-taxonomy-boundary"
+        ],
+        "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
+        "reviewed_at": "2026-10-10"
+      },
+      "evidence_ceiling": null,
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "identity_review",
+      "resolution_note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 25
+    },
+    {
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
       "scientific_name": "Channa argus var. Platinum",
@@ -40,128 +165,6 @@
       "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 3
-    },
-    {
-      "species_id": "sp_0002",
-      "common_name": "水晶虾",
-      "scientific_name": "Caridina cantonensis var.",
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [
-        "trade_name_taxon_ambiguous"
-      ],
-      "identity_boundary": {
-        "code": "trade_name_taxon_ambiguous",
-        "resolved_granularity": "trade_name_only",
-        "candidate_taxa": [
-          "Caridina logemanni",
-          "Caridina cantonensis complex"
-        ],
-        "source_ids": [
-          "batch03-itis-caridina-cantonensis",
-          "identity-zootaxa-caridina-logemanni",
-          "identity-worms-caridina-logemanni"
-        ],
-        "note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
-        "reviewed_at": "2026-09-22"
-      },
-      "evidence_ceiling": null,
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "identity_review",
-      "resolution_note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
-    },
-    {
-      "species_id": "sp_0428",
-      "common_name": "斑马螺",
-      "scientific_name": "Neritina natalensis",
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [
-        "accepted_taxon_alias_trade_ambiguous"
-      ],
-      "identity_boundary": {
-        "code": "accepted_taxon_alias_trade_ambiguous",
-        "resolved_granularity": "accepted_taxon_alias_only",
-        "candidate_taxa": [
-          "Vittina natalensis",
-          "other aquarium-trade zebra nerites"
-        ],
-        "source_ids": [
-          "batch03-obis-neritina-natalensis"
-        ],
-        "note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
-        "reviewed_at": "2026-09-22"
-      },
-      "evidence_ceiling": null,
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "identity_review",
-      "resolution_note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
-    },
-    {
-      "species_id": "sp_0021",
-      "common_name": "迷你鹦鹉鱼",
-      "scientific_name": "Amatitlania nigrofasciata var.",
-      "score": 19,
-      "gap_kinds": [
-        "environment",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [
-        "commercial_hybrid_identity_unresolved"
-      ],
-      "identity_boundary": {
-        "code": "commercial_hybrid_identity_unresolved",
-        "resolved_granularity": "commercial_lineage_only",
-        "candidate_taxa": [
-          "Amatitlania nigrofasciata lineage",
-          "commercial parrot/convict hybrid lineage"
-        ],
-        "source_ids": [
-          "batch03-fishbase-amatitlania-nigrofasciata",
-          "biology-2026-mini-parrot-taxonomy-boundary"
-        ],
-        "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
-        "reviewed_at": "2026-10-10"
-      },
-      "evidence_ceiling": null,
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "identity_review",
-      "resolution_note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 0
     },
     {
       "species_id": "sp_0258",
@@ -271,6 +274,1709 @@
       "resolution_note": "Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods."
     },
     {
+      "species_a_id": "sp_0001",
+      "species_a_name": "极火虾",
+      "species_b_id": "sp_0002",
+      "species_b_name": "水晶虾",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0001",
+      "species_a_name": "极火虾",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0010",
+      "species_b_name": "黑裙鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "catalog_identity_unresolved",
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0011",
+      "species_b_name": "月光鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0012",
+      "species_b_name": "樱桃灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0013",
+      "species_b_name": "小精灵",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0014",
+      "species_b_name": "咖啡鼠",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved",
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous",
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0431",
+      "species_b_name": "红绿灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0432",
+      "species_b_name": "宝莲灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_edge_overlap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0433",
+      "species_b_name": "红鼻剪刀",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0434",
+      "species_b_name": "白云金丝",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0435",
+      "species_b_name": "斑马鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0437",
+      "species_b_name": "玛丽鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0438",
+      "species_b_name": "红剑鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0439",
+      "species_b_name": "虎皮鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0443",
+      "species_b_name": "熊猫鼠",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0444",
+      "species_b_name": "珍珠马甲",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0446",
+      "species_b_name": "天使鱼（神仙鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0451",
+      "species_b_name": "地图鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0459",
+      "species_b_name": "黑壳虾",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0468",
+      "species_b_name": "金三角灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0010",
+      "species_a_name": "黑裙鱼",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "ph_range_edge_overlap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous",
+        "catalog_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0011",
+      "species_a_name": "月光鱼",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0012",
+      "species_a_name": "樱桃灯",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0013",
+      "species_a_name": "小精灵",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0014",
+      "species_a_name": "咖啡鼠",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "ph_range_gap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous",
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0431",
+      "species_b_name": "红绿灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_edge_overlap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0432",
+      "species_b_name": "宝莲灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0433",
+      "species_b_name": "红鼻剪刀",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_edge_overlap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0434",
+      "species_b_name": "白云金丝",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0435",
+      "species_b_name": "斑马鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0437",
+      "species_b_name": "玛丽鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0438",
+      "species_b_name": "红剑鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0439",
+      "species_b_name": "虎皮鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0443",
+      "species_b_name": "熊猫鼠",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0444",
+      "species_b_name": "珍珠马甲",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0446",
+      "species_b_name": "天使鱼（神仙鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0447",
+      "species_b_name": "七彩神仙鱼（七彩鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0451",
+      "species_b_name": "地图鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0459",
+      "species_b_name": "黑壳虾",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0468",
+      "species_b_name": "金三角灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0001",
+      "species_a_name": "极火虾",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "predation_vulnerability_context",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0010",
+      "species_a_name": "黑裙鱼",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "minimum_group_not_met",
+        "ph_range_edge_overlap",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "catalog_identity_unresolved",
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0011",
+      "species_a_name": "月光鱼",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0012",
+      "species_a_name": "樱桃灯",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0013",
+      "species_a_name": "小精灵",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability",
+        "predation_vulnerability_context",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0014",
+      "species_a_name": "咖啡鼠",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "ph_range_gap",
+        "territorial_conflict"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0431",
+      "species_b_name": "红绿灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_edge_overlap",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0432",
+      "species_b_name": "宝莲灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0433",
+      "species_b_name": "红鼻剪刀",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_edge_overlap",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0434",
+      "species_b_name": "白云金丝",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0435",
+      "species_b_name": "斑马鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0437",
+      "species_b_name": "玛丽鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0438",
+      "species_b_name": "红剑鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0443",
+      "species_b_name": "熊猫鼠",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0444",
+      "species_b_name": "珍珠马甲",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0446",
+      "species_b_name": "天使鱼（神仙鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability",
+        "territorial_conflict"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0447",
+      "species_b_name": "七彩神仙鱼（七彩鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0451",
+      "species_b_name": "地图鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "territorial_conflict"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0459",
+      "species_b_name": "黑壳虾",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "predation_vulnerability_context",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0468",
+      "species_b_name": "金三角灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 27,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "pair_evidence_ceiling": null,
+      "research_disposition": "actionable",
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
       "species_a_id": "sp_0224",
       "species_a_name": "白金雷龙",
       "species_b_id": "sp_0451",
@@ -305,6 +2011,131 @@
   ],
   "actionable_species_queue": [],
   "terminal_species_holds": [
+    {
+      "species_id": "sp_0428",
+      "common_name": "斑马螺",
+      "scientific_name": "Neritina natalensis",
+      "score": 68,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "identity_boundary": {
+        "code": "accepted_taxon_alias_trade_ambiguous",
+        "resolved_granularity": "accepted_taxon_alias_only",
+        "candidate_taxa": [
+          "Vittina natalensis",
+          "other aquarium-trade zebra nerites"
+        ],
+        "source_ids": [
+          "batch03-obis-neritina-natalensis"
+        ],
+        "note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
+        "reviewed_at": "2026-09-22"
+      },
+      "evidence_ceiling": null,
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "identity_review",
+      "resolution_note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 27
+    },
+    {
+      "species_id": "sp_0002",
+      "common_name": "水晶虾",
+      "scientific_name": "Caridina cantonensis var.",
+      "score": 68,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "identity_boundary": {
+        "code": "trade_name_taxon_ambiguous",
+        "resolved_granularity": "trade_name_only",
+        "candidate_taxa": [
+          "Caridina logemanni",
+          "Caridina cantonensis complex"
+        ],
+        "source_ids": [
+          "batch03-itis-caridina-cantonensis",
+          "identity-zootaxa-caridina-logemanni",
+          "identity-worms-caridina-logemanni"
+        ],
+        "note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
+        "reviewed_at": "2026-09-22"
+      },
+      "evidence_ceiling": null,
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "identity_review",
+      "resolution_note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 26
+    },
+    {
+      "species_id": "sp_0021",
+      "common_name": "迷你鹦鹉鱼",
+      "scientific_name": "Amatitlania nigrofasciata var.",
+      "score": 64,
+      "gap_kinds": [
+        "environment",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "identity_boundary": {
+        "code": "commercial_hybrid_identity_unresolved",
+        "resolved_granularity": "commercial_lineage_only",
+        "candidate_taxa": [
+          "Amatitlania nigrofasciata lineage",
+          "commercial parrot/convict hybrid lineage"
+        ],
+        "source_ids": [
+          "batch03-fishbase-amatitlania-nigrofasciata",
+          "biology-2026-mini-parrot-taxonomy-boundary"
+        ],
+        "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
+        "reviewed_at": "2026-10-10"
+      },
+      "evidence_ceiling": null,
+      "compatibility_domain_boundary": null,
+      "research_disposition": "terminal_unknown_hold",
+      "resolution_mode": "identity_review",
+      "resolution_note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 25
+    },
     {
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
@@ -342,128 +2173,6 @@
       "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 3
-    },
-    {
-      "species_id": "sp_0002",
-      "common_name": "水晶虾",
-      "scientific_name": "Caridina cantonensis var.",
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [
-        "trade_name_taxon_ambiguous"
-      ],
-      "identity_boundary": {
-        "code": "trade_name_taxon_ambiguous",
-        "resolved_granularity": "trade_name_only",
-        "candidate_taxa": [
-          "Caridina logemanni",
-          "Caridina cantonensis complex"
-        ],
-        "source_ids": [
-          "batch03-itis-caridina-cantonensis",
-          "identity-zootaxa-caridina-logemanni",
-          "identity-worms-caridina-logemanni"
-        ],
-        "note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
-        "reviewed_at": "2026-09-22"
-      },
-      "evidence_ceiling": null,
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "identity_review",
-      "resolution_note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
-    },
-    {
-      "species_id": "sp_0428",
-      "common_name": "斑马螺",
-      "scientific_name": "Neritina natalensis",
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [
-        "accepted_taxon_alias_trade_ambiguous"
-      ],
-      "identity_boundary": {
-        "code": "accepted_taxon_alias_trade_ambiguous",
-        "resolved_granularity": "accepted_taxon_alias_only",
-        "candidate_taxa": [
-          "Vittina natalensis",
-          "other aquarium-trade zebra nerites"
-        ],
-        "source_ids": [
-          "batch03-obis-neritina-natalensis"
-        ],
-        "note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
-        "reviewed_at": "2026-09-22"
-      },
-      "evidence_ceiling": null,
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "identity_review",
-      "resolution_note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
-    },
-    {
-      "species_id": "sp_0021",
-      "common_name": "迷你鹦鹉鱼",
-      "scientific_name": "Amatitlania nigrofasciata var.",
-      "score": 19,
-      "gap_kinds": [
-        "environment",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [
-        "commercial_hybrid_identity_unresolved"
-      ],
-      "identity_boundary": {
-        "code": "commercial_hybrid_identity_unresolved",
-        "resolved_granularity": "commercial_lineage_only",
-        "candidate_taxa": [
-          "Amatitlania nigrofasciata lineage",
-          "commercial parrot/convict hybrid lineage"
-        ],
-        "source_ids": [
-          "batch03-fishbase-amatitlania-nigrofasciata",
-          "biology-2026-mini-parrot-taxonomy-boundary"
-        ],
-        "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
-        "reviewed_at": "2026-10-10"
-      },
-      "evidence_ceiling": null,
-      "compatibility_domain_boundary": null,
-      "research_disposition": "terminal_unknown_hold",
-      "resolution_mode": "identity_review",
-      "resolution_note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 0
     },
     {
       "species_id": "sp_0258",

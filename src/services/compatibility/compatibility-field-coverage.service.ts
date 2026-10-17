@@ -3,7 +3,7 @@ import { fishData } from '../../data/fishData';
 import { catalogContentVerifiedSourceIds, getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
 import { getCatalogReviewSourceCandidates } from '../../data/catalogReviewSourceCandidates';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
-import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
+import { canInheritCompatibilityFact, getCatalogCanonicalIdentity } from '../../data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getCompatibilityVariantResearchCeiling } from '../../data/compatibilityVariantResearchCeilings';
@@ -14,6 +14,7 @@ import { resolveKnowledgeSources } from '../../modules/knowledge/knowledgeSource
 import { getLifeType } from '../../modules/species/species.service';
 import { getBaseSpeciesScientificName } from '../../modules/species/speciesTaxonomy';
 import type { Fish } from '../../types';
+import { assessCompatibilityOnboardingGate } from './compatibility-onboarding-gate.service';
 
 export type CompatibilityCoreField = typeof GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS[number];
 export type CompatibilityFieldCoverageStatus = 'reviewed_supported' | 'reviewed_neutral_or_negative' | 'reviewed_unknown' | 'needs_research' | 'missing_identity_or_domain' | 'not_applicable';
@@ -151,9 +152,11 @@ const supportedValueStatus = (review: CatalogFieldReview): CompatibilityFieldCov
 };
 
 const knowledgeCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell | null => {
-  const hasReviewedIdentityCorrection = fish.id in catalogIdentityCorrectionBaseSpeciesIds;
-  const knowledge = hasReviewedIdentityCorrection
-    ? getReviewedSpeciesKnowledgeForFish(fish)
+  const canonicalIdentity = getCatalogCanonicalIdentity(fish.id);
+  const knowledge = canonicalIdentity
+    ? canInheritCompatibilityFact(fish.id, field)
+      ? getReviewedSpeciesKnowledgeForFish(fish)
+      : getReviewedSpeciesKnowledge(fish.id)
     : getReviewedSpeciesKnowledge(fish.id) ?? getReviewedSpeciesKnowledgeForFish(fish);
   if (!knowledge) return null;
   if (field === 'water' || field === 'temperature' || field === 'ph') {
@@ -314,8 +317,15 @@ export const getCompatibilityCoreFieldCoverageRow = (fish: Fish): CompatibilityF
   const actionableGapCount = coreFields.filter(field => fields[field].disposition === 'targeted_source_expansion').length;
   const terminalGapCount = coreFields.filter(field => ['terminal_hold', 'domain_extension_required'].includes(fields[field].disposition)).length;
   const declared = new Set(resolvedProfile?.requiredFacts || []);
-  const genericOnboardingReady = getLifeType(fish) === 'fish' && !getCatalogIdentityBoundary(fish.id) && Boolean(resolvedProfile)
-    && coreFields.every(field => declared.has(field) && isAuthoritative(fields[field].status));
+  const authoritativeFacts = coreFields.filter(field => isAuthoritative(fields[field].status));
+  const onboarding = assessCompatibilityOnboardingGate(fish, {
+    lifeType: getLifeType(fish),
+    hasReviewedCompatibilityProfile: Boolean(resolvedProfile),
+    declaredRequiredFacts: [...declared],
+    authoritativeFacts,
+    catalogPersisted: true,
+  });
+  const genericOnboardingReady = onboarding.ready;
   return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
 };
 

@@ -10,22 +10,22 @@
   "genericReadyUniquePairs": 3240,
   "fishPairs": 47278,
   "statuses": {
-    "compatible": 409,
-    "caution": 3484,
+    "compatible": 404,
+    "caution": 3395,
     "not_recommended": 18931,
-    "insufficient_data": 24454
+    "insufficient_data": 24548
   },
-  "decisionCoveragePct": 48.28,
-  "unknownRatePct": 51.72,
+  "decisionCoveragePct": 48.08,
+  "unknownRatePct": 51.92,
   "systemGapPairs": 0,
   "systemGapPct": 0,
-  "fullyInformedPairs": 7299,
+  "fullyInformedPairs": 7179,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
-    "unresolved_identity": 19326,
-    "public_evidence_insufficient": 4894,
-    "missing_species_fact": 234,
+    "unresolved_identity": 19466,
+    "public_evidence_insufficient": 4851,
+    "missing_species_fact": 231,
     "system_gap": 0
   },
   "leverageQueues": {
@@ -103,15 +103,15 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 48743
+      "count": 48771
     },
     {
       "code": "missing_ph",
-      "count": 37459
+      "count": 37605
     },
     {
       "code": "missing_hardness",
-      "count": 8557
+      "count": 8586
     },
     {
       "code": "candidate_water_type_missing",
@@ -119,7 +119,7 @@
     },
     {
       "code": "water_type_unknown",
-      "count": 243
+      "count": 240
     }
   ],
   "coreFieldBacklog": {
