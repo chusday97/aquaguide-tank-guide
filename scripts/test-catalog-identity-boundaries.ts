@@ -82,7 +82,17 @@ assert.ok(bloodRedCorrection?.citationIds.includes('aquaculture-research-sclerop
 assert.ok(bloodRedCorrection?.citationIds.includes('kkp-scleropages-blood-red-first-grade-wave22'));
 assert.equal(getCatalogIdentityBoundary('sp_0407'), undefined, 'reviewed Blood Red + first-grade evidence must supersede the historical variant hold at runtime');
 assert.ok(getReviewedCompatibilityProfile('sp_0407'), 'resolved Blood Red A arowana must have an explicit same-species Compatibility bridge');
-assert.equal(getCatalogIdentityBoundary('sp_0408')?.code, 'catalog_variant_identity_unresolved', 'Gold Head must remain fail-closed without equivalent object-level identity evidence');
+const goldHeadCorrection = getCatalogFieldReviews('sp_0408').filter(review => review.field === 'identity').at(-1);
+assert.equal(goldHeadCorrection?.resolution, 'supported');
+assert.deepEqual(goldHeadCorrection?.proposedValue, {
+  scientificName: 'Scleropages formosus var. Gold Head',
+  baseSpeciesKey: 'Scleropages formosus',
+  variantKey: 'Golden Head / Golden Crossback phenotype',
+});
+assert.ok(goldHeadCorrection?.citationIds.includes('sunbeam-scleropages-formosus-golden-head-phase2-01'));
+assert.ok(goldHeadCorrection?.citationIds.includes('ijms-scleropages-formosus-color-variants-phase2-01'));
+assert.equal(getCatalogIdentityBoundary('sp_0408'), undefined, 'reviewed Golden Head identity evidence must supersede the historical variant hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0408'), 'resolved Golden Head arowana must have an explicit same-species Compatibility bridge');
 
 
 const historicalAlbinoRedHold = catalogIdentityBoundaries.sp_0236;
@@ -187,7 +197,7 @@ const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
 assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');
 assert.equal(parentTaxonHold?.resolvedGranularity, 'parent_taxon_unresolved');
 
-for (const speciesId of ['sp_0241','sp_0266','sp_0271']) {
+for (const speciesId of ['sp_0241','sp_0271']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');
@@ -202,6 +212,28 @@ const wave06Malformed = getCatalogIdentityBoundary('sp_0265');
 assert.equal(wave06Malformed?.code, 'catalog_scientific_name_unresolved');
 assert.equal(wave06Malformed?.researchDisposition, 'terminal_unknown_hold');
 
+const goldCalvusCorrection = getCatalogFieldReviews('sp_0266').filter(review => review.field === 'identity').at(-1);
+assert.equal(goldCalvusCorrection?.resolution, 'supported');
+assert.deepEqual(goldCalvusCorrection?.proposedValue, {
+  scientificName: 'Altolamprologus calvus var. Gold',
+  baseSpeciesKey: 'Altolamprologus calvus',
+  variantKey: 'Gold / Nkamba Bay',
+});
+assert.ok(goldCalvusCorrection?.citationIds.includes('france-cichlid-altolamprologus-calvus-gold-phase2-01'));
+assert.equal(getCatalogIdentityBoundary('sp_0266'), undefined, 'reviewed Gold/Nkamba Bay identity evidence must supersede the historical variant hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0266'));
+
+const albinoArowanaCorrection = getCatalogFieldReviews('sp_0242').filter(review => review.field === 'identity').at(-1);
+assert.equal(albinoArowanaCorrection?.resolution, 'supported');
+assert.deepEqual(albinoArowanaCorrection?.proposedValue, {
+  scientificName: 'Scleropages formosus var. Albino',
+  baseSpeciesKey: 'Scleropages formosus',
+  variantKey: 'Albino / Albino Silver',
+});
+assert.ok(albinoArowanaCorrection?.citationIds.includes('konelayan-sabah-scleropages-formosus-albino-silver-phase2-01'));
+assert.equal(getCatalogIdentityBoundary('sp_0242'), undefined, 'Sabah reviewed farm identity evidence must supersede the historical Albino Arowana hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0242'));
+
 for (const speciesId of ['sp_0372','sp_0373','sp_0411','sp_0416']) {
   assert.equal(getCatalogIdentityBoundary(speciesId)?.code, 'catalog_variant_identity_unresolved');
 }
@@ -215,7 +247,7 @@ assert.equal(superRedReview?.resolution, 'supported');
 assert.equal(getCatalogIdentityBoundary('sp_0283'), undefined);
 assert.ok(getReviewedCompatibilityProfile('sp_0283'));
 
-for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0234','sp_0235','sp_0242','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
+for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0234','sp_0235','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');

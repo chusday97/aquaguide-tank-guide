@@ -26,7 +26,7 @@ assert.equal(
   Object.keys(catalogIdentityCorrectionBaseSpeciesIds).length,
   'every reviewed identity correction must be represented by the canonical identity registry',
 );
-assert.equal(Object.keys(catalogCanonicalIdentities).length, 10);
+assert.equal(Object.keys(catalogCanonicalIdentities).length, 13);
 
 for (const identity of Object.values(catalogCanonicalIdentities)) {
   assert.equal(identity.identityStatus, 'reviewed');
@@ -68,6 +68,13 @@ assert.ok(platinum);
 assert.ok(blackLongfin);
 assert.equal(getCatalogCanonicalIdentity(platinum.id)?.relationshipType, 'longfin_variant');
 assert.equal(getCatalogCanonicalIdentity(blackLongfin.id)?.relationshipType, 'longfin_variant');
+
+assert.equal(getCatalogCanonicalIdentity('sp_0266')?.relationshipType, 'geographic_variant');
+assert.equal(getCatalogCanonicalIdentity('sp_0266')?.canonicalSpeciesId, 'sp_0057');
+assert.equal(getCatalogCanonicalIdentity('sp_0242')?.relationshipType, 'color_morph');
+assert.equal(getCatalogCanonicalIdentity('sp_0242')?.canonicalSpeciesId, 'sp_0116');
+assert.equal(getCatalogCanonicalIdentity('sp_0408')?.relationshipType, 'trade_strain');
+assert.equal(getCatalogCanonicalIdentity('sp_0408')?.canonicalSpeciesId, 'sp_0116');
 
 const unresolved = fishData.find(item => item.id === 'sp_0241');
 assert.ok(unresolved);
@@ -154,7 +161,7 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 81);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 84);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);

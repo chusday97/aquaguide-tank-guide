@@ -37,11 +37,12 @@ assert.equal(getLifeType(byId('sp_0334')), 'coral', 'Stichodactyla gigantea must
 assert.equal(getCompatibilityDomainBoundary('sp_0334')?.lifeType, 'coral_or_anemone', 'corrected sea anemone must route to the explicit cross-taxa domain boundary');
 assert.equal(getLifeType(byId('sp_0211')), 'fish', 'Thorichthys must not be mistaken for shrimp genus Thor');
 
-for (const id of ['sp_0241', 'sp_0266', 'sp_0271', 'sp_0372', 'sp_0373', 'sp_0411', 'sp_0416']) {
+for (const id of ['sp_0241', 'sp_0271', 'sp_0372', 'sp_0373', 'sp_0411', 'sp_0416']) {
   const boundary = getCatalogIdentityBoundary(id);
   assert.ok(boundary, id + ': corrected fish category must not erase unresolved variant identity');
   assert.equal(boundary.code, 'catalog_variant_identity_unresolved', id + ': category correction must preserve fail-closed variant identity');
 }
+assert.equal(getCatalogIdentityBoundary('sp_0266'), undefined, 'reviewed Gold calvus identity correction must supersede the historical variant hold');
 for (const id of ['sp_0077', 'sp_0089', 'sp_0334']) {
   assert.equal(getCatalogIdentityBoundary(id), undefined, id + ': resolved object classification must not keep a stale identity boundary');
 }

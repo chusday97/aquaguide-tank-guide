@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 81,
-  "coreFieldCompleteSpecies": 96,
+  "genericOnboardingReadySpecies": 84,
+  "coreFieldCompleteSpecies": 99,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 145,
-  "domainOrIdentityHeldSpecies": 280,
+  "runtimeReviewedProfileSpecies": 148,
+  "domainOrIdentityHeldSpecies": 277,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 152,
+      "reviewed_supported": 155,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 43,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 137,
+      "reviewed_supported": 140,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 131,
+      "reviewed_supported": 134,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 141,
+      "reviewed_supported": 144,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 129,
+      "reviewed_supported": 132,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 66,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 118,
+      "reviewed_supported": 121,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 84,
+      "reviewed_supported": 87,
       "reviewed_neutral_or_negative": 34,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 73,
-      "reviewed_neutral_or_negative": 30,
+      "reviewed_supported": 75,
+      "reviewed_neutral_or_negative": 31,
       "reviewed_unknown": 92,
       "needs_research": 0,
-      "missing_identity_or_domain": 280,
+      "missing_identity_or_domain": 277,
       "not_applicable": 11
     }
   },
@@ -20320,83 +20320,106 @@
       "name": "红眼白子金龙",
       "scientificName": "Scleropages formosus var. Albino",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "myfish-scleropages-formosus-territoriality",
+            "batch19-fishbase-scleropages-formosus-green"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-albino"
+            "konelayan-sabah-scleropages-formosus-albino-silver-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -22298,83 +22321,99 @@
       "name": "黄金珍珠虎 (改良)",
       "scientificName": "Altolamprologus calvus var. Gold",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "batch09-fishbase-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "batch09-fishbase-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "batch09-fishbase-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "batch09-fishbase-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "fishipedia-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "fishipedia-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "fishipedia-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-altolamprologus-calvus-gold"
+            "france-cichlid-altolamprologus-calvus-gold-phase2-01",
+            "destin-tanganyika-altolamprologus-calvus-gold-phase2-01",
+            "fishipedia-altolamprologus-calvus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -33752,83 +33791,114 @@
       "name": "金头过背金龙",
       "scientificName": "Scleropages formosus var. Gold Head",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "myfish-scleropages-formosus-territoriality",
+            "batch19-fishbase-scleropages-formosus-green"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-gold-head"
+            "sunbeam-scleropages-formosus-golden-head-phase2-01",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
