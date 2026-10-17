@@ -36,7 +36,7 @@ import {
   getEstimatedQuestionCount,
   isDiagnosisProblemType,
 } from '../modules/diagnosis/diagnosis.questionBank';
-import { getDiagnosisProblemPresentation, getDiagnosisQuestionPresentation } from '../modules/diagnosis/diagnosis.presentation';
+import { getDiagnosisCanonicalValuePresentation, getDiagnosisProblemPresentation, getDiagnosisQuestionPresentation, projectDiagnosisOutputForPresentation, projectDiagnosisRecordForPresentation } from '../modules/diagnosis/diagnosis.presentation';
 import type { DiagnosisAnswerMap, DiagnosisOutput, DiagnosisProblemType, DiagnosisQuestion, DiagnosisRecord, TankDailyCheckContext } from '../modules/diagnosis/diagnosis.types';
 import {
   DISCOVERY_DAILY_LIMIT,
@@ -3221,9 +3221,11 @@ export default function AquariumManager() {
     const context: TankDailyCheckContext = {
       locale: isEn ? 'en' : 'zh-CN',
       aquariumSnapshot: snapshot,
-      answers: diagnosisQuizAnswers,
+      answers: isEn
+        ? Object.fromEntries(Object.entries(diagnosisQuizAnswers).map(([key, value]) => [key, getDiagnosisCanonicalValuePresentation(value, true)]))
+        : diagnosisQuizAnswers,
       userDescription: userDescription && userDescription !== '跳过' ? userDescription : undefined,
-      deterministicResult,
+      deterministicResult: isEn ? projectDiagnosisOutputForPresentation(deterministicResult, true) : deterministicResult,
       candidateArticles,
     };
     setIsDiagnosing(true);
@@ -6011,7 +6013,9 @@ export default function AquariumManager() {
                   {recentDiagnosisRecords.length > 0 && (
                     <section className="grid gap-2 rounded-[18px] bg-white p-3 shadow-sm">
                       <div className="text-[13px] font-black text-ink">{t('aquarium.recentDiagnosis')}</div>
-                      {recentDiagnosisRecords.map(record => (
+                      {recentDiagnosisRecords.map(record => {
+                        const presentedRecord = projectDiagnosisRecordForPresentation(record, isEn);
+                        return (
                         <button
                           key={record.diagnosisId}
                           type="button"
@@ -6022,12 +6026,13 @@ export default function AquariumManager() {
                           className="rounded-[14px] bg-bg px-3 py-2 text-left"
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <span className="text-[12px] font-black text-ink">{format(new Date(record.createdAt), 'yyyy/MM/dd')} {isDiagnosisProblemType(record.problemType) ? getDiagnosisProblemPresentation(record.problemType, isEn).label : record.problemType}</span>
-                            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-ink/55">{record.riskLevel}</span>
+                            <span className="text-[12px] font-black text-ink">{format(new Date(record.createdAt), 'yyyy/MM/dd')} {presentedRecord.problemType}</span>
+                            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-ink/55">{presentedRecord.riskLevel}</span>
                           </div>
-                          <div className="mt-1 line-clamp-1 text-[11px] font-medium text-ink/55">{record.resultSummary}</div>
+                          <div className="mt-1 line-clamp-1 text-[11px] font-medium text-ink/55">{presentedRecord.resultSummary}</div>
                         </button>
-                      ))}
+                        );
+                      })}
                     </section>
                   )}
 
@@ -6223,7 +6228,7 @@ export default function AquariumManager() {
                 )}
                 {diagnosisIssueType === '巡检' && isDiagnosing && (
                   <div className="rounded-[14px] border border-sky-100 bg-sky-50 px-3 py-2 text-[11px] font-black text-sky-700">
-                    正在补充分析…
+                    {isEn ? 'Adding interpretation…' : '正在补充分析…'}
                   </div>
                 )}
               </section>
@@ -6231,20 +6236,22 @@ export default function AquariumManager() {
               </>
               )}
 
-              {diagnosisMode === 'history' && selectedDiagnosisRecord && (
+              {diagnosisMode === 'history' && selectedDiagnosisRecord && (() => {
+                const presentedRecord = projectDiagnosisRecordForPresentation(selectedDiagnosisRecord, isEn);
+                return (
                 <section className="grid gap-3 rounded-[18px] bg-white p-3 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-[13px] font-black text-ink">{selectedDiagnosisRecord.problemType}</div>
+                      <div className="text-[13px] font-black text-ink">{presentedRecord.problemType}</div>
                       <div className="mt-0.5 text-[11px] font-medium text-ink/50">{format(new Date(selectedDiagnosisRecord.createdAt), 'yyyy/MM/dd HH:mm')}</div>
                     </div>
-                    <span className="rounded-full bg-bg px-2 py-1 text-[10px] font-black text-ink/55">{selectedDiagnosisRecord.riskLevel}</span>
+                    <span className="rounded-full bg-bg px-2 py-1 text-[10px] font-black text-ink/55">{presentedRecord.riskLevel}</span>
                   </div>
-                  <div className="rounded-[14px] bg-bg px-3 py-2 text-[12px] font-black leading-relaxed text-ink">{selectedDiagnosisRecord.resultSummary}</div>
+                  <div className="rounded-[14px] bg-bg px-3 py-2 text-[12px] font-black leading-relaxed text-ink">{presentedRecord.resultSummary}</div>
                   <div>
                     <div className="text-[12px] font-black text-ink">{isEn ? 'Suggested Actions' : '建议动作'}</div>
                     <div className="mt-1 grid gap-1">
-                      {selectedDiagnosisRecord.suggestedActions.map(action => (
+                      {presentedRecord.suggestedActions.map(action => (
                         <div key={action} className="rounded-[12px] bg-bg px-3 py-2 text-[11px] font-medium text-ink/70">{action}</div>
                       ))}
                     </div>
@@ -6260,7 +6267,8 @@ export default function AquariumManager() {
                     </div>
                   )}
                 </section>
-              )}
+                );
+              })()}
             </div>
           </div>
           {diagnosisMode !== 'home' && (

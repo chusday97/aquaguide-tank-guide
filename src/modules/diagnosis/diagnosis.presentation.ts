@@ -1,4 +1,4 @@
-import type { DiagnosisOutput, DiagnosisProblemType, DiagnosisQuestion } from './diagnosis.types';
+import type { DiagnosisOutput, DiagnosisProblemType, DiagnosisQuestion, DiagnosisRecord, DiagnosisRiskCode } from './diagnosis.types';
 
 type DiagnosisProblemPresentation = { label: string; description: string };
 export type DiagnosisQuestionPresentation = {
@@ -486,6 +486,10 @@ const diagnosisRiskEnglish: Record<DiagnosisOutput['riskLevel'], string> = {
 };
 
 const diagnosisSummaryEnglish: Record<string, string> = {
+  '请先选择一个鱼缸，再进行诊断。': diagnosisRuleEnglish['static-no-aquarium']({ riskLevel: 'unknown' } as DiagnosisOutput).summary,
+  '当前鱼缸暂无活体生物，无法诊断鱼只状态。': diagnosisRuleEnglish['static-no-livestock']({ riskLevel: 'unknown' } as DiagnosisOutput).summary,
+  '当前鱼缸没有虾类记录，无法生成虾类死亡诊断。': diagnosisRuleEnglish['static-no-shrimp']({ riskLevel: 'unknown' } as DiagnosisOutput).summary,
+  '当前鱼缸没有水草配置记录，无法判断水草黄叶或烂叶。': diagnosisRuleEnglish['static-no-plants']({ riskLevel: 'unknown' } as DiagnosisOutput).summary,
   '鱼浮头并伴随水体异常，优先怀疑缺氧或水质恶化。': diagnosisRuleEnglish['water-breathing-high-risk']({ riskLevel: 'high' } as DiagnosisOutput).summary,
   '经常浮头或呼吸明显急促需要优先按缺氧、水温或过滤异常排查。': diagnosisRuleEnglish['frequent-breathing-warning']({ riskLevel: 'high' } as DiagnosisOutput).summary,
   '偶尔浮头更像轻微缺氧、短期应激或环境波动，需要先观察并排查供氧。': diagnosisRuleEnglish['occasional-breathing-watch']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
@@ -504,6 +508,39 @@ const diagnosisSummaryEnglish: Record<string, string> = {
   '当前未发现明显异常，可以正常观察。': diagnosisRuleEnglish['normal-patrol']({ riskLevel: 'low' } as DiagnosisOutput).summary,
   '当前信息不足，建议先补充观察和水质信息。': diagnosisRuleEnglish['generic-symptom-check']({ riskLevel: 'unknown' } as DiagnosisOutput).summary,
   '目前没有命中高风险规则，先做轻量排查和短期观察。': diagnosisRuleEnglish['generic-symptom-check']({ riskLevel: 'low' } as DiagnosisOutput).summary,
+};
+
+const diagnosisSummaryRuleId: Record<string, string> = {
+  '请先选择一个鱼缸，再进行诊断。': 'static-no-aquarium',
+  '当前鱼缸暂无活体生物，无法诊断鱼只状态。': 'static-no-livestock',
+  '当前鱼缸没有虾类记录，无法生成虾类死亡诊断。': 'static-no-shrimp',
+  '当前鱼缸没有水草配置记录，无法判断水草黄叶或烂叶。': 'static-no-plants',
+  '鱼浮头并伴随水体异常，优先怀疑缺氧或水质恶化。': 'water-breathing-high-risk',
+  '经常浮头或呼吸明显急促需要优先按缺氧、水温或过滤异常排查。': 'frequent-breathing-warning',
+  '偶尔浮头更像轻微缺氧、短期应激或环境波动，需要先观察并排查供氧。': 'occasional-breathing-watch',
+  '连续死亡或多条异常属于高风险，需要先控制污染源和观察同缸鱼。': 'multiple-death-high-risk',
+  '更像是换水后的短期应激或水质波动。': 'after-water-change-stress',
+  '新鱼刚入缸躲藏或拒食，多数是应激。': 'new-fish-stress',
+  '拒食需要结合呼吸、活动和近期操作继续观察，先排除水质与应激因素。': 'appetite-behavior-watch',
+  '更像是投喂过量或残饵导致的水质负担。': 'overfeeding-cloudy-water',
+  '追咬已经影响安全，需要优先降低领地和空间压力。': 'aggression-space-pressure',
+  '当前有追逐或抢食压力，需要先增加躲避和观察对象。': 'aggression-space-pressure',
+  '水体已经有明显异常，需要先减负并检查过滤。': 'water-clarity-check',
+  '水体轻微异常，先排查残饵、过滤和近期操作。': 'water-clarity-check',
+  '当前重点是鱼苗躲避、开口和水流安全。': 'fry-care-flow',
+  '当前重点是确认是否临产，并减少母鱼应激。': 'pregnancy-care-flow',
+  '当前鱼缸有提醒，建议先做轻量观察。': 'normal-patrol',
+  '当前未发现明显异常，可以正常观察。': 'normal-patrol',
+  '当前信息不足，建议先补充观察和水质信息。': 'generic-symptom-check',
+  '目前没有命中高风险规则，先做轻量排查和短期观察。': 'generic-symptom-check',
+};
+
+const diagnosisRiskCodeFromRecord = (record: DiagnosisRecord): DiagnosisRiskCode => {
+  if (record.riskCode) return record.riskCode;
+  if (record.riskLevel === '高风险') return 'high';
+  if (record.riskLevel === '需要关注') return 'medium';
+  if (record.riskLevel === '低风险') return 'low';
+  return 'unknown';
 };
 
 const diagnosisMetricEnglish: Record<string, string> = {
@@ -553,6 +590,7 @@ export const getDiagnosisCanonicalValuePresentation = (value: string, isEnglish:
   if (value === '无' || value === '暂无') return 'None';
   if (value === '未知' || value === '不确定') return 'Unknown';
   if (value === '未记录' || value === '暂无记录') return 'Not recorded';
+  if (value === '每日鱼缸检查') return 'Daily aquarium check';
   const daysAgo = value.match(/^(\d+)\s*天前$/);
   if (daysAgo) return `${daysAgo[1]} days ago`;
   const livestockCount = value.match(/^(\d+)\s*只\/条$/);
@@ -612,6 +650,46 @@ export const projectDiagnosisOutputForPresentation = (
       label: diagnosisMetricEnglish[metric.label] || metric.label,
       value: getDiagnosisCanonicalValuePresentation(metric.value, true),
     })),
+  };
+};
+
+export const projectDiagnosisRecordForPresentation = (
+  record: DiagnosisRecord,
+  isEnglish: boolean,
+): DiagnosisRecord => {
+  if (!isEnglish) return record;
+  const riskLevel = diagnosisRiskCodeFromRecord(record);
+  const matchedRule = diagnosisSummaryRuleId[record.resultSummary];
+  const output: DiagnosisOutput = {
+    riskLevel,
+    riskLabel: record.riskLevel,
+    summary: record.resultSummary,
+    currentAction: record.suggestedActions[0] || '',
+    actions: record.suggestedActions,
+    avoidActions: record.avoidActions || [],
+    possibleCauses: [],
+    observeItems: record.observeItems || [],
+    missingInfo: record.missingInfo || [],
+    evidence: [],
+    keyMetrics: record.keyMetrics || [],
+    matchedRules: matchedRule ? [matchedRule] : [],
+    matchedArticles: [],
+    nextCheckAt: record.nextCheckAt,
+  };
+  const projected = projectDiagnosisOutputForPresentation(output, true);
+  return {
+    ...record,
+    problemType: Object.prototype.hasOwnProperty.call(problemEnglish, record.problemType)
+      ? problemEnglish[record.problemType as DiagnosisProblemType].label
+      : record.problemType,
+    riskLevel: projected.riskLabel,
+    resultSummary: diagnosisSummaryEnglish[record.resultSummary] || projected.summary,
+    conclusion: record.conclusion ? (diagnosisSummaryEnglish[record.conclusion] || record.conclusion) : record.conclusion,
+    keyMetrics: projected.keyMetrics,
+    suggestedActions: matchedRule ? projected.actions : record.suggestedActions,
+    avoidActions: matchedRule ? projected.avoidActions : record.avoidActions,
+    observeItems: matchedRule ? projected.observeItems : record.observeItems,
+    missingInfo: matchedRule ? projected.missingInfo : record.missingInfo,
   };
 };
 

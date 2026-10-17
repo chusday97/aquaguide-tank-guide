@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import type { DiagnosisOutput } from '../src/modules/diagnosis/diagnosis.types';
+import type { DiagnosisOutput, DiagnosisRecord } from '../src/modules/diagnosis/diagnosis.types';
 import {
   getDiagnosisResultEnglishCoverage,
   projectDiagnosisOutputForPresentation,
+  projectDiagnosisRecordForPresentation,
 } from '../src/modules/diagnosis/diagnosis.presentation';
 import { buildDiagnosisVisualResult } from '../src/components/visual-results/visual-result.adapters';
 
@@ -115,5 +116,34 @@ const projectedFixture = projectDiagnosisOutputForPresentation(canonicalFixture,
 assert.equal(projectedFixture.summary, 'No obvious abnormality was found; continue normal observation.');
 assert.equal(projectedFixture.currentAction, 'Continue normal observation');
 assert.equal(projectedFixture.evidence[1], 'Breathing: Normal');
+
+const historyRecord: DiagnosisRecord = {
+  diagnosisId: 'history-1',
+  createdAt: '2026-10-17T10:00:00+08:00',
+  aquariumId: 'tank-1',
+  source: { type: 'home' },
+  problemType: '巡检',
+  answers: { breathing: '正常' },
+  resultSummary: '当前未发现明显异常，可以正常观察。',
+  riskLevel: '低风险',
+  riskCode: 'low',
+  keyMetrics: [{ label: '问题类型', value: '巡检' }],
+  suggestedActions: ['正常观察', '记录喂食或换水', '发现异常再进入对应诊断'],
+  avoidActions: ['不要无症状盲目下药', '不要频繁大换水'],
+  observeItems: ['呼吸频率', '抢食状态', '水体异味'],
+  missingInfo: [],
+  followUpNotes: ['用户自己写的备注不自动翻译'],
+};
+const historyBefore = JSON.stringify(historyRecord);
+const historyEnglish = projectDiagnosisRecordForPresentation(historyRecord, true);
+assert.equal(JSON.stringify(historyRecord), historyBefore, 'history presentation must not mutate canonical record');
+assert.equal(historyEnglish.problemType, 'Daily Check');
+assert.equal(historyEnglish.riskLevel, 'Low risk');
+assert.equal(historyEnglish.resultSummary, 'No obvious abnormality was found; continue normal observation.');
+assert.equal(historyEnglish.suggestedActions[0], 'Continue normal observation');
+assert.equal(historyEnglish.followUpNotes[0], historyRecord.followUpNotes[0], 'user-authored follow-up notes must remain untouched');
+[historyEnglish.problemType, historyEnglish.riskLevel, historyEnglish.resultSummary, ...historyEnglish.suggestedActions].forEach(text => {
+  assert.equal(hasCjk(text), false, `English history projection contains CJK: ${text}`);
+});
 
 console.log(`diagnosis result presentation i18n verified: ${expectedRuleIds.length} deterministic/static result keys project to English without mutating canonical output`);
