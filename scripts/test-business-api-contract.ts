@@ -100,6 +100,11 @@ assert.ok(
 );
 assert.match(routes, /registerFavoriteRoutes\('species'\)/);
 assert.match(routes, /registerFavoriteRoutes\('care'\)/);
+assert.match(routes, /contentTable = type === 'species' \? 'species' : 'care_articles'/);
+assert.match(routes, /catalogKey: content\.catalog_key/);
+assert.match(routes, /favoritedAt: favorite\.created_at/);
+assert.match(apiRepositorySource, /async getFavorites\(type: FavoriteMutation\['type'\]\)/);
+assert.match(apiRepositorySource, /`\/favorites\/\$\{type\}`/);
 assert.match(routes, /这个物种已有多个批次，请调整具体批次的数量/);
 assert.doesNotMatch(routes, /const \{ version, \.\.\.updates \} = parsed\.data;[\s\S]{0,300}from\('aquarium_species'\)\.update\(snakeize\(updates\)\)/);
 assert.match(routes, /MAX_SUBMISSIONS_PER_HOUR = 5/);

@@ -92,6 +92,7 @@ const gates = [
   ['Compatibility Pair Evidence Ceilings', 'npm', ['run', 'test:compatibility-pair-evidence-ceilings']],
   ['Collection Keeping History', 'npm', ['run', 'test:collection-keeping-history']],
   ['Collection Cloud History', 'npm', ['run', 'test:collection-cloud-history']],
+  ['Collection Favorite Boundary', 'npm', ['run', 'test:collection-favorite-boundary']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],

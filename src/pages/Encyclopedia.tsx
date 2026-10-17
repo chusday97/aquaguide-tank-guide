@@ -48,7 +48,8 @@ import {
 } from '../services/aquarium/species-addition.service';
 import { recordExistingLivestock } from '../services/aquarium/livestock-recording.service';
 import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
-import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { subscribeToFavorites } from '../services/favorites/favorites.service';
+import { loadCurrentFavorites } from '../services/collection/collection.service';
 import {
   buildAtlasDisplayItems,
   deriveSpeciesGroups,
@@ -256,10 +257,6 @@ const lifeTypes = [
 ];
 
 const getEncyclopediaImage = getSpeciesDisplayImage;
-
-const loadWishlistIds = () => {
-  return new Set(getSpeciesFavoriteIds());
-};
 
 const getFishTemperatureTheme = (tempString: string) => {
   const match = tempString.match(/(\d+)-(\d+)/);
@@ -695,7 +692,7 @@ export default function Encyclopedia() {
   }, [location.search, navigateToSection, viewMode]);
 
   const [ownedFishIds, setOwnedFishIds] = useState<Set<string>>(new Set());
-  const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => loadWishlistIds());
+  const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(new Set());
   const [discoveryState, setDiscoveryState] = useState<DiscoveryDeckState>(() => loadDiscoveryState());
   const [isWishlistExpanded, setIsWishlistExpanded] = useState(false);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
@@ -769,62 +766,65 @@ export default function Encyclopedia() {
     };
     void loadAquariumContext();
 
-    setWishlistFishIds(loadWishlistIds());
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const syncWishlistFishIds = (next: Set<string>) => {
-    setWishlistFishIds(next);
-    setSpeciesFavoriteIds(next);
-  };
-
   useEffect(() => {
-    const refreshWishlist = () => setWishlistFishIds(loadWishlistIds());
-    window.addEventListener('focus', refreshWishlist);
-    const unsubscribe = subscribeToFavorites(refreshWishlist);
+    let cancelled = false;
+    const refreshWishlist = async () => {
+      try {
+        const current = await loadCurrentFavorites();
+        if (!cancelled) setWishlistFishIds(new Set(current.wishlistIds));
+      } catch {
+        if (!cancelled) setWishlistFishIds(new Set());
+      }
+    };
+    const onFocus = () => void refreshWishlist();
+    void refreshWishlist();
+    window.addEventListener('focus', onFocus);
+    const unsubscribe = subscribeToFavorites(onFocus);
     return () => {
-      window.removeEventListener('focus', refreshWishlist);
+      cancelled = true;
+      window.removeEventListener('focus', onFocus);
       unsubscribe();
     };
   }, []);
 
-  const toggleWishlist = (id: string) => {
-    const next = new Set(wishlistFishIds);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    syncWishlistFishIds(next);
+  const updateWishlistFavorite = async (id: string, favorite: boolean) => {
+    const previous = new Set(wishlistFishIds);
+    const next = new Set(previous);
+    if (favorite) next.add(id);
+    else next.delete(id);
+    setWishlistFishIds(next);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: id, favorite });
+      return true;
+    } catch {
+      setWishlistFishIds(previous);
+      return false;
+    }
   };
 
-  const handleWishlistToggle = (fish: Fish) => {
-    const wasFavorite = wishlistFishIds.has(fish.id);
-    const next = new Set(wishlistFishIds);
-    if (wasFavorite) next.delete(fish.id);
-    else next.add(fish.id);
+  const toggleWishlist = (id: string) => {
+    void updateWishlistFavorite(id, !wishlistFishIds.has(id));
+  };
 
-    try {
-      setSpeciesFavoriteIds(next);
-      const savedIds = new Set(getSpeciesFavoriteIds());
-      const savedAsExpected = savedIds.has(fish.id) === !wasFavorite;
-      if (!savedAsExpected) throw new Error('收藏状态未能保存');
-      setWishlistFishIds(savedIds);
-      setWishlistFeedback({
-        message: wasFavorite ? t('encyclopedia.wishlistRemoved', { name: fish.name }) : t('encyclopedia.wishlistAdded', { name: fish.name }),
-        added: !wasFavorite,
-      });
-      if (!wasFavorite) {
-        try {
-          posthog.capture('species_favorited', { species_id: fish.id });
-        } catch (e) {}
-      }
-    } catch {
-      setWishlistFishIds(loadWishlistIds());
-      setWishlistFeedback({
-        message: t('encyclopedia.wishlistSaveError'),
-        added: false,
-        error: true,
-      });
+  const handleWishlistToggle = async (fish: Fish) => {
+    const wasFavorite = wishlistFishIds.has(fish.id);
+    const saved = await updateWishlistFavorite(fish.id, !wasFavorite);
+    if (!saved) {
+      setWishlistFeedback({ message: t('encyclopedia.wishlistSaveError'), added: false, error: true });
+      return;
+    }
+    setWishlistFeedback({
+      message: wasFavorite ? t('encyclopedia.wishlistRemoved', { name: fish.name }) : t('encyclopedia.wishlistAdded', { name: fish.name }),
+      added: !wasFavorite,
+    });
+    if (!wasFavorite) {
+      try { posthog.capture('species_favorited', { species_id: fish.id }); } catch (e) {}
     }
   };
 

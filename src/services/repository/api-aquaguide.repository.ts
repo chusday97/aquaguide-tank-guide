@@ -417,6 +417,13 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return content.id;
   }
 
+  async getFavorites(type: FavoriteMutation['type']) {
+    const response = await apiRequest<Array<{ catalogKey: string; title?: string; favoritedAt?: string }>>(`/favorites/${type}`);
+    return response
+      .filter(item => typeof item.catalogKey === 'string' && item.catalogKey.length > 0)
+      .map(item => ({ catalogKey: item.catalogKey, title: item.title, favoritedAt: item.favoritedAt }));
+  }
+
   async updateFavorite(input: FavoriteMutation) {
     const id = await this.resolveContentId(input.type, input.catalogKey);
     const path = `/favorites/${input.type}/${id}`;

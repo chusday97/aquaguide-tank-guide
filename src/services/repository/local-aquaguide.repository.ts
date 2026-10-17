@@ -26,6 +26,7 @@ import type {
   AquariumCreateCommand,
   CareReminderMutation,
   FavoriteMutation,
+  FavoriteRecord,
   MemorialSaveInput,
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
@@ -112,6 +113,15 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
         : aquarium.fishes.filter(item => item.id !== current.id),
     };
     return this.saveAquarium(nextAquarium);
+  }
+
+  async getFavorites(type: FavoriteMutation['type']): Promise<FavoriteRecord[]> {
+    if (type === 'species') return getSpeciesFavoriteIds().map(catalogKey => ({ catalogKey }));
+    return Object.values(getCareFavorites()).map(favorite => ({
+      catalogKey: favorite.id,
+      title: favorite.title,
+      favoritedAt: favorite.favoritedAt,
+    }));
   }
 
   async updateFavorite(input: FavoriteMutation) {

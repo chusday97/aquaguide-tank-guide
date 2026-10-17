@@ -29,9 +29,10 @@ import { fishData } from '../data/fishData';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import { getCareVisualSources } from '../lib/careVisual';
 import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
-import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
+import { getCollectionSnapshot, loadCurrentFavorites, subscribeToCollection } from '../services/collection/collection.service';
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
-import { getCareFavorites, getSpeciesFavoriteIds, setSpeciesFavoriteIds, toggleCareFavorite } from '../services/favorites/favorites.service';
+import type { CareFavoriteMap } from '../services/favorites/favorites.service';
+import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { taskRoutes } from '../services/navigation/task-routes';
 import type { Aquarium, Fish } from '../types';
@@ -78,6 +79,8 @@ export default function Collection({ module }: { module: CollectionModule }) {
   ], [isEn]);
   const activeTab = module;
   const [snapshot, setSnapshot] = useState(() => getCollectionSnapshot());
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+  const [careFavorites, setCareFavorites] = useState<CareFavoriteMap>({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [selectedFish, setSelectedFish] = useState<Fish | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<CareTopic | null>(null);
@@ -93,23 +96,46 @@ export default function Collection({ module }: { module: CollectionModule }) {
   const previousUnlockedRef = useRef(new Set(snapshot.achievements.filter(item => item.unlocked).map(item => item.id)));
   const detailScrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => subscribeToCollection(() => {
-    setSnapshot(getCollectionSnapshot());
-  }), []);
+  useEffect(() => {
+    let cancelled = false;
+    const refresh = async () => {
+      setSnapshot(getCollectionSnapshot());
+      try {
+        const current = await loadCurrentFavorites();
+        if (cancelled) return;
+        setWishlistIds(current.wishlistIds);
+        setCareFavorites(current.careFavorites);
+      } catch {
+        if (!cancelled) {
+          setWishlistIds([]);
+          setCareFavorites({});
+        }
+      }
+    };
+    const onFocus = () => void refresh();
+    void refresh();
+    window.addEventListener('focus', onFocus);
+    const unsubscribe = subscribeToCollection(onFocus);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', onFocus);
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
     trackSessionEvent('favorite_page_view', { action: 'view', status: activeTab, entry: 'collection' });
   }, [activeTab]);
 
-  const wishlistFishes = useMemo(() => [...snapshot.wishlistIds]
+  const wishlistFishes = useMemo(() => [...wishlistIds]
     .reverse()
     .map(id => fishData.find(item => item.id === id))
-    .filter((item): item is Fish => Boolean(item)), [snapshot.wishlistIds]);
-  const careTopics = useMemo(() => Object.values(snapshot.careFavorites)
+    .filter((item): item is Fish => Boolean(item)), [wishlistIds]);
+  const careTopics = useMemo(() => Object.values(careFavorites)
     .sort((a, b) => new Date(b.favoritedAt).getTime() - new Date(a.favoritedAt).getTime())
     .map(favorite => careTopicsData.find(item => item.id === favorite.id))
-    .filter((item): item is CareTopic => Boolean(item)), [snapshot.careFavorites]);
+    .filter((item): item is CareTopic => Boolean(item)), [careFavorites]);
   const currentAquarium = useMemo<Aquarium | null>(() => (
     snapshot.appState.aquariums.find(item => item.id === snapshot.appState.currentAquariumId)
     || snapshot.appState.aquariums[0]
@@ -211,34 +237,44 @@ export default function Collection({ module }: { module: CollectionModule }) {
     if (context) void restoreContext(context);
   };
 
-  const removeFishFavorite = () => {
+  const removeFishFavorite = async () => {
     if (!pendingFishRemoval) return;
-    setSpeciesFavoriteIds(snapshot.wishlistIds.filter(id => id !== pendingFishRemoval.id));
-    if (getSpeciesFavoriteIds().includes(pendingFishRemoval.id)) {
+    const target = pendingFishRemoval;
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: target.id, favorite: false });
+      setWishlistIds(ids => ids.filter(id => id !== target.id));
+      setPendingFishRemoval(null);
+      if (deepLink?.module === 'wishlist' && deepLink.itemId === target.id) {
+        setSelectedFish(null);
+        clearDeepLinkItem();
+      }
+      showToast(isEn ? 'Removed from species wishlist' : '已从种草图鉴移除');
+    } catch {
       showToast(isEn ? 'Could not remove this item. Try again.' : '移除失败，请稍后重试。', 'error');
-      return;
     }
-    setPendingFishRemoval(null);
-    if (deepLink?.module === 'wishlist' && deepLink.itemId === pendingFishRemoval.id) {
-      setSelectedFish(null);
-      clearDeepLinkItem();
-    }
-    showToast(isEn ? 'Removed from species wishlist' : '已从种草图鉴移除');
   };
 
-  const removeCareFavorite = () => {
+  const removeCareFavorite = async () => {
     if (!pendingCareRemoval) return;
-    toggleCareFavorite({ id: pendingCareRemoval.id, title: pendingCareRemoval.title, favoritedAt: new Date().toISOString() });
-    if (getCareFavorites()[pendingCareRemoval.id]) {
+    const target = pendingCareRemoval;
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'care', catalogKey: target.id, title: target.title, favorite: false });
+      setCareFavorites(items => {
+        const next = { ...items };
+        delete next[target.id];
+        return next;
+      });
+      setPendingCareRemoval(null);
+      if (deepLink?.module === 'care' && deepLink.itemId === target.id) {
+        setSelectedTopic(null);
+        clearDeepLinkItem();
+      }
+      showToast(isEn ? 'Removed from care collection' : '已从养护收藏移除');
+    } catch {
       showToast(isEn ? 'Could not remove this item. Try again.' : '移除失败，请稍后重试。', 'error');
-      return;
     }
-    setPendingCareRemoval(null);
-    if (deepLink?.module === 'care' && deepLink.itemId === pendingCareRemoval.id) {
-      setSelectedTopic(null);
-      clearDeepLinkItem();
-    }
-    showToast(isEn ? 'Removed from care collection' : '已从养护收藏移除');
   };
 
   const openCarePreview = (topic: CareTopic) => {
@@ -287,7 +323,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
             <BookHeart className="h-6 w-6" />
           </div>
         </div>
-        {activeTab !== 'achievements' && <div className="mt-5 inline-flex rounded-full bg-white/75 px-3 py-1.5 text-[11px] font-black text-ink/55 shadow-sm">{Boolean(i18n.language?.startsWith('en')) ? `Total ${snapshot.counts[activeTab]} item(s)` : `共 ${snapshot.counts[activeTab]} 项`}</div>}
+        {activeTab !== 'achievements' && <div className="mt-5 inline-flex rounded-full bg-white/75 px-3 py-1.5 text-[11px] font-black text-ink/55 shadow-sm">{Boolean(i18n.language?.startsWith('en')) ? `Total ${activeTab === 'wishlist' ? wishlistIds.length : activeTab === 'care' ? Object.keys(careFavorites).length : snapshot.counts[activeTab]} item(s)` : `共 ${activeTab === 'wishlist' ? wishlistIds.length : activeTab === 'care' ? Object.keys(careFavorites).length : snapshot.counts[activeTab]} 项`}</div>}
       </header>
 
       {activeTab === 'wishlist' && (wishlistFishes.length ? (
@@ -391,7 +427,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         imageSrc={selectedFish ? getSpeciesDisplayImage(selectedFish) : ''}
         owned={Boolean(selectedFish && ownedIds.has(selectedFish.id))}
         inCalculator={false}
-        inWishlist={Boolean(selectedFish && snapshot.wishlistIds.includes(selectedFish.id))}
+        inWishlist={Boolean(selectedFish && wishlistIds.includes(selectedFish.id))}
         finalFocusElement={detailFinalFocusRef.current}
         onOpenChange={(open) => { if (!open) { setSelectedFish(null); clearDeepLinkItem(); restoreCard(); } }}
         onSelectSpecies={setSelectedFish}
@@ -418,7 +454,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
               topic={selectedTopic}
               scrollRef={detailScrollRef}
               checkedActions={checkedActions}
-              favorite={Boolean(snapshot.careFavorites[selectedTopic.id])}
+              favorite={Boolean(careFavorites[selectedTopic.id])}
               onToggleAction={(value) => setCheckedActions(items => items.includes(value) ? items.filter(item => item !== value) : [...items, value])}
               onToggleFavorite={() => setPendingCareRemoval(selectedTopic)}
               onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}

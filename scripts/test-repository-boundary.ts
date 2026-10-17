@@ -36,8 +36,15 @@ assert.equal(selectRepositoryMode(true, { ...stateWithLocalTank, aquariums: [] }
 
 await repository.updateFavorite({ type: 'species', catalogKey: 'sp_0001', favorite: true });
 assert.deepEqual(JSON.parse(localStorage.getItem('wishlistFishIds') || '[]'), ['sp_0001']);
+assert.deepEqual(await repository.getFavorites('species'), [{ catalogKey: 'sp_0001' }]);
 await repository.updateFavorite({ type: 'species', catalogKey: 'sp_0001', favorite: false });
 assert.deepEqual(JSON.parse(localStorage.getItem('wishlistFishIds') || '[]'), []);
+assert.deepEqual(await repository.getFavorites('species'), []);
+await repository.updateFavorite({ type: 'care', catalogKey: 'guide_safe_water_change', title: '安全换水', favorite: true });
+const localCareFavorites = await repository.getFavorites('care');
+assert.equal(localCareFavorites[0]?.catalogKey, 'guide_safe_water_change');
+assert.equal(localCareFavorites[0]?.title, '安全换水');
+assert.equal(typeof localCareFavorites[0]?.favoritedAt, 'string');
 
 const diagnosis = await repository.saveDiagnosis({
   diagnosisId: 'daily-local',

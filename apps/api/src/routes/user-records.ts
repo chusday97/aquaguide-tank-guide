@@ -121,7 +121,30 @@ const registerFavoriteRoutes = (type: 'species' | 'care') => {
     const client = userClientFor(request);
     const { data, error } = await client.from(table).select('*').is('deleted_at', null).order('created_at', { ascending: false });
     if (error) throwDatabaseError(error, '收藏暂时无法加载。');
-    return sendData(request, response, camelize(data || []));
+    const favorites = data || [];
+    const contentIds = favorites
+      .map(item => item[idColumn])
+      .filter((value): value is string => typeof value === 'string' && value.length > 0);
+    if (contentIds.length === 0) return sendData(request, response, []);
+    const contentTable = type === 'species' ? 'species' : 'care_articles';
+    const contentSelect = type === 'species' ? 'id,catalog_key,name' : 'id,catalog_key,title';
+    const { data: contents, error: contentError } = await client.from(contentTable).select(contentSelect).in('id', contentIds);
+    if (contentError) throwDatabaseError(contentError, '收藏内容暂时无法加载。');
+    const contentById = new Map((contents || []).map(item => [item.id, item]));
+    const result = favorites.flatMap(favorite => {
+      const content = contentById.get(favorite[idColumn]);
+      if (!content || typeof content.catalog_key !== 'string') return [];
+      const title = type === 'species'
+        ? ('name' in content && typeof content.name === 'string' ? content.name : undefined)
+        : ('title' in content && typeof content.title === 'string' ? content.title : undefined);
+      return [{
+        ...camelize<Record<string, unknown>>(favorite),
+        catalogKey: content.catalog_key,
+        title,
+        favoritedAt: favorite.created_at,
+      }];
+    });
+    return sendData(request, response, result);
   }));
 
   userRecordsRouter.put(`${route}/:contentId`, asyncRoute(async (request, response) => {

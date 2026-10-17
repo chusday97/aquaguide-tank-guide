@@ -26,12 +26,8 @@ import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigation
 import { ResilientImage } from '../components/common/ResilientImage';
 import { getCareVisualSources } from '../lib/careVisual';
 import { AdaptiveDetailContent } from '../components/common/AdaptiveDetailContent';
-import {
-  getCareFavorites,
-  subscribeToFavorites,
-  toggleCareFavorite,
-  type CareFavoriteMap,
-} from '../services/favorites/favorites.service';
+import { subscribeToFavorites, type CareFavoriteMap } from '../services/favorites/favorites.service';
+import { loadCurrentFavorites } from '../services/collection/collection.service';
 import {
   getCompletedCareOperations,
   getSavedCareChecklists,
@@ -1615,7 +1611,7 @@ export default function CareEncyclopedia() {
   const [carePresentationMode, setCarePresentationMode] = useState<CarePresentationMode>(() => (
     new URLSearchParams(location.search).get('mode') === 'browse' ? 'browse' : 'scene'
   ));
-  const [favorites, setFavorites] = useState<CareFavoriteMap>(() => getCareFavorites());
+  const [favorites, setFavorites] = useState<CareFavoriteMap>({});
   const [shareTopic, setShareTopic] = useState<CareTopic | null>(null);
   const [copyMessage, setCopyMessage] = useState('');
   const [flyingFavorites, setFlyingFavorites] = useState<FlyingFavorite[]>([]);
@@ -1693,9 +1689,26 @@ export default function CareEncyclopedia() {
     node.scrollTo({ left: card.offsetLeft - node.offsetLeft, behavior: 'smooth' });
   }, [activeBannerIndex, careRecommendations.length]);
 
-  useEffect(() => subscribeToFavorites(() => {
-    setFavorites(getCareFavorites());
-  }), []);
+  useEffect(() => {
+    let cancelled = false;
+    const refreshFavorites = async () => {
+      try {
+        const current = await loadCurrentFavorites();
+        if (!cancelled) setFavorites(current.careFavorites);
+      } catch {
+        if (!cancelled) setFavorites({});
+      }
+    };
+    const onFocus = () => void refreshFavorites();
+    void refreshFavorites();
+    window.addEventListener('focus', onFocus);
+    const unsubscribe = subscribeToFavorites(onFocus);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', onFocus);
+      unsubscribe();
+    };
+  }, []);
 
   const goToBanner = (index: number) => {
     setActiveBannerIndex((index + careRecommendations.length) % Math.max(1, careRecommendations.length));
@@ -1822,20 +1835,27 @@ export default function CareEncyclopedia() {
     }, 720);
   };
 
-  const toggleFavorite = (topic: CareTopic, source?: HTMLElement) => {
+  const toggleFavorite = async (topic: CareTopic, source?: HTMLElement) => {
     const isAdding = !favorites[topic.id];
     if (isAdding) launchFavoriteFly(source);
-    const next = toggleCareFavorite({
-      id: topic.id,
-      title: getDisplayTitle(topic),
-      favoritedAt: new Date().toISOString(),
-    });
-    setFavorites(next);
-    showToast(isAdding ? '已收录到水族册' : '已从水族册移除');
+    const previous = favorites;
+    const next: CareFavoriteMap = { ...favorites };
     if (isAdding) {
-      try {
-        posthog.capture('care_article_favorited', { topic_id: topic.id });
-      } catch (e) {}
+      next[topic.id] = { id: topic.id, title: getDisplayTitle(topic), favoritedAt: new Date().toISOString() };
+    } else {
+      delete next[topic.id];
+    }
+    setFavorites(next);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'care', catalogKey: topic.id, title: getDisplayTitle(topic), favorite: isAdding });
+      showToast(isAdding ? '已收录到水族册' : '已从水族册移除');
+      if (isAdding) {
+        try { posthog.capture('care_article_favorited', { topic_id: topic.id }); } catch (e) {}
+      }
+    } catch {
+      setFavorites(previous);
+      showToast(isEn ? 'Could not update the collection. Try again.' : '收藏没有保存成功，请重试。', 'error');
     }
   };
 

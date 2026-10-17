@@ -7,6 +7,12 @@ export type FavoriteMutation =
   | { type: 'species'; catalogKey: string; favorite: boolean }
   | { type: 'care'; catalogKey: string; title: string; favorite: boolean };
 
+export type FavoriteRecord = {
+  catalogKey: string;
+  title?: string;
+  favoritedAt?: string;
+};
+
 export type MemorialSaveInput = {
   aquariumId?: string;
   speciesCatalogKey: string;
@@ -95,6 +101,7 @@ export interface AquaGuideRepository {
   /** @deprecated Aggregate synchronization retained for legacy profile and batch editors. */
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
+  getFavorites(type: FavoriteMutation['type']): Promise<FavoriteRecord[]>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
   saveDiagnosis(record: DiagnosisRecord): Promise<DiagnosisRecord>;
   getMemorials(): Promise<DeceasedRecord[]>;

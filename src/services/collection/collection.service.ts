@@ -189,6 +189,28 @@ export const getCollectionSnapshot = (): CollectionSnapshot => {
   };
 };
 
+export const loadCurrentFavorites = async () => {
+  const mode = await resolveRepositoryMode();
+  const repository = getAquaGuideRepository(mode);
+  const [speciesFavorites, careFavoriteRecords] = await Promise.all([
+    repository.getFavorites('species'),
+    repository.getFavorites('care'),
+  ]);
+  const careFavorites: CareFavoriteMap = Object.fromEntries(careFavoriteRecords.map(record => [
+    record.catalogKey,
+    {
+      id: record.catalogKey,
+      title: record.title || record.catalogKey,
+      favoritedAt: record.favoritedAt || new Date(0).toISOString(),
+    },
+  ]));
+  return {
+    source: mode,
+    wishlistIds: speciesFavorites.map(record => record.catalogKey),
+    careFavorites,
+  };
+};
+
 export const loadCurrentKeepingHistory = async () => {
   const mode = await resolveRepositoryMode();
   if (mode === 'local') {

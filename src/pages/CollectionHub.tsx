@@ -18,7 +18,8 @@ import { fishData } from '../data/fishData';
 import { getCareVisualSources } from '../lib/careVisual';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
-import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
+import { getCollectionSnapshot, loadCurrentFavorites, subscribeToCollection } from '../services/collection/collection.service';
+import type { CareFavoriteMap } from '../services/favorites/favorites.service';
 
 const moduleRoutes: Record<CollectionModule, string> = {
   wishlist: '/collection/wishlist',
@@ -75,22 +76,49 @@ export default function CollectionHub() {
   const navigate = useNavigate();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+  const [careFavorites, setCareFavorites] = useState<CareFavoriteMap>({});
   const [activeModule, setActiveModule] = useState<CollectionModule>('wishlist');
   const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
 
-  useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);
+  useEffect(() => {
+    let cancelled = false;
+    const refresh = async () => {
+      setSnapshot(getCollectionSnapshot());
+      try {
+        const current = await loadCurrentFavorites();
+        if (cancelled) return;
+        setWishlistIds(current.wishlistIds);
+        setCareFavorites(current.careFavorites);
+      } catch {
+        if (!cancelled) {
+          setWishlistIds([]);
+          setCareFavorites({});
+        }
+      }
+    };
+    const onFocus = () => void refresh();
+    void refresh();
+    window.addEventListener('focus', onFocus);
+    const unsubscribe = subscribeToCollection(onFocus);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('focus', onFocus);
+      unsubscribe();
+    };
+  }, []);
 
-  const wishlistFishes = useMemo(() => [...snapshot.wishlistIds]
+  const wishlistFishes = useMemo(() => [...wishlistIds]
     .reverse()
     .map(id => fishData.find(fish => fish.id === id))
     .filter((fish): fish is (typeof fishData)[number] => Boolean(fish))
-    .slice(0, 4), [snapshot.wishlistIds]);
+    .slice(0, 4), [wishlistIds]);
 
-  const careTopics = useMemo(() => Object.values(snapshot.careFavorites)
+  const careTopics = useMemo(() => Object.values(careFavorites)
     .sort((a, b) => new Date(b.favoritedAt).getTime() - new Date(a.favoritedAt).getTime())
     .map(favorite => careTopicsData.find(topic => topic.id === favorite.id))
     .filter((topic): topic is (typeof careTopicsData)[number] => Boolean(topic))
-    .slice(0, 4), [snapshot.careFavorites]);
+    .slice(0, 4), [careFavorites]);
 
   const recentMemorials = snapshot.memorials.slice(0, 4);
   const achievementPreviews = useMemo(() => {
@@ -115,7 +143,7 @@ export default function CollectionHub() {
       title: isEn ? 'Species Wishlist' : '种草图鉴',
       shortLabel: isEn ? 'Wishlist' : '种草',
       description: isEn ? 'Species you saved for a closer look before deciding what belongs in your tank.' : '把感兴趣的生物先放在这里，再决定是否适合你的鱼缸。',
-      countLabel: isEn ? `${snapshot.counts.wishlist} saved` : `${snapshot.counts.wishlist} 种`,
+      countLabel: isEn ? `${wishlistIds.length} saved` : `${wishlistIds.length} 种`,
       icon: <Heart className="h-4 w-4" />,
       accentClass: 'text-rose-600',
     },
@@ -123,7 +151,7 @@ export default function CollectionHub() {
       title: isEn ? 'Saved Care' : '养护收藏',
       shortLabel: isEn ? 'Care' : '养护',
       description: isEn ? 'Keep the care guides you want to return to during real aquarium maintenance.' : '把真正会反复查看的养护指南收进来，维护时直接继续。',
-      countLabel: isEn ? `${snapshot.counts.care} guides` : `${snapshot.counts.care} 篇`,
+      countLabel: isEn ? `${Object.keys(careFavorites).length} guides` : `${Object.keys(careFavorites).length} 篇`,
       icon: <BookOpenCheck className="h-4 w-4" />,
       accentClass: 'text-sky-700',
     },
