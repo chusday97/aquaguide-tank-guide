@@ -5,7 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
-export const MIGRATION = '20261017160000_aquarium_water_parameters.sql';
+export const MIGRATION = '20261017081435_aquarium_water_parameters.sql';
 export const EXPECTED_MIGRATION_SHA256 = 'dd6808b313ac3b1889238a8810926cb3d243953bef61532daf83bd599f76e8ef';
 export const REQUIRED_ORDER = [
   'apply_database_migration',
@@ -67,7 +67,7 @@ export const buildLivePreflightSql = () => `select
   ) as hardness_constraint_exists,
   exists (
     select 1 from supabase_migrations.schema_migrations
-    where version='20261017160000'
+    where version='20261017081435'
   ) as migration_recorded;`;
 
 export const validateLivePreflight = live => {

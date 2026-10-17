@@ -86,7 +86,7 @@ const reviewedMismatch = evaluateSpeciesForAquarium(redRainbowfish, makeFitTank(
 assert.ok(reviewedMismatch.warnings.some(item => item.type === 'ph_mismatch'), 'out-of-range recorded pH must surface a warning');
 assert.ok(reviewedMismatch.warnings.some(item => item.type === 'hardness_mismatch'), 'out-of-range reviewed GH must surface a warning');
 
-const migration = readFileSync(resolve('supabase/migrations/20261017160000_aquarium_water_parameters.sql'), 'utf8');
+const migration = readFileSync(resolve('supabase/migrations/20261017081435_aquarium_water_parameters.sql'), 'utf8');
 assert.match(migration, /add column if not exists ph numeric\(4, 2\)/);
 assert.match(migration, /add column if not exists hardness_dgh numeric\(6, 2\)/);
 assert.match(migration, /ph >= 0 and ph <= 14/);

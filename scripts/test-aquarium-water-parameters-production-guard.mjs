@@ -8,7 +8,7 @@ import {
   validateLocalMigration,
 } from './aquarium-water-parameters-production-guard.mjs';
 
-assert.equal(MIGRATION, '20261017160000_aquarium_water_parameters.sql');
+assert.equal(MIGRATION, '20261017081435_aquarium_water_parameters.sql');
 assert.equal(EXPECTED_MIGRATION_SHA256, 'dd6808b313ac3b1889238a8810926cb3d243953bef61532daf83bd599f76e8ef');
 assert.deepEqual(REQUIRED_ORDER, [
   'apply_database_migration',
@@ -25,7 +25,7 @@ assert.match(sql, /column_name='ph'/);
 assert.match(sql, /column_name='hardness_dgh'/);
 assert.match(sql, /aquariums_ph_range_check/);
 assert.match(sql, /aquariums_hardness_dgh_range_check/);
-assert.match(sql, /20261017160000/);
+assert.match(sql, /20261017081435/);
 
 const notReady = validateLivePreflight({
   ph_exists: false,
