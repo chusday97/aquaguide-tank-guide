@@ -5,6 +5,7 @@ import { evaluateTankCompatibility } from '../src/services/compatibility/compati
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision } from '../src/modules/knowledge/knowledge.types';
 import { buildBeginnerCompatibilityAction } from '../src/services/compatibility/compatibility-action.service';
+import { buildCompatibilityDecisionPlan } from '../src/services/compatibility/compatibility-decision-plan.service';
 import type { Aquarium } from '../src/types';
 
 const byId = (id: string) => {
@@ -129,6 +130,15 @@ assert.equal(missingTankAction.authorityLevel, 'information_required');
 assert.ok(missingTankAction.sourceRuleCodes.includes('tank_missing'));
 assert.match(missingTankAction.immediateAction, /补齐|鱼缸|再算|再判断/);
 
+const missingSpeciesFact = decisionFor([
+  ['sp_0014', quantityFor('sp_0014')],
+  ['sp_0112', quantityFor('sp_0112')],
+], largeTank);
+assert.equal(missingSpeciesFact.status, 'insufficient_data');
+assert.ok(missingSpeciesFact.metadata.domainRuleCodes.includes('water_type_unknown'));
+const missingSpeciesFactPlan = buildCompatibilityDecisionPlan(missingSpeciesFact);
+assert.equal(missingSpeciesFactPlan.unknownReason, 'missing_species_fact', 'species authority gaps must not be mislabeled as missing user input');
+
 // 6a) A manageable evidence ceiling should preserve a usable caution verdict instead of collapsing to 暂时无法判断.
 const softEvidenceCeiling = decisionFor([
   ['sp_0010', quantityFor('sp_0010')],
@@ -218,9 +228,10 @@ const adjusted = evaluateCompatibilityDecision({
 assert.equal(adjusted.status, 'compatible');
 assert.ok(adjusted.warningRules.every(rule => !rule.code.includes('bioload')));
 
-// Unknown results in this release acceptance are limited to explicit missing input, identity, or decision-critical public-evidence ceiling causes.
+// Unknown results in this release acceptance are limited to explicit missing input, species-fact gaps, identity, or decision-critical public-evidence ceiling causes.
 for (const [label, decision, allowed] of [
   ['missing input', missingTank, ['tank_missing']],
+  ['missing species fact', missingSpeciesFact, ['water_type_unknown']],
   ['identity', unresolvedIdentity, ['species_identity_unresolved']],
   ['hard public evidence', hardEvidenceCeiling, ['species_public_evidence_insufficient']],
 ] as const) {
@@ -228,4 +239,4 @@ for (const [label, decision, allowed] of [
   assert.ok(allowed.some(code => decision.metadata.domainRuleCodes.includes(code)), `${label}: unavailable result lacks an allowed reason`);
 }
 
-console.log('Compatibility release badcase acceptance PASS: 10 launch scenarios cover hard blocks, territorial/breeding risk, unknown boundaries, multi-species aggregation, duplicate normalization, adjustment recovery, and sourced action contracts with recheck + stop conditions.');
+console.log('Compatibility release badcase acceptance PASS: 11 launch scenarios cover hard blocks, territorial/breeding risk, distinct user-input/species-fact/identity/evidence unknown boundaries, multi-species aggregation, duplicate normalization, adjustment recovery, and sourced action contracts with recheck + stop conditions.');

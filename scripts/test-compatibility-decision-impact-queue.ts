@@ -78,6 +78,9 @@ assert.equal(plan.find(item => item.researchKey === 'Hemigrammus rodwayi'), unde
 assert.equal(blocked.find((item: { researchKey: string }) => item.researchKey === 'Hemigrammus rodwayi'), undefined, 'terminal-only work is represented by coverage terminal holds, not a repeated research job');
 
 assert.equal(audit.fullyInformedUnknownPairs, 0, 'fully informed compatibility pairs must never collapse to UNKNOWN');
+assert.equal(audit.systemGapPairs, 0, 'complete-input pair audit must not contain unexplained system-gap UNKNOWN results');
+assert.equal(audit.unknownReasons?.system_gap, 0, 'all UNKNOWN outcomes must map to an explicit product/evidence boundary');
+assert.equal(audit.unknownReasons?.missing_user_input, 0, 'complete synthetic tank inputs must not be mislabeled as missing user input');
 
 console.log(
   'Compatibility decision-impact queue PASS:',

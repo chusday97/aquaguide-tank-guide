@@ -1,7 +1,7 @@
 {
   "auditPolicy": {
     "scope": "all unique fish-domain pairs under complete synthetic tank inputs",
-    "note": "The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; the hard invariant is fully-informed UNKNOWN = 0."
+    "note": "The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; the hard invariants are fully-informed UNKNOWN = 0 and unexplained system_gap UNKNOWN = 0."
   },
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
@@ -16,14 +16,17 @@
     "insufficient_data": 25136
   },
   "decisionCoveragePct": 47.52,
+  "unknownRatePct": 52.48,
+  "systemGapPairs": 0,
+  "systemGapPct": 0,
   "fullyInformedPairs": 7060,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
-    "missing_user_input": 228,
+    "missing_user_input": 0,
     "unresolved_identity": 20100,
     "public_evidence_insufficient": 4808,
-    "missing_species_fact": 0,
-    "other": 0
+    "missing_species_fact": 228,
+    "system_gap": 0
   },
   "leverageQueues": {
     "policy": "Prioritize reviewed evidence work by actual UNKNOWN-pair impact. affectedUnknownPairs means the taxon participates in that many current UNKNOWN pairs; it is not a guarantee that resolving the taxon alone will unlock every pair because the opposite species or non-core facts can remain blocking.",

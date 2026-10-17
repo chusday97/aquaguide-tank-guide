@@ -52,7 +52,7 @@ const unknownReasons: Record<string, number> = {
   unresolved_identity: 0,
   public_evidence_insufficient: 0,
   missing_species_fact: 0,
-  other: 0,
+  system_gap: 0,
 };
 const unknownRuleCodes = new Map<string, number>();
 const unknownPairImpactBySpecies = new Map<string, number>();
@@ -91,7 +91,7 @@ for (let leftIndex = 0; leftIndex < fishDomainSpecies.length; leftIndex += 1) {
       }
       if (fullyInformed) fullyInformedUnknownPairs += 1;
       const plan = buildCompatibilityDecisionPlan(decision);
-      const reason = plan.unknownReason || 'other';
+      const reason = plan.unknownReason || 'system_gap';
       unknownReasons[reason] = (unknownReasons[reason] || 0) + 1;
       for (const rule of decision.missingData) {
         unknownRuleCodes.set(rule.code, (unknownRuleCodes.get(rule.code) || 0) + 1);
@@ -177,10 +177,13 @@ for (const item of speciesImpactRows) {
 }
 
 const fishPairs = (fishDomainSpecies.length * (fishDomainSpecies.length - 1)) / 2;
+const unknownRatePct = fishPairs === 0 ? 0 : Number(((statuses.insufficient_data / fishPairs) * 100).toFixed(2));
+const systemGapPairs = unknownReasons.system_gap || 0;
+const systemGapPct = fishPairs === 0 ? 0 : Number(((systemGapPairs / fishPairs) * 100).toFixed(4));
 const report = {
   auditPolicy: {
     scope: 'all unique fish-domain pairs under complete synthetic tank inputs',
-    note: 'The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; the hard invariant is fully-informed UNKNOWN = 0.',
+    note: 'The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; the hard invariants are fully-informed UNKNOWN = 0 and unexplained system_gap UNKNOWN = 0.',
   },
   catalogObjects: fishData.length,
   compatibilityDomainObjects: compatibilityDomainObjects.length,
@@ -190,6 +193,9 @@ const report = {
   fishPairs,
   statuses,
   decisionCoveragePct: Number((((fishPairs - statuses.insufficient_data) / fishPairs) * 100).toFixed(2)),
+  unknownRatePct,
+  systemGapPairs,
+  systemGapPct,
   fullyInformedPairs,
   fullyInformedUnknownPairs,
   unknownReasons,

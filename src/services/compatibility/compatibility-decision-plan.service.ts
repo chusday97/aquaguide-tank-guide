@@ -15,6 +15,7 @@ export type CompatibilityUnknownReason =
   | 'unresolved_identity'
   | 'public_evidence_insufficient'
   | 'missing_species_fact'
+  | 'system_gap'
   | null;
 
 export type CompatibilityResolutionMode =
@@ -81,11 +82,44 @@ const unknownReasonFor = (decision: CompatibilityDecision): CompatibilityUnknown
     codes.has('species_public_evidence_insufficient')
     || [...codes].some(code => code.startsWith('public_evidence_') && code.endsWith('_insufficient'))
   ) return 'public_evidence_insufficient';
+  const missingUserInputCodes = new Set([
+    'candidate_missing',
+    'missing_candidate_species',
+    'missing_species_pair',
+    'empty_tank_no_existing_species',
+    'tank_missing',
+    'missing_tank',
+    'tank_water_type_missing',
+    'missing_tank_water_type',
+    'tank_volume_missing',
+    'missing_tank_volume',
+    'tank_temperature_missing',
+    'missing_tank_temperature',
+  ]);
+  if ([...codes].some(code => missingUserInputCodes.has(code))) return 'missing_user_input';
+
+  const missingSpeciesFactCodes = new Set([
+    'species_evidence_unreviewed',
+    'candidate_water_type_missing',
+    'water_type_unknown',
+    'temperature_range_missing',
+    'ph_range_missing',
+    'species_temperature_missing',
+    'species_ph_missing',
+    'behavior_evidence_unreviewed',
+    'missing_ph',
+    'missing_hardness',
+  ]);
   if (
-    codes.has('species_evidence_unreviewed')
+    [...codes].some(code => missingSpeciesFactCodes.has(code))
     || [...codes].some(code => code.startsWith('required_fact_') && code.endsWith('_missing'))
+    || [...codes].some(code => code.startsWith('species_') && code.endsWith('_missing'))
+    || [...codes].some(code => code.endsWith('_evidence_unreviewed'))
   ) return 'missing_species_fact';
-  return 'missing_user_input';
+
+  // Unknown should never silently blame the user when no known user-input,
+  // identity, public-evidence, or species-fact boundary explains it.
+  return 'system_gap';
 };
 
 const sourceRulesForPlan = (decision: CompatibilityDecision): TankCompatibilityRule[] => {
