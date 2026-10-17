@@ -47,6 +47,7 @@ const loadCompatibility = () => import('./pages/Compatibility');
 const loadCare = () => import('./pages/CareEncyclopedia');
 const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
+const loadCollectionHistory = () => import('./pages/CollectionHistory');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadInteractivePreview = () => import('./pages/InteractivePreview');
 const loadLogin = () => import('./pages/Login');
@@ -68,6 +69,7 @@ const Compatibility = lazyWithRecovery(loadCompatibility, 'compatibility');
 const CareEncyclopedia = lazyWithRecovery(loadCare, 'care');
 const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
+const CollectionHistory = lazyWithRecovery(loadCollectionHistory, 'collection-history');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const InteractivePreview = lazyWithRecovery(loadInteractivePreview, 'interactive-preview');
 const Login = lazyWithRecovery(loadLogin, 'login');
@@ -100,6 +102,8 @@ const preloadRoute = (path: string) => {
         ? loadCare
         : path === '/collection'
           ? loadCollectionHub
+          : path === '/collection/history'
+            ? loadCollectionHistory
           : path.startsWith('/collection/memorial/')
             ? loadMemorialDetail
           : path.startsWith('/collection/')
@@ -918,6 +922,7 @@ function WorkspaceRoutes() {
           <Route path="/care/:topicId" element={page(<CareEncyclopedia />, 'care-topic-en')} />
           <Route path="/zh/care/:topicId" element={page(<CareEncyclopedia />, 'care-topic-zh')} />
           <Route path="/collection" element={page(<CollectionEntry />, 'collection')} />
+          <Route path="/collection/history" element={page(<CollectionHistory />, 'collection-history')} />
           <Route path="/collection/wishlist" element={page(<Collection module="wishlist" />, 'collection-wishlist')} />
           <Route path="/collection/care" element={page(<Collection module="care" />, 'collection-care')} />
           <Route path="/collection/memorial/:recordId" element={page(<MemorialDetail />, 'collection-memorial-detail')} />

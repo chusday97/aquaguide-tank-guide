@@ -6,6 +6,7 @@ import {
   Check,
   ChevronRight,
   Heart,
+  History as HistoryIcon,
   Medal,
   ShieldCheck,
   Skull,
@@ -18,7 +19,7 @@ import { fishData } from '../data/fishData';
 import { getCareVisualSources } from '../lib/careVisual';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
-import { getCollectionSnapshot, loadCurrentFavorites, subscribeToCollection } from '../services/collection/collection.service';
+import { getCollectionSnapshot, loadCurrentFavorites, loadCurrentKeepingHistory, subscribeToCollection } from '../services/collection/collection.service';
 import type { CareFavoriteMap } from '../services/favorites/favorites.service';
 
 const moduleRoutes: Record<CollectionModule, string> = {
@@ -78,6 +79,7 @@ export default function CollectionHub() {
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [careFavorites, setCareFavorites] = useState<CareFavoriteMap>({});
+  const [historySummary, setHistorySummary] = useState({ current: 0, ever: 0, events: 0 });
   const [activeModule, setActiveModule] = useState<CollectionModule>('wishlist');
   const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
 
@@ -87,14 +89,27 @@ export default function CollectionHub() {
       setSnapshot(getCollectionSnapshot());
       try {
         const current = await loadCurrentFavorites();
-        if (cancelled) return;
-        setWishlistIds(current.wishlistIds);
-        setCareFavorites(current.careFavorites);
+        if (!cancelled) {
+          setWishlistIds(current.wishlistIds);
+          setCareFavorites(current.careFavorites);
+        }
       } catch {
         if (!cancelled) {
           setWishlistIds([]);
           setCareFavorites({});
         }
+      }
+      try {
+        const keeping = await loadCurrentKeepingHistory();
+        if (!cancelled) {
+          setHistorySummary({
+            current: keeping.history.currentSpeciesIds.length,
+            ever: keeping.history.speciesEverKeptIds.length,
+            events: keeping.history.events.length,
+          });
+        }
+      } catch {
+        if (!cancelled) setHistorySummary({ current: 0, ever: 0, events: 0 });
       }
     };
     const onFocus = () => void refresh();
@@ -364,6 +379,28 @@ export default function CollectionHub() {
         <h1 className="mt-2 text-[30px] font-bold text-ink md:text-[42px]">{isEn ? 'My Collection' : '我的水族册'}</h1>
         <p className="mt-2 max-w-[680px] text-[13px] font-semibold leading-6 text-ink/56">{isEn ? 'Hover over a creature to preview its collection, then bring that collection into the center.' : '把鼠标移到海洋生物上查看细分内容，点击后把对应收藏拉到中央。'}</p>
       </header>
+
+      <button
+        type="button"
+        data-collection-history-entry
+        onClick={() => navigate('/collection/history')}
+        className="group flex w-full items-center justify-between gap-4 rounded-[26px] border border-emerald-100 bg-white px-5 py-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+      >
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><HistoryIcon className="h-5 w-5" /></span>
+          <span className="min-w-0">
+            <span className="block text-[14px] font-black text-ink">{isEn ? 'My keeping history' : '我的养鱼履历'}</span>
+            <span className="mt-1 block text-[11px] font-semibold leading-5 text-ink/48">
+              {isEn
+                ? `${historySummary.current} species now · ${historySummary.ever} kept over time · ${historySummary.events} events`
+                : `当前在养 ${historySummary.current} 种 · 曾经养过 ${historySummary.ever} 种 · ${historySummary.events} 条历史事件`}
+            </span>
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-1 text-[11px] font-black text-emerald-700">
+          {isEn ? 'Open' : '查看'}<ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </span>
+      </button>
 
       <section className="relative min-h-[720px] overflow-hidden rounded-[36px] border border-emerald-100/80 bg-[linear-gradient(180deg,#dff6f0_0%,#bfe7dc_53%,#9fcdbf_72%,#7f9f84_100%)] shadow-[0_26px_70px_rgba(18,83,66,0.13)] md:min-h-[760px]" aria-label={isEn ? 'Interactive collection aquarium' : '互动水族册'}>
         <span aria-hidden="true" className="absolute inset-x-0 top-[22%] h-px bg-white/70 shadow-[0_0_30px_white]" />

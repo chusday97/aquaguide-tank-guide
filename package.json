@@ -48,6 +48,7 @@
     "test:collection-keeping-history": "node --import tsx scripts/test-collection-keeping-history.ts",
     "test:collection-cloud-history": "node --import tsx scripts/test-collection-cloud-history.ts",
     "test:collection-favorite-boundary": "node --import tsx scripts/test-collection-favorite-boundary.ts",
+    "test:collection-history-entry": "node --import tsx scripts/test-collection-history-entry.ts",
     "test:memorial": "tsx scripts/test-memorial-service.ts",
     "test:state-services": "tsx scripts/test-business-state-services.ts",
     "test:care-timeline": "node --import tsx scripts/test-care-timeline.ts",

@@ -93,6 +93,7 @@ const gates = [
   ['Collection Keeping History', 'npm', ['run', 'test:collection-keeping-history']],
   ['Collection Cloud History', 'npm', ['run', 'test:collection-cloud-history']],
   ['Collection Favorite Boundary', 'npm', ['run', 'test:collection-favorite-boundary']],
+  ['Collection History Entry', 'npm', ['run', 'test:collection-history-entry']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],
