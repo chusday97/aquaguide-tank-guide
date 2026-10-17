@@ -31,6 +31,12 @@ const largeTank: Aquarium = {
   dimensions: { length: '300', width: '100', height: '80' },
 };
 
+const largeCoolTank: Aquarium = {
+  ...largeTank,
+  id: 'compatibility-release-badcase-large-cool-tank',
+  targetTemperature: '22',
+};
+
 const decisionFor = (ids: Array<[string, number]>, tank: Aquarium | null = fullTank) => evaluateCompatibilityDecision({
   tank,
   items: ids.map(([id, quantity], index) => ({
@@ -123,14 +129,29 @@ assert.equal(missingTankAction.authorityLevel, 'information_required');
 assert.ok(missingTankAction.sourceRuleCodes.includes('tank_missing'));
 assert.match(missingTankAction.immediateAction, /补齐|鱼缸|再算|再判断/);
 
-// 6) A real public-evidence ceiling must say the limitation is the evidence, not user configuration.
-const evidenceCeiling = decisionFor([
+// 6a) A manageable evidence ceiling should preserve a usable caution verdict instead of collapsing to 暂时无法判断.
+const softEvidenceCeiling = decisionFor([
   ['sp_0010', quantityFor('sp_0010')],
   ['sp_0467', 6],
 ], largeTank);
-assert.equal(evidenceCeiling.status, 'insufficient_data');
-assert.ok(evidenceCeiling.metadata.domainRuleCodes.includes('species_public_evidence_insufficient'));
-const evidenceAction = assertActionContract('public evidence ceiling', evidenceCeiling);
+assert.equal(softEvidenceCeiling.status, 'caution');
+assert.equal(softEvidenceCeiling.metadata.decisionReadiness, 'partial');
+assert.ok(softEvidenceCeiling.metadata.domainRuleCodes.includes('species_evidence_ceiling'));
+const softEvidenceAction = assertActionContract('soft evidence ceiling', softEvidenceCeiling);
+assert.equal(softEvidenceAction.authorityLevel, 'risk_management');
+assert.ok(softEvidenceAction.sourceRuleCodes.includes('species_evidence_ceiling'));
+assert.match(softEvidenceAction.primaryReason, /证据|公开|保守/);
+assert.match(softEvidenceAction.immediateAction, /保守|不要|证据|安全余量/);
+
+// 6b) A decision-critical public-evidence ceiling must still say the limitation is the evidence, not user configuration.
+const hardEvidenceCeiling = decisionFor([
+  ['sp_0010', quantityFor('sp_0010')],
+  ['sp_0039', 6],
+], largeCoolTank);
+assert.equal(hardEvidenceCeiling.status, 'insufficient_data');
+assert.equal(hardEvidenceCeiling.metadata.decisionReadiness, 'unknown');
+assert.ok(hardEvidenceCeiling.metadata.domainRuleCodes.includes('species_public_evidence_insufficient'));
+const evidenceAction = assertActionContract('hard public evidence ceiling', hardEvidenceCeiling);
 assert.ok(evidenceAction.sourceRuleCodes.includes('species_public_evidence_insufficient'));
 assert.match(evidenceAction.headline, /公开资料|可靠公开/);
 assert.match(evidenceAction.primaryReason, /可靠公开|来源|风险边界/);
@@ -197,11 +218,11 @@ const adjusted = evaluateCompatibilityDecision({
 assert.equal(adjusted.status, 'compatible');
 assert.ok(adjusted.warningRules.every(rule => !rule.code.includes('bioload')));
 
-// Unknown results in this release acceptance are limited to explicit missing input, identity, or public-evidence ceiling causes.
+// Unknown results in this release acceptance are limited to explicit missing input, identity, or decision-critical public-evidence ceiling causes.
 for (const [label, decision, allowed] of [
   ['missing input', missingTank, ['tank_missing']],
   ['identity', unresolvedIdentity, ['species_identity_unresolved']],
-  ['public evidence', evidenceCeiling, ['species_public_evidence_insufficient']],
+  ['hard public evidence', hardEvidenceCeiling, ['species_public_evidence_insufficient']],
 ] as const) {
   assert.equal(decision.status, 'insufficient_data', `${label}: expected unavailable result`);
   assert.ok(allowed.some(code => decision.metadata.domainRuleCodes.includes(code)), `${label}: unavailable result lacks an allowed reason`);

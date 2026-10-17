@@ -196,9 +196,9 @@
       ],
       "deterministic": {
         "status": "insufficient_data",
-        "decisionReadiness": "unknown",
+        "decisionReadiness": "partial",
         "ruleCodes": [
-          "species_public_evidence_insufficient",
+          "species_evidence_ceiling",
           "water_type_unknown",
           "candidate_water_type_missing"
         ],

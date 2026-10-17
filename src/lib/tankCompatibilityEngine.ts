@@ -37,6 +37,7 @@ import { estimateBioloadUnits } from '../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
 import { LOCAL_CATALOG_VERSION } from '../data/catalogVersion';
 import { getCompatibilityCoreFieldCoverageRow } from '../services/compatibility/compatibility-field-coverage.service';
+import { getCompatibilityPairEvidenceCeiling } from '../data/compatibilityPairEvidenceCeilings';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
@@ -854,6 +855,41 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
   const provider = input.evidenceProvider || runtimeEvidenceProvider();
   const legacy = evaluateLegacyTankCompatibility({ ...input, evidenceProvider: provider });
   const normalized = normalizeExistingSpecies(input.existingSpecies);
+  const pairEvidenceCeilings = input.candidateSpecies
+    ? normalized
+      .filter(item => item.species.id !== input.candidateSpecies?.id)
+      .map(item => getCompatibilityPairEvidenceCeiling(item.species.id, input.candidateSpecies!.id))
+      .filter((ceiling): ceiling is NonNullable<typeof ceiling> => Boolean(ceiling))
+    : [];
+  const pairEvidenceBoundaryRules = pairEvidenceCeilings.map(ceiling => asRule(
+    ceiling.code,
+    ceiling.decisionImpact === 'identity_critical' ? '配对身份仍有关键边界' : '配对直接证据存在边界',
+    ceiling.note,
+    'medium',
+    {
+      basis: 'pair_rule',
+      confidence: 'high',
+      reviewStatus: 'reviewed',
+      affectedSpeciesIds: [...ceiling.speciesIds],
+      citations: [],
+    },
+  ));
+  const pairEvidenceBoundaries = pairEvidenceCeilings.map(ceiling => ({
+    status: ceiling.decisionImpact === 'identity_critical' ? 'insufficient_data' as const : 'caution' as const,
+    code: ceiling.decisionImpact === 'identity_critical' ? 'pair_identity_evidence_ceiling' : 'pair_risk_evidence_ceiling',
+    evidenceIds: ceiling.sourceIds,
+  }));
+  const legacyWithPairEvidenceBoundaries: TankCompatibilityResult = {
+    ...legacy,
+    warningRules: dedupeRules([
+      ...legacy.warningRules,
+      ...pairEvidenceBoundaryRules.filter((_, index) => pairEvidenceCeilings[index]?.decisionImpact === 'risk_management'),
+    ]),
+    missingData: dedupeRules([
+      ...legacy.missingData,
+      ...pairEvidenceBoundaryRules.filter((_, index) => pairEvidenceCeilings[index]?.decisionImpact === 'identity_critical'),
+    ]),
+  };
   const pairStatuses = normalized
     .map(item => item.species)
     .filter(species => species.id !== input.candidateSpecies?.id)
@@ -882,13 +918,14 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
       return batch ? [[item.species.id, { lifeStage: batch.lifeStage, reproductiveState: batch.reproductiveState }]] : [];
     })),
     explicitPairStatus,
+    pairEvidenceBoundaries,
     catalogVersion: LOCAL_CATALOG_VERSION,
   };
   const domainDecision = evaluateCompatibility(domainInput);
   return applyCanonicalCompatibilityDecision({
-    ...legacy,
+    ...legacyWithPairEvidenceBoundaries,
     metadata: {
-      ...legacy.metadata,
+      ...legacyWithPairEvidenceBoundaries.metadata,
       intent: domainInput.intent,
       ruleVersion: domainDecision.ruleVersion,
       catalogVersion: domainDecision.catalogVersion,

@@ -21,9 +21,12 @@ assert.equal(profile?.requiredFacts.includes('ph'), false, 'Wave24 must not fake
 const coverage = buildCompatibilityCoreFieldCoverage().rows.find(row => row.speciesId === 'sp_0185');
 assert.ok(coverage);
 assert.equal(coverage?.authoritativeFieldCount, 7);
-assert.equal(coverage?.actionableGapCount, 1);
+assert.equal(coverage?.actionableGapCount, 0);
+assert.equal(coverage?.terminalGapCount, 1);
 assert.equal(coverage?.genericOnboardingReady, false);
 assert.deepEqual(coverage?.fields.ph.status, 'reviewed_unknown');
+assert.equal(coverage?.fields.ph.disposition, 'terminal_hold');
+assert.equal(coverage?.fields.ph.reasonCode, 'species_ph_husbandry_range_not_established');
 assert.deepEqual(coverage?.fields.predation.status, 'reviewed_supported');
 assert.equal(compatibilityPredationWave24AuthorityPatch.promotedFieldCount, 1);
 assert.equal(compatibilityPredationWave24AuthorityPatch.writesProductionAuthority, false);
@@ -79,4 +82,4 @@ for (const prey of [smallFish, mediumFish]) {
 const sameSpecies = evaluateCompatibility({ intent: 'record_existing', existingSpecies: [predator], candidateSpecies: { ...predator } });
 assert.equal(sameSpecies.ruleCodes.includes('predation_scope_uncertain'), false, 'generic fish-prey evidence must not invent conspecific predation');
 
-console.log('Compatibility predation wave24 PASS: direct fish-prey evidence is represented without guessing prey size; runtime emits caution, not a blanket hard block, and Pomacanthus remains 7/8 because pH range is still unresolved.');
+console.log('Compatibility predation wave24 PASS: direct fish-prey evidence is represented without guessing prey size; runtime emits caution, not a blanket hard block, and Pomacanthus remains 7/8 with the unresolved pH range held at an explicit evidence ceiling.');

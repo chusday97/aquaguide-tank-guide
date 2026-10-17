@@ -9,7 +9,7 @@ Tank fixture: 120 × 50 × 50 cm, Freshwater, 25°C.
 | V4-SHADOW-3SP-COMPATIBLE | 红莲灯×8 + 喷火灯×8 + 樱桃灯×6 | compatible / reviewed | compatibility_clear | accepted → caution | compatible | PASS |
 | V4-SHADOW-3SP-CAUTION | 红莲灯×8 + 喷火灯×8 + 小精灵×1 | caution / reviewed | predation_vulnerability_context | accepted → not_recommended | caution | PASS |
 | V4-SHADOW-3SP-BLOCKED | 珍珠麒麟×1 + 变色鱼 (喷火麒麟)×1 + 荷兰凤凰×1 | not_recommended / reviewed | territorial_pressure_context, temperature_range_conflict, tank_temperature_conflict | rejected → compatible | not_recommended | PASS |
-| V4-SHADOW-3SP-INSUFFICIENT | 红莲灯×8 + 喷火灯×8 + 蓝眼灯×1 | insufficient_data / unknown | species_public_evidence_insufficient, water_type_unknown, candidate_water_type_missing | skipped | insufficient_data | PASS |
+| V4-SHADOW-3SP-INSUFFICIENT | 红莲灯×8 + 喷火灯×8 + 蓝眼灯×1 | insufficient_data / partial | species_evidence_ceiling, water_type_unknown, candidate_water_type_missing | skipped | insufficient_data | PASS |
 
 ## Summary
 

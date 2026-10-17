@@ -1270,8 +1270,10 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       return getReviewedCompatibilityProfileForFish(channa) == null
         && result.status === 'not_recommended'
         && result.metadata.domainRuleCodes.includes('tank_temperature_conflict')
+        && result.metadata.domainRuleCodes.includes('species_evidence_ceiling')
         && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
-        && result.metadata.decisionReadiness === 'unknown';
+        && !result.metadata.domainRuleCodes.some(code => /territorial|predation|fin_nipping|breeding/.test(code))
+        && result.metadata.decisionReadiness === 'partial';
     },
   },
   {

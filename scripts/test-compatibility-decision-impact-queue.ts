@@ -47,21 +47,35 @@ const fastLane = eligible.filter((item: { affectedUnknownPairs: number; gapInsta
   && item.gapInstances === 1
   && item.nearReadyCatalogObjects > 0
 ));
-assert.ok(fastLane.length > 0, 'current decision-impact audit must surface at least one high-impact near-ready single-gap taxon when such work exists');
-assert.deepEqual(
-  eligible.slice(0, fastLane.length).map((item: { researchKey: string }) => item.researchKey),
-  fastLane.map((item: { researchKey: string }) => item.researchKey),
-  'highest-impact near-ready single-gap taxa must lead the completion-eligible queue dynamically',
-);
+const hasNearReadySingleGapWork = eligible.some((item: { affectedUnknownPairs: number; gapInstances: number; nearReadyCatalogObjects: number }) => (
+  item.affectedUnknownPairs > 0
+  && item.gapInstances === 1
+  && item.nearReadyCatalogObjects > 0
+));
+if (hasNearReadySingleGapWork) {
+  assert.ok(fastLane.length > 0, 'current decision-impact audit must surface high-impact near-ready single-gap taxa when such work exists');
+  assert.deepEqual(
+    eligible.slice(0, fastLane.length).map((item: { researchKey: string }) => item.researchKey),
+    fastLane.map((item: { researchKey: string }) => item.researchKey),
+    'highest-impact near-ready single-gap taxa must lead the completion-eligible queue dynamically',
+  );
+} else {
+  assert.equal(fastLane.length, 0, 'Fast Lane must be empty when there is no actionable near-ready single-gap research');
+}
 for (const item of fastLane) {
   assert.equal(item.impactPerGap, item.affectedUnknownPairs, 'single-gap Fast Lane impact-per-gap must track the current dynamic pair impact');
 }
 
-const hemigrammusRodwayi = blocked.find((item: { researchKey: string }) => item.researchKey === 'Hemigrammus rodwayi');
-assert.ok(hemigrammusRodwayi, 'Hemigrammus rodwayi must remain outside the completion queue while reviewed social/territorial/predation ceilings are terminally held');
-assert.deepEqual(hemigrammusRodwayi.combinedGapFields, ['water']);
-assert.equal(hemigrammusRodwayi.terminalGapInstances, 3);
-assert.ok(hemigrammusRodwayi.affectedUnknownPairs > 0, 'terminal-blocked work should retain observable UNKNOWN-pair impact without freezing a stale pair count');
+const hemigrammusRodwayiRow = rows.get('sp_0362');
+assert.ok(hemigrammusRodwayiRow, 'Hemigrammus rodwayi coverage row must remain observable');
+assert.equal(hemigrammusRodwayiRow.actionableGapCount, 0, 'terminal evidence ceilings must not be re-queued as ordinary research');
+assert.equal(hemigrammusRodwayiRow.terminalGapCount, 3);
+assert.deepEqual(
+  ['social_behavior', 'territoriality', 'predation'].filter(field => hemigrammusRodwayiRow.fields[field]?.disposition === 'terminal_hold'),
+  ['social_behavior', 'territoriality', 'predation'],
+);
+assert.equal(plan.find(item => item.researchKey === 'Hemigrammus rodwayi'), undefined, 'terminal-only Hemigrammus rodwayi work must stay out of the actionable taxon research plan');
+assert.equal(blocked.find((item: { researchKey: string }) => item.researchKey === 'Hemigrammus rodwayi'), undefined, 'terminal-only work is represented by coverage terminal holds, not a repeated research job');
 
 assert.equal(audit.fullyInformedUnknownPairs, 0, 'fully informed compatibility pairs must never collapse to UNKNOWN');
 

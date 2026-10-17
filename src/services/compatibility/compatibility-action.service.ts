@@ -533,11 +533,19 @@ const actionSourceRules = (decision: CompatibilityDecision) => {
   return prioritizeDistinctCompatibilityRules(decision.passedRules).slice(0, 2);
 };
 
-const criticalInformationSourceCodes = (decision: CompatibilityDecision): string[] => {
-  if (decision.status !== 'insufficient_data') return [];
+const domainAuthoritySourceCodes = (decision: CompatibilityDecision): string[] => {
   const domainCodes = decision.metadata.domainRuleCodes || [];
+  if (decision.status === 'caution') {
+    return domainCodes.filter(code => (
+      code === 'species_evidence_ceiling'
+      || code === 'pair_risk_evidence_ceiling'
+      || code.startsWith('evidence_ceiling_')
+    )).slice(0, 2);
+  }
+  if (decision.status !== 'insufficient_data') return [];
   const identityCodes = domainCodes.filter(code => (
     code === 'species_identity_unresolved'
+    || code === 'pair_identity_evidence_ceiling'
     || (code.startsWith('identity_') && code.endsWith('_unresolved'))
   ));
   const publicEvidenceCodes = domainCodes.filter(code => (
@@ -580,11 +588,11 @@ export const buildBeginnerCompatibilityAction = (
     ? buildCurrentTankCompatibilityAction(decision, plannedAction)
     : plannedAction;
   const sourceRules = actionSourceRules(decision);
-  const criticalSourceCodes = criticalInformationSourceCodes(decision);
-  const sourceRuleCodes = Array.from(new Set([...criticalSourceCodes, ...sourceRules.map(rule => rule.code)])).slice(0, 2);
+  const domainSourceCodes = domainAuthoritySourceCodes(decision);
+  const sourceRuleCodes = Array.from(new Set([...domainSourceCodes, ...sourceRules.map(rule => rule.code)])).slice(0, 2);
   const ruleEvidenceIds = sourceRules.flatMap(rule => (rule.citations || []).map(source => source.id));
   const evidenceIds = Array.from(new Set([
-    ...(criticalSourceCodes.length > 0 ? (decision.evidenceIds || []) : []),
+    ...(domainSourceCodes.length > 0 ? (decision.evidenceIds || []) : []),
     ...ruleEvidenceIds,
   ]));
   return {

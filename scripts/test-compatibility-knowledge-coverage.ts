@@ -46,8 +46,8 @@ assert.equal(
   Object.values(report.launch_pair_status_counts).reduce((sum: number, value: unknown) => sum + Number(value), 0),
   report.launch_pair_count,
 );
-assert.equal(report.launch_pair_status_counts.insufficient_data, queue.pair_gaps.length);
-assert.equal(report.launch_pair_status_counts.insufficient_data, report.priority_pair_gap_count);
+assert.equal(report.priority_pair_gap_count, queue.pair_gaps.length, 'pair-gap queue includes terminal reviewed pair ceilings even when the user verdict is caution');
+assert.equal(report.launch_pair_status_counts.insufficient_data, queue.pair_gaps.filter(item => item.status === 'insufficient_data').length);
 assert.equal(report.evidence_research_pair_gap_count, 0, 'launch pair insufficiency must not have unexplained evidence-research roots');
 
 const exhaustiveInsufficientKeys = new Set<string>();
@@ -60,7 +60,9 @@ for (let leftIndex = 0; leftIndex < launchFish.length; leftIndex += 1) {
     }
   }
 }
-const queuedInsufficientKeys = new Set(queue.pair_gaps.map(item => [item.species_a_id, item.species_b_id].sort().join('::')));
+const queuedInsufficientKeys = new Set(queue.pair_gaps
+  .filter(item => item.status === 'insufficient_data')
+  .map(item => [item.species_a_id, item.species_b_id].sort().join('::')));
 assert.deepEqual(queuedInsufficientKeys, exhaustiveInsufficientKeys, 'gap queue must account for every exhaustive launch-cohort insufficient pair');
 
 for (const value of Object.values(report.field_coverage) as Array<{ applicable: number; reviewed_supported: number; reviewed_unknown: number }>) {
@@ -135,7 +137,7 @@ for (const item of queue.pair_gaps) {
   const right = fishById.get(item.species_b_id);
   assert.ok(left && right);
   const result = evaluateSpeciesCombination([left, right]);
-  assert.equal(result.status, 'insufficient_data');
+  assert.equal(result.status, item.status, 'pair-gap runtime status must match the current reviewed boundary impact');
   assert.ok(Array.isArray(item.boundary_codes));
   assert.ok(['boundary_blocked', 'evidence_research', 'evidence_ceiling'].includes(item.resolution_mode));
   assert.match(item.priority_basis, /launch_cohort/);
@@ -150,31 +152,31 @@ assert.equal(
 );
 
 
-for (const [leftId, rightId, code] of [
-  ['sp_0002', 'sp_0224', 'prey_trade_identity_not_resolved'],
-  ['sp_0224', 'sp_0428', 'gastropod_predation_not_established'],
-  ['sp_0224', 'sp_0451', 'large_fish_outside_supported_prey_window'],
+for (const [leftId, rightId, code, decisionImpact, status] of [
+  ['sp_0002', 'sp_0224', 'prey_trade_identity_not_resolved', 'identity_critical', 'insufficient_data'],
+  ['sp_0224', 'sp_0428', 'gastropod_predation_not_established', 'identity_critical', 'insufficient_data'],
+  ['sp_0224', 'sp_0451', 'large_fish_outside_supported_prey_window', 'risk_management', 'caution'],
 ] as const) {
   const ceiling = getCompatibilityPairEvidenceCeiling(leftId, rightId);
   assert.ok(ceiling, 'missing persisted pair evidence ceiling for ' + [leftId, rightId].sort().join('::'));
   assert.equal(ceiling.code, code);
+  assert.equal(ceiling.decisionImpact, decisionImpact);
   assert.ok(ceiling.sourceIds.length > 0);
   assert.ok(ceiling.note.length > 30);
   const left = fishData.find(item => item.id === leftId);
   const right = fishData.find(item => item.id === rightId);
   assert.ok(left && right);
-  assert.notEqual(
-    evaluateSpeciesCombination([left, right]).status,
-    'insufficient_data',
-    'persisted pair ceilings may stay as policy guards even when newer reviewed species-level evidence supports a conservative recordable verdict',
-  );
+  assert.equal(evaluateSpeciesCombination([left, right]).status, status);
 }
-assert.equal(report.evidence_ceiling_pair_gap_count, 0);
+assert.equal(report.evidence_ceiling_pair_gap_count, 3);
 assert.equal(report.boundary_blocked_pair_gap_count, 0);
 assert.equal(report.research_actionable_pair_count, 0);
-assert.equal(report.terminal_pair_hold_count, 0);
+assert.equal(report.terminal_pair_hold_count, 3);
 assert.deepEqual(queue.actionable_pair_queue, []);
-assert.deepEqual(queue.terminal_pair_holds, []);
+assert.deepEqual(
+  queue.terminal_pair_holds.map(item => [item.species_a_id, item.species_b_id].sort().join('::')).sort(),
+  ['sp_0002::sp_0224', 'sp_0224::sp_0428', 'sp_0224::sp_0451'],
+);
 
 assert.equal(report.next_wave_species_count, queue.next_wave_species_queue.length);
 assert.ok(queue.next_wave_species_queue.length <= 25, 'next-wave promotion queue may be empty when all current promotion candidates are terminally classified');

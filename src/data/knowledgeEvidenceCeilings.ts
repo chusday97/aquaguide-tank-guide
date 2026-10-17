@@ -14,6 +14,7 @@ export type KnowledgeEvidenceCeilingCode =
   | 'species_space_minimum_conflicted'
   | 'species_space_minimum_not_established'
   | 'species_temperature_husbandry_not_established'
+  | 'species_ph_husbandry_range_not_established'
   | 'species_territoriality_not_established'
   | 'species_fish_predation_not_established';
 
@@ -188,6 +189,21 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       ],
       note: 'Targeted exact-species review confirms strong aggression, piscivory and juvenile intraspecific injury/cannibalism in Salminus brasiliensis, but the reviewed sources do not directly establish stable territory defense or explicit non-territoriality. Aggression is already represented by predation/social risk and must not be silently converted into a territorial trait.',
       reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+  ],
+  sp_0185: [
+    {
+      speciesId: 'sp_0185',
+      field: 'environment',
+      code: 'species_ph_husbandry_range_not_established',
+      sourceIds: [
+        'batch21-fishbase-pomacanthus-annularis',
+        'research-wave21-fishipedia-pomacanthus-annularis',
+        'adw-pomacanthus-annularis-predation-wave24',
+      ],
+      note: 'Repeated exact-taxon review across FishBase, Fishipedia and Animal Diversity Web did not establish a tolerated aquarium pH range for Pomacanthus annularis. ADW supplies only an optimum point of pH 8; Wave26 and Wave28 explicitly rejected promoting that point as {8,8}. Keep pH terminal-unknown until a direct min-max husbandry range is available.',
+      reviewedAt: '2026-10-17',
       researchDisposition: 'terminal_unknown_hold',
     },
   ],

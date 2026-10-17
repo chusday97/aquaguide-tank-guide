@@ -142,6 +142,9 @@ const boundaryResolution = (codes: GapBoundaryCode[]) => {
   if (codes.includes('species_temperature_husbandry_not_established')) {
     return 'evidence_ceiling';
   }
+  if (codes.includes('species_ph_husbandry_range_not_established')) {
+    return 'evidence_ceiling';
+  }
   if (codes.includes('species_fish_predation_not_established')) {
     return 'evidence_ceiling';
   }
@@ -253,8 +256,9 @@ for (let leftIndex = 0; leftIndex < launchFish.length; leftIndex += 1) {
     const left = launchFish[leftIndex];
     const right = launchFish[rightIndex];
     const result = evaluateSpeciesCombination([left, right]);
+    const reviewedPairEvidenceCeiling = getCompatibilityPairEvidenceCeiling(left.id, right.id);
     launchPairStatusCounts[result.status] = (launchPairStatusCounts[result.status] || 0) + 1;
-    if (result.status !== 'insufficient_data') continue;
+    if (result.status !== 'insufficient_data' && !reviewedPairEvidenceCeiling) continue;
     const leftRow = rowById.get(left.id);
     const rightRow = rowById.get(right.id);
     const pairKey = [left.id, right.id].sort().join('::');
@@ -276,7 +280,9 @@ for (let leftIndex = 0; leftIndex < launchFish.length; leftIndex += 1) {
       missing_codes: missingCodes,
       warning_codes: warningCodes,
       score,
-      priority_basis: 'launch_cohort pair + current insufficient_data + evidence gap',
+      priority_basis: reviewedPairEvidenceCeiling
+        ? 'launch_cohort pair + reviewed terminal pair evidence boundary'
+        : 'launch_cohort pair + current insufficient_data + evidence gap',
     });
   }
 }

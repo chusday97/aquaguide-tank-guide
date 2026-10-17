@@ -97,6 +97,11 @@ export type DomainCompatibilityInput = {
   candidateContext?: CompatibilityIndividualContext;
   individualContexts?: Record<string, CompatibilityIndividualContext>;
   explicitPairStatus?: CompatibilityDecisionStatus;
+  pairEvidenceBoundaries?: Array<{
+    status: Extract<CompatibilityDecisionStatus, 'caution' | 'insufficient_data'>;
+    code: string;
+    evidenceIds?: string[];
+  }>;
   catalogVersion?: string;
 };
 
@@ -112,7 +117,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v12-evidence-ceiling-policy';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v13-pair-evidence-boundary';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -291,6 +296,7 @@ export const evaluateCompatibility = ({
   candidateContext,
   individualContexts,
   explicitPairStatus,
+  pairEvidenceBoundaries = [],
   catalogVersion = 'unknown',
 }: DomainCompatibilityInput): CompatibilityDecision => {
   const ruleCodes: string[] = [];
@@ -565,6 +571,9 @@ export const evaluateCompatibility = ({
   }
 
   if (explicitPairStatus) raise(explicitPairStatus, 'reviewed_pair_rule');
+  for (const boundary of pairEvidenceBoundaries) {
+    raise(boundary.status, boundary.code);
+  }
 
   const observedStatus = observedStatusOf(tank?.observedSignals);
   if (observedStatus === 'emergency') raise('not_recommended', 'observed_emergency');
@@ -596,8 +605,9 @@ export const evaluateCompatibility = ({
   // explicit evidence boundary; identity, water, temperature and adult-size
   // ceilings remain unknown. Hard safety blocks always outrank either state.
   const finalStatus: CompatibilityDecisionStatus = status;
-  const hasDecisionCriticalResearchGap = ruleCodes.some(code => code === 'species_review_pending' || code === 'species_evidence_ceiling' || code.startsWith('review_pending_') || code.startsWith('evidence_ceiling_'));
-  const decisionReadiness: CompatibilityDecisionReadiness = hasIdentityUnresolved || hasUnreviewedHardEvidenceCeiling || hasLegacyUnreviewedSpecies
+  const hasHardPairEvidenceBoundary = pairEvidenceBoundaries.some(boundary => boundary.status === 'insufficient_data');
+  const hasDecisionCriticalResearchGap = ruleCodes.some(code => code === 'species_review_pending' || code === 'species_evidence_ceiling' || code.startsWith('review_pending_') || code.startsWith('evidence_ceiling_') || code.startsWith('pair_'));
+  const decisionReadiness: CompatibilityDecisionReadiness = hasIdentityUnresolved || hasUnreviewedHardEvidenceCeiling || hasLegacyUnreviewedSpecies || hasHardPairEvidenceBoundary
     ? 'unknown'
     : hasDecisionCriticalResearchGap || !allSpeciesReviewed || !allRequiredTraitsReady || isInsufficientData(finalStatus)
       ? 'partial'
@@ -615,6 +625,7 @@ export const evaluateCompatibility = ({
     evidenceIds: Array.from(new Set([
       ...(candidateSpecies?.evidenceIds || []),
       ...existingSpecies.flatMap(species => species.evidenceIds || []),
+      ...pairEvidenceBoundaries.flatMap(boundary => boundary.evidenceIds || []),
     ])),
   };
 };

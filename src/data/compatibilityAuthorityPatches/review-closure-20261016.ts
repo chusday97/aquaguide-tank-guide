@@ -12,14 +12,14 @@ export const compatibilityReviewClosureFieldReviews: CatalogFieldReview[] = [
   {
     speciesId: 'sp_0185',
     field: 'ph',
-    proposedValue: { min: 8, max: 8 },
+    proposedValue: null,
     status: 'reviewed',
-    resolution: 'supported',
+    resolution: 'unknown',
     confidence: 'high',
     citationIds: [adw],
     conflictNotes: [
       'The verified exact-taxon Animal Diversity Web account states that aquarium-kept Pomacanthus annularis has an optimal pH of 8.',
-      'The source gives a point optimum, not a husbandry range. Authority stores pH 8 as the reviewed point value and does not invent a wider range.',
+      'The source gives a point optimum, not a tolerated husbandry range. Compatibility requires a min-max range for pH overlap, so this observation is retained as reviewed_unknown and is not promoted to runtime pH authority.',
       'Verified cached source snapshot SHA-256: 02c71aba4a34e748d9904d12bcabd9264d1743b8898f10bc6ee4b0cbb9482606.',
     ],
     reviewedAt,
@@ -28,13 +28,7 @@ export const compatibilityReviewClosureFieldReviews: CatalogFieldReview[] = [
 
 export const compatibilityReviewClosureVerifiedSourceIds = [adw] as const;
 
-export const compatibilityReviewClosureProfilePatches: readonly CompatibilityProfileAuthorityPatch[] = [
-  {
-    speciesId: 'sp_0185',
-    addCitationIds: [adw],
-    addRequiredFacts: ['ph'],
-  },
-] as const;
+export const compatibilityReviewClosureProfilePatches: readonly CompatibilityProfileAuthorityPatch[] = [];
 
 export const compatibilityReviewClosureAuthorityPatch = {
   patchId: 'review-closure-20261016',
@@ -43,5 +37,5 @@ export const compatibilityReviewClosureAuthorityPatch = {
   runtimeScope: 'source_controlled_only',
   writesProductionAuthority: false,
   exactTaxonOnly: true,
-  promotedFieldCount: 1,
+  promotedFieldCount: 0,
 } as const;
