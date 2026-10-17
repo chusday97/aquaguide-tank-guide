@@ -26,7 +26,7 @@ assert.equal(
   Object.keys(catalogIdentityCorrectionBaseSpeciesIds).length,
   'every reviewed identity correction must be represented by the canonical identity registry',
 );
-assert.equal(Object.keys(catalogCanonicalIdentities).length, 13);
+assert.equal(Object.keys(catalogCanonicalIdentities).length, 15);
 
 for (const identity of Object.values(catalogCanonicalIdentities)) {
   assert.equal(identity.identityStatus, 'reviewed');
@@ -75,6 +75,11 @@ assert.equal(getCatalogCanonicalIdentity('sp_0242')?.relationshipType, 'color_mo
 assert.equal(getCatalogCanonicalIdentity('sp_0242')?.canonicalSpeciesId, 'sp_0116');
 assert.equal(getCatalogCanonicalIdentity('sp_0408')?.relationshipType, 'trade_strain');
 assert.equal(getCatalogCanonicalIdentity('sp_0408')?.canonicalSpeciesId, 'sp_0116');
+
+assert.equal(getCatalogCanonicalIdentity('sp_0257')?.relationshipType, 'color_morph');
+assert.equal(getCatalogCanonicalIdentity('sp_0257')?.canonicalSpeciesId, 'sp_0121');
+assert.equal(getCatalogCanonicalIdentity('sp_0284')?.relationshipType, 'color_morph');
+assert.equal(getCatalogCanonicalIdentity('sp_0284')?.canonicalSpeciesId, 'sp_0116');
 
 const unresolved = fishData.find(item => item.id === 'sp_0241');
 assert.ok(unresolved);
@@ -161,7 +166,7 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 84);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 86);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);

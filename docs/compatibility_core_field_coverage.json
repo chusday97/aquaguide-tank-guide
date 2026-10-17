@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 84,
-  "coreFieldCompleteSpecies": 99,
+  "genericOnboardingReadySpecies": 86,
+  "coreFieldCompleteSpecies": 101,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 148,
-  "domainOrIdentityHeldSpecies": 277,
+  "runtimeReviewedProfileSpecies": 150,
+  "domainOrIdentityHeldSpecies": 275,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 155,
+      "reviewed_supported": 157,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 43,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 140,
+      "reviewed_supported": 142,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 134,
+      "reviewed_supported": 136,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 144,
+      "reviewed_supported": 146,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 132,
+      "reviewed_supported": 134,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 66,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 121,
+      "reviewed_supported": 123,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 87,
+      "reviewed_supported": 89,
       "reviewed_neutral_or_negative": 34,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 75,
-      "reviewed_neutral_or_negative": 31,
+      "reviewed_supported": 76,
+      "reviewed_neutral_or_negative": 32,
       "reviewed_unknown": 92,
       "needs_research": 0,
-      "missing_identity_or_domain": 277,
+      "missing_identity_or_domain": 275,
       "not_applicable": 11
     }
   },
@@ -21588,83 +21588,95 @@
       "name": "黄金斑马异型 (L134改良)",
       "scientificName": "Peckoltia compta var. Gold",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "batch09-fishbase-peckoltia-compta",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "batch09-fishbase-peckoltia-compta",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "batch09-fishbase-peckoltia-compta",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "batch09-fishbase-peckoltia-compta",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-peckoltia-compta-gold"
+            "suedamerikafans-peckoltia-compta-gold-phase2-02",
+            "aquaristatlas-peckoltia-compta"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -23896,83 +23908,114 @@
       "name": "白金龙鱼",
       "scientificName": "Scleropages formosus var. Silver Platinum",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "myfish-scleropages-formosus-territoriality",
+            "batch19-fishbase-scleropages-formosus-green"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-scleropages-formosus-silver-platinum"
+            "fishcollection-scleropages-formosus-platinum-phase2-02",
+            "ijms-scleropages-formosus-color-variants-phase2-01",
+            "batch19-fishbase-scleropages-formosus-green",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

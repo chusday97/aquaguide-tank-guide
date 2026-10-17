@@ -247,7 +247,30 @@ assert.equal(superRedReview?.resolution, 'supported');
 assert.equal(getCatalogIdentityBoundary('sp_0283'), undefined);
 assert.ok(getReviewedCompatibilityProfile('sp_0283'));
 
-for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0234','sp_0235','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
+const goldPeckoltiaCorrection = getCatalogFieldReviews('sp_0257').filter(review => review.field === 'identity').at(-1);
+assert.equal(goldPeckoltiaCorrection?.resolution, 'supported');
+assert.deepEqual(goldPeckoltiaCorrection?.proposedValue, {
+  scientificName: 'Peckoltia compta var. Gold',
+  baseSpeciesKey: 'Peckoltia compta',
+  variantKey: 'Gold',
+});
+assert.ok(goldPeckoltiaCorrection?.citationIds.includes('suedamerikafans-peckoltia-compta-gold-phase2-02'));
+assert.equal(getCatalogIdentityBoundary('sp_0257'), undefined, 'reviewed Peckoltia compta Gold evidence must supersede the historical variant hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0257'));
+
+const platinumArowanaCorrection = getCatalogFieldReviews('sp_0284').filter(review => review.field === 'identity').at(-1);
+assert.equal(platinumArowanaCorrection?.resolution, 'supported');
+assert.deepEqual(platinumArowanaCorrection?.proposedValue, {
+  scientificName: 'Scleropages formosus var. Silver Platinum',
+  baseSpeciesKey: 'Scleropages formosus',
+  variantKey: 'Platinum / Silver Platinum',
+});
+assert.ok(platinumArowanaCorrection?.citationIds.includes('fishcollection-scleropages-formosus-platinum-phase2-02'));
+assert.ok(platinumArowanaCorrection?.citationIds.includes('ijms-scleropages-formosus-color-variants-phase2-01'));
+assert.equal(getCatalogIdentityBoundary('sp_0284'), undefined, 'reviewed Platinum Arowana evidence must supersede the historical variant hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0284'));
+
+for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0234','sp_0235','sp_0247','sp_0248','sp_0256','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');

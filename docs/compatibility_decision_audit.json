@@ -6,26 +6,26 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 409,
   "fishDomainSpecies": 308,
-  "genericOnboardingReadySpecies": 84,
-  "genericReadyUniquePairs": 3486,
+  "genericOnboardingReadySpecies": 86,
+  "genericReadyUniquePairs": 3655,
   "fishPairs": 47278,
   "statuses": {
-    "compatible": 413,
-    "caution": 3604,
-    "not_recommended": 19119,
-    "insufficient_data": 24142
+    "compatible": 422,
+    "caution": 3757,
+    "not_recommended": 19213,
+    "insufficient_data": 23886
   },
-  "decisionCoveragePct": 48.94,
-  "unknownRatePct": 51.06,
+  "decisionCoveragePct": 49.48,
+  "unknownRatePct": 50.52,
   "systemGapPairs": 0,
   "systemGapPct": 0,
-  "fullyInformedPairs": 7542,
+  "fullyInformedPairs": 7789,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
-    "unresolved_identity": 18956,
-    "public_evidence_insufficient": 4952,
-    "missing_species_fact": 234,
+    "unresolved_identity": 18625,
+    "public_evidence_insufficient": 5024,
+    "missing_species_fact": 237,
     "system_gap": 0
   },
   "leverageQueues": {
@@ -44,7 +44,7 @@
     "terminalReasonCounts": [
       {
         "reason": "catalog_variant_identity_unresolved",
-        "speciesCount": 62
+        "speciesCount": 60
       },
       {
         "reason": "variant_identity_research_exhausted",
@@ -103,23 +103,23 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 47947
+      "count": 47427
     },
     {
       "code": "missing_ph",
-      "count": 36966
+      "count": 36587
     },
     {
       "code": "missing_hardness",
-      "count": 8180
+      "count": 7990
     },
     {
       "code": "candidate_water_type_missing",
-      "count": 669
+      "count": 666
     },
     {
       "code": "water_type_unknown",
-      "count": 243
+      "count": 246
     }
   ],
   "coreFieldBacklog": {
@@ -158,6 +158,6 @@
         "count": 0
       }
     ],
-    "domainOrIdentityHeldSpecies": 277
+    "domainOrIdentityHeldSpecies": 275
   }
 }
