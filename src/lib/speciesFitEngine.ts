@@ -1,7 +1,6 @@
 import type { Aquarium, Fish } from '../types';
 import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
-import { estimateWaterProfile } from './waterProfileEstimate';
 import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
@@ -328,20 +327,59 @@ export const evaluateSpeciesForAquarium = (
     ? { min: catalogProfile.phMin, max: catalogProfile.phMax }
     : null;
   const phRange = reviewedEnvironment?.phRange ?? catalogPhRange ?? parseRange(species.phLevel);
+  const currentPh = aquarium.ph !== undefined && aquarium.ph !== '' && Number.isFinite(Number(aquarium.ph))
+    ? Number(aquarium.ph)
+    : null;
   const identityText = identityTextOf(species);
   const phSensitive = Boolean(phRange && (phRange.max - phRange.min <= 1.5 || species.difficulty === 'Hard' || /水晶虾|苏虾|虾|短鲷|七彩|珊瑚|海葵|水母/i.test(identityText)));
-  if (phSensitive && species.phLevel && phRange) {
-    const waterProfile = estimateWaterProfile(aquarium);
+  if (phRange && currentPh != null) {
+    if (currentPh < phRange.min || currentPh > phRange.max) {
+      warnings.push({
+        type: 'ph_mismatch',
+        title: 'pH 超出适宜范围',
+        detail: `当前记录 pH ${currentPh}，已审核参考范围为 ${phRange.min}-${phRange.max}；先复测确认稳定值，不要按一次测量结果大幅调水。`,
+        severity: 'medium',
+      });
+      score -= 8;
+    } else {
+      matchedItems.push({ type: 'ph', title: 'pH 在适宜范围内', detail: `当前记录 pH ${currentPh}，已审核参考范围为 ${phRange.min}-${phRange.max}。` });
+      score += 5;
+    }
+  } else if (phSensitive && phRange) {
     confirmations.push({
       type: 'missing_ph',
-      title: '敏感物种建议实测水质',
-      detail: `环境线索仅显示“${waterProfile.tendency === 'acidic' ? '可能偏酸' : waterProfile.tendency === 'alkaline' ? '可能偏碱' : waterProfile.tendency === 'marine' ? '海水环境' : '倾向不明确'}”，不能代替 pH 实测；该物种参考范围为 ${phRange.min}-${phRange.max}。`,
+      title: '敏感物种建议实测 pH',
+      detail: `当前鱼缸尚未记录稳定 pH；该物种已审核参考范围为 ${phRange.min}-${phRange.max}。记录实测值后可用于适配复核。`,
       severity: 'low',
     });
     score -= 2;
   }
-  if (/虾|螺|珊瑚|海葵|水母|苏拉威西|水晶/i.test(identityText)) {
-    confirmations.push({ type: 'missing_hardness', title: '敏感物种建议实测硬度', detail: '该物种对硬度或矿物质更敏感；可用试纸或滴定测试确认，不要求在鱼缸资料中长期填写。', severity: 'low' });
+
+  const hardnessRange = reviewedEnvironment?.hardnessDgh;
+  const currentHardnessDgh = aquarium.hardnessDgh !== undefined && aquarium.hardnessDgh !== '' && Number.isFinite(Number(aquarium.hardnessDgh))
+    ? Number(aquarium.hardnessDgh)
+    : null;
+  const hardnessSensitive = /虾|螺|珊瑚|海葵|水母|苏拉威西|水晶/i.test(identityText);
+  if (hardnessRange && currentHardnessDgh != null) {
+    if (currentHardnessDgh < hardnessRange.min || currentHardnessDgh > hardnessRange.max) {
+      warnings.push({
+        type: 'hardness_mismatch',
+        title: 'GH 超出已审核范围',
+        detail: `当前记录 GH ${currentHardnessDgh} dGH，已审核参考范围为 ${hardnessRange.min}-${hardnessRange.max} dGH。`,
+        severity: 'medium',
+      });
+      score -= 6;
+    } else {
+      matchedItems.push({ type: 'hardness', title: 'GH 在已审核范围内', detail: `当前记录 GH ${currentHardnessDgh} dGH，参考范围为 ${hardnessRange.min}-${hardnessRange.max} dGH。` });
+      score += 4;
+    }
+  } else if (hardnessSensitive && currentHardnessDgh == null) {
+    confirmations.push({
+      type: 'missing_hardness',
+      title: '敏感物种建议实测 GH',
+      detail: '该物种对硬度或矿物质较敏感；可用滴定或可靠试剂实测 GH。记录后仅在存在已审核范围时参与适配复核，未填写不会单独阻断混养结论。',
+      severity: 'low',
+    });
     score -= 2;
   }
 

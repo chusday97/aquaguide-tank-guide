@@ -97,6 +97,8 @@ export interface Aquarium {
   dimensions?: { length: string; width: string; height: string };
   waterType?: 'Freshwater' | 'Saltwater';
   targetTemperature?: string;
+  ph?: string;
+  hardnessDgh?: string;
   substrate?: string;
   plants?: string[];
   hardscape?: string[];

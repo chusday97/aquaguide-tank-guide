@@ -83,6 +83,7 @@ export type DomainTankFact = {
   volumeLiters?: number | null;
   lengthCm?: number | null;
   targetTemperatureC?: number | null;
+  ph?: number | null;
   observedSignals?: ObservedCoexistenceSignals;
   stabilityContext?: TankStabilityContext;
 };
@@ -117,7 +118,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v13-pair-evidence-boundary';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v14-measured-water-parameters';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -506,6 +507,10 @@ export const evaluateCompatibility = ({
     );
     if (candidateTankTemperatureFit === null && tank.targetTemperatureC != null) raiseFactGap([candidateSpecies], 'temperature', 'temperature_range_missing');
     if (candidateTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
+    if (tank.ph != null && Number.isFinite(tank.ph)) {
+      const candidateTankPhFit = rangeContains(tank.ph, candidateSpecies.phMin, candidateSpecies.phMax);
+      if (candidateTankPhFit === false) raise('caution', 'tank_ph_conflict');
+    }
     if (candidateSpecies.minTankLiters != null && tank.volumeLiters != null && tank.volumeLiters < candidateSpecies.minTankLiters) {
       raise('caution', 'tank_volume_below_species_minimum');
     }
@@ -523,6 +528,10 @@ export const evaluateCompatibility = ({
       );
       if (existingTankTemperatureFit === null && tank.targetTemperatureC != null) raiseFactGap([existing], 'temperature', 'temperature_range_missing');
       if (existingTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
+      if (tank.ph != null && Number.isFinite(tank.ph)) {
+        const existingTankPhFit = rangeContains(tank.ph, existing.phMin, existing.phMax);
+        if (existingTankPhFit === false) raise('caution', 'tank_ph_conflict');
+      }
       if (existing.minTankLiters != null && tank.volumeLiters != null && tank.volumeLiters < existing.minTankLiters) {
         raise('caution', 'tank_volume_below_species_minimum');
       }

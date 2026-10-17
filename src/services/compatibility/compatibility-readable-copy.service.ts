@@ -100,6 +100,9 @@ const plainRuleText = (
   if (code === 'ph_range_edge_overlap') {
     return '它们能共同接受的水质范围很窄，长期维持的余量比较小。';
   }
+  if (code === 'tank_ph_conflict') {
+    return '你记录的 pH 不在至少一种生物的已审核长期适宜范围内，先复测确认稳定值。';
+  }
   if (code === 'tank_length_below_species_minimum' || code === 'tank_volume_below_species_minimum') {
     return '按成体需求看，当前鱼缸的活动空间偏紧。';
   }

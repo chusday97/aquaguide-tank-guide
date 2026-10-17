@@ -25,6 +25,8 @@ export const aquariumSchema = z.object({
   }).optional(),
   waterType: z.enum(['Freshwater', 'Saltwater']).optional(),
   targetTemperature: z.string().optional(),
+  ph: z.string().optional(),
+  hardnessDgh: z.string().optional(),
   substrate: z.string().optional(),
   plants: z.array(z.string()).optional(),
   hardscape: z.array(z.string()).optional(),

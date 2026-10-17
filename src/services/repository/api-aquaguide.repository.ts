@@ -37,6 +37,8 @@ type ApiAquarium = {
   widthCm?: number;
   heightCm?: number;
   targetTemperatureC?: number;
+  ph?: number | null;
+  hardnessDgh?: number | null;
   lastWaterChangeAt?: string;
   lastWaterStoredAt?: string;
   startedAt?: string;
@@ -114,6 +116,8 @@ const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
       : undefined,
     waterType: record.waterType,
     targetTemperature: record.targetTemperatureC == null ? undefined : String(record.targetTemperatureC),
+    ph: record.ph == null ? undefined : String(record.ph),
+    hardnessDgh: record.hardnessDgh == null ? undefined : String(record.hardnessDgh),
     substrate,
     plants,
     hardscape,
@@ -283,6 +287,8 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       widthCm: dimensions?.width ? Number(dimensions.width) : undefined,
       heightCm: dimensions?.height ? Number(dimensions.height) : undefined,
       targetTemperatureC: aquarium.targetTemperature ? Number(aquarium.targetTemperature) : undefined,
+      ph: aquarium.ph !== undefined && aquarium.ph !== '' ? Number(aquarium.ph) : null,
+      hardnessDgh: aquarium.hardnessDgh !== undefined && aquarium.hardnessDgh !== '' ? Number(aquarium.hardnessDgh) : null,
       lastWaterChangeAt: aquarium.lastWaterChangeDate,
       lastWaterStoredAt: aquarium.lastWaterStoredDate,
       startedAt: aquarium.startedAt,

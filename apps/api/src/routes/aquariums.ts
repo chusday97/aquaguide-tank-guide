@@ -114,7 +114,7 @@ export const readPublishedCatalogCompatibilityContext = async ({
 
   const { data: aquarium, error: aquariumError } = await client
     .from('aquariums')
-    .select('water_type,length_cm,width_cm,height_cm,target_temperature_c,aquarium_species(species_catalog_key,quantity,deleted_at)')
+    .select('water_type,length_cm,width_cm,height_cm,target_temperature_c,ph,hardness_dgh,aquarium_species(species_catalog_key,quantity,deleted_at)')
     .eq('id', aquariumId)
     .is('deleted_at', null)
     .maybeSingle();
@@ -153,6 +153,8 @@ export const readPublishedCatalogCompatibilityContext = async ({
       dimensions: { length: String(length), width: String(width), height: String(height) },
     } : {}),
     ...(aquarium.target_temperature_c != null ? { targetTemperature: String(aquarium.target_temperature_c) } : {}),
+    ...(aquarium.ph != null ? { ph: String(aquarium.ph) } : {}),
+    ...(aquarium.hardness_dgh != null ? { hardnessDgh: String(aquarium.hardness_dgh) } : {}),
   };
 
   const existingSpecies = existingRows.map((item: DbRow) => ({
@@ -229,7 +231,7 @@ export const readPublishedCatalogCombinationContext = async ({
 
   const { data: aquarium, error: aquariumError } = await client
     .from('aquariums')
-    .select('water_type,length_cm,width_cm,height_cm,target_temperature_c,aquarium_species(species_catalog_key,quantity,deleted_at)')
+    .select('water_type,length_cm,width_cm,height_cm,target_temperature_c,ph,hardness_dgh,aquarium_species(species_catalog_key,quantity,deleted_at)')
     .eq('id', aquariumId)
     .is('deleted_at', null)
     .maybeSingle();
@@ -267,6 +269,8 @@ export const readPublishedCatalogCombinationContext = async ({
       dimensions: { length: String(length), width: String(width), height: String(height) },
     } : {}),
     ...(aquarium.target_temperature_c != null ? { targetTemperature: String(aquarium.target_temperature_c) } : {}),
+    ...(aquarium.ph != null ? { ph: String(aquarium.ph) } : {}),
+    ...(aquarium.hardness_dgh != null ? { hardnessDgh: String(aquarium.hardness_dgh) } : {}),
   };
 
   const combined = new Map<string, {

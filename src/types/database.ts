@@ -330,6 +330,8 @@ export interface AquariumRecord extends SyncFields {
   widthCm?: number;
   heightCm?: number;
   targetTemperatureC?: number;
+  ph?: number | null;
+  hardnessDgh?: number | null;
   lastWaterChangeAt?: IsoDateTime;
   lastWaterStoredAt?: IsoDateTime;
 }

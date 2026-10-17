@@ -71,6 +71,7 @@ const BIOLOAD_CODES = new Set([
 const PH_CODES = new Set([
   'ph_range_conflict',
   'ph_range_edge_overlap',
+  'tank_ph_conflict',
 ]);
 
 const TERRITORIAL_CODES = new Set([
@@ -103,6 +104,7 @@ const RULE_PRIORITY: Record<string, number> = {
   minimum_group_not_met: 90,
   group_requirement_gap: 90,
   ph_range_conflict: 100,
+  tank_ph_conflict: 102,
   ph_range_edge_overlap: 105,
   tank_length_below_species_minimum: 110,
   tank_volume_below_species_minimum: 115,

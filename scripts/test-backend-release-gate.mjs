@@ -10,6 +10,8 @@ const gates = [
   ['Launch Environment Batch', 'npm', ['run', 'test:launch-environment-batch-authority']],
   ['Multi Water Type Authority', 'npm', ['run', 'test:multi-water-type-authority']],
   ['Species Fit Multi Water', 'npm', ['run', 'test:species-fit-multi-water']],
+  ['Aquarium Water Parameters', 'npm', ['run', 'test:aquarium-water-parameters']],
+  ['Aquarium Water Parameters Production Guard', 'npm', ['run', 'test:aquarium-water-parameters-production-guard']],
   ['Rhodeus Compatibility Authority', 'npm', ['run', 'test:rhodeus-compatibility-authority']],
   ['Secondary Environment Batch', 'npm', ['run', 'test:secondary-environment-batch-authority']],
   ['Species Knowledge Completion Matrix', 'node', ['--import', 'tsx', 'scripts/test-species-knowledge-completion-matrix.ts']],

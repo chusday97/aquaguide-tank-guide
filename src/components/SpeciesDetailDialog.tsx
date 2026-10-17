@@ -265,6 +265,8 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
   const tankLiters = getTankVolumeLiters(aquarium);
   const minLiters = getMinimumTankLiters(fish);
   const currentTemperature = aquarium?.targetTemperature ? Number(aquarium.targetTemperature) : null;
+  const currentPh = aquarium?.ph !== undefined && aquarium.ph !== '' && Number.isFinite(Number(aquarium.ph)) ? Number(aquarium.ph) : null;
+  const currentHardnessDgh = aquarium?.hardnessDgh !== undefined && aquarium.hardnessDgh !== '' && Number.isFinite(Number(aquarium.hardnessDgh)) ? Number(aquarium.hardnessDgh) : null;
   const taxonomy = getCareTaxonomyPath(fish);
   const isSaltwaterSpecies = taxonomy.waterType.includes('海水');
   const waterTypeMismatch = !!aquarium && ((aquarium.waterType === 'Saltwater') !== isSaltwaterSpecies);
@@ -306,10 +308,25 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
     {
       type: 'water_parameter',
       label: isEn ? "Water Parameters" : "水质参数",
-      current: phRange ? t('encyclopedia.phMatch') : (isEn ? 'Not recorded' : '未记录'),
-      requirement: phRange ? fish.phLevel : (isEn ? 'Review pending' : '待审核'),
-      status: 'info',
-      advice: phRange ? t('encyclopedia.phMatch') : t('encyclopedia.phWarning', { range: fish.phLevel, current: 'pH' }),
+      current: aquarium
+        ? [
+            currentPh != null ? `pH ${currentPh}` : (isEn ? 'pH not recorded' : 'pH 未记录'),
+            currentHardnessDgh != null ? `GH ${currentHardnessDgh} dGH` : null,
+          ].filter(Boolean).join(' · ')
+        : t('encyclopedia.noTankSelected'),
+      requirement: phRange ? `pH ${fish.phLevel}` : (isEn ? 'pH review pending' : 'pH 待审核'),
+      status: !aquarium || !phRange || currentPh == null
+        ? 'info'
+        : currentPh >= phRange.min && currentPh <= phRange.max ? 'ok' : 'warning',
+      advice: !aquarium
+        ? (isEn ? 'Select a tank to compare measured water parameters.' : '选择鱼缸后可对照实测水质参数。')
+        : !phRange
+          ? (isEn ? 'The species pH range is still under review.' : '该物种的 pH 适宜范围仍待审核。')
+          : currentPh == null
+            ? (isEn ? `Record a stable pH to compare with ${fish.phLevel}.` : `记录稳定 pH 后可与 ${fish.phLevel} 对照。`)
+            : currentPh >= phRange.min && currentPh <= phRange.max
+              ? (isEn ? 'Recorded pH is within the reviewed range.' : '已记录 pH 位于适宜范围内。')
+              : (isEn ? `Recorded pH is outside ${fish.phLevel}; re-test before making large adjustments.` : `已记录 pH 超出 ${fish.phLevel}；先复测确认稳定值，不要直接大幅调水。`),
     },
   ];
 
@@ -651,7 +668,7 @@ export function SpeciesDetailDialog({
   const getMetricSettingsPanel = (metric: FitDimension) => {
     if (metric.type === 'space') return 'size' as const;
     if (metric.type === 'filter' || metric.type === 'heater') return 'equipment' as const;
-    if (metric.type === 'temperature' || metric.type === 'water_type') return 'parameters' as const;
+    if (metric.type === 'temperature' || metric.type === 'water_type' || metric.type === 'water_parameter') return 'parameters' as const;
     return null;
   };
 

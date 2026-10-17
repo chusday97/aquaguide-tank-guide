@@ -15,6 +15,8 @@ export const aquariumCreateSchema = z.object({
   widthCm: z.number().positive().max(10000).optional(),
   heightCm: z.number().positive().max(10000).optional(),
   targetTemperatureC: z.number().min(-10).max(60).optional(),
+  ph: z.number().min(0).max(14).nullable().optional(),
+  hardnessDgh: z.number().min(0).max(100).nullable().optional(),
   lastWaterChangeAt: isoDateTimeSchema.optional(),
   lastWaterStoredAt: isoDateTimeSchema.optional(),
 });

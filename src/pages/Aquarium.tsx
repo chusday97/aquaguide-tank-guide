@@ -1188,6 +1188,7 @@ export default function AquariumManager() {
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
   const [isSavingStartedAt, setIsSavingStartedAt] = useState(false);
   const [settingsForm, setSettingsForm] = useState<Partial<Aquarium>>({});
+  const [isSettingsSaving, setIsSettingsSaving] = useState(false);
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | null>(null);
   const [isPlantListExpanded, setIsPlantListExpanded] = useState(false);
   const [isScapeListExpanded, setIsScapeListExpanded] = useState(false);
@@ -1670,6 +1671,60 @@ export default function AquariumManager() {
     setIsScapeListExpanded(panel === 'substrate');
     setActiveSettingsPanel(panel);
     setIsSettingsOpen(true);
+  };
+
+  const handleSaveAquariumSettings = async () => {
+    if (!activeAquarium || isSettingsSaving) return;
+    const phText = settingsForm.ph?.trim() || '';
+    const hardnessText = settingsForm.hardnessDgh?.trim() || '';
+    const phValue = phText === '' ? null : Number(phText);
+    const hardnessValue = hardnessText === '' ? null : Number(hardnessText);
+    if (phValue != null && (!Number.isFinite(phValue) || phValue < 0 || phValue > 14)) {
+      showToast(isEn ? 'pH must be between 0 and 14.' : 'pH 需要填写 0–14 之间的数值。', 'error');
+      return;
+    }
+    if (hardnessValue != null && (!Number.isFinite(hardnessValue) || hardnessValue < 0 || hardnessValue > 100)) {
+      showToast(isEn ? 'GH must be between 0 and 100 dGH.' : 'GH 需要填写 0–100 dGH 之间的数值。', 'error');
+      return;
+    }
+
+    const nextAquarium: Aquarium = {
+      ...activeAquarium,
+      ...settingsForm,
+      ph: phText || undefined,
+      hardnessDgh: hardnessText || undefined,
+    };
+    setIsSettingsSaving(true);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      const savedAquarium = await repository.saveAquarium(nextAquarium);
+      setAquariums(current => current.map(aquarium => aquarium.id === activeId ? savedAquarium : aquarium));
+      try {
+        await persistCareTimelineEvent({
+          aquariumId: activeAquarium.id,
+          eventType: 'settings_updated',
+          title: isEn ? 'Updated aquarium settings' : '更新鱼缸设置',
+          label: isEn ? 'Environment and equipment settings saved' : '已保存环境与设备配置',
+          payload: {
+            ph: phValue,
+            hardnessDgh: hardnessValue,
+          },
+          occurredAt: new Date().toISOString(),
+          sourceType: 'aquarium_settings',
+          sourceId: `${activeAquarium.id}:${Date.now()}`,
+          isInferred: false,
+        });
+      } catch {
+        showToast(isEn ? 'Settings were saved, but the care timeline could not be updated.' : '设置已保存，但养护时间线没有更新成功。', 'error');
+      }
+      markAquariumConfigured();
+      setIsSettingsOpen(false);
+      showToast(isEn ? 'Aquarium settings saved.' : '鱼缸设置已保存。');
+    } catch (error) {
+      showToast(isEn ? 'Aquarium settings could not be saved. Try again.' : '鱼缸设置没有保存成功，请重试。', 'error');
+    } finally {
+      setIsSettingsSaving(false);
+    }
   };
 
   const openSettingsPanel = (panel: NonNullable<typeof activeSettingsPanel>) => {
@@ -3851,7 +3906,12 @@ export default function AquariumManager() {
     {
       id: 'parameters',
       title: isEn ? 'Parameters' : '参数',
-      summary: `${settingsForm.waterType ? (settingsForm.waterType === 'Saltwater' ? (isEn ? 'Marine' : '海水') : (isEn ? 'Freshwater' : '淡水')) : (isEn ? 'Water type unknown' : '水体未记录')} · ${settingsForm.targetTemperature ? `${isEn ? 'Target ' : '目标 '}${settingsForm.targetTemperature}°C` : (isEn ? 'Target temperature unknown' : '目标温度未记录')}`,
+      summary: [
+        settingsForm.waterType ? (settingsForm.waterType === 'Saltwater' ? (isEn ? 'Marine' : '海水') : (isEn ? 'Freshwater' : '淡水')) : (isEn ? 'Water type unknown' : '水体未记录'),
+        settingsForm.targetTemperature ? `${isEn ? 'Target ' : '目标 '}${settingsForm.targetTemperature}°C` : (isEn ? 'Target temperature unknown' : '目标温度未记录'),
+        settingsForm.ph ? `pH ${settingsForm.ph}` : null,
+        settingsForm.hardnessDgh ? `GH ${settingsForm.hardnessDgh} dGH` : null,
+      ].filter(Boolean).join(' · '),
       configured: Boolean(settingsForm.waterType && settingsForm.targetTemperature),
     },
     {
@@ -3994,6 +4054,48 @@ export default function AquariumManager() {
               onChange={e => setSettingsForm({ ...settingsForm, targetTemperature: e.target.value })}
               className="h-10 rounded-[12px] bg-bg text-sm font-bold md:w-[220px]"
             />
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            <div className="grid gap-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <Label className="text-[11px] font-bold text-ink/55">{isEn ? 'Measured pH' : '实测 pH'}</Label>
+                <span className="text-[9px] font-bold text-ink/35">{isEn ? 'Optional' : '选填'}</span>
+              </div>
+              <Input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                max="14"
+                step="0.1"
+                value={settingsForm.ph || ''}
+                onChange={e => setSettingsForm({ ...settingsForm, ph: e.target.value })}
+                placeholder="7.0"
+                className="h-10 rounded-[12px] bg-bg text-sm font-bold"
+              />
+              <p className="text-[10px] font-medium leading-relaxed text-ink/42">
+                {isEn ? 'Use a stable measured value. Re-test before making large chemistry adjustments.' : '记录稳定实测值；若超出范围先复测，不要为了追数字频繁大幅调水。'}
+              </p>
+            </div>
+            <div className="grid gap-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <Label className="text-[11px] font-bold text-ink/55">{isEn ? 'GH / Hardness (dGH)' : 'GH / 硬度 (dGH)'}</Label>
+                <span className="text-[9px] font-bold text-ink/35">{isEn ? 'Optional' : '选填'}</span>
+              </div>
+              <Input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                max="100"
+                step="0.5"
+                value={settingsForm.hardnessDgh || ''}
+                onChange={e => setSettingsForm({ ...settingsForm, hardnessDgh: e.target.value })}
+                placeholder="6"
+                className="h-10 rounded-[12px] bg-bg text-sm font-bold"
+              />
+              <p className="text-[10px] font-medium leading-relaxed text-ink/42">
+                {isEn ? 'Used only when the species has a reviewed GH range; missing GH never creates an automatic hard block.' : '仅在物种有已审核 GH 范围时参与适配；未填写不会自动变成硬性阻断。'}
+              </p>
+            </div>
           </div>
         </ConfigSection>
       );
@@ -8202,23 +8304,13 @@ export default function AquariumManager() {
           </div>
           <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:px-6">
             <Button variant="outline" onClick={() => setIsSettingsOpen(false)} className="h-10 min-w-[112px] rounded-full text-sm font-bold">{isEn ? "Cancel" : "取消"}</Button>
-            <Button onClick={() => {
-              const updated = aquariums.map(a => a.id === activeId ? { ...a, ...settingsForm } : a);
-              saveAquariums(updated);
-              void persistCareTimelineEvent({
-                aquariumId: activeAquarium.id,
-                eventType: 'settings_updated',
-                title: isEn ? 'Updated aquarium settings' : '更新鱼缸设置',
-                label: isEn ? 'Environment and equipment settings saved' : '已保存环境与设备配置',
-                payload: {},
-                occurredAt: new Date().toISOString(),
-                sourceType: 'aquarium_settings',
-                sourceId: `${activeAquarium.id}:${Date.now()}`,
-                isInferred: false,
-              }).catch(error => showToast('设置时间线没有保存成功。', 'error'));
-              markAquariumConfigured();
-              setIsSettingsOpen(false);
-            }} className="h-10 min-w-[128px] rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90">{isEn ? 'Save Settings' : '保存设置'}</Button>
+            <Button
+              onClick={() => void handleSaveAquariumSettings()}
+              disabled={isSettingsSaving}
+              className="h-10 min-w-[128px] rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90"
+            >
+              {isSettingsSaving ? (isEn ? 'Saving…' : '保存中…') : (isEn ? 'Save Settings' : '保存设置')}
+            </Button>
           </DialogFooter>
         </AdaptiveTaskContent>
       </Dialog>
