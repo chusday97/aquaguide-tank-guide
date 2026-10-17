@@ -44,7 +44,7 @@
 
 - RC page components, global CSS and Interactive Atlas UI are `HISTORICAL_OR_EXCLUDED` unless a specific behavior is independently justified.
 - PR #140 and `codex/rc1-visual-convergence-v1` are `HISTORICAL_OR_EXCLUDED`.
-- `/3d-demo`, project-structure previews and old prototype files are experiments or evidence, not formal product delivery routes.
+- The former `/3d-demo`, project-structure preview, legacy Home and standalone AI assistant UI have been removed from `src/pages`; their history remains in Git/docs only and they are not product delivery routes.
 
 ## Update rule
 

@@ -45,7 +45,7 @@ aquaguide_frontend/
 | 养护收藏 | `/collection/care` | 收藏文章列表与详情 |
 | 生命纪念 | `/collection/memorial` | 离缸记录与复盘 |
 | 成就勋章 | `/collection/achievements` | 自动追溯进度与下一步 |
-| 3D 实验 | `/3d-demo` | 内部 3D 验证，不进入正式导航 |
+| 3D 运行能力 | `/aquarium` 内部 | 正式鱼缸 3D；旧独立 `ThreeDemo` 页面已归档删除，不存在 `/3d-demo` 路由 |
 
 ## 2. 领域模块
 

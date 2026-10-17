@@ -112,6 +112,7 @@ const gates = [
   ['Repository Boundary', 'npm', ['run', 'test:repository-boundary']],
   ['Aquarium Delete Repository Boundary', 'npm', ['run', 'test:aquarium-delete-repository-boundary']],
   ['Documentation Authority', 'npm', ['run', 'test:docs-authority']],
+  ['Experimental Surface Boundary', 'npm', ['run', 'test:experimental-surface-boundary']],
   ['Core User-State Parity Contract', 'npm', ['run', 'test:core-user-state-parity']],
   ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
   ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],

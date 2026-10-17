@@ -32,7 +32,7 @@
 | 产品验证与 Evaluation | 部分完成 | 已建立证据矩阵、核心产品假设和 AI 评测状态基线 | 结构化数据集、真实模型评测、5–8 名真人任务测试与真实行为数据 |
 | 中英文国际化 | 部分完成 | 浏览器首选、持久化语言设置、应用壳与本轮导航/体态词条、四张翻译表/RLS、内容 API 中文回退与登录语言偏好接口 | Antigravity 任务暂停；剩余固定词条、英文内容草稿、管理员审核和 100% 发布覆盖率未完成 |
 | 本地数据 | 部分完成 | 鱼缸创建/更新/删除、纪念、养护计划、Care Events、收藏、巡检与通用诊断历史已按 Repository mode 读写；cloud mode 不再由旧 LocalAppState 覆盖这些业务事实 | 图鉴筛选/推荐等纯 UI 偏好仍保持页面级本地状态；其它剩余用户业务状态继续按 migration boundary 审计 |
-| `/3d-demo` | 实验中 | 用户并行开发的 3D 动效/材质实验 | 不进正式导航；需独立验收后再决定合并 |
+| 旧独立实验页面 | 已归档 | `Home`、`ProjectStructurePreview`、`ThreeDemo`、独立 `AIAssistant` 与其 UI 适配层已从正式源码删除；Aquarium 内 3D 与受控 AI service 保留 | 新实验必须显式隔离，不得以正式路由或旧页面文件回流 |
 | 云同步 | 延后 | 已完成实体、RLS、迁移、冲突、备份和隐私方案评估 | 业务数据未迁移；需用户确认正式契约和 SQL |
 
 ## 当前正式路由
@@ -51,7 +51,7 @@
 - `/collection/achievements`
 - `/login`
 
-兼容路由：`/collection?tab=...`、`/wishlist`、`/care-favorites`。内部实验：`/3d-demo`。
+兼容路由：`/collection?tab=...`、`/wishlist`、`/care-favorites`。旧 `/3d-demo` 与 `/assistant` 均无正式路由，且对应旧页面已归档删除。
 
 ## 当前质量基线
 

@@ -323,6 +323,7 @@
     "test:species-knowledge-completion-matrix": "node --import tsx scripts/test-species-knowledge-completion-matrix.ts",
     "test:backend-release-gate": "node scripts/test-backend-release-gate.mjs",
     "test:docs-authority": "node scripts/test-documentation-authority.mjs",
+    "test:experimental-surface-boundary": "node scripts/test-experimental-surface-boundary.mjs",
     "test:compatibility-user-conclusion": "node --import tsx scripts/test-compatibility-user-conclusion.ts",
     "test:compatibility-fully-informed-matrix": "node --import tsx scripts/test-compatibility-fully-informed-matrix.ts",
     "generate:compatibility-decision-audit": "node --import tsx scripts/generate-compatibility-decision-audit.ts",

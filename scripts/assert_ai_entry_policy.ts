@@ -15,14 +15,17 @@ const sourceFiles = sourceRoots.flatMap(relativeRoot => {
 });
 
 const productSource = sourceFiles
-  .filter(file => !file.endsWith('/AIAssistant.tsx') && !file.endsWith('/ProjectStructurePreview.tsx'))
   .map(file => fs.readFileSync(file, 'utf8'))
   .join('\n');
 const appSource = fs.readFileSync(path.join(root, 'src/App.tsx'), 'utf8');
 
+assert.equal(fs.existsSync(path.join(root, 'src/pages/AIAssistant.tsx')), false, '独立 AI 助手旧页面不得重新出现。');
+assert.equal(fs.existsSync(path.join(root, 'src/modules/assistant/assistant.ui.tsx')), false, '独立 AI 助手 UI 适配层不得重新出现。');
+
 assert.equal(productSource.includes('generateRiskAudit'), false, '产品页面不得直接调用旧 risk_audit。');
 assert.equal(productSource.includes('generateRecommendationAssist'), false, '产品页面不得直接调用旧 recommendation_assist。');
 assert.equal(appSource.includes('AIAssistant'), false, '独立 AI 助手不得出现在应用路由。');
+assert.equal(appSource.includes('/assistant'), false, '独立 AI 助手路由不得重新出现。');
 assert.equal(productSource.includes('AI 建缸助手'), true, '鱼缸页必须保留 AI 建缸助手主入口。');
 assert.equal(productSource.includes('AI 建缸规划'), false, '用户界面不得继续显示 AI 建缸规划旧名称。');
 assert.equal(productSource.includes('让 AI 帮我解读'), false, '规则详情不得继续暴露通用 AI 解读入口。');

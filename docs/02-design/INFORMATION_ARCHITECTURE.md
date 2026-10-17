@@ -19,7 +19,6 @@ flowchart TD
   A --> I["拍照识别 /identify"]
   A --> T["设置 /settings"]
   A --> W["首次引导 /welcome"]
-  A -. 内部实验 .-> X["3D Demo /3d-demo"]
 ```
 
 产品包含四个正式核心模块；搜索、拍照识别、设置和首次引导是任务型辅助路由。数据统计、提醒中心不属于当前产品架构；养护计划作为“我的鱼缸”内的紧凑区块展示，不扩展为新的导航中心。
@@ -51,7 +50,6 @@ flowchart TD
 | `/collection/memorial` | 生命纪念 | 死亡记录 | 正式 |
 | `/collection/achievements` | 成就进度 | 现有数据的派生结果 | 正式 |
 | `/login` | 可选登录入口 | Supabase Auth | 辅助 |
-| `/3d-demo` | 3D 独立验证页 | 3D 场景与物种素材 | 内部实验，不进入正式导航与核心验收 |
 
 兼容路由：旧 `/collection?tab=...`、`/wishlist` 与 `/care-favorites` 重定向到对应独立地址。兼容路由不应再作为新入口使用。
 

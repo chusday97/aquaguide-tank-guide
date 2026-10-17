@@ -7,7 +7,7 @@
 
 ## 已收敛入口
 
-- 独立 `AIAssistant` 页面没有应用路由，仅保留兼容代码。
+- 独立 `AIAssistant` 页面与 `assistant.ui.tsx` 已从产品源码删除；底层 `assistant.service/schema` 保留为受控 AI 能力边界，禁止重新创建 `/assistant` 产品路由。
 - 旧“智能混养推荐”弹窗及页面级 `recommendation_assist` 调用已移除。
 - 缸内生物推荐只展示本地规则候选，不再提供单独的 AI 排序说明按钮。
 - 今日行动、鱼缸风险弹窗和单物种详情的 AI 解读入口已移除。

@@ -1,6 +1,6 @@
 # Product / Care Published Content Authority
 
-Updated: 2026-09-04
+Updated: 2026-10-17
 Status: P0 source-of-truth inventory and read-contract decision
 
 ## Purpose
@@ -26,18 +26,14 @@ Direct `fishData.ts` runtime consumers currently found under `src/`:
 - Localization projection: `src/i18n/localizeData.ts`
 - Assistant context: `src/modules/assistant/assistant.service.ts`
 - Species filtering/grouping service: `src/modules/species/species.service.ts`
-- AI assistant page: `src/pages/AIAssistant.tsx`
 - Aquarium product/runtime decisions: `src/pages/Aquarium.tsx`
 - Care context species lookup: `src/pages/CareEncyclopedia.tsx`
 - Collection/favorites: `src/pages/Collection.tsx`, `src/pages/CollectionHub.tsx`
 - Encyclopedia: `src/pages/Encyclopedia.tsx`
-- Home summaries: `src/pages/Home.tsx`
 - Identification mapping: `src/pages/Identify.tsx`
 - Memorial detail: `src/pages/MemorialDetail.tsx`
 - Search: `src/pages/Search.tsx`
 - Collection service: `src/services/collection/collection.service.ts`
-
-`src/pages/ProjectStructurePreview.tsx` is a documentation/structure display reference, not a product-data decision consumer.
 
 ## Runtime Care Knowledge consumers
 Direct `careTopicsData.ts` runtime consumers currently found under `src/`:

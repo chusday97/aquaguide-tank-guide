@@ -272,9 +272,9 @@
 - `output/image_quality/manual_rework_review_2026-07-15.md`：18 张中优先级素材的逐项人工复核与两张重做门槛。
 - `PROGRESS.md`：项目内进度、决策与阻塞记录。
 
-## 内部实验
+## 已归档实验
 
-- `src/pages/ThreeDemo.tsx` 与 `/3d-demo`：3D 独立验证入口，不进入正式导航和核心发布验收。
+- 旧 `src/pages/ThreeDemo.tsx`、`Home.tsx`、`ProjectStructurePreview.tsx` 与独立 `AIAssistant.tsx` 已从正式源码删除；`/3d-demo` 与 `/assistant` 不存在正式路由。实验历史通过 Git/文档追溯，不保留可被误接回的孤立页面文件。
 # 2026-07-29 导出模块补充
 
 - `src/components/export/ExportArtifactDialog.tsx`：固定宽度 PNG 预览与下载表面。
