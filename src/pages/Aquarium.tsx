@@ -113,6 +113,8 @@ import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import { applyWaterChangeHistory, isFutureWaterChangeDate, toggleWaterChangeDate } from '../services/aquarium/water-change.service';
 import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
 import { projectCareEventsToDailyRecords } from '../services/aquarium/daily-care-state.service';
+import { getObservationOptionLabel, normalizeObservationNote, observationOptions, type ObservationOptionValue } from '../services/aquarium/observation-presentation.service';
+import { getRiskReminderStatusLabel, isRiskReminderDone, normalizeRiskReminderState, type RiskReminderStatusCode } from '../services/aquarium/risk-reminder-state.service';
 import {
   getCareReminders,
   getCareReminderStatus,
@@ -1287,11 +1289,11 @@ export default function AquariumManager() {
   const [deceasedRecords, setDeceasedRecords] = useState<DeceasedRecord[]>([]);
   const [tankActionMessage, setTankActionMessage] = useState<string>('');
   const [fedToday, setFedToday] = useState(false);
-  const [priorityTaskStatus, setPriorityTaskStatus] = useState<Record<string, string>>({});
+  const [priorityTaskStatus, setPriorityTaskStatus] = useState<Record<string, RiskReminderStatusCode>>({});
   const [isCarePlanExpanded, setIsCarePlanExpanded] = useState(false);
   const [isRiskReminderOpen, setIsRiskReminderOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
-  const [observationChecks, setObservationChecks] = useState<string[]>([]);
+  const [observationChecks, setObservationChecks] = useState<ObservationOptionValue[]>([]);
   const [feedingRecords, setFeedingRecords] = useState<LocalEventRecord[]>([]);
   const [observationRecords, setObservationRecords] = useState<LocalEventRecord[]>([]);
   const [isLocalDataOpen, setIsLocalDataOpen] = useState(false);
@@ -1358,7 +1360,7 @@ export default function AquariumManager() {
     const appState = loadAppStateFromStorage();
     setWishlistFishIds(loadWishlistFishIds());
     setDeceasedRecords(Array.isArray(appState.deceasedRecords) ? appState.deceasedRecords as DeceasedRecord[] : []);
-    setPriorityTaskStatus(appState.riskReminderState || {});
+    setPriorityTaskStatus(normalizeRiskReminderState(appState.riskReminderState));
   }, []);
 
   useEffect(() => subscribeToCareActivity(() => {
@@ -4932,7 +4934,7 @@ export default function AquariumManager() {
       action.onClick();
     },
   }));
-  const markPriorityTask = (id: string, status: string) => {
+  const markPriorityTask = (id: string, status: RiskReminderStatusCode) => {
     setPriorityTaskStatus(prev => {
       const next = { ...prev, [id]: status };
       patchLocalAppState({ riskReminderState: next }, { debounce: true });
@@ -4943,31 +4945,34 @@ export default function AquariumManager() {
   const riskReminders = [
     ...(hasStockedAnimals ? [{
       id: 'observeBreathing',
-      level: healthScore < 60 ? '紧急' : '建议观察',
-      title: '观察鱼的呼吸状态',
-      reason: '如果鱼浮头、急促呼吸或趴缸，可能需要处理。',
-      actionText: priorityTaskStatus.observeBreathing || '开始观察',
+      level: isEn ? (healthScore < 60 ? 'Urgent' : 'Observe') : (healthScore < 60 ? '紧急' : '建议观察'),
+      title: isEn ? 'Observe breathing' : '观察鱼的呼吸状态',
+      reason: isEn ? 'Surface gasping, rapid breathing, or bottom resting may need follow-up.' : '如果鱼浮头、急促呼吸或趴缸，可能需要处理。',
+      actionText: getRiskReminderStatusLabel(priorityTaskStatus.observeBreathing, isEn) || (isEn ? 'Start observation' : '开始观察'),
+      isDone: isRiskReminderDone(priorityTaskStatus.observeBreathing),
       tone: healthScore < 60 ? 'danger' : 'warning',
       onClick: () => setIsObservationOpen(true),
     }] : []),
     ...(conflicts.length > 0 ? [{
       id: 'viewMixingRisk',
-      level: '混养提醒',
-      title: '查看混养风险',
-      reason: `当前鱼缸内已有 ${totalStockedQuantity} 只/条生物，建议检查体型、性情或空间冲突。`,
-      actionText: priorityTaskStatus.viewMixingRisk || '查看混养风险',
+      level: isEn ? 'Compatibility reminder' : '混养提醒',
+      title: isEn ? 'Review compatibility risk' : '查看混养风险',
+      reason: isEn ? `There are ${totalStockedQuantity} animals in this aquarium. Review size, temperament, and space conflicts.` : `当前鱼缸内已有 ${totalStockedQuantity} 只/条生物，建议检查体型、性情或空间冲突。`,
+      actionText: getRiskReminderStatusLabel(priorityTaskStatus.viewMixingRisk, isEn) || (isEn ? 'Review risk' : '查看混养风险'),
+      isDone: isRiskReminderDone(priorityTaskStatus.viewMixingRisk),
       tone: 'warning',
       onClick: () => {
         setIsConflictDialogOpen(true);
-        markPriorityTask('viewMixingRisk', '已查看');
+        markPriorityTask('viewMixingRisk', 'reviewed');
       },
     }] : []),
     ...((healthScore < 85 || isChangeOverdue) ? [{
       id: 'checkWater',
-      level: '建议检查',
-      title: '检查水体状态',
-      reason: '如果水发白、发绿、有异味，再进入水质诊断。',
-      actionText: priorityTaskStatus.checkWater || '开始水质自查',
+      level: isEn ? 'Check suggested' : '建议检查',
+      title: isEn ? 'Check water condition' : '检查水体状态',
+      reason: isEn ? 'If the water turns white or green or develops an odor, continue to the water-quality check.' : '如果水发白、发绿、有异味，再进入水质诊断。',
+      actionText: isEn ? 'Start water check' : '开始水质自查',
+      isDone: false,
       tone: 'info',
       onClick: () => {
         handleOpenDiagnosisWithType('水质异常');
@@ -4995,7 +5000,7 @@ export default function AquariumManager() {
     const model = buildDiagnosisVisualResult({
       result: deterministicResult,
       answers: diagnosisQuizAnswers,
-      aquariumName: diagnosisAquarium?.name || '当前鱼缸',
+      aquariumName: diagnosisAquarium?.name || (isEn ? 'Current aquarium' : '当前鱼缸'),
       livestock: getDiagnosisLivestock(diagnosisAquarium).map(item => item.fish),
       primaryActionLabel: diagnosisIssueType === '巡检' && dailyCheckArticles[0]
         ? (isEn ? 'View recovery steps' : '查看补救步骤')
@@ -6320,7 +6325,7 @@ export default function AquariumManager() {
           <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
             <DialogTitle className="font-serif text-xl font-bold italic text-ink">{isEn ? 'All Reminders' : '全部提醒'}</DialogTitle>
             <DialogDescription className="text-xs font-medium text-ink/55">
-              不是所有提醒都需要立即处理，先完成最明确的一项。
+              {isEn ? 'Not every reminder needs immediate action. Start with the clearest next step.' : '不是所有提醒都需要立即处理，先完成最明确的一项。'}
             </DialogDescription>
           </DialogHeader>
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
@@ -6331,7 +6336,7 @@ export default function AquariumManager() {
                   : task.tone === 'warning'
                     ? 'border-amber-100 bg-amber-50 text-amber-700'
                     : 'border-sky-100 bg-sky-50 text-sky-700';
-                const isDone = task.actionText.startsWith('已');
+                const isDone = task.isDone;
                 return (
                   <div key={task.id} className="rounded-[16px] border border-border/70 bg-white p-3">
                     <div className="flex items-start justify-between gap-3">
@@ -6379,18 +6384,18 @@ export default function AquariumManager() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-2 px-5 py-4 md:grid-cols-2">
-            {(isEn ? ['Fish floating at surface', 'Rapid breathing', 'Lying at bottom or hiding', 'Refusing food or abnormal feeding', 'No obvious abnormalities'] : ['鱼浮在水面', '呼吸明显急促', '趴缸或躲藏', '拒食或抢食异常', '没有明显异常']).map(item => {
-              const checked = observationChecks.includes(item);
+            {observationOptions.map(option => {
+              const checked = observationChecks.includes(option.value);
               return (
                 <button
-                  key={item}
+                  key={option.value}
                   type="button"
-                  onClick={() => setObservationChecks(prev => prev.includes(item) ? prev.filter(value => value !== item) : [...prev, item])}
+                  onClick={() => setObservationChecks(prev => prev.includes(option.value) ? prev.filter(value => value !== option.value) : [...prev, option.value])}
                   className={`flex items-center justify-between rounded-[14px] border px-3 py-3 text-left text-sm font-black transition-colors ${
                     checked ? 'border-red-100 bg-red-50 text-red-700' : 'border-border bg-bg text-ink/68'
                   }`}
                 >
-                  <span>{item}</span>
+                  <span>{getObservationOptionLabel(option.value, isEn)}</span>
                   <span className={`flex h-5 w-5 items-center justify-center rounded-full border text-[11px] ${checked ? 'border-red-300 bg-red-500 text-white' : 'border-ink/20 bg-white text-transparent'}`}>
                     ✓
                   </span>
@@ -6414,7 +6419,7 @@ export default function AquariumManager() {
                   await persistCareTimelineEvent({
                     aquariumId: activeId,
                     eventType: 'observation',
-                    title: isEn ? 'Logged observation' : '记录观察',
+                    title: '记录观察',
                     label: createdRecord.note,
                     payload: {},
                     occurredAt: createdRecord.createdAt,
@@ -6426,8 +6431,10 @@ export default function AquariumManager() {
                   setObservationRecords(nextRecords);
                   if (await resolveRepositoryMode() === 'local') patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
                   setObservationChecks([]);
-                  markPriorityTask('observeBreathing', '已观察');
-                  setTankActionMessage(`已记录观察：${format(new Date(), 'HH:mm')} 未发现明显呼吸异常`);
+                  markPriorityTask('observeBreathing', 'observed_normal');
+                  setTankActionMessage(isEn
+                    ? `Observation logged: ${format(new Date(), 'HH:mm')} no obvious breathing abnormality`
+                    : `已记录观察：${format(new Date(), 'HH:mm')} 未发现明显呼吸异常`);
                   setIsObservationOpen(false);
                 } catch {
                   showToast(isEn ? 'Observation history could not be saved.' : '观察记录没有保存成功。', 'error');
@@ -6444,13 +6451,13 @@ export default function AquariumManager() {
                   aquariumId: activeId,
                   createdAt: new Date().toISOString(),
                   type: 'observation',
-                  note: observationChecks.length > 0 ? observationChecks.join('、') : '发现异常',
+                  note: normalizeObservationNote(observationChecks.length > 0 ? observationChecks.join('、') : '发现异常'),
                 };
                 try {
                   await persistCareTimelineEvent({
                     aquariumId: activeId,
                     eventType: 'observation',
-                    title: isEn ? 'Logged observation' : '记录观察',
+                    title: '记录观察',
                     label: createdRecord.note,
                     payload: {},
                     occurredAt: createdRecord.createdAt,
@@ -6461,8 +6468,10 @@ export default function AquariumManager() {
                   const nextRecords = [...observationRecords, createdRecord];
                   setObservationRecords(nextRecords);
                   if (await resolveRepositoryMode() === 'local') patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
-                  markPriorityTask('observeBreathing', '已发现异常');
-                  setTankActionMessage('已记录呼吸异常，建议继续完成鱼只异常诊断。');
+                  markPriorityTask('observeBreathing', 'observed_abnormal');
+                  setTankActionMessage(isEn
+                    ? 'Breathing abnormality logged. Continue with the livestock health check.'
+                    : '已记录呼吸异常，建议继续完成鱼只异常诊断。');
                   setIsObservationOpen(false);
                   handleOpenDiagnosisWithType('鱼只异常');
                 } catch {

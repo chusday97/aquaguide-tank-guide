@@ -2,6 +2,7 @@ import { Activity, CalendarClock, CheckCircle2, Droplets, Fish, Settings, Utensi
 import type { CareReminderRecord } from '../../services/care/care-activity.service';
 import type { CareTimelineItem } from '../../services/care/care-timeline.service';
 import { SurfaceHeader } from '../common/SurfaceHeader';
+import { getObservationHistoryTitle, presentObservationNote } from '../../services/aquarium/observation-presentation.service';
 
 type Props = {
   aquariumName: string;
@@ -25,6 +26,14 @@ const iconFor = (eventType: CareTimelineItem['eventType']) => {
 const formatDateTime = (value: string, isEn: boolean) => new Intl.DateTimeFormat(isEn ? 'en' : 'zh-CN', {
   year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
 }).format(new Date(value));
+
+const getTimelineTitle = (item: CareTimelineItem, isEn: boolean) => (
+  item.eventType === 'observation' ? getObservationHistoryTitle(isEn) : item.title
+);
+
+const getTimelineLabel = (item: CareTimelineItem, isEn: boolean) => (
+  item.eventType === 'observation' ? presentObservationNote(item.label, isEn) : item.label
+);
 
 export function AquariumTimeline({
   aquariumName,
@@ -68,10 +77,10 @@ export function AquariumTimeline({
                     <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-50 text-emerald-800">{iconFor(item.eventType)}</span>
                     <div className="min-w-0 rounded-2xl bg-bg px-3 py-3">
                       <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div className="min-w-0 text-sm font-black text-ink">{item.title}</div>
+                        <div className="min-w-0 text-sm font-black text-ink">{getTimelineTitle(item, isEn)}</div>
                         {item.isInferred && <span className="shrink-0 rounded-full bg-white px-2 py-1 text-[10px] font-black text-ink/45">{isEn ? 'From older records' : '由旧记录整理'}</span>}
                       </div>
-                      {item.label && <p className="mt-1 break-words text-xs font-semibold leading-5 text-ink/58">{item.label}</p>}
+                      {getTimelineLabel(item, isEn) && <p className="mt-1 break-words text-xs font-semibold leading-5 text-ink/58">{getTimelineLabel(item, isEn)}</p>}
                       <time className="mt-1.5 block text-[10px] font-bold text-ink/38" dateTime={item.occurredAt}>{formatDateTime(item.occurredAt, isEn)}</time>
                     </div>
                   </li>
