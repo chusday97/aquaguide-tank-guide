@@ -114,6 +114,7 @@ const gates = [
   ['Documentation Authority', 'npm', ['run', 'test:docs-authority']],
   ['Experimental Surface Boundary', 'npm', ['run', 'test:experimental-surface-boundary']],
   ['Localization Rule Boundary', 'npm', ['run', 'test:localization-rule-boundary']],
+  ['Diagnosis Presentation i18n', 'npm', ['run', 'test:diagnosis-presentation-i18n']],
   ['Core User-State Parity Contract', 'npm', ['run', 'test:core-user-state-parity']],
   ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
   ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],

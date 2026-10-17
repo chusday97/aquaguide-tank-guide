@@ -36,6 +36,7 @@ import {
   getEstimatedQuestionCount,
   isDiagnosisProblemType,
 } from '../modules/diagnosis/diagnosis.questionBank';
+import { getDiagnosisProblemPresentation, getDiagnosisQuestionPresentation } from '../modules/diagnosis/diagnosis.presentation';
 import type { DiagnosisAnswerMap, DiagnosisOutput, DiagnosisProblemType, DiagnosisQuestion, DiagnosisRecord, TankDailyCheckContext } from '../modules/diagnosis/diagnosis.types';
 import {
   DISCOVERY_DAILY_LIMIT,
@@ -2735,6 +2736,7 @@ export default function AquariumManager() {
 
   const diagnosisIssueTypes = diagnosisProblemTypes.map(type => ({
     ...type,
+    ...(isEn ? getDiagnosisProblemPresentation(type.id, true) : {}),
     icon: diagnosisIconMap[type.id] || <Activity className="h-4 w-4" />,
   }));
 
@@ -4532,6 +4534,8 @@ export default function AquariumManager() {
   const activeDiagnosisProblemType: DiagnosisProblemType = isDiagnosisProblemType(diagnosisIssueType) ? diagnosisIssueType : '巡检';
   const activeDiagnosisQuestions = getDiagnosisQuestions(activeDiagnosisProblemType, diagnosisQuizAnswers);
   const activeDiagnosisQuestion = activeDiagnosisQuestions[diagnosisQuestionIndex];
+  const activeDiagnosisQuestionPresentation = activeDiagnosisQuestion ? getDiagnosisQuestionPresentation(activeDiagnosisQuestion, isEn) : null;
+  const activeDiagnosisProblemPresentation = getDiagnosisProblemPresentation(activeDiagnosisProblemType, isEn);
   const currentDiagnosisAnswer = activeDiagnosisQuestion ? diagnosisQuizAnswers[activeDiagnosisQuestion.id] || '' : '';
   const isDailyCheckQuiz = diagnosisMode === 'quiz' && activeDiagnosisProblemType === '巡检';
   const dailyCheckRequiredQuestions = activeDiagnosisQuestions.filter(question => !question.optionalText);
@@ -5980,7 +5984,7 @@ export default function AquariumManager() {
                           className="rounded-[14px] bg-bg px-3 py-2 text-left"
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <span className="text-[12px] font-black text-ink">{format(new Date(record.createdAt), 'yyyy/MM/dd')} {record.problemType}</span>
+                            <span className="text-[12px] font-black text-ink">{format(new Date(record.createdAt), 'yyyy/MM/dd')} {isDiagnosisProblemType(record.problemType) ? getDiagnosisProblemPresentation(record.problemType, isEn).label : record.problemType}</span>
                             <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-ink/55">{record.riskLevel}</span>
                           </div>
                           <div className="mt-1 line-clamp-1 text-[11px] font-medium text-ink/55">{record.resultSummary}</div>
@@ -6009,7 +6013,7 @@ export default function AquariumManager() {
                               <span className="block text-[13px] font-black text-ink">{type.label}</span>
                               <span className="mt-0.5 line-clamp-1 block text-[10px] font-medium text-ink/48">{type.description}</span>
                             </span>
-                            <span className="rounded-full bg-white px-2 py-1 text-[10px] font-black text-ink/45">预计 {count} 题</span>
+                            <span className="rounded-full bg-white px-2 py-1 text-[10px] font-black text-ink/45">{isEn ? `About ${count} questions` : `预计 ${count} 题`}</span>
                           </button>
                         );
                       })}
@@ -6051,6 +6055,7 @@ export default function AquariumManager() {
                   <div className="grid gap-2">
                     {activeDiagnosisQuestions.map((question, index) => {
                       const answer = diagnosisQuizAnswers[question.id] || '';
+                      const presentation = getDiagnosisQuestionPresentation(question, isEn);
                       return (
                         <div
                           key={question.id}
@@ -6062,7 +6067,7 @@ export default function AquariumManager() {
                             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-black text-emerald-700">
                               {index + 1}
                             </span>
-                            <div className="text-[13px] font-black leading-relaxed text-ink">{question.question}</div>
+                            <div className="text-[13px] font-black leading-relaxed text-ink">{presentation.question}</div>
                           </div>
                           {question.optionalText ? (
                             <Input
@@ -6073,20 +6078,20 @@ export default function AquariumManager() {
                             />
                           ) : (
                             <div className="mt-2 flex flex-wrap gap-1.5">
-                              {question.options.map(option => {
-                                const selected = answer === option;
+                              {presentation.options.map(option => {
+                                const selected = answer === option.value;
                                 return (
                                   <button
-                                    key={option}
+                                    key={option.value}
                                     type="button"
-                                    onClick={() => handleDiagnosisChoice(question.id, option)}
+                                    onClick={() => handleDiagnosisChoice(question.id, option.value)}
                                     className={`rounded-full border px-3 py-2 text-[11px] font-black transition-colors ${
                                       selected
                                         ? 'border-emerald-700 bg-emerald-700 text-white'
                                         : 'border-border bg-white text-ink/58 hover:border-emerald-200'
                                     }`}
                                   >
-                                    {option}
+                                    {option.label}
                                   </button>
                                 );
                               })}
@@ -6107,33 +6112,33 @@ export default function AquariumManager() {
                 >
                   <div>
                     <div className="flex items-center justify-between gap-3">
-                      <div className="text-[13px] font-black text-ink">{diagnosisIssueType}</div>
-                      <div className="text-[11px] font-black text-ink/45">第 {diagnosisQuestionIndex + 1} / {activeDiagnosisQuestions.length} 题</div>
+                      <div className="text-[13px] font-black text-ink">{activeDiagnosisProblemPresentation.label}</div>
+                      <div className="text-[11px] font-black text-ink/45">{isEn ? `Question ${diagnosisQuestionIndex + 1} / ${activeDiagnosisQuestions.length}` : `第 ${diagnosisQuestionIndex + 1} / ${activeDiagnosisQuestions.length} 题`}</div>
                     </div>
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-bg">
                       <div className="h-full rounded-full bg-emerald-600 transition-all" style={{ width: `${diagnosisProgressPercent}%` }} />
                     </div>
                   </div>
                   <div className="rounded-[16px] bg-bg p-3">
-                    <div className="text-[16px] font-black leading-relaxed text-ink">{activeDiagnosisQuestion.question}</div>
+                    <div className="text-[16px] font-black leading-relaxed text-ink">{activeDiagnosisQuestionPresentation?.question || activeDiagnosisQuestion.question}</div>
                     {activeDiagnosisQuestion.id === 'optionalTestData' && (
                       <div className="mt-2 rounded-[12px] bg-blue-50 px-3 py-2 text-[11px] font-medium leading-relaxed text-blue-800">
-                        没有也没关系，系统会先根据观察到的现象给出初步判断。
+                        {isEn ? 'It is okay if you do not have these readings; the first assessment can use observed signs.' : '没有也没关系，系统会先根据观察到的现象给出初步判断。'}
                       </div>
                     )}
                     <div className="mt-3 grid gap-2">
-                      {activeDiagnosisQuestion.options.map(option => {
-                        const selected = currentDiagnosisAnswer === option;
+                      {(activeDiagnosisQuestionPresentation?.options || activeDiagnosisQuestion.options.map(value => ({ value, label: value }))).map(option => {
+                        const selected = currentDiagnosisAnswer === option.value;
                         return (
                           <button
-                            key={option}
+                            key={option.value}
                             type="button"
-                            onClick={() => handleDiagnosisChoice(activeDiagnosisQuestion.id, option)}
+                            onClick={() => handleDiagnosisChoice(activeDiagnosisQuestion.id, option.value)}
                             className={`rounded-[14px] border px-3 py-3 text-left text-[13px] font-black transition-colors ${
                               selected ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-transparent bg-white text-ink/65 hover:border-emerald-100'
                             }`}
                           >
-                            {option}
+                            {option.label}
                           </button>
                         );
                       })}
