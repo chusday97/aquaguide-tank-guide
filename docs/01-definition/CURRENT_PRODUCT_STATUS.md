@@ -30,7 +30,7 @@
 | 成就勋章 | 已完成 | 8 枚派生成就、历史追溯、自动解锁说明、三态和唯一下一步 | 不增加积分、排行或手动领取 |
 | AI BFF | 已完成 | 服务端 Key、限流、超时、五类任务 | 部署环境监控和调用成本统计 |
 | 产品验证与 Evaluation | 部分完成 | 已建立证据矩阵、核心产品假设和 AI 评测状态基线 | 结构化数据集、真实模型评测、5–8 名真人任务测试与真实行为数据 |
-| 中英文国际化 | 部分完成 | canonical rule data 与 localized presentation 已分层；Diagnosis 问卷/结果、Daily Check AI 均 locale-aware，AI priority 锁定 deterministic risk；观察记录始终保存 canonical value，英文只投影 label；风险提醒完成状态已从中文文案迁移为稳定 code，并兼容旧 `已观察/已发现异常/已查看` 数据 | 剩余 Add Fish/Timeline 等固定词条、英文发布内容草稿、管理员审核和 100% 发布覆盖率未完成 |
+| 中英文国际化 | 部分完成 | canonical rule data 与 localized presentation 已分层；Diagnosis、Daily Check AI、观察记录、风险提醒均已语言解耦；Add Fish 核心判断已改为 stable status/rule family → locale projection，英文 judgment/why/action/checkpoint/stop/evidence 不再读取中文 assessment 字符串，中文 AI 补充不会泄漏到英文界面 | 剩余 Timeline 非 observation 事件、少量固定词条、英文发布内容草稿、管理员审核和 100% 发布覆盖率未完成 |
 | 本地数据 | 部分完成 | 鱼缸创建/更新/删除、纪念、养护计划、Care Events、收藏、巡检与通用诊断历史已按 Repository mode 读写；cloud mode 不再由旧 LocalAppState 覆盖这些业务事实 | 图鉴筛选/推荐等纯 UI 偏好仍保持页面级本地状态；其它剩余用户业务状态继续按 migration boundary 审计 |
 | 旧独立实验页面 | 已归档 | `Home`、`ProjectStructurePreview`、`ThreeDemo`、独立 `AIAssistant` 与其 UI 适配层已从正式源码删除；Aquarium 内 3D 与受控 AI service 保留 | 新实验必须显式隔离，不得以正式路由或旧页面文件回流 |
 | 云同步 | 延后 | 已完成实体、RLS、迁移、冲突、备份和隐私方案评估 | 业务数据未迁移；需用户确认正式契约和 SQL |

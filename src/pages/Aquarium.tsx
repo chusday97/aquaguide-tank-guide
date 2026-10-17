@@ -100,6 +100,8 @@ import {
   loadCompatibilityAssessmentForPlan,
   type CompatibilityAssessmentUiModel,
 } from '../services/compatibility/compatibility-assessment.service';
+import { getCompatibilityRuleFamily } from '../services/compatibility/compatibility-action.service';
+import { getCompatibilityRuleFamilyEnglishReason, getCompatibilityStatusLabelLocalized, projectCompatibilityAssessmentForLocale } from '../services/compatibility/compatibility-assessment-presentation.service';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
@@ -1829,6 +1831,22 @@ export default function AquariumManager() {
     || (addFishCompatibilityReview ? buildLocalCompatibilityAssessment(addFishCompatibilityReview.decision) : null)
   ), [addFishCompatibilityReview, addFishProductAssessment]);
 
+  const addFishAssessmentPresentation = useMemo(() => projectCompatibilityAssessmentForLocale({
+    model: addFishAssessmentView,
+    decision: addFishCompatibilityReview?.decision,
+    isEnglish: isEn,
+  }), [addFishAssessmentView, addFishCompatibilityReview?.decision, isEn]);
+
+  const addFishSuccessAssessmentPresentation = useMemo(() => {
+    const assessment = addFishSuccess?.result.assessment;
+    if (!assessment) return null;
+    return projectCompatibilityAssessmentForLocale({
+      model: buildLocalCompatibilityAssessment(assessment.decision),
+      decision: assessment.decision,
+      isEnglish: isEn,
+    });
+  }, [addFishSuccess, isEn]);
+
   const addFishEvaluationPresentations = useMemo(() => {
     if (!addFishCompatibilityReview) return new Map<string, ReturnType<typeof getCompatibilityPresentationForStatus>>();
     return new Map(addFishCompatibilityReview.evaluations.map(evaluation => {
@@ -2206,7 +2224,9 @@ export default function AquariumManager() {
       setFishSearchTerm('');
       setAddFishDatePicker(null);
       showToast(result.failedItems.length > 0
-        ? `已记录 ${result.savedItems.length} 项，${result.failedItems.length} 项需要重试`
+        ? (isEn
+          ? `Recorded ${result.savedItems.length} item(s); ${result.failedItems.length} item(s) need retry.`
+          : `已记录 ${result.savedItems.length} 项，${result.failedItems.length} 项需要重试`)
         : (isEn ? 'Livestock recorded. Risk guidance is ready.' : '已记录缸内生物，并生成风险提示'));
       return true;
     } catch (error) {
@@ -3809,9 +3829,9 @@ export default function AquariumManager() {
   const todayAddFishDate = format(new Date(), 'yyyy-MM-dd');
   const formatAddFishDateLabel = (dateValue: string) => {
     const date = new Date(dateValue);
-    if (Number.isNaN(date.getTime())) return '今天';
+    if (Number.isNaN(date.getTime())) return isEn ? 'Today' : '今天';
     const formatted = format(date, 'yyyy/MM/dd');
-    return dateValue === todayAddFishDate ? `今天 · ${formatted}` : formatted;
+    return dateValue === todayAddFishDate ? `${isEn ? 'Today' : '今天'} · ${formatted}` : formatted;
   };
   const updateSelectedAddFishItem = (fishId: string, patch: Partial<{ quantity: number; entryDate: string }>) => {
     resetAddFishAssessmentState();
@@ -6521,7 +6541,9 @@ export default function AquariumManager() {
                     <div className="min-w-0">
                       <div className="text-lg font-black text-emerald-800">{isEn ? 'Recorded' : '已记录'}</div>
                       <p className="mt-1 text-[12px] font-bold leading-relaxed text-emerald-900/70">
-                        已保存到 {addFishSuccess.aquariumName}。这是现实记录，下面的判断只用于提示下一步，不会撤销已保存内容。
+                        {isEn
+                          ? `Saved to ${addFishSuccess.aquariumName}. This records the real tank state; the assessment below only guides next steps and does not undo the saved record.`
+                          : `已保存到 ${addFishSuccess.aquariumName}。这是现实记录，下面的判断只用于提示下一步，不会撤销已保存内容。`}
                       </p>
                     </div>
                   </div>
@@ -6537,35 +6559,43 @@ export default function AquariumManager() {
                   }`}>
                     <div className="text-[12px] font-black">
                       {addFishSuccess.result.assessment
-                        ? getTankCompatibilityStatusLabel(addFishSuccess.result.assessment.status)
-                        : '判断暂时不可用'}
+                        ? getCompatibilityStatusLabelLocalized(addFishSuccess.result.assessment.status, isEn)
+                        : (isEn ? 'Assessment temporarily unavailable' : '判断暂时不可用')}
                     </div>
                     <p className="mt-1 text-[11px] font-bold leading-relaxed opacity-75">
-                      {addFishSuccess.result.assessmentFailure || (
-                        addFishSuccess.result.assessment?.status === 'not_recommended'
-                          ? '已记录现实情况；当前存在紧急混养风险，请优先查看风险处理。'
+                      {addFishSuccess.result.assessmentFailure
+                        ? (isEn ? 'The record was saved, but the compatibility assessment is temporarily unavailable.' : addFishSuccess.result.assessmentFailure)
+                        : addFishSuccess.result.assessment?.status === 'not_recommended'
+                          ? (isEn ? 'The real tank state was recorded. A blocking compatibility risk is present; review the risk action first.' : '已记录现实情况；当前存在紧急混养风险，请优先查看风险处理。')
                           : addFishSuccess.result.assessment?.status === 'insufficient_data'
-                            ? '已记录现实情况；当前结论会随着环境和行为资料完善而更新。'
+                            ? (isEn ? 'The real tank state was recorded. The conclusion will update after the missing environment or behavior information is added.' : '已记录现实情况；当前结论会随着环境和行为资料完善而更新。')
                             : addFishSuccess.result.assessment?.status === 'caution'
-                              ? '已记录现实情况；请按提示重点观察，不需要重新添加。'
-                              : '当前未发现阻断风险，继续观察实际状态。'
-                      )}
+                              ? (isEn ? 'The real tank state was recorded. Follow the highlighted observations; you do not need to add the livestock again.' : '已记录现实情况；请按提示重点观察，不需要重新添加。')
+                              : (isEn ? 'No blocking risk is currently surfaced. Keep observing the real tank state.' : '当前未发现阻断风险，继续观察实际状态。')}
                     </p>
-                    {(addFishSuccess.result.assessment?.keyRules.length || 0) > 0 && (
-                      <div className="mt-2 grid gap-1">
-                        {addFishSuccess.result.assessment?.keyRules.slice(0, 3).map(rule => (
-                          <div key={`${rule.code}-${rule.evidence}`} className="text-[10px] font-bold leading-relaxed">
-                            <span className="font-black">{rule.title}：</span>{rule.evidence}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    {isEn
+                      ? (addFishSuccessAssessmentPresentation?.why.length ? (
+                        <div className="mt-2 grid gap-1">
+                          {addFishSuccessAssessmentPresentation.why.slice(0, 3).map((reason, index) => (
+                            <div key={`recorded-assessment-${index}`} className="text-[10px] font-bold leading-relaxed">{reason}</div>
+                          ))}
+                        </div>
+                      ) : null)
+                      : ((addFishSuccess.result.assessment?.keyRules.length || 0) > 0 && (
+                        <div className="mt-2 grid gap-1">
+                          {addFishSuccess.result.assessment?.keyRules.slice(0, 3).map(rule => (
+                            <div key={`${rule.code}-${rule.evidence}`} className="text-[10px] font-bold leading-relaxed">
+                              <span className="font-black">{rule.title}：</span>{rule.evidence}
+                            </div>
+                          ))}
+                        </div>
+                      ))}
                   </div>
 
                   {addFishSuccess.result.failedItems.length > 0 && (
                     <div className="rounded-[16px] border border-amber-200 bg-amber-50 p-3 text-[11px] font-bold text-amber-900">
                       {addFishSuccess.result.failedItems.map(item => (
-                        <div key={item.fishId}>{fishData.find(fish => fish.id === item.fishId)?.name || item.fishId}：{item.message}</div>
+                        <div key={item.fishId}>{fishData.find(fish => fish.id === item.fishId)?.name || item.fishId}{isEn ? ': ' : '：'}{isEn ? 'This item could not be saved. Please try again.' : item.message}</div>
                       ))}
                     </div>
                   )}
@@ -6578,7 +6608,7 @@ export default function AquariumManager() {
                         </span>
                         <div className="min-w-0">
                           <div className="truncate text-sm font-black text-ink">{getSpeciesNameLocalized(item, isEn)} x {item.quantity}</div>
-                          <div className="mt-0.5 text-[11px] font-bold text-ink/48">入缸日期：{formatAddFishDateLabel(item.entryDate)}</div>
+                          <div className="mt-0.5 text-[11px] font-bold text-ink/48">{isEn ? 'Entry date: ' : '入缸日期：'}{formatAddFishDateLabel(item.entryDate)}</div>
                         </div>
                       </div>
                     ))}
@@ -6587,20 +6617,22 @@ export default function AquariumManager() {
                   <div className="grid gap-2">
                     <Button type="button" onClick={handlePostRecordPrimaryAction} className="h-11 rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
                       {addFishSuccess.result.assessment?.status === 'insufficient_data'
-                        ? '补充基础资料'
+                        ? (isEn ? 'Add missing information' : '补充基础资料')
                         : addFishSuccess.result.assessment?.status === 'not_recommended'
-                          ? '查看风险处理'
-                          : '返回鱼缸查看'}
+                          ? (isEn ? 'Review risk action' : '查看风险处理')
+                          : (isEn ? 'Back to aquarium' : '返回鱼缸查看')}
                     </Button>
                     <Button type="button" variant="ghost" onClick={handleContinueAddFish} className="h-11 rounded-full text-sm font-black text-ink/58">
-                      {addFishSuccess.result.failedItems.length > 0 ? '继续处理失败项' : '继续记录其他生物'}
+                      {addFishSuccess.result.failedItems.length > 0
+                        ? (isEn ? 'Retry failed items' : '继续处理失败项')
+                        : (isEn ? 'Record more livestock' : '继续记录其他生物')}
                     </Button>
                   </div>
                 </div>
               ) : addFishCompatibilityReview ? (
                 <section
                   data-add-fish-compatibility-result
-                  data-compatibility-judgment={addFishAssessmentView?.main.judgment || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
+                  data-compatibility-judgment={addFishAssessmentPresentation?.judgment || getCompatibilityStatusLabelLocalized(addFishCompatibilityReview.status, isEn)}
                   className={`grid gap-3 rounded-[20px] border p-4 shadow-sm ${
                     addFishCompatibilityReview.status === 'not_recommended'
                       ? 'border-red-200 bg-red-50'
@@ -6645,7 +6677,7 @@ export default function AquariumManager() {
                               ? 'text-xl text-emerald-800'
                               : 'text-xl text-slate-700'
                       }`}>
-                        {addFishAssessmentView?.main.judgment || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
+                        {addFishAssessmentPresentation?.judgment || getCompatibilityStatusLabelLocalized(addFishCompatibilityReview.status, isEn)}
                       </div>
                       {isAddFishAssessmentLoading && (
                         <div className="mt-1 flex items-center gap-1.5 text-[10px] font-bold text-ink/42">
@@ -6656,8 +6688,12 @@ export default function AquariumManager() {
                     </div>
                     <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-ink/55 shadow-sm">
                       {activeAquarium.fishes.length > 0
-                        ? `规划新增 ${addFishCompatibilityReview.evaluations.length} 种 · 已结合当前鱼缸`
-                        : `规划 ${addFishCompatibilityReview.evaluations.length} 种`}
+                        ? (isEn
+                          ? `Planning ${addFishCompatibilityReview.evaluations.length} species · current aquarium included`
+                          : `规划新增 ${addFishCompatibilityReview.evaluations.length} 种 · 已结合当前鱼缸`)
+                        : (isEn
+                          ? `Planning ${addFishCompatibilityReview.evaluations.length} species`
+                          : `规划 ${addFishCompatibilityReview.evaluations.length} 种`)}
                     </span>
                   </div>
 
@@ -6669,7 +6705,7 @@ export default function AquariumManager() {
                           : (addFishCompatibilityReview.status === 'compatible' ? '为什么可以' : addFishCompatibilityReview.status === 'insufficient_data' ? '还缺什么' : '主要风险')}
                       </div>
                       <div className="mt-2 grid gap-2">
-                        {(addFishAssessmentView?.main.why || []).map((text, index) => (
+                        {(addFishAssessmentPresentation?.why || []).map((text, index) => (
                           <div key={`compatibility-why-${index}`} className="grid grid-cols-[8px_1fr] items-start gap-2.5">
                             <span className={`mt-[8px] h-2 w-2 rounded-full ${
                               addFishCompatibilityReview.status === 'not_recommended'
@@ -6690,12 +6726,12 @@ export default function AquariumManager() {
                       <div className="border-t border-ink/8 pt-3">
                         <div className="text-[11px] font-black text-emerald-800">{isEn ? 'Keep it stable' : '保持稳定'}</div>
                         <div className="mt-2 grid gap-1.5">
-                          {(addFishAssessmentView?.main.howTo || []).map((text, index) => (
+                          {(addFishAssessmentPresentation?.howTo || []).map((text, index) => (
                             <p key={`compatibility-how-${index}`} className="text-[13px] font-black leading-6 text-ink">{text}</p>
                           ))}
                         </div>
                       </div>
-                    ) : addFishAssessmentView?.decisionPlan?.nextSteps?.length ? (
+                    ) : addFishAssessmentPresentation?.plan.nextSteps?.length ? (
                       <div className="border-t border-ink/8 pt-3" data-compatibility-next-steps>
                         <div className={`text-[11px] font-black ${
                           addFishCompatibilityReview.status === 'not_recommended'
@@ -6705,7 +6741,7 @@ export default function AquariumManager() {
                               : 'text-slate-700'
                         }`}>{isEn ? 'Do this first' : '现在先做'}</div>
                         <div className="mt-2 grid gap-2">
-                          {addFishAssessmentView.decisionPlan.nextSteps.slice(0, 2).map((text, index) => (
+                          {addFishAssessmentPresentation.plan.nextSteps.slice(0, 2).map((text, index) => (
                             <div key={`compatibility-next-step-${index}`} className="grid grid-cols-[24px_1fr] items-start gap-2.5 rounded-[12px] bg-bg/70 px-3 py-2.5">
                               <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-black text-white ${
                                 addFishCompatibilityReview.status === 'not_recommended'
@@ -6723,7 +6759,7 @@ export default function AquariumManager() {
                       <div className="border-t border-ink/8 pt-3">
                         <div className="text-[11px] font-black text-ink/48">{isEn ? 'What to do' : '怎么做'}</div>
                         <div className="mt-2 grid gap-1.5">
-                          {(addFishAssessmentView?.main.howTo || []).map((text, index) => (
+                          {(addFishAssessmentPresentation?.howTo || []).map((text, index) => (
                             <p key={`compatibility-how-${index}`} className="text-[13px] font-black leading-6 text-ink">{text}</p>
                           ))}
                         </div>
@@ -6731,17 +6767,17 @@ export default function AquariumManager() {
                     )}
                   </div>
 
-                  {addFishAssessmentView?.decisionPlan && addFishAssessmentView.main.judgment !== '可以养' && (
+                  {addFishAssessmentPresentation?.plan && addFishCompatibilityReview.status !== 'compatible' && (
                     <div className="rounded-[16px] bg-white/72 px-4 py-3" data-compatibility-decision-plan>
                       <div className="text-[11px] font-black text-ink/48">{isEn ? 'After the first action' : '做完以后'}</div>
                       <div className="mt-2 grid gap-2 sm:grid-cols-2">
                         <div className="rounded-[12px] bg-bg/70 px-3 py-2.5">
                           <div className="text-[10px] font-black text-ink/45">{isEn ? 'Expected next state' : '调整后'}</div>
-                          <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentView.decisionPlan.expectedAfterAdjustment}</p>
+                          <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentPresentation.plan.expectedAfterAdjustment}</p>
                         </div>
                         <div className="rounded-[12px] bg-bg/70 px-3 py-2.5">
                           <div className="text-[10px] font-black text-ink/45">{isEn ? 'Review checkpoint' : '复查点'}</div>
-                          <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentView.decisionPlan.reviewCheckpoint}</p>
+                          <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentPresentation.plan.reviewCheckpoint}</p>
                         </div>
                       </div>
                       <div className={`mt-2 rounded-[12px] border px-3 py-2.5 ${
@@ -6764,14 +6800,14 @@ export default function AquariumManager() {
                             : addFishCompatibilityReview.status === 'caution'
                               ? 'text-amber-950/80'
                               : 'text-slate-800/80'
-                        }`}>{addFishAssessmentView.decisionPlan.stopCondition}</p>
+                        }`}>{addFishAssessmentPresentation.plan.stopCondition}</p>
                       </div>
                     </div>
                   )}
 
                   <details className="rounded-[16px] bg-white/72 px-4 py-3">
                     <summary className="cursor-pointer text-[12px] font-black text-ink/65">
-                      {isEn ? 'View evidence' : addFishAssessmentView?.details.label || '查看依据'}
+                      {addFishAssessmentPresentation?.details.label || (isEn ? 'View evidence' : '查看依据')}
                     </summary>
                     <div className="mt-3 grid gap-3 border-t border-ink/8 pt-3">
                       <div className="grid gap-2">
@@ -6783,9 +6819,15 @@ export default function AquariumManager() {
                                 <>
                                   <span className="min-w-0">
                                     <span className="block truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
-                                    <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.mode === 'confirmed_facts' ? '当前可确认部分条件' : presentation?.mode === 'unavailable' ? '暂未开放这组混养建议' : evaluation.result.summary}</span>
+                                    <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.mode === 'confirmed_facts'
+                                      ? (isEn ? 'Reviewed conditions are available' : '当前可确认部分条件')
+                                      : presentation?.mode === 'unavailable'
+                                        ? (isEn ? 'Guidance is not available for this combination yet' : '暂未开放这组混养建议')
+                                        : (isEn ? 'Deterministic compatibility result' : evaluation.result.summary)}</span>
                                   </span>
-                                  <span className="shrink-0 text-[10px] font-black text-ink/55">{presentation?.headline || getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
+                                  <span className="shrink-0 text-[10px] font-black text-ink/55">{isEn
+                                    ? getCompatibilityStatusLabelLocalized(evaluation.result.status, true)
+                                    : presentation?.headline || getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
                                 </>
                               );
                             })()}
@@ -6796,15 +6838,17 @@ export default function AquariumManager() {
                         <div className="grid gap-1.5">
                           {addFishCompatibilityReview.keyRules.slice(0, 4).map(rule => (
                             <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className="text-[11px] font-medium leading-5 text-ink/62">
-                              <span className="font-black text-ink/72">{rule.title}：</span>{rule.evidence}
+                              {isEn
+                                ? getCompatibilityRuleFamilyEnglishReason(getCompatibilityRuleFamily(rule.code), addFishCompatibilityReview.status)
+                                : <><span className="font-black text-ink/72">{rule.title}：</span>{rule.evidence}</>}
                             </div>
                           ))}
                         </div>
                       )}
-                      {addFishAssessmentView?.details.reasons?.length ? (
+                      {addFishAssessmentPresentation?.details.reasons?.length ? (
                         <div className="grid gap-1.5 rounded-[12px] bg-violet-50/70 px-3 py-2">
                           <div className="text-[10px] font-black text-violet-800">{isEn ? 'Supporting explanation' : '补充依据'}</div>
-                          {addFishAssessmentView.details.reasons.slice(0, 3).map((item, index) => (
+                          {addFishAssessmentPresentation.details.reasons.slice(0, 3).map((item, index) => (
                             <div key={`assessment-detail-${index}`} className="text-[11px] font-medium leading-5 text-violet-950/75">{item.text}</div>
                           ))}
                         </div>
@@ -6869,7 +6913,9 @@ export default function AquariumManager() {
               </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="text-[12px] font-black text-ink/55">{fishSearchTerm.trim() ? '搜索结果' : '智能推荐'}</div>
+                  <div className="text-[12px] font-black text-ink/55">{fishSearchTerm.trim()
+                    ? (isEn ? 'Search results' : '搜索结果')
+                    : (isEn ? 'Recommended' : '智能推荐')}</div>
                   {!fishSearchTerm.trim() && <span className="text-[10px] font-bold text-ink/35">{isEn ? 'Based on active tank' : '基于当前鱼缸'}</span>}
                 </div>
 
@@ -6896,7 +6942,7 @@ export default function AquariumManager() {
                           <span className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-black ${
                             isSelected ? 'bg-emerald-600 text-white' : 'bg-white text-ink/45'
                           }`}>
-                            {isSelected ? '已选择' : '选择'}
+                            {isSelected ? (isEn ? 'Selected' : '已选择') : (isEn ? 'Select' : '选择')}
                           </span>
                         </span>
                         <span className="mt-1 flex flex-wrap gap-1">
@@ -6963,7 +7009,7 @@ export default function AquariumManager() {
                                         setSelectedAddFishItems(prev => prev.filter(selected => selected.fishId !== item.fishId));
                                       }}
                                       className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                              aria-label={`移除 ${item.fish.name}`}
+                              aria-label={isEn ? `Remove ${getSpeciesNameLocalized(item.fish, true)}` : `移除 ${item.fish.name}`}
                             >
                               <X className="h-3.5 w-3.5" />
                             </button>
@@ -6978,7 +7024,7 @@ export default function AquariumManager() {
                                   onClick={() => updateSelectedAddFishItem(item.fishId, { quantity: Math.max(1, item.quantity - 1) })}
                                   disabled={item.quantity <= 1}
                                   className="flex h-8 items-center justify-center rounded-full bg-white text-lg font-black text-ink/55 shadow-sm disabled:text-ink/18"
-                                  aria-label={`减少 ${item.fish.name} 数量`}
+                                  aria-label={isEn ? `Decrease ${getSpeciesNameLocalized(item.fish, true)} quantity` : `减少 ${item.fish.name} 数量`}
                                 >
                                   -
                                 </button>
@@ -6987,7 +7033,7 @@ export default function AquariumManager() {
                                   type="button"
                                   onClick={() => updateSelectedAddFishItem(item.fishId, { quantity: item.quantity + 1 })}
                                   className="flex h-8 items-center justify-center rounded-full bg-white text-lg font-black text-emerald-700 shadow-sm"
-                                  aria-label={`增加 ${item.fish.name} 数量`}
+                                  aria-label={isEn ? `Increase ${getSpeciesNameLocalized(item.fish, true)} quantity` : `增加 ${item.fish.name} 数量`}
                                 >
                                   +
                                 </button>
@@ -7021,7 +7067,7 @@ export default function AquariumManager() {
                                 >
                                   <ChevronLeft className="h-4 w-4" />
                                 </button>
-                                <div className="text-sm font-black text-ink">{format(datePickerMonth, 'yyyy年 M月')}</div>
+                                <div className="text-sm font-black text-ink">{isEn ? format(datePickerMonth, 'MMM yyyy') : format(datePickerMonth, 'yyyy年 M月')}</div>
                                 <button
                                   type="button"
                                   onClick={() => setAddFishDatePicker({ fishId: item.fishId, month: addMonths(datePickerMonth, 1) })}
@@ -7033,7 +7079,7 @@ export default function AquariumManager() {
                                 </button>
                               </div>
                               <div className="mt-2 grid grid-cols-7 gap-1 text-center text-[10px] font-black text-ink/35">
-                                {['日', '一', '二', '三', '四', '五', '六'].map(day => <span key={day}>{day}</span>)}
+                                {(isEn ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] : ['日', '一', '二', '三', '四', '五', '六']).map(day => <span key={day}>{day}</span>)}
                               </div>
                               <div className="mt-1 grid grid-cols-7 gap-1">
                                 {Array.from({ length: monthStartOffset }).map((_, index) => <span key={`empty-${index}`} />)}
