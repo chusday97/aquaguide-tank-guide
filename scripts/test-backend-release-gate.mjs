@@ -111,6 +111,7 @@ const gates = [
   ['Business API', 'npm', ['run', 'test:business-api-contract']],
   ['Repository Boundary', 'npm', ['run', 'test:repository-boundary']],
   ['Aquarium Delete Repository Boundary', 'npm', ['run', 'test:aquarium-delete-repository-boundary']],
+  ['Documentation Authority', 'npm', ['run', 'test:docs-authority']],
   ['Core User-State Parity Contract', 'npm', ['run', 'test:core-user-state-parity']],
   ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
   ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],

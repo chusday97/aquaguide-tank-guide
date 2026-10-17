@@ -1,5 +1,7 @@
 # AquaGuide 交互重构技术说明
 
+> **历史专项（已归档，2026-10-17）**：本文描述旧水族册/本地聚合实现，不代表当前 Repository / cloud / Waterbook 架构。当前入口见 [当前文档入口](../README.md)。
+
 ## 架构
 
 - `/collection` 使用 URL query 保存四个页签状态。

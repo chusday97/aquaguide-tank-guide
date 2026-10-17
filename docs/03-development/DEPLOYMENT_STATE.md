@@ -1,5 +1,7 @@
 # AquaGuide Deployment State
 
+> **历史发布证据（已归档，2026-10-17）**：本文记录 2026-08 阶段的发布/迁移排查，不代表当前 Production。当前发布状态必须通过 Git refs、`npm run test:backend-release-gate`、`npm run readiness:production-preflight` 与 Vercel/Supabase 实时结果确认。当前文档入口见 [`docs/README.md`](../README.md)。
+
 **Status:** Active
 **Updated:** 2026-08-30
 

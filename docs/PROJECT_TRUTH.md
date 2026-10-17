@@ -1,8 +1,11 @@
-# AquaGuide Project Truth
+# AquaGuide Project Truth（历史文档）
 
-**Status:** Active
-**Updated:** 2026-08-30
-**Purpose:** the one reading map for the current product. This file routes facts; it does not duplicate their full definitions.
+**Status:** Superseded / Historical
+**Updated:** 2026-10-17
+
+> 本文件是 2026-08 的阶段性阅读路由图，其中分支、PR、预览端口与发布结论已经过期。不要再从本文件判断当前产品或 Production 状态。
+>
+> 当前唯一阅读入口： [AquaGuide 产品文档入口](./README.md)。当前能力见 [当前产品状态](./01-definition/CURRENT_PRODUCT_STATUS.md)，待办见 [产品卡点与路线图](./04-planning/PRODUCT_GAPS_AND_ROADMAP.md)。发布状态必须通过 Git refs、`npm run test:backend-release-gate`、`npm run readiness:production-preflight` 和 Vercel/Supabase 实时结果确认。
 
 ## Current delivery line
 

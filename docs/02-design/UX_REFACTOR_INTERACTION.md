@@ -1,5 +1,7 @@
 # AquaGuide 交互重构规范
 
+> **历史专项（已归档，2026-10-17）**：本文包含已失效入口（例如已不存在的 `interaction-rules.md`），仅保留阶段性证据。当前交互 authority 见 [当前文档入口](../README.md) 与 [INTERACTION_SPEC](./INTERACTION_SPEC.md)。
+
 本文继承工作区 `interaction-rules.md` 的全部 P0/P1 规则。
 
 ## 分层表面
