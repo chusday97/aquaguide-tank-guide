@@ -33,12 +33,16 @@ import {
   START as FAST_LANE_WAVE4_START,
   TARGET as FAST_LANE_WAVE4_TARGET,
 } from './compatibility-fast-lane-wave4-production-patch-guard.mjs';
+import {
+  START as CHRYSIPTERA_RECONCILIATION_START,
+  TARGET as CHRYSIPTERA_RECONCILIATION_TARGET,
+} from './compatibility-chrysiptera-production-reconciliation-guard.mjs';
 
 const root = resolve(import.meta.dirname, '..');
-export const CURRENT_PRODUCTION_LATEST_VERSION = FULL_CHAIN_START_LATEST_VERSION;
-export const CURRENT_PRODUCTION_MIGRATION_COUNT = FULL_CHAIN_START_MIGRATION_COUNT;
-export const TARGET_PRODUCTION_LATEST_VERSION = FULL_CHAIN_TARGET_LATEST_VERSION;
-export const TARGET_PRODUCTION_MIGRATION_COUNT = FULL_CHAIN_TARGET_MIGRATION_COUNT;
+export const CURRENT_PRODUCTION_LATEST_VERSION = CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion;
+export const CURRENT_PRODUCTION_MIGRATION_COUNT = CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount;
+export const TARGET_PRODUCTION_LATEST_VERSION = CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion;
+export const TARGET_PRODUCTION_MIGRATION_COUNT = CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount;
 
 const run = (cmd, args) => {
   const result = spawnSync(cmd, args, { cwd: root, encoding: 'utf8' });
@@ -101,6 +105,15 @@ export const classifyState = state => {
     && schemaReady;
   if (wave4Start) return 'READY_FOR_FAST_LANE_WAVE4_MIGRATION';
 
+  const chrysipteraStart = state.migration_count === CHRYSIPTERA_RECONCILIATION_START.migrationCount
+    && state.latest_version === CHRYSIPTERA_RECONCILIATION_START.latestVersion
+    && state.profiles === CHRYSIPTERA_RECONCILIATION_START.profiles
+    && state.pair_rules === CHRYSIPTERA_RECONCILIATION_START.pairRules
+    && state.evidence === CHRYSIPTERA_RECONCILIATION_START.evidence
+    && state.stage_risks === CHRYSIPTERA_RECONCILIATION_START.stageRisks
+    && schemaReady;
+  if (chrysipteraStart) return 'READY_FOR_CHRYSIPTERA_RECONCILIATION';
+
   const post = state.migration_count === FULL_CHAIN_TARGET_MIGRATION_COUNT
     && state.latest_version === FULL_CHAIN_TARGET_LATEST_VERSION
     && state.profiles === FULL_CHAIN_TARGET_REVIEWED_PROFILES
@@ -108,11 +121,24 @@ export const classifyState = state => {
     && state.evidence === FULL_CHAIN_TARGET_REVIEWED_EVIDENCE
     && state.stage_risks === FULL_CHAIN_TARGET_REVIEWED_STAGE_RISKS
     && schemaReady;
-  return post ? 'VERIFY_POST_MIGRATION' : 'BLOCKED_STATE_DRIFT';
+  if (post) return 'READY_FOR_CHRYSIPTERA_RECONCILIATION';
+
+  const current = state.migration_count === CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount
+    && state.latest_version === CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion
+    && state.profiles === CHRYSIPTERA_RECONCILIATION_TARGET.profiles
+    && state.pair_rules === CHRYSIPTERA_RECONCILIATION_TARGET.pairRules
+    && state.evidence === CHRYSIPTERA_RECONCILIATION_TARGET.evidence
+    && state.stage_risks === CHRYSIPTERA_RECONCILIATION_TARGET.stageRisks
+    && schemaReady;
+  return current ? 'VERIFY_CURRENT_PRODUCTION' : 'BLOCKED_STATE_DRIFT';
 };
 
 export const validateDetailedState = (state, detail) => {
   const expected = getAuthorityKeys();
+  const expectedEvidence = state.migration_count === CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount
+    && state.latest_version === CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion
+    ? CHRYSIPTERA_RECONCILIATION_TARGET.evidence
+    : FULL_CHAIN_TARGET_REVIEWED_EVIDENCE;
   const blockers = [];
   if (state.species !== 486) blockers.push(`species:${state.species}/486`);
   if (state.feeding !== 486) blockers.push(`feeding:${state.feeding}/486`);
@@ -124,7 +150,7 @@ export const validateDetailedState = (state, detail) => {
   if (JSON.stringify(detail.profile_keys) !== JSON.stringify(expected.profiles)) blockers.push('profile_key_set_mismatch');
   if (JSON.stringify(detail.pair_keys) !== JSON.stringify(expected.pairRules)) blockers.push('pair_key_set_mismatch');
   if (JSON.stringify(detail.stage_risk_keys) !== JSON.stringify(expected.stageRisks)) blockers.push('stage_risk_key_set_mismatch');
-  if (detail.reviewed_evidence !== FULL_CHAIN_TARGET_REVIEWED_EVIDENCE) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${FULL_CHAIN_TARGET_REVIEWED_EVIDENCE}`);
+  if (detail.reviewed_evidence !== expectedEvidence) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${expectedEvidence}`);
   if (detail.authority_singleton !== 1) blockers.push(`authority_singleton:${detail.authority_singleton}/1`);
 
   const pair = detail.tiger_guppy;
@@ -158,7 +184,7 @@ export const validateDetailedState = (state, detail) => {
       profiles: expected.profiles.length,
       pairRules: expected.pairRules.length,
       stageRisks: expected.stageRisks.length,
-      evidenceSources: FULL_CHAIN_TARGET_REVIEWED_EVIDENCE,
+      evidenceSources: expectedEvidence,
     },
   };
 };
@@ -206,7 +232,7 @@ if (isMain) {
   const state = readState();
   const phase = classifyState(state);
 
-  if (phase !== 'VERIFY_POST_MIGRATION') {
+  if (phase !== 'VERIFY_CURRENT_PRODUCTION') {
     console.log(JSON.stringify({
       phase,
       projectRef: linkedRef,

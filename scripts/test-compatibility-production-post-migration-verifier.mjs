@@ -27,6 +27,10 @@ import {
   START as FAST_LANE_WAVE4_START,
   TARGET as FAST_LANE_WAVE4_TARGET,
 } from './compatibility-fast-lane-wave4-production-patch-guard.mjs';
+import {
+  START as CHRYSIPTERA_RECONCILIATION_START,
+  TARGET as CHRYSIPTERA_RECONCILIATION_TARGET,
+} from './compatibility-chrysiptera-production-reconciliation-guard.mjs';
 
 const stateFor = point => ({
   migration_count: point.migrationCount,
@@ -47,10 +51,10 @@ const stateFor = point => ({
   stage_risks_exists: true,
 });
 
-assert.equal(CURRENT_PRODUCTION_MIGRATION_COUNT, START_MIGRATION_COUNT);
-assert.equal(CURRENT_PRODUCTION_LATEST_VERSION, START_LATEST_VERSION);
-assert.equal(TARGET_PRODUCTION_MIGRATION_COUNT, TARGET_MIGRATION_COUNT);
-assert.equal(TARGET_PRODUCTION_LATEST_VERSION, TARGET_LATEST_VERSION);
+assert.equal(CURRENT_PRODUCTION_MIGRATION_COUNT, CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount);
+assert.equal(CURRENT_PRODUCTION_LATEST_VERSION, CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion);
+assert.equal(TARGET_PRODUCTION_MIGRATION_COUNT, CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount);
+assert.equal(TARGET_PRODUCTION_LATEST_VERSION, CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion);
 assert.deepEqual(FAST_LANE_WAVE2_TARGET, FAST_LANE_WAVE3_START, 'wave2 target must exactly equal wave3 start');
 assert.deepEqual(FAST_LANE_WAVE3_TARGET, FAST_LANE_WAVE4_START, 'wave3 target must exactly equal wave4 start');
 
@@ -69,17 +73,21 @@ assert.equal(classifyState(wave4Start), 'READY_FOR_FAST_LANE_WAVE4_MIGRATION');
 const reconciliationStart = stateFor({ migrationCount: START_MIGRATION_COUNT, latestVersion: START_LATEST_VERSION, profiles: START_REVIEWED_PROFILES, pairRules: START_REVIEWED_PAIR_RULES, evidence: START_REVIEWED_EVIDENCE, stageRisks: START_REVIEWED_STAGE_RISKS });
 assert.equal(classifyState(reconciliationStart), 'READY_FOR_FULL_CHAIN_MIGRATION');
 const post = stateFor({ migrationCount: TARGET_MIGRATION_COUNT, latestVersion: TARGET_LATEST_VERSION, profiles: TARGET_REVIEWED_PROFILES, pairRules: TARGET_REVIEWED_PAIR_RULES, evidence: TARGET_REVIEWED_EVIDENCE, stageRisks: TARGET_REVIEWED_STAGE_RISKS });
-assert.equal(classifyState(post), 'VERIFY_POST_MIGRATION');
+assert.equal(classifyState(post), 'READY_FOR_CHRYSIPTERA_RECONCILIATION');
+const chrysipteraStart = stateFor(CHRYSIPTERA_RECONCILIATION_START);
+assert.equal(classifyState(chrysipteraStart), 'READY_FOR_CHRYSIPTERA_RECONCILIATION');
+const currentProduction = stateFor(CHRYSIPTERA_RECONCILIATION_TARGET);
+assert.equal(classifyState(currentProduction), 'VERIFY_CURRENT_PRODUCTION');
 assert.equal(classifyState({ ...current, migration_count: current.migration_count - 1 }), 'BLOCKED_STATE_DRIFT');
 assert.equal(classifyState({ ...current, profiles: 100 }), 'BLOCKED_STATE_DRIFT');
-assert.equal(classifyState({ ...post, evidence: TARGET_REVIEWED_EVIDENCE - 1 }), 'BLOCKED_STATE_DRIFT');
+assert.equal(classifyState({ ...currentProduction, evidence: CHRYSIPTERA_RECONCILIATION_TARGET.evidence - 1 }), 'BLOCKED_STATE_DRIFT');
 
 const keys = getAuthorityKeys();
 const detail = {
   profile_keys: keys.profiles,
   pair_keys: keys.pairRules,
   stage_risk_keys: keys.stageRisks,
-  reviewed_evidence: TARGET_REVIEWED_EVIDENCE,
+  reviewed_evidence: CHRYSIPTERA_RECONCILIATION_TARGET.evidence,
   authority_singleton: 1,
   tiger_guppy: {
     verdict: 'not_recommended',
@@ -100,14 +108,14 @@ const detail = {
   },
 };
 
-assert.equal(validateDetailedState(post, detail).ready, true);
-const bad = validateDetailedState(post, {
+assert.equal(validateDetailedState(currentProduction, detail).ready, true);
+const bad = validateDetailedState(currentProduction, {
   ...detail,
-  reviewed_evidence: TARGET_REVIEWED_EVIDENCE - 1,
+  reviewed_evidence: CHRYSIPTERA_RECONCILIATION_TARGET.evidence - 1,
   tiger_guppy: { ...detail.tiger_guppy, verdict: 'caution' },
 });
 assert.equal(bad.ready, false);
-assert.ok(bad.blockers.includes('reviewed_evidence:199/200'));
+assert.ok(bad.blockers.includes('reviewed_evidence:201/202'));
 assert.ok(bad.blockers.includes('tiger_guppy_verdict:caution'));
 
-console.log('Compatibility Production post-migration verifier contract PASS: historical fast lanes remain recognized, 69/101/189 is the reconciliation start, and 70/109/200 is final verification.');
+console.log('Compatibility Production post-migration verifier contract PASS: historical migration states remain recognized, 70/109/200 requires Chrysiptera reconciliation, and 71/109/202 is current Production verification.');

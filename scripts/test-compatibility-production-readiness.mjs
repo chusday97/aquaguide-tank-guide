@@ -32,8 +32,8 @@ if (blocked.phase !== 'BLOCKED_COMPATIBILITY_DB'
   || blocked.live.source !== 'env') {
   throw new Error('blocked readiness mismatch');
 }
-if (blocked.expected.evidenceSources !== 200) {
-  throw new Error(`readiness must track identity-bridge evidence target 200, got ${blocked.expected.evidenceSources}`);
+if (blocked.expected.evidenceSources !== 202) {
+  throw new Error(`readiness must track current Production evidence target 202, got ${blocked.expected.evidenceSources}`);
 }
 
 const ready = run({
