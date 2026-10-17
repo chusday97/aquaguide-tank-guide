@@ -121,7 +121,7 @@ export const buildAquariumTimeline = ({
     eventType: 'daily_check',
     title: item.problemType === '巡检' ? '完成每日检查' : `完成${item.problemType}`,
     label: item.resultSummary,
-    payload: { riskLevel: item.riskLevel },
+    payload: { riskLevel: item.riskLevel, problemType: item.problemType },
     occurredAt: asIso(item.createdAt, fallbackDate),
     sourceType: 'diagnosis_record',
     sourceId: item.diagnosisId,
@@ -130,7 +130,7 @@ export const buildAquariumTimeline = ({
   reminders.filter(item => item.aquariumId === aquarium.id && item.completedAt).forEach(item => addDerived({
     eventType: 'care_plan_completed',
     title: `完成养护计划：${item.title}`,
-    payload: {},
+    payload: { reminderTitle: item.title, reminderType: item.type },
     occurredAt: asIso(item.completedAt, fallbackDate),
     sourceType: 'care_reminder',
     sourceId: item.id,

@@ -70,7 +70,7 @@ assert.doesNotMatch(aquariumSource, /isEn \? \['Fish floating at surface'/, 'Eng
 assert.match(aquariumSource, /eventType: 'observation',[\s\S]*title: '记录观察',[\s\S]*label: createdRecord\.note/);
 
 const timelineSource = readFileSync(new URL('../src/components/aquarium/AquariumTimeline.tsx', import.meta.url), 'utf8');
-assert.match(timelineSource, /presentObservationNote\(item\.label, isEn\)/);
-assert.match(timelineSource, /getObservationHistoryTitle\(isEn\)/);
+assert.match(timelineSource, /presentCareTimelineItem\(item, isEn\)/);
+assert.match(timelineSource, /getCareReminderTitlePresentation\(reminder, isEn\)/);
 
 console.log('aquarium localization state boundary verified: observation values and reminder completion use canonical codes, presentation remains locale-specific');

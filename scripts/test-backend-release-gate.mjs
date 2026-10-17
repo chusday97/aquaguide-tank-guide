@@ -119,6 +119,7 @@ const gates = [
   ['Daily Check AI Contract', 'npm', ['run', 'test:daily-check']],
   ['Aquarium Localization State Boundary', 'node', ['--import', 'tsx', 'scripts/test-aquarium-localization-state-boundary.ts']],
   ['Add Fish Compatibility i18n', 'node', ['--import', 'tsx', 'scripts/test-add-fish-compatibility-i18n.ts']],
+  ['Care Timeline i18n Boundary', 'node', ['--import', 'tsx', 'scripts/test-care-timeline-i18n-boundary.ts']],
   ['Core User-State Parity Contract', 'npm', ['run', 'test:core-user-state-parity']],
   ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
   ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],

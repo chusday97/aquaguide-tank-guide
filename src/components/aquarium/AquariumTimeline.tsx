@@ -2,7 +2,7 @@ import { Activity, CalendarClock, CheckCircle2, Droplets, Fish, Settings, Utensi
 import type { CareReminderRecord } from '../../services/care/care-activity.service';
 import type { CareTimelineItem } from '../../services/care/care-timeline.service';
 import { SurfaceHeader } from '../common/SurfaceHeader';
-import { getObservationHistoryTitle, presentObservationNote } from '../../services/aquarium/observation-presentation.service';
+import { getCareReminderTitlePresentation, presentCareTimelineItem } from '../../services/care/care-timeline-presentation.service';
 
 type Props = {
   aquariumName: string;
@@ -27,13 +27,8 @@ const formatDateTime = (value: string, isEn: boolean) => new Intl.DateTimeFormat
   year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
 }).format(new Date(value));
 
-const getTimelineTitle = (item: CareTimelineItem, isEn: boolean) => (
-  item.eventType === 'observation' ? getObservationHistoryTitle(isEn) : item.title
-);
-
-const getTimelineLabel = (item: CareTimelineItem, isEn: boolean) => (
-  item.eventType === 'observation' ? presentObservationNote(item.label, isEn) : item.label
-);
+const getTimelineTitle = (item: CareTimelineItem, isEn: boolean) => presentCareTimelineItem(item, isEn).title;
+const getTimelineLabel = (item: CareTimelineItem, isEn: boolean) => presentCareTimelineItem(item, isEn).label;
 
 export function AquariumTimeline({
   aquariumName,
@@ -112,7 +107,7 @@ export function AquariumTimeline({
                 <div className="mt-2 grid gap-2">
                   {activeRecurring.map(reminder => (
                     <div key={reminder.id} className="flex items-center justify-between gap-3 rounded-2xl border border-emerald-100 px-3 py-3">
-                      <div className="min-w-0"><div className="truncate text-xs font-black text-ink">{reminder.title}</div><div className="mt-0.5 text-[10px] font-bold text-ink/42">{isEn ? `Every ${reminder.repeatIntervalDays} days` : `每 ${reminder.repeatIntervalDays} 天`}</div></div>
+                      <div className="min-w-0"><div className="truncate text-xs font-black text-ink">{getCareReminderTitlePresentation(reminder, isEn)}</div><div className="mt-0.5 text-[10px] font-bold text-ink/42">{isEn ? `Every ${reminder.repeatIntervalDays} days` : `每 ${reminder.repeatIntervalDays} 天`}</div></div>
                       <button type="button" onClick={() => onChangeRecurrence(reminder, false)} className="min-h-11 shrink-0 rounded-full border border-border px-3 text-xs font-black text-ink/58 hover:bg-bg">{isEn ? 'Turn off' : '关闭循环'}</button>
                     </div>
                   ))}

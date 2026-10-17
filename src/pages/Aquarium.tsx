@@ -124,6 +124,7 @@ import {
   type CareReminderRecord,
 } from '../services/care/care-activity.service';
 import { buildAquariumTimeline } from '../services/care/care-timeline.service';
+import { getCareReminderTitlePresentation } from '../services/care/care-timeline-presentation.service';
 import type { CareTimelineMutation, CareTimelineRecord } from '../services/repository/aquaguide.repository';
 import {
   appendSpeciesBatch,
@@ -1492,8 +1493,8 @@ export default function AquariumManager() {
       await persistCareTimelineEvent({
         aquariumId: active.id,
         eventType: 'life_stage_updated',
-        title: isEn ? 'Updated livestock state' : '调整缸内物种体态',
-        label: isEn ? 'Quantity and state changes saved' : '已保存数量与体态变化',
+        title: '调整缸内物种体态',
+        label: '已保存数量与体态变化',
         payload: { speciesRecordId: recordId, speciesId: nextRecord.fishId },
         occurredAt: new Date().toISOString(),
         sourceType: 'livestock_state',
@@ -1504,8 +1505,8 @@ export default function AquariumManager() {
       await persistCareTimelineEvent({
         aquariumId: active.id,
         eventType: 'species_removed',
-        title: isEn ? 'Removed species from tank' : '移出缸内物种',
-        label: isEn ? `${previousRecord.quantity} animals` : `${previousRecord.quantity} 只/条`,
+        title: '移出缸内物种',
+        label: `${previousRecord.quantity} 只/条`,
         payload: { aquariumFishId: recordId, speciesId: previousRecord.fishId, quantity: previousRecord.quantity },
         occurredAt: new Date().toISOString(),
         sourceType: 'livestock_removal',
@@ -1534,8 +1535,8 @@ export default function AquariumManager() {
     await persistCareTimelineEvent({
       aquariumId: active.id,
       eventType: 'species_removed',
-      title: isEn ? 'Removed livestock' : '移出缸内生物',
-      label: isEn ? `${input.quantity} animals` : `${input.quantity} 只/条`,
+      title: '移出缸内生物',
+      label: `${input.quantity} 只/条`,
       payload: {
         aquariumFishId: input.aquariumFishId,
         ...(previousRecord?.fishId ? { speciesId: previousRecord.fishId } : {}),
@@ -1590,8 +1591,8 @@ export default function AquariumManager() {
       await persistCareTimelineEvent({
         aquariumId: reminder.aquariumId || activeId,
         eventType: 'care_plan_completed',
-        title: isEn ? `Completed care plan: ${reminder.title}` : `完成养护计划：${reminder.title}`,
-        payload: {},
+        title: `完成养护计划：${reminder.title}`,
+        payload: { reminderTitle: reminder.title, reminderType: reminder.type },
         occurredAt: completed.completedAt || completedAt,
         sourceType: 'care_reminder',
         sourceId: reminder.id,
@@ -1608,9 +1609,9 @@ export default function AquariumManager() {
 
   const handleCreateRecurrence = async (type: 'feeding' | 'water_change' | 'general', days: number) => {
     const labels = {
-      feeding: isEn ? 'Feeding reminder' : '喂食计划',
-      water_change: isEn ? 'Water change reminder' : '换水计划',
-      general: isEn ? 'General care reminder' : '通用养护计划',
+      feeding: '喂食计划',
+      water_change: '换水计划',
+      general: '通用养护计划',
     };
     const scheduled = new Date();
     scheduled.setDate(scheduled.getDate() + days);
@@ -1629,7 +1630,9 @@ export default function AquariumManager() {
       } });
       if (!reminder) throw new Error(isEn ? 'The recurring care plan was not saved.' : '循环养护没有保存成功。');
       setCareRemindersState(await repository.getCareReminders());
-      showToast(isEn ? `${reminder.title} repeats every ${days} days.` : `已设置“${reminder.title}”每 ${days} 天循环。`);
+      showToast(isEn
+        ? `${getCareReminderTitlePresentation(reminder, true)} repeats every ${days} days.`
+        : `已设置“${reminder.title}”每 ${days} 天循环。`);
     } catch (error) {
       showToast((isEn ? 'Could not save recurring care.' : '循环养护没有保存成功。'), 'error');
     }
@@ -1691,7 +1694,7 @@ export default function AquariumManager() {
         await repository.saveCareEvent({
           aquariumId: target.id,
           eventType: 'aquarium_deleted',
-          title: isEn ? 'Aquarium removed' : '结束鱼缸记录',
+          title: '结束鱼缸记录',
           label: target.name,
           payload: { aquariumName: target.name },
           occurredAt: new Date().toISOString(),
@@ -1758,8 +1761,8 @@ export default function AquariumManager() {
         await persistCareTimelineEvent({
           aquariumId: activeAquarium.id,
           eventType: 'settings_updated',
-          title: isEn ? 'Updated aquarium settings' : '更新鱼缸设置',
-          label: isEn ? 'Environment and equipment settings saved' : '已保存环境与设备配置',
+          title: '更新鱼缸设置',
+          label: '已保存环境与设备配置',
           payload: {
             ph: phValue,
             hardnessDgh: hardnessValue,
@@ -2115,9 +2118,9 @@ export default function AquariumManager() {
       await persistCareTimelineEvent({
         aquariumId: savedAquarium.id,
         eventType: 'settings_updated',
-        title: isEn ? 'Renamed aquarium' : '重命名鱼缸',
-        label: isEn ? `Renamed to ${savedAquarium.name}` : `已改为“${savedAquarium.name}”`,
-        payload: {},
+        title: '重命名鱼缸',
+        label: `已改为“${savedAquarium.name}”`,
+        payload: { aquariumName: savedAquarium.name },
         occurredAt: new Date().toISOString(),
         sourceType: 'aquarium_rename',
         sourceId: `${savedAquarium.id}:${Date.now()}`,
@@ -2170,8 +2173,8 @@ export default function AquariumManager() {
         operations.push(persistCareTimelineEvent({
           aquariumId: after.id,
           eventType: 'species_added',
-          title: isEn ? `Added ${speciesName}` : `加入${speciesName}`,
-          label: isEn ? `${batch.quantity} animals` : `${batch.quantity} 只/条`,
+          title: `加入${speciesName}`,
+          label: `${batch.quantity} 只/条`,
           payload: { speciesId: record.fishId, quantity: batch.quantity },
           occurredAt: batch.entryDate,
           sourceType: 'livestock_batch',
@@ -2443,7 +2446,7 @@ export default function AquariumManager() {
           await persistCareTimelineEvent({
             aquariumId: activeAquarium.id,
             eventType: 'water_change',
-            title: isEn ? "Undid today's water-change record" : '撤回今日换水记录',
+            title: '撤回今日换水记录',
             payload: { reversed: true },
             occurredAt: now,
             sourceType: 'water_change_reversal',
@@ -2454,7 +2457,7 @@ export default function AquariumManager() {
           await persistCareTimelineEvent({
             aquariumId: activeAquarium.id,
             eventType: 'water_change',
-            title: isEn ? 'Logged water change' : '记录换水',
+            title: '记录换水',
             payload: {},
             occurredAt: now,
             sourceType: 'water_change_day',
@@ -3318,9 +3321,9 @@ export default function AquariumManager() {
       void persistCareTimelineEvent({
         aquariumId: targetAquarium.id,
         eventType: 'daily_check',
-        title: problemType === '巡检' ? (isEn ? 'Completed daily check' : '完成每日检查') : (isEn ? `Completed ${problemType}` : `完成${problemType}`),
+        title: problemType === '巡检' ? '完成每日检查' : `完成${problemType}`,
         label: result.verdict,
-        payload: { riskLevel: result.riskLevel },
+        payload: { riskLevel: result.riskLevel, problemType },
         occurredAt: record.createdAt,
         sourceType: 'diagnosis_record',
         sourceId: id,
@@ -4883,14 +4886,14 @@ export default function AquariumManager() {
           aquariumId: activeId,
           createdAt: new Date().toISOString(),
           type: 'feeding',
-          note: isEn ? 'Feeding Record' : '喂食记录',
+          note: '喂食记录',
         };
         try {
           if (next) {
             await persistCareTimelineEvent({
               aquariumId: activeId,
               eventType: 'feeding',
-              title: isEn ? 'Logged feeding' : '记录喂食',
+              title: '记录喂食',
               payload: {},
               occurredAt: createdRecord.createdAt,
               sourceType: 'feeding_record',
