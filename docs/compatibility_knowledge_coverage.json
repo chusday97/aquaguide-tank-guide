@@ -8,6 +8,8 @@
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 411,
   "reviewed_compatibility_profiles": 109,
+  "runtime_effective_compatibility_profiles": 145,
+  "inherited_compatibility_profiles": 36,
   "reviewed_pair_rules": 21,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,

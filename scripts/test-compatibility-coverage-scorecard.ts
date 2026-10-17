@@ -15,6 +15,8 @@ const baseline = {
 const priorityNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼', '水晶虾'];
 const eligibleSpecies = fishData.filter(species => !['plant', 'hardscape'].includes(getLifeType(species)));
 const reviewedIds = getCompatibilityEvidenceAudit().reviewedSpeciesIds;
+const runtimeEffectiveProfileIds = eligibleSpecies.filter(species => Boolean(getReviewedCompatibilityProfileForFish(species))).map(species => species.id);
+const inheritedProfileCount = runtimeEffectiveProfileIds.filter(id => !reviewedIds.includes(id)).length;
 const reviewedPairRules = getCompatibilityEvidenceAudit().reviewedPairRules;
 const prioritySpecies = eligibleSpecies.filter(species => priorityNames.includes(species.name));
 const reviewedPrioritySpecies = prioritySpecies.filter(species => Boolean(getReviewedCompatibilityProfileForFish(species)));
@@ -77,9 +79,12 @@ const scorecard = {
   catalogObjects: fishData.length,
   compatibilityEligibleSpecies: eligibleSpecies.length,
   reviewedSpeciesProfiles: reviewedIds.length,
+  runtimeEffectiveSpeciesProfiles: runtimeEffectiveProfileIds.length,
+  inheritedSpeciesProfiles: inheritedProfileCount,
   reviewedPairRules: reviewedPairRules.length,
   catalogProfileCoveragePct: Number((catalogCoverage * 100).toFixed(2)),
   eligibleProfileCoveragePct: Number((eligibleCoverage * 100).toFixed(2)),
+  runtimeEffectiveEligibleCoveragePct: Number((runtimeEffectiveProfileIds.length * 100 / eligibleSpecies.length).toFixed(2)),
   prioritySpeciesCount: prioritySpecies.length,
   reviewedPrioritySpecies: reviewedPrioritySpecies.length,
   priorityProfileCoveragePct: Number((priorityProfileCoverage * 100).toFixed(2)),

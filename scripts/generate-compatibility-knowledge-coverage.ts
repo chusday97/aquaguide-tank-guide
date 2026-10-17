@@ -49,6 +49,8 @@ const fieldCoverage = Object.fromEntries(allFields.map(field => {
 }));
 
 const eligibleSpecies = fishData.filter(fish => !['plant', 'hardscape'].includes(getLifeType(fish)));
+const runtimeEffectiveProfileSpecies = fishData.filter(fish => Boolean(getReviewedCompatibilityProfileForFish(fish))).length;
+const inheritedCompatibilityProfileSpecies = runtimeEffectiveProfileSpecies - audit.reviewedSpeciesIds.length;
 const launchRows = rows.filter(row => row.commonness_proxy === 'launch_cohort');
 
 type GapBoundaryCode =
@@ -430,6 +432,8 @@ const report = {
   completion_matrix_objects: rows.length,
   compatibility_eligible_species: eligibleSpecies.length,
   reviewed_compatibility_profiles: audit.reviewedSpeciesIds.length,
+  runtime_effective_compatibility_profiles: runtimeEffectiveProfileSpecies,
+  inherited_compatibility_profiles: inheritedCompatibilityProfileSpecies,
   reviewed_pair_rules: audit.reviewedPairRules.length,
   reviewed_stage_risk_profiles: audit.reviewedStageRiskProfiles.length,
   launch_cohort_species: launchRows.length,
@@ -493,7 +497,8 @@ markdown.push('## Coverage snapshot');
 markdown.push('');
 markdown.push('- Catalog objects: ' + report.catalog_objects);
 markdown.push('- Compatibility-eligible species: ' + report.compatibility_eligible_species);
-markdown.push('- Reviewed compatibility profiles: ' + report.reviewed_compatibility_profiles);
+markdown.push('- Direct reviewed compatibility profiles: ' + report.reviewed_compatibility_profiles);
+markdown.push('- Runtime effective compatibility profiles: ' + report.runtime_effective_compatibility_profiles + ' (' + report.inherited_compatibility_profiles + ' inherited through reviewed-safe resolution)');
 markdown.push('- Reviewed pair rules: ' + report.reviewed_pair_rules);
 markdown.push('- Reviewed stage-risk profiles: ' + report.reviewed_stage_risk_profiles);
 markdown.push('- Launch-cohort species: ' + report.launch_cohort_species);

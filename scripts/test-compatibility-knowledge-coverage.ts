@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { fishData } from '../src/data/fishData';
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
 import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launch-cohort';
+import { getCompatibilityPairEvidenceCeiling } from '../src/data/compatibilityPairEvidenceCeilings';
 
 const files = [
   'docs/compatibility_knowledge_coverage.json',
@@ -33,6 +34,12 @@ assert.equal(report.completion_matrix_objects, 486);
 assert.equal(report.uses_real_user_telemetry, false);
 assert.match(report.telemetry_boundary, /proxy/i);
 assert.match(report.telemetry_boundary, /not used|not claimed/i);
+assert.ok(report.runtime_effective_compatibility_profiles >= report.reviewed_compatibility_profiles);
+assert.equal(
+  report.runtime_effective_compatibility_profiles - report.reviewed_compatibility_profiles,
+  report.inherited_compatibility_profiles,
+  'runtime effective coverage must expose inherited reviewed-safe profiles separately from direct reviewed authority',
+);
 
 assert.equal(report.launch_pair_count, report.launch_cohort_species * (report.launch_cohort_species - 1) / 2);
 assert.equal(
@@ -143,28 +150,31 @@ assert.equal(
 );
 
 
-const pairCeilings = new Map<string, any>(queue.pair_gaps.map((item: any) => [[item.species_a_id, item.species_b_id].sort().join('::'), item]));
-for (const [key, code] of [
-  [['sp_0002', 'sp_0224'].sort().join('::'), 'prey_trade_identity_not_resolved'],
-  [['sp_0224', 'sp_0428'].sort().join('::'), 'gastropod_predation_not_established'],
-  [['sp_0224', 'sp_0451'].sort().join('::'), 'large_fish_outside_supported_prey_window'],
-]) {
-  const item = pairCeilings.get(key);
-  assert.ok(item, 'missing pair evidence ceiling for ' + key);
-  assert.equal(item.resolution_mode, 'evidence_ceiling');
-  assert.equal(item.pair_evidence_ceiling.code, code);
-  assert.ok(item.pair_evidence_ceiling.source_ids.length > 0);
-  assert.ok(item.resolution_note.length > 30);
+for (const [leftId, rightId, code] of [
+  ['sp_0002', 'sp_0224', 'prey_trade_identity_not_resolved'],
+  ['sp_0224', 'sp_0428', 'gastropod_predation_not_established'],
+  ['sp_0224', 'sp_0451', 'large_fish_outside_supported_prey_window'],
+] as const) {
+  const ceiling = getCompatibilityPairEvidenceCeiling(leftId, rightId);
+  assert.ok(ceiling, 'missing persisted pair evidence ceiling for ' + [leftId, rightId].sort().join('::'));
+  assert.equal(ceiling.code, code);
+  assert.ok(ceiling.sourceIds.length > 0);
+  assert.ok(ceiling.note.length > 30);
+  const left = fishData.find(item => item.id === leftId);
+  const right = fishData.find(item => item.id === rightId);
+  assert.ok(left && right);
+  assert.notEqual(
+    evaluateSpeciesCombination([left, right]).status,
+    'insufficient_data',
+    'persisted pair ceilings may stay as policy guards even when newer reviewed species-level evidence supports a conservative recordable verdict',
+  );
 }
-assert.equal(report.evidence_ceiling_pair_gap_count, 3);
+assert.equal(report.evidence_ceiling_pair_gap_count, 0);
 assert.equal(report.boundary_blocked_pair_gap_count, 0);
 assert.equal(report.research_actionable_pair_count, 0);
-assert.equal(report.terminal_pair_hold_count, 3);
+assert.equal(report.terminal_pair_hold_count, 0);
 assert.deepEqual(queue.actionable_pair_queue, []);
-assert.equal(queue.terminal_pair_holds.length, 3);
-for (const item of queue.terminal_pair_holds) {
-  assert.equal(item.research_disposition, 'terminal_unknown_hold');
-}
+assert.deepEqual(queue.terminal_pair_holds, []);
 
 assert.equal(report.next_wave_species_count, queue.next_wave_species_queue.length);
 assert.ok(queue.next_wave_species_queue.length <= 25, 'next-wave promotion queue may be empty when all current promotion candidates are terminally classified');
