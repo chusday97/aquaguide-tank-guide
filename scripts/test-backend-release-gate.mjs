@@ -116,6 +116,7 @@ const gates = [
   ['Localization Rule Boundary', 'npm', ['run', 'test:localization-rule-boundary']],
   ['Diagnosis Presentation i18n', 'npm', ['run', 'test:diagnosis-presentation-i18n']],
   ['Diagnosis Result Presentation i18n', 'npm', ['run', 'test:diagnosis-result-presentation-i18n']],
+  ['Daily Check AI Contract', 'npm', ['run', 'test:daily-check']],
   ['Core User-State Parity Contract', 'npm', ['run', 'test:core-user-state-parity']],
   ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
   ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],

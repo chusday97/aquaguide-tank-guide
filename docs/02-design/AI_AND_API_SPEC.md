@@ -38,7 +38,7 @@ flowchart LR
 | `risk_audit` | 复核风险信息 | 规则结果与上下文 | 找遗漏、补问题 | 保持原风险 |
 | `recommendation_assist` | 辅助推荐 | 候选物种/文章 | 排序与解释 | 使用本地推荐 |
 | `build_tank_copilot` | AI 建缸助手 | 用户目标与鱼缸约束 | 组织可执行方案 | 使用规则模板 |
-| `tank_daily_check_interpretation` | 每日检查 | 鱼缸快照、答案、确定性结果、候选文章 | 理解自然语言、整理关联、补充问题 | 展示本地分诊与百科步骤 |
+| `tank_daily_check_interpretation` | 每日检查 | locale、鱼缸快照、答案、确定性结果、候选文章 | 仅解释自然语言、整理关联、补充问题；输出语言跟随 locale | priority 必须严格等于 deterministic risk 映射，不能升高或降低；文章只能来自候选池；失败或语言不匹配时回退 deterministic presentation |
 
 `build_tank_copilot` 是内部兼容任务名；用户界面统一称“AI 建缸助手”。
 

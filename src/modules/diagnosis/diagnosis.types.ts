@@ -48,6 +48,7 @@ export type AquariumDiagnosisSnapshot = {
 };
 
 export interface TankDailyCheckContext {
+  locale?: 'zh-CN' | 'en';
   aquariumSnapshot: AquariumDiagnosisSnapshot;
   answers: DiagnosisAnswerMap;
   userDescription?: string;

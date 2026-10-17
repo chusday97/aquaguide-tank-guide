@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { generateTankDailyCheckInterpretation, sanitizeTankDailyCheckInterpretation } from '../src/lib/aiClient';
 import type { DiagnosisRecord, TankDailyCheckContext } from '../src/modules/diagnosis/diagnosis.types';
 import { findDailyPatrolRecord, upsertDiagnosisRecord } from '../src/services/diagnosis/diagnosis-records.service';
@@ -46,6 +47,34 @@ const constrained = sanitizeTankDailyCheckInterpretation({
 assert.equal(constrained.priority, 'urgent', 'AI 不得降低本地高风险');
 assert.deepEqual(constrained.recommendedArticleIds, ['safe-article'], '虚构文章必须被丢弃');
 assert.match(constrained.disclaimer, /不是疾病确诊/);
+
+const routineContext: TankDailyCheckContext = {
+  ...context,
+  deterministicResult: {
+    ...context.deterministicResult,
+    riskLevel: 'low',
+    riskLabel: '低风险',
+    summary: '当前未发现明显异常，可以正常观察。',
+    currentAction: '正常观察',
+    actions: ['正常观察'],
+    avoidActions: ['不要无症状盲目下药'],
+    possibleCauses: ['暂无明显异常'],
+    observeItems: ['呼吸频率'],
+    missingInfo: [],
+    matchedRules: ['normal-patrol'],
+  },
+};
+const attemptedEscalation = sanitizeTankDailyCheckInterpretation({
+  summary: '模型想升级风险',
+  priority: 'urgent',
+  reasoning: ['模型自行认为更严重'],
+}, routineContext);
+assert.equal(attemptedEscalation.priority, 'routine', 'AI 不得提高本地低风险优先级');
+
+const serverSource = readFileSync(new URL('../server/index.mjs', import.meta.url), 'utf8');
+assert.match(serverSource, /priority MUST remain exactly/);
+assert.match(serverSource, /Answer in English/);
+assert.match(serverSource, /normalizeTankDailyCheckData\(parsed, context\?\.locale\)/);
 
 const aquarium: Aquarium = {
   id: 'tank-1',
@@ -102,6 +131,9 @@ assert.ok(positiveWaterAnswerControl.matchedRules.includes('water-breathing-high
 assert.match(positiveWaterAnswerControl.summary, /水体异常/, '明显异味正向对照应保留水体异常摘要');
 assert.ok(positiveWaterAnswerControl.actions.includes('少量换水 20%-30%'), '明显异味正向对照应保留原有紧急换水动作');
 
+const englishContext: TankDailyCheckContext = { ...context, locale: 'en' };
+const hasCjk = (value: string) => /[\u3400-\u9fff]/.test(value);
+
 const originalFetch = globalThis.fetch;
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
   status,
@@ -121,6 +153,39 @@ try {
   globalThis.fetch = async () => response({ ok: true, task: 'wrong_task', data: {} });
   const invalidTask = await generateTankDailyCheckInterpretation(context);
   assert.equal(invalidTask.failureReason, 'invalid_json');
+
+  globalThis.fetch = async () => response({ ok: false, error: 'AI provider is not configured' }, 503);
+  const englishFallback = await generateTankDailyCheckInterpretation(englishContext);
+  assert.equal(englishFallback.source, 'fallback');
+  assert.equal(englishFallback.priority, 'urgent');
+  [englishFallback.summary, ...englishFallback.reasoning, ...englishFallback.clarifyingQuestions, englishFallback.disclaimer].forEach(text => {
+    assert.equal(hasCjk(text), false, `English fallback contains CJK: ${text}`);
+  });
+  assert.match(englishFallback.disclaimer, /not a disease diagnosis/i);
+
+  let capturedLocale = '';
+  globalThis.fetch = async (_input, init) => {
+    const request = JSON.parse(String(init?.body || '{}'));
+    capturedLocale = request?.context?.locale || '';
+    return response({
+      ok: true,
+      task: 'tank_daily_check_interpretation',
+      data: {
+        summary: '模型错误返回中文',
+        priority: 'routine',
+        reasoning: ['中文关联解释'],
+        recommendedArticleIds: ['safe-article'],
+        clarifyingQuestions: ['请补充水质数据'],
+      },
+    });
+  };
+  const englishLocaleMismatch = await generateTankDailyCheckInterpretation(englishContext);
+  assert.equal(capturedLocale, 'en', 'daily-check request must carry locale to the server prompt');
+  assert.equal(englishLocaleMismatch.source, 'model');
+  assert.equal(englishLocaleMismatch.priority, 'urgent', 'model priority must not alter deterministic priority');
+  [englishLocaleMismatch.summary, ...englishLocaleMismatch.reasoning, ...englishLocaleMismatch.clarifyingQuestions, englishLocaleMismatch.disclaimer].forEach(text => {
+    assert.equal(hasCjk(text), false, `English sanitized model output contains CJK: ${text}`);
+  });
 
   globalThis.fetch = async () => response({
     ok: true,

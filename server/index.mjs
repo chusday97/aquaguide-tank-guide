@@ -217,19 +217,45 @@ const buildTankCopilotPrompt = (context = {}) => {
 
 const buildTankDailyCheckPrompt = (context = {}) => {
   const compactContext = JSON.stringify(context, null, 2).slice(0, 16000);
-  const system = [
+  const isEnglish = context?.locale === 'en';
+  const deterministicPriority = context?.deterministicResult?.riskLevel === 'high'
+    ? 'urgent'
+    : context?.deterministicResult?.riskLevel === 'medium' || context?.deterministicResult?.riskLevel === 'unknown'
+      ? 'watch'
+      : 'routine';
+  const system = isEnglish ? [
+    'You are AquaGuide’s daily aquarium check interpretation assistant.',
+    'Deterministic local rules are the authority for risk level, immediate actions, prohibited actions, and candidate care articles. You may only explain user language, organize relationships, and ask clarifying questions.',
+    `The priority MUST remain exactly "${deterministicPriority}". You may not raise or lower it, delete or weaken deterministic actions, diagnose disease, or recommend medication automatically.`,
+    'recommendedArticleIds may only contain IDs from candidateArticles. Never invent an article.',
+    'Answer in English. Output valid JSON only: no Markdown, code fences, or extra commentary.',
+  ].join('\n') : [
     '你是 AquaGuide 的每日鱼缸检查解释助手。',
-    '本地规则已经确定风险等级、立即动作、禁止动作和候选百科。你只能理解用户自然语言、整理可能关联和生成补充问题。',
-    '你不能降低 deterministicResult 的风险，不能删除或弱化立即动作和禁止动作，不能诊断疾病，不能给出自动用药建议。',
+    '本地确定性规则是风险等级、立即动作、禁止动作和候选百科的最终 authority。你只能理解用户自然语言、整理可能关联和生成补充问题。',
+    `priority 必须严格保持为 "${deterministicPriority}"，不能提高或降低；不能删除或弱化确定性动作，不能诊断疾病，不能给出自动用药建议。`,
     'recommendedArticleIds 只能来自 candidateArticles，不能虚构文章。',
-    '输出必须是合法 JSON，不要 Markdown，不要代码块，不要额外解释。',
+    '请使用中文回答。输出必须是合法 JSON，不要 Markdown，不要代码块，不要额外解释。',
   ].join('\n');
-  const user = [
+  const user = isEnglish ? [
+    'Explain the current situation using the aquarium snapshot, structured answers, user description, and deterministic local result.',
+    'Return JSON matching this shape:',
+    JSON.stringify({
+      summary: 'One-sentence explanation of the current situation',
+      priority: deterministicPriority,
+      reasoning: ['Connections supported only by the supplied facts'],
+      recommendedArticleIds: ['IDs selected only from candidateArticles'],
+      clarifyingQuestions: ['Up to 3 questions asking for missing information'],
+      disclaimer: 'This is risk triage and care guidance, not a disease diagnosis or medication recommendation.',
+    }, null, 2),
+    '',
+    'context:',
+    compactContext,
+  ].join('\n') : [
     '请结合鱼缸快照、结构化回答、用户补充描述和本地确定性结果生成解释。',
     '返回 JSON 必须符合：',
     JSON.stringify({
       summary: '一句话解释当前情况',
-      priority: 'routine | watch | urgent',
+      priority: deterministicPriority,
       reasoning: ['只基于输入事实的关联原因'],
       recommendedArticleIds: ['只能选择 candidateArticles 中的 id'],
       clarifyingQuestions: ['最多 3 个需要用户补充的问题'],
@@ -358,7 +384,7 @@ const normalizeTankCopilotData = (data) => {
   };
 };
 
-const normalizeTankDailyCheckData = (data) => ({
+const normalizeTankDailyCheckData = (data, locale = 'zh-CN') => ({
   summary: typeof data?.summary === 'string' ? data.summary.trim() : '',
   priority: ['routine', 'watch', 'urgent'].includes(data?.priority) ? data.priority : 'watch',
   reasoning: Array.isArray(data?.reasoning) ? data.reasoning.filter(item => typeof item === 'string').slice(0, 5) : [],
@@ -368,7 +394,9 @@ const normalizeTankDailyCheckData = (data) => ({
   clarifyingQuestions: Array.isArray(data?.clarifyingQuestions)
     ? data.clarifyingQuestions.filter(item => typeof item === 'string').slice(0, 3)
     : [],
-  disclaimer: '这是风险分诊和养护引导，不是疾病确诊或用药建议。',
+  disclaimer: locale === 'en'
+    ? 'This is risk triage and care guidance, not a disease diagnosis or medication recommendation.'
+    : '这是风险分诊和养护引导，不是疾病确诊或用药建议。',
 });
 
 const fetchWithTimeout = async (url, options, timeoutMs = aiRequestTimeoutMs) => {
@@ -508,7 +536,7 @@ app.post(['/api/ai/chat', '/api/v1/ai/chat'], async (req, res) => {
         task: 'tank_daily_check_interpretation',
         source: 'model',
         generatedAt: new Date().toISOString(),
-        data: normalizeTankDailyCheckData(parsed),
+        data: normalizeTankDailyCheckData(parsed, context?.locale),
       });
     }
 

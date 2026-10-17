@@ -12,6 +12,7 @@ interface AskAiOptions {
 }
 
 import type { TankDailyCheckContext, TankDailyCheckInterpretation } from '../modules/diagnosis/diagnosis.types';
+import { projectDiagnosisOutputForPresentation } from '../modules/diagnosis/diagnosis.presentation';
 
 export type AiTaskName = 'risk_explanation' | 'risk_audit' | 'recommendation_assist' | 'build_tank_copilot' | 'tank_daily_check_interpretation' | 'species_symptom_interpretation';
 export type AiResponseSource = 'model' | 'fallback';
@@ -127,12 +128,6 @@ const fallbackRecommendationAssist: RecommendationAssistData = {
   fallback: true,
 };
 
-const dailyPriorityRank: Record<TankDailyCheckInterpretation['priority'], number> = {
-  routine: 1,
-  watch: 2,
-  urgent: 3,
-};
-
 const getDeterministicDailyPriority = (context: TankDailyCheckContext): TankDailyCheckInterpretation['priority'] => (
   context.deterministicResult.riskLevel === 'high'
     ? 'urgent'
@@ -141,42 +136,55 @@ const getDeterministicDailyPriority = (context: TankDailyCheckContext): TankDail
       : 'routine'
 );
 
-const buildDailyCheckFallback = (context: TankDailyCheckContext): TankDailyCheckInterpretation => ({
-  summary: context.deterministicResult.summary,
-  priority: getDeterministicDailyPriority(context),
-  reasoning: [...context.deterministicResult.possibleCauses, ...context.deterministicResult.evidence].slice(0, 4),
-  recommendedArticleIds: context.candidateArticles.slice(0, 2).map(article => article.id),
-  clarifyingQuestions: context.deterministicResult.missingInfo.slice(0, 3).map(item => `请补充：${item}`),
-  disclaimer: '这是风险分诊和养护引导，不是疾病确诊或用药建议。',
-});
+const buildDailyCheckFallback = (context: TankDailyCheckContext): TankDailyCheckInterpretation => {
+  const isEnglish = context.locale === 'en';
+  const deterministic = projectDiagnosisOutputForPresentation(context.deterministicResult, isEnglish);
+  return {
+    summary: deterministic.summary,
+    priority: getDeterministicDailyPriority(context),
+    reasoning: [...deterministic.possibleCauses, ...deterministic.observeItems].slice(0, 4),
+    recommendedArticleIds: context.candidateArticles.slice(0, 2).map(article => article.id),
+    clarifyingQuestions: deterministic.missingInfo.slice(0, 3).map(item => isEnglish ? `Please add: ${item}` : `请补充：${item}`),
+    disclaimer: isEnglish
+      ? 'This is risk triage and care guidance, not a disease diagnosis or medication recommendation.'
+      : '这是风险分诊和养护引导，不是疾病确诊或用药建议。',
+  };
+};
+
+const hasCjk = (value: string) => /[\u3400-\u9fff]/.test(value);
+const dailyCheckText = (value: unknown, fallback: string, isEnglish: boolean) => {
+  if (typeof value !== 'string' || !value.trim()) return fallback;
+  const trimmed = value.trim();
+  return isEnglish && hasCjk(trimmed) ? fallback : trimmed;
+};
+const dailyCheckTextList = (value: unknown, fallback: string[], isEnglish: boolean, limit: number) => {
+  if (!Array.isArray(value)) return fallback;
+  const valid = value
+    .filter((item): item is string => typeof item === 'string' && Boolean(item.trim()))
+    .map(item => item.trim())
+    .filter(item => !isEnglish || !hasCjk(item))
+    .slice(0, limit);
+  return valid.length > 0 ? valid : fallback;
+};
 
 export const sanitizeTankDailyCheckInterpretation = (
   data: Partial<TankDailyCheckInterpretation> | undefined,
   context: TankDailyCheckContext,
 ): TankDailyCheckInterpretation => {
   const fallback = buildDailyCheckFallback(context);
-  const allowedPriorities: TankDailyCheckInterpretation['priority'][] = ['routine', 'watch', 'urgent'];
-  const requestedPriority = allowedPriorities.includes(data?.priority as TankDailyCheckInterpretation['priority'])
-    ? data?.priority as TankDailyCheckInterpretation['priority']
-    : fallback.priority;
-  const priority = dailyPriorityRank[requestedPriority] < dailyPriorityRank[fallback.priority]
-    ? fallback.priority
-    : requestedPriority;
+  const isEnglish = context.locale === 'en';
   const candidateIds = new Set(context.candidateArticles.map(article => article.id));
 
   return {
-    summary: typeof data?.summary === 'string' && data.summary.trim() ? data.summary.trim() : fallback.summary,
-    priority,
-    reasoning: Array.isArray(data?.reasoning)
-      ? data.reasoning.filter(item => typeof item === 'string' && item.trim()).slice(0, 5)
-      : fallback.reasoning,
+    summary: dailyCheckText(data?.summary, fallback.summary, isEnglish),
+    // AI interpretation never raises or lowers deterministic priority.
+    priority: fallback.priority,
+    reasoning: dailyCheckTextList(data?.reasoning, fallback.reasoning, isEnglish, 5),
     recommendedArticleIds: Array.isArray(data?.recommendedArticleIds)
       ? Array.from(new Set(data.recommendedArticleIds.filter(id => typeof id === 'string' && candidateIds.has(id)))).slice(0, 3)
       : fallback.recommendedArticleIds,
-    clarifyingQuestions: Array.isArray(data?.clarifyingQuestions)
-      ? data.clarifyingQuestions.filter(item => typeof item === 'string' && item.trim()).slice(0, 3)
-      : fallback.clarifyingQuestions,
-    disclaimer: '这是风险分诊和养护引导，不是疾病确诊或用药建议。',
+    clarifyingQuestions: dailyCheckTextList(data?.clarifyingQuestions, fallback.clarifyingQuestions, isEnglish, 3),
+    disclaimer: fallback.disclaimer,
   };
 };
 

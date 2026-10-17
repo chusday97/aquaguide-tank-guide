@@ -3194,6 +3194,7 @@ export default function AquariumManager() {
     if (!hasAbnormalAnswer && (!userDescription || userDescription === '跳过')) return;
 
     const context: TankDailyCheckContext = {
+      locale: isEn ? 'en' : 'zh-CN',
       aquariumSnapshot: snapshot,
       answers: diagnosisQuizAnswers,
       userDescription: userDescription && userDescription !== '跳过' ? userDescription : undefined,
