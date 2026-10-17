@@ -182,4 +182,40 @@ assert.deepEqual(superRedAngelfishApproved.get('social_behavior')?.proposedValue
 assert.deepEqual(superRedAngelfishApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
 assert.deepEqual(superRedAngelfishApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
 
-console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, Fire Red Agassizii, and Blue Diamond, Panda, and Super Red angelfish corrections inherit only explicit same-species authority');
+
+const platinumLongfinIdentity = getCatalogFieldReviews('sp_0240').filter(review => review.field === 'identity').at(-1);
+assert.equal(platinumLongfinIdentity?.resolution, 'supported');
+assert.deepEqual(platinumLongfinIdentity?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Platinum Longfin',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Platinum Veiltail / Longfin',
+});
+const platinumLongfinApproved = new Map(getApprovedCatalogFieldReviews('sp_0240').map(review => [review.field, review]));
+assert.equal(platinumLongfinApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(platinumLongfinApproved.get('temperature')?.proposedValue, { min: 24, max: 30 });
+assert.deepEqual(platinumLongfinApproved.get('ph')?.proposedValue, { min: 6, max: 8 });
+assert.deepEqual(platinumLongfinApproved.get('adult_size')?.proposedValue, { min: null, max: 15 });
+assert.deepEqual(platinumLongfinApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 100 });
+assert.deepEqual(platinumLongfinApproved.get('social_behavior')?.proposedValue, { mode: 'group', minimumGroupSize: 5 });
+assert.deepEqual(platinumLongfinApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
+assert.deepEqual(platinumLongfinApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
+
+const blackLongfinIdentity = getCatalogFieldReviews('sp_0272').filter(review => review.field === 'identity').at(-1);
+assert.equal(blackLongfinIdentity?.resolution, 'supported');
+assert.deepEqual(blackLongfinIdentity?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Black Longfin',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Black Veil / Longfin',
+});
+const blackLongfinApproved = new Map(getApprovedCatalogFieldReviews('sp_0272').map(review => [review.field, review]));
+assert.equal(blackLongfinApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(blackLongfinApproved.get('temperature')?.proposedValue, { min: 24, max: 30 });
+assert.deepEqual(blackLongfinApproved.get('ph')?.proposedValue, { min: 6, max: 8 });
+assert.deepEqual(blackLongfinApproved.get('adult_size')?.proposedValue, { min: null, max: 15 });
+assert.deepEqual(blackLongfinApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 100 });
+assert.deepEqual(blackLongfinApproved.get('social_behavior')?.proposedValue, { mode: 'group', minimumGroupSize: 5 });
+assert.deepEqual(blackLongfinApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
+assert.deepEqual(blackLongfinApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
+
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, Fire Red Agassizii, and Blue Diamond, Panda, Super Red, Platinum Longfin, and Black Longfin angelfish corrections inherit only explicit same-species authority');

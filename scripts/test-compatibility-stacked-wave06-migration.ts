@@ -2,14 +2,14 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { nextWaveUnified06ProfileIds, nextWaveUnified06Sources } from '../src/data/catalogReviewBatches/next-wave-unified-06';
-import { compatibilityStackedWave06PendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { compatibilitySourceControlledPendingProfileIds, compatibilityStackedWave06PendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 
 const migrationPath = 'supabase/migrations/20261012023000_compatibility_unified_wave06_authority.sql';
 const migration = readFileSync(migrationPath, 'utf8');
 const audit = getCompatibilityEvidenceAudit();
 
-assert.equal(audit.reviewedProfiles.length, 109, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 111, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 assert.deepEqual([...compatibilityStackedWave06PendingProfileIds].sort(), [...nextWaveUnified06ProfileIds].sort());
@@ -42,8 +42,14 @@ assert.equal(historicalLinks, 3, 'historical wave06 migration must retain its or
 assert.equal(Object.values(nextWaveUnified06Sources).length, 1);
 
 for (const member of batch.members.filter(item => !item.expectProfile)) {
-  assert.equal(getReviewedCompatibilityProfile(member.speciesId), undefined);
-  assert.equal(getCatalogIdentityBoundary(member.speciesId)?.researchDisposition, 'terminal_unknown_hold');
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(member.speciesId);
+  if (laterSourceControlledProfile) {
+    assert.ok(getReviewedCompatibilityProfile(member.speciesId), 'later reviewed source-controlled correction may add a Profile without rewriting frozen wave06 authority: ' + member.speciesId);
+    assert.equal(getCatalogIdentityBoundary(member.speciesId), undefined);
+  } else {
+    assert.equal(getReviewedCompatibilityProfile(member.speciesId), undefined);
+    assert.equal(getCatalogIdentityBoundary(member.speciesId)?.researchDisposition, 'terminal_unknown_hold');
+  }
   assert.equal(migration.includes("'" + member.speciesId + "'"), true);
 }
 

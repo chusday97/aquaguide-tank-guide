@@ -31,6 +31,7 @@ import { identityCorrectionsWave25Sources } from './catalogReviewBatches/identit
 import { identityCorrectionsWave26Sources } from './catalogReviewBatches/identity-corrections-wave26';
 import { identityCorrectionsWave27Sources } from './catalogReviewBatches/identity-corrections-wave27';
 import { identityCorrectionsWave28Sources } from './catalogReviewBatches/identity-corrections-wave28';
+import { identityCorrectionsWave29Sources } from './catalogReviewBatches/identity-corrections-wave29';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 
 export type ReviewedCompatibilityProfile = {
@@ -1658,6 +1659,16 @@ profiles.sp_0388 = wave04BridgeProfile(
   'sp_0388',
   'sp_0446',
   identityCorrectionsWave28Sources.superRedAquaticArts,
+);
+profiles.sp_0240 = wave04BridgeProfile(
+  'sp_0240',
+  'sp_0446',
+  identityCorrectionsWave29Sources.platinumVeiltailAquaticArts,
+);
+profiles.sp_0272 = wave04BridgeProfile(
+  'sp_0272',
+  'sp_0446',
+  identityCorrectionsWave29Sources.blackVeilPeerReviewed,
 );
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {

@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 79,
-  "coreFieldCompleteSpecies": 94,
+  "genericOnboardingReadySpecies": 81,
+  "coreFieldCompleteSpecies": 96,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 145,
-  "domainOrIdentityHeldSpecies": 282,
+  "runtimeReviewedProfileSpecies": 147,
+  "domainOrIdentityHeldSpecies": 280,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 150,
+      "reviewed_supported": 152,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 43,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 135,
+      "reviewed_supported": 137,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 129,
+      "reviewed_supported": 131,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 139,
+      "reviewed_supported": 141,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 127,
+      "reviewed_supported": 129,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 66,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 116,
+      "reviewed_supported": 118,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 82,
+      "reviewed_supported": 84,
       "reviewed_neutral_or_negative": 34,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 71,
+      "reviewed_supported": 73,
       "reviewed_neutral_or_negative": 30,
       "reviewed_unknown": 92,
       "needs_research": 0,
-      "missing_identity_or_domain": 282,
+      "missing_identity_or_domain": 280,
       "not_applicable": 11
     }
   },
@@ -20126,83 +20126,107 @@
       "name": "白金神仙 (长鳍)",
       "scientificName": "Pterophyllum scalare var. Platinum Longfin",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch13-fishbase-pterophyllum-scalare-platinum-longfin"
+            "aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -22774,83 +22798,107 @@
       "name": "长鳍神仙 (黑)",
       "scientificName": "Pterophyllum scalare var. Black Longfin",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch14-fishbase-pterophyllum-scalare-black-longfin"
+            "aquaculture-pterophyllum-scalare-black-veil-wave29",
+            "quality-marine-pterophyllum-scalare-veil-catalog-wave29",
+            "wave29-fishbase-pterophyllum-scalare-husbandry",
+            "wave29-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
