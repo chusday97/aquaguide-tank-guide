@@ -4,6 +4,7 @@ import { apiRequest } from '../services/api/api-client';
 import { fishData as seedFishData } from './fishData';
 import { careTopicsData as seedCareTopicsData, type CareTopic } from './careTopicsData';
 import { loadGitRuntimeAuthoritySnapshot } from './gitRuntimeAuthority';
+import { replaceCanonicalRuntimeContent } from './runtimeRuleContent';
 
 type ContentBootstrapResponse = {
   species: SpeciesDetailDto[];
@@ -201,6 +202,7 @@ const applyGitProductCareSnapshot = (snapshot: Awaited<ReturnType<typeof loadGit
   snapshot.productCare.careArticles.forEach(item => publishedCareKeys.add(item.input.catalogKey));
   runtimeFishData.splice(0, runtimeFishData.length, ...species);
   runtimeCareTopicsData.splice(0, runtimeCareTopicsData.length, ...care);
+  replaceCanonicalRuntimeContent(species, care);
   runtimeContentStatus = {
     source: 'git-snapshot',
     speciesFromPublished: snapshot.productCare.species.length,
@@ -226,6 +228,7 @@ export const getRuntimeContentLocalePreference = (): RuntimeContentLocale => {
 const resetRuntimeContentCatalog = () => {
   runtimeFishData.splice(0, runtimeFishData.length, ...seedFishData.map(cloneFish));
   runtimeCareTopicsData.splice(0, runtimeCareTopicsData.length, ...seedCareTopicsData.map(cloneCareTopic));
+  replaceCanonicalRuntimeContent(seedFishData, seedCareTopicsData);
   publishedSpeciesKeys.clear();
   publishedCareKeys.clear();
   runtimeContentStatus = {
@@ -237,16 +240,21 @@ const resetRuntimeContentCatalog = () => {
   };
 };
 
+const loadContentBootstrap = (locale: RuntimeContentLocale) => apiRequest<ContentBootstrapResponse>(`/content-bootstrap?locale=${encodeURIComponent(locale)}`, {
+  authenticated: false,
+  signal: AbortSignal.timeout(5000),
+});
+
 export const hydratePublishedContentCatalog = async (
   locale: RuntimeContentLocale = getRuntimeContentLocalePreference(),
 ) => {
   try {
     const gitSnapshot = await loadGitRuntimeAuthoritySnapshot();
     if (applyGitProductCareSnapshot(gitSnapshot)) return getRuntimeContentStatus();
-    const payload = await apiRequest<ContentBootstrapResponse>(`/content-bootstrap?locale=${encodeURIComponent(locale)}`, {
-      authenticated: false,
-      signal: AbortSignal.timeout(5000),
-    });
+    const [payload, canonicalPayload] = await Promise.all([
+      loadContentBootstrap(locale),
+      locale === 'zh-CN' ? Promise.resolve(null) : loadContentBootstrap('zh-CN'),
+    ]);
     if (payload.species.length === 0 && payload.careArticles.length === 0) {
       resetRuntimeContentCatalog();
       return getRuntimeContentStatus();
@@ -259,8 +267,11 @@ export const hydratePublishedContentCatalog = async (
 
     const mergedSpecies = mergeSpecies(payload.species);
     const mergedCare = mergeCare(payload.careArticles);
+    const canonicalSpecies = canonicalPayload ? mergeSpecies(canonicalPayload.species) : mergedSpecies;
+    const canonicalCare = canonicalPayload ? mergeCare(canonicalPayload.careArticles) : mergedCare;
     runtimeFishData.splice(0, runtimeFishData.length, ...mergedSpecies);
     runtimeCareTopicsData.splice(0, runtimeCareTopicsData.length, ...mergedCare);
+    replaceCanonicalRuntimeContent(canonicalSpecies, canonicalCare);
     runtimeContentStatus = {
       source: 'published-api',
       speciesFromPublished: payload.species.length,

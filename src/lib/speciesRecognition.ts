@@ -1,5 +1,6 @@
 import type { RawVisionCandidate } from '../../packages/contracts/src/index';
 import type { Aquarium, Fish } from '../types';
+import { getCanonicalRuntimeFish } from '../data/runtimeRuleContent';
 
 export type MappedRecognitionCandidate = RawVisionCandidate & {
   fish?: Fish;
@@ -10,7 +11,10 @@ export const normalizeSpeciesName = (value = '') => value.toLowerCase().replace(
 
 const diagnosableFishCategories = new Set(['鱼类', '灯科鱼', '慈鲷/斗鱼', '海水鱼', '鲶鱼/异型']);
 
-export const isSpeciesEligibleForHealthTriage = (fish: Fish) => diagnosableFishCategories.has(fish.category);
+export const isSpeciesEligibleForHealthTriage = (fish: Fish) => {
+  const canonical = getCanonicalRuntimeFish(fish) || fish;
+  return diagnosableFishCategories.has(canonical.category);
+};
 
 const parseNumericRange = (value: string) => {
   const numbers = value.match(/\d+(?:\.\d+)?/g)?.map(Number) || [];
@@ -18,6 +22,7 @@ const parseNumericRange = (value: string) => {
 };
 
 export const buildSpeciesDiagnosisContextAnswers = (fish: Fish, aquarium?: Aquarium | null) => {
+  fish = getCanonicalRuntimeFish(fish) || fish;
   const answers: Record<string, string> = {};
   const isSaltwaterSpecies = fish.category === '海水鱼';
   answers.water_fit = !aquarium?.waterType

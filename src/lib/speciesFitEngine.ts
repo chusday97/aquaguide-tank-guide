@@ -5,6 +5,7 @@ import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvi
 import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
 import { applyApprovedCatalogFieldReviews } from '../data/catalogFieldReviews';
+import { getCanonicalRuntimeFish } from '../data/runtimeRuleContent';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -28,26 +29,32 @@ export type SpeciesFitEvaluation = {
 
 type SpeciesWaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
 
-const textOf = (species: Fish) => [
-  species.name,
-  species.scientificName,
-  species.category,
-  species.description,
-  species.diet,
-  species.housingMode,
-  species.housingReason,
-  species.feedingProfile?.specialNotes,
-].filter(Boolean).join(' ');
+const textOf = (species: Fish) => {
+  const canonical = getCanonicalRuntimeFish(species) || species;
+  return [
+    canonical.name,
+    canonical.scientificName,
+    canonical.category,
+    canonical.description,
+    canonical.diet,
+    canonical.housingMode,
+    canonical.housingReason,
+    canonical.feedingProfile?.specialNotes,
+  ].filter(Boolean).join(' ');
+};
 
-const identityTextOf = (species: Fish) => [
-  species.name,
-  species.scientificName,
-  species.category,
-  species.description,
-  species.housingMode,
-  species.housingReason,
-  species.feedingProfile?.specialNotes,
-].filter(Boolean).join(' ');
+const identityTextOf = (species: Fish) => {
+  const canonical = getCanonicalRuntimeFish(species) || species;
+  return [
+    canonical.name,
+    canonical.scientificName,
+    canonical.category,
+    canonical.description,
+    canonical.housingMode,
+    canonical.housingReason,
+    canonical.feedingProfile?.specialNotes,
+  ].filter(Boolean).join(' ');
+};
 
 const parseRange = (value?: string) => {
   const matches = value?.match(/(\d+(?:\.\d+)?)/g);
@@ -72,11 +79,13 @@ const getAquariumLengthCm = (aquarium?: Aquarium | null) => {
 };
 
 const getSpeciesMinVolumeLiters = (species: Fish) => {
+  species = getCanonicalRuntimeFish(species) || species;
   const range = parseRange(species.tankSize);
   return range?.min ?? null;
 };
 
 const getSpeciesMinLengthCm = (species: Fish) => {
+  species = getCanonicalRuntimeFish(species) || species;
   const explicit = (species as Fish & { minLengthCm?: unknown }).minLengthCm;
   if (typeof explicit === 'number' && Number.isFinite(explicit)) return explicit;
   const text = `${species.tankSize} ${textOf(species)}`;
@@ -85,6 +94,7 @@ const getSpeciesMinLengthCm = (species: Fish) => {
 };
 
 const getSpeciesWaterTypes = (species: Fish): SpeciesWaterType[] => {
+  species = getCanonicalRuntimeFish(species) || species;
   const reviewedProfile = getReviewedCompatibilityProfileForFish(species);
   if (reviewedProfile?.waterTypes?.length) return [...reviewedProfile.waterTypes];
 
@@ -159,7 +169,8 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
   const predator = validLivestock.find(item => {
     const reviewed = getReviewedCompatibilityProfileForFish(item.species);
     if (reviewed) return reviewedProfileTargetsSpecies(item.species, species);
-    const predatorIdentity = `${item.species.name} ${item.species.category} ${item.species.description}`;
+    const canonicalPredator = getCanonicalRuntimeFish(item.species) || item.species;
+    const predatorIdentity = `${canonicalPredator.name} ${canonicalPredator.category} ${canonicalPredator.description}`;
     return selectedIsSmall && /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
   });
   if (predator) {
@@ -184,8 +195,12 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
     };
   }
 
-  const territorial = validLivestock.find(item => item.species?.temperament === 'Territorial' || item.species?.housingMode === '建议单养');
-  if (territorial && (species.temperament === 'Territorial' || species.housingMode === '建议单养')) {
+  const territorial = validLivestock.find(item => {
+    const canonical = getCanonicalRuntimeFish(item.species) || item.species;
+    return canonical.temperament === 'Territorial' || canonical.housingMode === '建议单养';
+  });
+  const canonicalSpecies = getCanonicalRuntimeFish(species) || species;
+  if (territorial && (canonicalSpecies.temperament === 'Territorial' || canonicalSpecies.housingMode === '建议单养')) {
     return {
       type: 'territorial_conflict',
       title: '领地冲突风险',
@@ -428,9 +443,10 @@ export const evaluateSpeciesForAquarium = (
   }
   if (species.temperament === 'Peaceful') score += 5;
   const reviewedHousing = getReviewedCompatibilityProfileForFish(species);
+  const canonicalSpecies = getCanonicalRuntimeFish(species) || species;
   const solitaryRequired = reviewedHousing
     ? reviewedHousing.behaviorTraits.includes('solitary_required')
-    : species.housingMode === '建议单养';
+    : canonicalSpecies.housingMode === '建议单养';
   if (solitaryRequired && otherLivestock.length > 0) {
     warnings.push({ type: 'single_housing', title: '更适合单养', detail: '该物种更适合单独规划缸位。', severity: 'medium' });
     score -= 15;

@@ -1,4 +1,5 @@
 import type { CareTopic } from '../../data/careTopicsData';
+import { getCanonicalRuntimeCareTopic } from '../../data/runtimeRuleContent';
 
 export type CareCategoryId =
   | 'all'
@@ -12,21 +13,14 @@ export type CareCategoryId =
   | 'equipment'
   | 'beginner';
 
-type CanonicalCareTopic = CareTopic & {
-  _originalTitle?: string;
-  _originalCategory?: string;
-  _originalSummary?: string;
-  _originalKeywords?: string[];
-};
-
 const getCanonicalText = (topic: CareTopic) => {
-  const canonical = topic as CanonicalCareTopic;
+  const canonical = getCanonicalRuntimeCareTopic(topic) || topic;
   return [
-    topic.id,
-    canonical._originalTitle || topic.title,
-    canonical._originalCategory || topic.category,
-    canonical._originalSummary || topic.summary,
-    ...(canonical._originalKeywords || topic.keywords),
+    canonical.id,
+    canonical.title,
+    canonical.category,
+    canonical.summary,
+    ...canonical.keywords,
   ].join(' ');
 };
 

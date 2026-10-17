@@ -4,6 +4,7 @@ import { loggerService } from '../../services/logger/logger.service';
 import { Aquarium, Fish } from '../../types';
 import { speciesDetailInputSchema, speciesListInputSchema, SpeciesDetailOutput, SpeciesListOutput } from './species.schema';
 import { getSpeciesHousingAuthority } from '../knowledge/speciesHousingAuthority';
+import { getCanonicalRuntimeFish } from '../../data/runtimeRuleContent';
 
 const secondaryCategoryOrder: Record<string, string[]> = {
   freshwaterFish: [
@@ -99,6 +100,7 @@ export const getDifficultyLabel = (fish: Fish) => {
 };
 
 export const getLifeType = (fish: Fish) => {
+  fish = getCanonicalRuntimeFish(fish) || fish;
   const origCategory = (fish as any)._originalCategory || fish.category;
   const text = `${fish.name} ${fish.scientificName} ${fish.category} ${origCategory}`;
 

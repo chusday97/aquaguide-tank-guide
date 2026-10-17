@@ -1,4 +1,5 @@
 import type { CareTopic } from '../../data/careTopicsData';
+import { getCanonicalRuntimeCareTopic } from '../../data/runtimeRuleContent';
 import type {
   AiDiagnosisInput,
   BuildDiagnosisInput,
@@ -38,17 +39,18 @@ export const matchCareArticles = (problemType: DiagnosisProblemType, answers: Re
   const answerText = Object.values(answers).join(' ');
   const query = `${problemType} ${answerText}`;
   const scored = careTopics.map(topic => {
+    const canonical = getCanonicalRuntimeCareTopic(topic) || topic;
     const searchable = [
-      topic.title,
-      topic.category,
-      topic.summary,
-      ...topic.keywords,
-      ...topic.symptoms,
-      ...topic.firstSteps,
-      ...topic.avoid,
+      canonical.title,
+      canonical.category,
+      canonical.summary,
+      ...canonical.keywords,
+      ...canonical.symptoms,
+      ...canonical.firstSteps,
+      ...canonical.avoid,
     ].join(' ');
     let score = 0;
-    if (topic.category.includes(problemType) || problemType.includes(topic.category)) score += 3;
+    if (canonical.category.includes(problemType) || problemType.includes(canonical.category)) score += 3;
     if (/水质/.test(problemType) && /水质|水浑|发白|发绿|异味|油膜/.test(searchable)) score += 3;
     if (/鱼只异常/.test(problemType) && /浮头|趴缸|白点|烂尾|拒食|鱼只异常|生病/.test(searchable)) score += 3;
     if (/新鱼入缸/.test(problemType) && /新鱼|入缸|过水|检疫/.test(searchable)) score += 3;

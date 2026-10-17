@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { CareTopic } from '../data/careTopicsData';
 import { isRuntimeCarePublished, runtimeFishData as fishData, runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
+import { getCanonicalRuntimeCareTopic } from '../data/runtimeRuleContent';
 import {
   getCareActionEvidence,
   getCareActionEvidenceForText,
@@ -1141,6 +1142,7 @@ const getStepDiagnosisQuestions = (issueType: StepDiagnosisIssue, isEn = false) 
 };
 
 const inferStepDiagnosisIssue = (topic: CareTopic): StepDiagnosisIssue => {
+  topic = getCanonicalRuntimeCareTopic(topic) || topic;
   const text = `${topic.title}${topic.category}${topic.summary}${topic.keywords.join(' ')}`;
   if (/虾/.test(text)) return 'shrimpDeath';
   if (/水草|黄叶|烂叶|藻/.test(text)) return 'plantProblem';

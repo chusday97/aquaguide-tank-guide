@@ -1834,18 +1834,24 @@ void i18n.use(initReactI18next).init({
 applyLocalization(initialLocale);
 
 const applyLocale = async (locale: SupportedLocale, persist: boolean) => {
-  await hydratePublishedContentCatalog(locale);
+  // Switch the app shell immediately; published/localized content can refresh afterward.
   applyLocalization(locale);
-  await i18n.changeLanguage(locale);
   if (typeof document !== 'undefined') {
     document.documentElement.lang = locale;
   }
-  if (!persist) return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, locale);
-  } catch {
-    // Language still changes for the current session when storage is unavailable.
+  if (persist) {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, locale);
+    } catch {
+      // Language still changes for the current session when storage is unavailable.
+    }
   }
+  await i18n.changeLanguage(locale);
+  await hydratePublishedContentCatalog(locale);
+  applyLocalization(locale);
+  // Hydration replaces runtime presentation objects in place; re-emit so consumers
+  // that read those objects render the newly localized snapshot as well.
+  i18n.emit('languageChanged', locale);
 };
 
 export const setLocale = async (locale: SupportedLocale) => applyLocale(locale, true);

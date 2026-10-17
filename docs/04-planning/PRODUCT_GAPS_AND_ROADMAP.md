@@ -37,7 +37,7 @@
 | P1-10 | 图鉴卡收藏必须先打开详情，路径长且用户不确定收藏去向 | 卡片左上角独立收藏；品类进入变种后逐个收藏；统一同步水族册 | 桌面/手机快捷收藏、刷新保持、失败回滚和水族册同步均通过 | 已完成 |
 | P1-11 | 今日行动与养护计划分成两张卡，缸内物种入口重复且目标不可见 | 计划内嵌今日行动；鱼缸画面下只保留一个可展开物种入口 | 一个行动主操作、一个计划摘要、一个正式物种入口 | 已完成 |
 | P1-12 | 单页巡检需要手动寻找下一题，连续回答节奏被打断 | 选择后保留反馈并聚焦下一道有效问题；最后聚焦提交 | 鼠标、触控、键盘和减少动态效果均可完成，不自动提交 | 已完成 |
-| P1-13 | 语言切换缺少统一入口，英文内容可能与规则输入混用 | 桌面/手机共享语言偏好；展示层本地化，规则继续读取中文主数据 | 首选、切换、持久化、回退和中英文规则一致性通过 | 部分完成：基础框架与设置已完成，内容审核待完成 |
+| P1-13 | 语言切换缺少统一入口，英文内容可能与规则输入混用 | 桌面/手机共享语言偏好；runtime 分为 localized presentation 与 canonical rule data；英文 API 同步读取 `zh-CN` canonical authority；Species 分类/识别/Fit、Care 分类与 Diagnosis 文章匹配均从 canonical accessor 读取 | 语言切换前后规则判定一致；英文展示对象即使没有 `_original*` 也不能改变规则结果 | 规则边界已完成；剩余英文展示内容覆盖待完成 |
 | P1-14 | “我的水族册”此前实际只完成收藏/纪念/勋章壳，没有沉淀“我养过什么、何时发生过什么”的个人养鱼履历 | 复用鱼缸批次、Care Events、观察、纪念与混养记录生成只读履历 projection；cloud mode 只读取云端事实；species/care 收藏由 Repository 统一读写；Hub 提供独立履历入口与 current / ever-kept / timeline 页面 | 履历回归覆盖 current/ever-kept、移出历史、纪念、观察与无 stale local leakage；收藏边界门禁 + 正式 route/Hub entry 门禁通过 | 核心闭环完成（MVP） |
 | P1-15 | 登录后今日喂食、观察与巡检仍可能被本机 LocalAppState 覆盖，换设备后状态不一致 | cloud mode 从 Care Events 投影喂食/观察；Repository 暴露 `getDailyCheck` 并复用现有 daily-check API；巡检保存走当前 Repository；cloud 写入不再新增 feed/observation local 业务状态 | 跨设备恢复今天喂食/观察/巡检；local mode 保持原行为；本地日历日避免 UTC 午夜错日 | 已完成 |
 | P1-16 | 非巡检诊断仍只写 LocalAppState，换设备后最近诊断、Tank State 证据和水族册诊断历史缺失 | 复用现有 `diagnosis_records` 表与 RLS，新增通用诊断 list/create API；Repository 统一读取/保存巡检与非巡检诊断；cloud Aquarium 加载完整诊断历史；Waterbook 接入诊断并按 diagnosisKey 与显式 Care Event 去重 | API/Repository/Waterbook 边界回归覆盖；不新增 schema、不读取真实用户行 | 已完成 |

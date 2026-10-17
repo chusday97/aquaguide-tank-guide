@@ -1,4 +1,5 @@
 import { Fish } from '../types';
+import { getCanonicalRuntimeFish } from '../data/runtimeRuleContent';
 
 const aquaticPlantScientificPattern = /Hemianthus|Glossostigma|Eleocharis|Utricularia|Bucephalandra|Anubias|Rotala|Vesicularia|Microsorum|Bolbitis|Cryptocoryne|Aponogeton|Lemna|Limnobium|Egeria|Nymphaea|Micranthemum|Echinodorus|Bacopa|Myriophyllum|Blyxa|Vallisneria|Staurogyne|Ludwigia|Alternanthera|Hygrophila|Proserpinaca|Phyllanthus|Ceratopteris|Sagittaria|Marsilea|Riccia|Fissidens/i;
 const aquaticPlantNamePattern = /矮珍珠|趴地珍珠|牛毛毡|挖耳草|辣椒榕|水榕|迷你榕|宫廷草|红宫廷|绿宫廷|莫斯|铁皇冠|黑木蕨|椒草|大浪草|浮萍|圆心萍|红根浮萍|蜈蚣草|睡莲|红荷根|虎耳草|绿羽毛|箦藻|水兰|皇冠草|细叶皇冠|南美叉柱花|红玫瑰|细叶太阳|红太阴|鹿角苔|凤尾藓|红蝴蝶|小对叶|水罗兰|红雨伞|丁香|水芹|天胡荽|小慈菇/;
@@ -7,6 +8,7 @@ const hardscapeScientificPattern = /Hardscape|Seiryu|Ohko|Lava|Driftwood|Aqua So
 const hardscapeNamePattern = /青龙石|松皮石|火山石|沉木|流木|水草泥|溪流砂|化妆砂|景观板|景观组|景观树|底床/;
 
 export const isAquaticPlantSpecies = (fish: Fish) => {
+  fish = getCanonicalRuntimeFish(fish) || fish;
   const name = fish.name || '';
   const scientificName = fish.scientificName || '';
   const category = fish.category || '';
@@ -21,6 +23,7 @@ export const isAquaticPlantSpecies = (fish: Fish) => {
 };
 
 export const isHardscapeSpecies = (fish: Fish) => {
+  fish = getCanonicalRuntimeFish(fish) || fish;
   const name = fish.name || '';
   const scientificName = fish.scientificName || '';
   const text = `${name} ${scientificName} ${fish.category || ''}`;
