@@ -76,9 +76,14 @@ for (const sourceId of predecessorSourceIds) {
   assert.equal(migration.includes(sourceId), true, 'migration must require predecessor source ' + sourceId);
 }
 
+const supersededClassificationHolds = new Set(['sp_0077', 'sp_0089', 'sp_0334']);
 for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds) {
   assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
-  assert.equal(getCatalogIdentityBoundary(speciesId)?.researchDisposition, 'terminal_unknown_hold');
+  if (supersededClassificationHolds.has(speciesId)) {
+    assert.equal(getCatalogIdentityBoundary(speciesId), undefined, speciesId + ': later catalog classification correction must supersede the historical wave04 identity hold');
+  } else {
+    assert.equal(getCatalogIdentityBoundary(speciesId)?.researchDisposition, 'terminal_unknown_hold');
+  }
 }
 for (const speciesId of compatibilityUnifiedNextWave.domainBoundaryHoldSpeciesIds) {
   assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);

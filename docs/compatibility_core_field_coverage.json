@@ -6525,7 +6525,7 @@
       "speciesId": "sp_0077",
       "name": "绿菊",
       "scientificName": "Cabomba caroliniana",
-      "lifeType": "fish",
+      "lifeType": "plant",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
@@ -6534,75 +6534,59 @@
       "fields": {
         "water": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "ph": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "predation": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-aquaplant-cabomba-caroliniana"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         }
       }
     },
@@ -7369,7 +7353,7 @@
       "speciesId": "sp_0089",
       "name": "大宝塔",
       "scientificName": "Limnophila aquatica",
-      "lifeType": "fish",
+      "lifeType": "plant",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
@@ -7378,75 +7362,59 @@
       "fields": {
         "water": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "ph": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         },
         "predation": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch27-kew-limnophila-aquatica"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "disposition": "domain_extension_required",
+          "evidenceIds": [],
+          "authoritySource": "domain_boundary",
+          "reasonCode": "unsupported_compatibility_domain_plant"
         }
       }
     },
@@ -17680,7 +17648,7 @@
       "speciesId": "sp_0211",
       "name": "大点火口",
       "scientificName": "Thorichthys meeki var.",
-      "lifeType": "invertebrate",
+      "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
@@ -17689,59 +17657,75 @@
       "fields": {
         "water": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
-          "disposition": "domain_extension_required",
-          "evidenceIds": [],
-          "authoritySource": "domain_boundary",
-          "reasonCode": "unsupported_compatibility_domain_invertebrate"
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch12-fishbase-thorichthys-meeki-var"
+          ],
+          "authoritySource": "identity_boundary",
+          "reasonCode": "catalog_scientific_name_unresolved"
         }
       }
     },
@@ -20240,7 +20224,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
@@ -20249,7 +20233,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
@@ -20258,7 +20242,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
@@ -20267,7 +20251,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
@@ -20276,7 +20260,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
@@ -20285,7 +20269,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
@@ -20294,7 +20278,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
@@ -20303,7 +20287,7 @@
             "batch13-fishbase-pterophyllum-scalare-marble-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         }
       }
     },
@@ -22303,7 +22287,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
@@ -22312,7 +22296,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
@@ -22321,7 +22305,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
@@ -22330,7 +22314,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
@@ -22339,7 +22323,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
@@ -22348,7 +22332,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
@@ -22357,7 +22341,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
@@ -22366,7 +22350,7 @@
             "batch14-fishbase-altolamprologus-calvus-gold"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         }
       }
     },
@@ -22718,7 +22702,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
@@ -22727,7 +22711,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
@@ -22736,7 +22720,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
@@ -22745,7 +22729,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
@@ -22754,7 +22738,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
@@ -22763,7 +22747,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
@@ -22772,7 +22756,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
@@ -22781,7 +22765,7 @@
             "batch14-fishbase-hemichromis-bimaculatus-albino"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         }
       }
     },
@@ -27694,7 +27678,7 @@
       "speciesId": "sp_0334",
       "name": "长须地毯",
       "scientificName": "Stichodactyla gigantea",
-      "lifeType": "fish",
+      "lifeType": "coral",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
@@ -27703,75 +27687,75 @@
       "fields": {
         "water": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         },
         "ph": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         },
         "predation": {
           "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "disposition": "domain_extension_required",
           "evidenceIds": [
             "batch24-worms-stichodactyla-gigantea"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_object_type_mismatch"
+          "authoritySource": "domain_boundary",
+          "reasonCode": "life_type_not_supported_by_fish_compatibility_domain"
         }
       }
     },
@@ -30703,7 +30687,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
@@ -30712,7 +30696,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
@@ -30721,7 +30705,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
@@ -30730,7 +30714,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
@@ -30739,7 +30723,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
@@ -30748,7 +30732,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
@@ -30757,7 +30741,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
@@ -30766,7 +30750,7 @@
             "batch16-fishbase-andinoacara-pulcher-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         }
       }
     },
@@ -30788,7 +30772,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
@@ -30797,7 +30781,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
@@ -30806,7 +30790,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
@@ -30815,7 +30799,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
@@ -30824,7 +30808,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
@@ -30833,7 +30817,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
@@ -30842,7 +30826,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
@@ -30851,7 +30835,7 @@
             "batch16-fishbase-hemichromis-bimaculatus-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         }
       }
     },
@@ -33988,7 +33972,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
@@ -33997,7 +33981,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
@@ -34006,7 +33990,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
@@ -34015,7 +33999,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
@@ -34024,7 +34008,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
@@ -34033,7 +34017,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
@@ -34042,7 +34026,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
@@ -34051,7 +34035,7 @@
             "batch25-fishbase-channa-stewartii-karbi-anglong"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         }
       }
     },
@@ -34403,7 +34387,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
@@ -34412,7 +34396,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "ph": {
           "status": "missing_identity_or_domain",
@@ -34421,7 +34405,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
@@ -34430,7 +34414,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
@@ -34439,7 +34423,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
@@ -34448,7 +34432,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
@@ -34457,7 +34441,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         },
         "predation": {
           "status": "missing_identity_or_domain",
@@ -34466,7 +34450,7 @@
             "batch17-fishbase-andinoacara-pulcher-super-balloon"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_category_mismatch"
+          "reasonCode": "catalog_variant_identity_unresolved"
         }
       }
     },

@@ -154,11 +154,11 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
 
   sp_0241: {
     speciesId: 'sp_0241',
-    code: 'catalog_category_mismatch',
-    resolvedGranularity: 'catalog_category_mismatch',
+    code: 'catalog_variant_identity_unresolved',
+    resolvedGranularity: 'variant_identity_unresolved',
     candidateTaxa: ['Pterophyllum scalare ornamental Marble Balloon lineage'],
     sourceIds: ['batch13-fishbase-pterophyllum-scalare-marble-balloon'],
-    note: 'Catalog scientificName 指向 Pterophyllum scalare 观赏变体，但 category 却是“硬景/底床”；同时 Marble Balloon 精确品系缺少对象级 reviewed 身份来源。在类别与变体身份都修正前保持 fail-closed。',
+    note: 'Catalog category 已纠正为慈鲷/斗鱼；Marble Balloon 精确品系仍缺少对象级 reviewed 身份来源，因此继续按变体身份边界 fail-closed。',
     reviewedAt: '2026-10-12',
     researchDisposition: 'terminal_unknown_hold',
   },
@@ -184,21 +184,21 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
   },
   sp_0266: {
     speciesId: 'sp_0266',
-    code: 'catalog_category_mismatch',
-    resolvedGranularity: 'catalog_category_mismatch',
+    code: 'catalog_variant_identity_unresolved',
+    resolvedGranularity: 'variant_identity_unresolved',
     candidateTaxa: ['Altolamprologus calvus ornamental Gold lineage'],
     sourceIds: ['batch14-fishbase-altolamprologus-calvus-gold'],
-    note: 'Altolamprologus calvus 是坦噶尼喀湖淡水慈鲷，但 catalog category 标成“海水鱼”；Gold 精确品系也没有对象级 reviewed 身份来源。类别与变体身份修正前保持 fail-closed。',
+    note: 'Catalog category 已纠正为淡水慈鲷；Gold 精确品系仍没有对象级 reviewed 身份来源，因此继续按变体身份边界 fail-closed。',
     reviewedAt: '2026-10-12',
     researchDisposition: 'terminal_unknown_hold',
   },
   sp_0271: {
     speciesId: 'sp_0271',
-    code: 'catalog_category_mismatch',
-    resolvedGranularity: 'catalog_category_mismatch',
+    code: 'catalog_variant_identity_unresolved',
+    resolvedGranularity: 'variant_identity_unresolved',
     candidateTaxa: ['Hemichromis bimaculatus ornamental Albino lineage'],
     sourceIds: ['batch14-fishbase-hemichromis-bimaculatus-albino'],
-    note: 'Catalog scientificName 指向 Hemichromis bimaculatus 观赏白化品系，但 category 却是“硬景/底床”；精确 Albino 对象也缺少足够强的身份来源，因此不进入鱼类 Compatibility Profile。',
+    note: 'Catalog category 已纠正为慈鲷/斗鱼；精确 Albino 对象仍缺少足够强的 reviewed 身份来源，因此继续按变体身份边界 fail-closed。',
     reviewedAt: '2026-10-12',
     researchDisposition: 'terminal_unknown_hold',
   },
@@ -375,8 +375,15 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
   },
 };
 
+const resolvedClassificationCorrectionSpeciesIds = new Set([
+  'sp_0077',
+  'sp_0089',
+  'sp_0334',
+]);
+
 export const getCatalogIdentityBoundary = (speciesId: string) => (
   resolvedCatalogIdentityCorrectionSpeciesIds.has(speciesId)
+  || resolvedClassificationCorrectionSpeciesIds.has(speciesId)
     ? undefined
     : catalogIdentityBoundaries[speciesId]
 );

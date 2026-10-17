@@ -6,7 +6,7 @@
   "uses_real_user_telemetry": false,
   "catalog_objects": 486,
   "completion_matrix_objects": 486,
-  "compatibility_eligible_species": 411,
+  "compatibility_eligible_species": 409,
   "reviewed_compatibility_profiles": 109,
   "runtime_effective_compatibility_profiles": 145,
   "inherited_compatibility_profiles": 36,

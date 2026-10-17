@@ -16,6 +16,7 @@ import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilin
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { fishData } from '../src/data/fishData';
 import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
+import { getLifeType } from '../src/modules/species/species.service';
 
 const gapQueue = JSON.parse(readFileSync('docs/compatibility_knowledge_gap_queue.json', 'utf8'));
 const coverage = JSON.parse(readFileSync('docs/compatibility_knowledge_coverage.json', 'utf8'));
@@ -52,10 +53,11 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
     const identityBoundary = getCatalogIdentityBoundary(member.speciesId);
     const domainBoundary = getCompatibilityDomainBoundary(member.speciesId);
     const evidenceCeiling = getKnowledgeEvidenceCeiling(member.speciesId);
-    if (!identityBoundary && !domainBoundary && !evidenceCeiling) {
+    const lifeType = getLifeType(fish);
+    if (!identityBoundary && !domainBoundary && !evidenceCeiling && lifeType === 'fish') {
       assert.ok(
         getReviewedSpeciesKnowledgeForFish(fish),
-        'released species without a fail-closed boundary must resolve runtime Species Knowledge: ' + member.speciesId,
+        'released fish without a fail-closed boundary must resolve runtime Species Knowledge: ' + member.speciesId,
       );
     }
 
@@ -89,6 +91,8 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
           assert.equal(identityBoundary.researchDisposition, 'terminal_unknown_hold');
         } else if (domainBoundary) {
           assert.equal(domainBoundary.researchDisposition, 'terminal_unknown_hold');
+        } else if (lifeType !== 'fish') {
+          assert.equal(profile, undefined, 'correctly classified non-fish release member must remain outside fish Compatibility Profiles: ' + member.speciesId);
         } else {
           const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
           assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
@@ -132,6 +136,7 @@ for (const speciesId of compatibilityUnifiedNextWave.activeQueueSpeciesIds) {
 }
 
 
+const supersededClassificationIdentityHolds = new Set(['sp_0077', 'sp_0089', 'sp_0334']);
 for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds) {
   assert.equal(
     getReviewedCompatibilityProfile(speciesId),
@@ -139,8 +144,15 @@ for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpecies
     'identity-boundary hold must remain without a direct Compatibility Profile: ' + speciesId,
   );
   const boundary = getCatalogIdentityBoundary(speciesId);
-  assert.ok(boundary, 'identity-boundary hold must resolve an explicit boundary: ' + speciesId);
-  assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  if (supersededClassificationIdentityHolds.has(speciesId)) {
+    const fish = fishData.find(item => item.id === speciesId);
+    assert.ok(fish);
+    assert.notEqual(getLifeType(fish), 'fish', 'resolved classification hold must now route outside the fish Compatibility domain: ' + speciesId);
+    assert.equal(boundary, undefined, 'later catalog classification correction must supersede the historical identity hold: ' + speciesId);
+  } else {
+    assert.ok(boundary, 'identity-boundary hold must resolve an explicit boundary: ' + speciesId);
+    assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  }
 }
 
 for (const speciesId of compatibilityUnifiedNextWave.domainBoundaryHoldSpeciesIds) {

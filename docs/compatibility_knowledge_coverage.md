@@ -11,7 +11,7 @@
 ## Coverage snapshot
 
 - Catalog objects: 486
-- Compatibility-eligible species: 411
+- Compatibility-eligible species: 409
 - Direct reviewed compatibility profiles: 109
 - Runtime effective compatibility profiles: 145 (36 inherited through reviewed-safe resolution)
 - Reviewed pair rules: 21

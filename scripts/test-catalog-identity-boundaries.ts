@@ -39,10 +39,11 @@ assert.equal(electricEelMismatch?.code, 'catalog_common_name_identity_mismatch')
 assert.equal(electricEelMismatch?.resolvedGranularity, 'catalog_name_mismatch');
 assert.ok(electricEelMismatch?.candidateTaxa.includes('Gymnotus carapo'));
 
-const anemoneTypeMismatch = getCatalogIdentityBoundary('sp_0334');
-assert.equal(anemoneTypeMismatch?.code, 'catalog_object_type_mismatch');
-assert.equal(anemoneTypeMismatch?.resolvedGranularity, 'object_type_mismatch');
-assert.ok(anemoneTypeMismatch?.candidateTaxa.some(value => value.includes('Stichodactyla gigantea')));
+const historicalAnemoneTypeMismatch = catalogIdentityBoundaries.sp_0334;
+assert.equal(historicalAnemoneTypeMismatch?.code, 'catalog_object_type_mismatch');
+assert.equal(historicalAnemoneTypeMismatch?.resolvedGranularity, 'object_type_mismatch');
+assert.ok(historicalAnemoneTypeMismatch?.candidateTaxa.some(value => value.includes('Stichodactyla gigantea')));
+assert.equal(getCatalogIdentityBoundary('sp_0334'), undefined, 'corrected sea-anemone object type must supersede the historical marine-fish mismatch at runtime');
 
 const pakistaniLoach = getCatalogIdentityBoundary('sp_0127');
 assert.equal(pakistaniLoach?.code, 'trade_name_taxon_ambiguous');
@@ -188,8 +189,8 @@ assert.equal(parentTaxonHold?.resolvedGranularity, 'parent_taxon_unresolved');
 
 for (const speciesId of ['sp_0241','sp_0266','sp_0271']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
-  assert.equal(boundary?.code, 'catalog_category_mismatch');
-  assert.equal(boundary?.resolvedGranularity, 'catalog_category_mismatch');
+  assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
+  assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');
   assert.equal(boundary?.researchDisposition, 'terminal_unknown_hold');
 }
 
@@ -202,7 +203,7 @@ assert.equal(wave06Malformed?.code, 'catalog_scientific_name_unresolved');
 assert.equal(wave06Malformed?.researchDisposition, 'terminal_unknown_hold');
 
 for (const speciesId of ['sp_0372','sp_0373','sp_0411','sp_0416']) {
-  assert.equal(getCatalogIdentityBoundary(speciesId)?.code, 'catalog_category_mismatch');
+  assert.equal(getCatalogIdentityBoundary(speciesId)?.code, 'catalog_variant_identity_unresolved');
 }
 for (const speciesId of ['sp_0297','sp_0414']) {
   assert.equal(getCatalogIdentityBoundary(speciesId)?.code, 'catalog_parent_taxon_unresolved');

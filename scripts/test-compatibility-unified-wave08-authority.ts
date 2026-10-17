@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
@@ -26,11 +26,20 @@ for (const speciesId of nextWaveUnified08AllSpeciesIds) {
   assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
 }
 
+const supersededClassificationOutcomes = new Set(['sp_0077', 'sp_0089']);
 for (const outcome of nextWaveUnified08IdentityOutcomes) {
   const boundary = getCatalogIdentityBoundary(outcome.speciesId);
-  assert.ok(boundary, 'wave08 identity/category outcome must resolve a boundary: ' + outcome.speciesId);
-  assert.equal(boundary.code, outcome.code);
-  assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  if (supersededClassificationOutcomes.has(outcome.speciesId)) {
+    const historicalBoundary = catalogIdentityBoundaries[outcome.speciesId];
+    assert.ok(historicalBoundary, 'wave08 historical classification outcome must remain auditable: ' + outcome.speciesId);
+    assert.equal(historicalBoundary.code, outcome.code);
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(boundary, undefined, 'later catalog category correction must supersede the historical wave08 mismatch: ' + outcome.speciesId);
+  } else {
+    assert.ok(boundary, 'wave08 identity outcome must resolve a boundary: ' + outcome.speciesId);
+    assert.equal(boundary.code, outcome.code);
+    assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  }
 }
 
 for (const outcome of nextWaveUnified08EvidenceCeilings) {

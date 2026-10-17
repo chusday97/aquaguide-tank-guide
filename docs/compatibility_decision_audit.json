@@ -4,26 +4,26 @@
     "note": "The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; the hard invariants are fully-informed UNKNOWN = 0 and unexplained system_gap UNKNOWN = 0."
   },
   "catalogObjects": 486,
-  "compatibilityDomainObjects": 411,
-  "fishDomainSpecies": 310,
+  "compatibilityDomainObjects": 409,
+  "fishDomainSpecies": 308,
   "genericOnboardingReadySpecies": 79,
   "genericReadyUniquePairs": 3081,
-  "fishPairs": 47895,
+  "fishPairs": 47278,
   "statuses": {
     "compatible": 397,
     "caution": 3307,
-    "not_recommended": 19055,
-    "insufficient_data": 25136
+    "not_recommended": 18931,
+    "insufficient_data": 24643
   },
-  "decisionCoveragePct": 47.52,
-  "unknownRatePct": 52.48,
+  "decisionCoveragePct": 47.88,
+  "unknownRatePct": 52.12,
   "systemGapPairs": 0,
   "systemGapPct": 0,
   "fullyInformedPairs": 7060,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
-    "unresolved_identity": 20100,
+    "unresolved_identity": 19607,
     "public_evidence_insufficient": 4808,
     "missing_species_fact": 228,
     "system_gap": 0
@@ -44,7 +44,7 @@
     "terminalReasonCounts": [
       {
         "reason": "catalog_variant_identity_unresolved",
-        "speciesCount": 61
+        "speciesCount": 67
       },
       {
         "reason": "variant_identity_research_exhausted",
@@ -56,7 +56,7 @@
       },
       {
         "reason": "catalog_scientific_name_unresolved",
-        "speciesCount": 23
+        "speciesCount": 24
       },
       {
         "reason": "species_social_not_established",
@@ -65,10 +65,6 @@
       {
         "reason": "catalog_parent_taxon_unresolved",
         "speciesCount": 11
-      },
-      {
-        "reason": "catalog_category_mismatch",
-        "speciesCount": 8
       },
       {
         "reason": "compatibility_field_source_strategy_exhausted",
@@ -91,10 +87,6 @@
         "speciesCount": 1
       },
       {
-        "reason": "catalog_object_type_mismatch",
-        "speciesCount": 1
-      },
-      {
         "reason": "species_fish_predation_not_established",
         "speciesCount": 1
       },
@@ -111,19 +103,19 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 50111
+      "count": 49125
     },
     {
       "code": "missing_ph",
-      "count": 38874
+      "count": 38026
     },
     {
       "code": "missing_hardness",
-      "count": 9299
+      "count": 8615
     },
     {
       "code": "candidate_water_type_missing",
-      "count": 681
+      "count": 675
     },
     {
       "code": "water_type_unknown",
