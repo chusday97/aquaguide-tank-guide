@@ -207,9 +207,9 @@ try {
       },
     },
     {
-      name: 'unreviewed predator data',
-      status: 'insufficient_data',
-      action: 'Complete Tank Setup',
+      name: 'reviewed predator conflict',
+      status: 'not_recommended',
+      action: 'View current tank risks',
       state: {
         ...baseConfiguredState,
         aquariums: [{
