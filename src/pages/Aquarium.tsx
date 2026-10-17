@@ -111,6 +111,7 @@ import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositor
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import { applyWaterChangeHistory, isFutureWaterChangeDate, toggleWaterChangeDate } from '../services/aquarium/water-change.service';
 import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
+import { projectCareEventsToDailyRecords } from '../services/aquarium/daily-care-state.service';
 import {
   getCareReminders,
   getCareReminderStatus,
@@ -1322,15 +1323,27 @@ export default function AquariumManager() {
       try {
         const resolvedMode = mode ?? await resolveRepositoryMode();
         const repository = getAquaGuideRepository(resolvedMode);
+        const localState = loadAppStateFromStorage();
         const [repositoryAquariums, repositoryReminders, repositoryEvents] = resolvedMode === 'cloud'
           ? await Promise.all([repository.getAquariums(), repository.getCareReminders(), repository.getCareEvents()])
-          : [loadAppStateFromStorage().aquariums, await repository.getCareReminders(), await repository.getCareEvents()];
+          : [localState.aquariums, await repository.getCareReminders(), await repository.getCareEvents()];
+        const dailyRecords = resolvedMode === 'cloud'
+          ? projectCareEventsToDailyRecords(repositoryEvents)
+          : { feedingRecords: localState.feedingRecords, observationRecords: localState.observationRecords };
+        const today = format(new Date(), 'yyyy-MM-dd');
+        const repositoryDiagnosisRecords = resolvedMode === 'cloud'
+          ? (await Promise.all(repositoryAquariums.map(aquarium => repository.getDailyCheck(aquarium.id, today))))
+              .filter((record): record is DiagnosisRecord => Boolean(record))
+          : (localState.diagnosisRecords as DiagnosisRecord[]);
         if (!active) return;
         if (resolvedMode === 'cloud') patchLocalAppState({ cloudMigrationConfirmed: true });
         const normalized = normalizeAquariumPlants(repositoryAquariums);
         setAquariums(normalized);
         setCareRemindersState(repositoryReminders);
         setCareTimelineEvents(repositoryEvents);
+        setDiagnosisRecords(repositoryDiagnosisRecords);
+        setFeedingRecords(dailyRecords.feedingRecords);
+        setObservationRecords(dailyRecords.observationRecords);
         setActiveId(current => normalized.some(item => item.id === current) ? current : normalized[0]?.id || '');
       } catch (error) {
         if (active) showToast((isEn ? 'Cloud aquarium data could not be loaded.' : '云端鱼缸暂时无法读取。'), 'error');
@@ -1345,9 +1358,6 @@ export default function AquariumManager() {
     const appState = loadAppStateFromStorage();
     setWishlistFishIds(loadWishlistFishIds());
     setDeceasedRecords(Array.isArray(appState.deceasedRecords) ? appState.deceasedRecords as DeceasedRecord[] : []);
-    setDiagnosisRecords(Array.isArray(appState.diagnosisRecords) ? appState.diagnosisRecords as DiagnosisRecord[] : []);
-    setFeedingRecords(appState.feedingRecords);
-    setObservationRecords(appState.observationRecords);
     setPriorityTaskStatus(appState.riskReminderState || {});
   }, []);
 
@@ -3192,7 +3202,7 @@ export default function AquariumManager() {
     setDiagnosisMode('home');
   };
 
-  const handleSaveDiagnosisRecord = (): boolean => {
+  const handleSaveDiagnosisRecord = async (): Promise<boolean> => {
     if (isDiagnosisRecordSaving) return false;
     const targetAquarium = diagnosisAquarium;
     if (!targetAquarium) return false;
@@ -3239,7 +3249,9 @@ export default function AquariumManager() {
     };
     const nextRecords = upsertDiagnosisRecord(diagnosisRecords, record);
     try {
-      const persistedRecords = persistDiagnosisRecords(nextRecords);
+      const persistedRecords = problemType === '巡检'
+        ? upsertDiagnosisRecord(diagnosisRecords, await (await getCurrentAquaGuideRepository()).saveDiagnosis(record))
+        : persistDiagnosisRecords(nextRecords);
       setDiagnosisRecords(persistedRecords);
       setDiagnosisSaveMessage(problemType === '巡检'
         ? existingDailyRecord ? '已更新今天的检查记录。' : '已保存今天的检查记录。'
@@ -4804,29 +4816,24 @@ export default function AquariumManager() {
       label: isEn ? (fedToday ? 'Undo Feeding Record' : 'Record Feeding') : (fedToday ? '撤回喂食记录' : '记录本次喂食'),
       description: isEn ? (hasStockedAnimals ? (fedToday ? 'Recorded Today' : "Save today's feeding") : 'Add Livestock First') : (hasStockedAnimals ? (fedToday ? '今日已记录' : '保存今天的喂食记录') : '添加生物后使用'),
       icon: <Heart className="h-4 w-4" />,
-      onClick: () => {
+      onClick: async () => {
         if (!hasStockedAnimals) {
           showToast(isEn ? 'No livestock in tank yet, add animals to record feeding.' : '鱼缸内还没有生物，添加后才能记录喂食', 'error');
           return;
         }
-        setFedToday(prev => {
-          const next = !prev;
-          const today = format(new Date(), 'yyyy-MM-dd');
-          const todayRecords = feedingRecords.filter(record => record.aquariumId === activeId && record.createdAt.startsWith(today));
-          const createdRecord: LocalEventRecord = {
-            id: Math.random().toString(36).substring(2, 9),
-            aquariumId: activeId,
-            createdAt: new Date().toISOString(),
-            type: 'feeding',
-            note: isEn ? 'Feeding Record' : '喂食记录',
-          };
-          const nextRecords = next
-            ? [...feedingRecords, createdRecord]
-            : feedingRecords.filter(record => !(record.aquariumId === activeId && record.createdAt.startsWith(today)));
-          setFeedingRecords(nextRecords);
-          patchLocalAppState({ feedingRecords: nextRecords });
+        const next = !fedToday;
+        const today = format(new Date(), 'yyyy-MM-dd');
+        const todayRecords = feedingRecords.filter(record => record.aquariumId === activeId && record.createdAt.startsWith(today));
+        const createdRecord: LocalEventRecord = {
+          id: Math.random().toString(36).substring(2, 9),
+          aquariumId: activeId,
+          createdAt: new Date().toISOString(),
+          type: 'feeding',
+          note: isEn ? 'Feeding Record' : '喂食记录',
+        };
+        try {
           if (next) {
-            void persistCareTimelineEvent({
+            await persistCareTimelineEvent({
               aquariumId: activeId,
               eventType: 'feeding',
               title: isEn ? 'Logged feeding' : '记录喂食',
@@ -4835,14 +4842,20 @@ export default function AquariumManager() {
               sourceType: 'feeding_record',
               sourceId: createdRecord.id,
               isInferred: false,
-            }).catch(error => showToast('喂食时间线没有保存成功。', 'error'));
+            });
           } else {
-            todayRecords.forEach(record => void removeCareTimelineEventBySource(activeId, 'feeding_record', record.id).catch(error => showToast('喂食时间线没有撤回成功。', 'error')));
+            await Promise.all(todayRecords.map(record => removeCareTimelineEventBySource(activeId, 'feeding_record', record.id)));
           }
-          setCareTimelineRevision(value => value + 1);
+          const nextRecords = next
+            ? [...feedingRecords, createdRecord]
+            : feedingRecords.filter(record => !(record.aquariumId === activeId && record.createdAt.startsWith(today)));
+          setFeedingRecords(nextRecords);
+          setFedToday(next);
+          if (await resolveRepositoryMode() === 'local') patchLocalAppState({ feedingRecords: nextRecords });
           setTankActionMessage(next ? (isEn ? `Recorded feeding: ${format(new Date(), 'HH:mm')}` : `已记录喂食：${format(new Date(), 'HH:mm')}`) : (isEn ? 'Undid feeding record' : '已撤回今日喂食记录'));
-          return next;
-        });
+        } catch {
+          showToast(isEn ? 'Feeding record could not be saved.' : '喂食记录没有保存成功。', 'error');
+        }
       },
       tone: !hasStockedAnimals ? 'muted' as const : fedToday ? 'normal' as const : 'info' as const,
       active: fedToday,
@@ -4968,8 +4981,8 @@ export default function AquariumManager() {
     }
     return model;
   })() : null;
-  const handleVisualDiagnosisPrimary = () => {
-    const saved = handleSaveDiagnosisRecord();
+  const handleVisualDiagnosisPrimary = async () => {
+    const saved = await handleSaveDiagnosisRecord();
     if (!saved) return;
     if (diagnosisIssueType === '巡检' && dailyCheckArticles[0] && structuredDiagnosis) {
       setSelectedDailyCheckArticle(dailyCheckArticles[0]);
@@ -6355,9 +6368,7 @@ export default function AquariumManager() {
             <Button
               variant="outline"
               className="h-10 rounded-full text-sm font-bold"
-              onClick={() => {
-                setObservationChecks([]);
-                markPriorityTask('observeBreathing', '已观察');
+              onClick={async () => {
                 const createdRecord: LocalEventRecord = {
                   id: Math.random().toString(36).substring(2, 9),
                   aquariumId: activeId,
@@ -6365,30 +6376,35 @@ export default function AquariumManager() {
                   type: 'observation',
                   note: '未发现明显呼吸异常',
                 };
-                const nextRecords = [...observationRecords, createdRecord];
-                setObservationRecords(nextRecords);
-                patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
-                void persistCareTimelineEvent({
-                  aquariumId: activeId,
-                  eventType: 'observation',
-                  title: isEn ? 'Logged observation' : '记录观察',
-                  label: createdRecord.note,
-                  payload: {},
-                  occurredAt: createdRecord.createdAt,
-                  sourceType: 'observation_record',
-                  sourceId: createdRecord.id,
-                  isInferred: false,
-                }).catch(() => showToast(isEn ? 'Observation history could not be synced.' : '观察履历没有同步成功。', 'error'));
-                setTankActionMessage(`已记录观察：${format(new Date(), 'HH:mm')} 未发现明显呼吸异常`);
-                setIsObservationOpen(false);
+                try {
+                  await persistCareTimelineEvent({
+                    aquariumId: activeId,
+                    eventType: 'observation',
+                    title: isEn ? 'Logged observation' : '记录观察',
+                    label: createdRecord.note,
+                    payload: {},
+                    occurredAt: createdRecord.createdAt,
+                    sourceType: 'observation_record',
+                    sourceId: createdRecord.id,
+                    isInferred: false,
+                  });
+                  const nextRecords = [...observationRecords, createdRecord];
+                  setObservationRecords(nextRecords);
+                  if (await resolveRepositoryMode() === 'local') patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
+                  setObservationChecks([]);
+                  markPriorityTask('observeBreathing', '已观察');
+                  setTankActionMessage(`已记录观察：${format(new Date(), 'HH:mm')} 未发现明显呼吸异常`);
+                  setIsObservationOpen(false);
+                } catch {
+                  showToast(isEn ? 'Observation history could not be saved.' : '观察记录没有保存成功。', 'error');
+                }
               }}
             >
               {isEn ? 'No Abnormalities' : '没有异常，记录观察'}
             </Button>
             <Button
               className="h-10 rounded-full bg-red-600 text-sm font-bold text-white hover:bg-red-700"
-              onClick={() => {
-                markPriorityTask('observeBreathing', '已发现异常');
+              onClick={async () => {
                 const createdRecord: LocalEventRecord = {
                   id: Math.random().toString(36).substring(2, 9),
                   aquariumId: activeId,
@@ -6396,23 +6412,28 @@ export default function AquariumManager() {
                   type: 'observation',
                   note: observationChecks.length > 0 ? observationChecks.join('、') : '发现异常',
                 };
-                const nextRecords = [...observationRecords, createdRecord];
-                setObservationRecords(nextRecords);
-                patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
-                void persistCareTimelineEvent({
-                  aquariumId: activeId,
-                  eventType: 'observation',
-                  title: isEn ? 'Logged observation' : '记录观察',
-                  label: createdRecord.note,
-                  payload: {},
-                  occurredAt: createdRecord.createdAt,
-                  sourceType: 'observation_record',
-                  sourceId: createdRecord.id,
-                  isInferred: false,
-                }).catch(() => showToast(isEn ? 'Observation history could not be synced.' : '观察履历没有同步成功。', 'error'));
-                setTankActionMessage('已记录呼吸异常，建议继续完成鱼只异常诊断。');
-                setIsObservationOpen(false);
-                handleOpenDiagnosisWithType('鱼只异常');
+                try {
+                  await persistCareTimelineEvent({
+                    aquariumId: activeId,
+                    eventType: 'observation',
+                    title: isEn ? 'Logged observation' : '记录观察',
+                    label: createdRecord.note,
+                    payload: {},
+                    occurredAt: createdRecord.createdAt,
+                    sourceType: 'observation_record',
+                    sourceId: createdRecord.id,
+                    isInferred: false,
+                  });
+                  const nextRecords = [...observationRecords, createdRecord];
+                  setObservationRecords(nextRecords);
+                  if (await resolveRepositoryMode() === 'local') patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
+                  markPriorityTask('observeBreathing', '已发现异常');
+                  setTankActionMessage('已记录呼吸异常，建议继续完成鱼只异常诊断。');
+                  setIsObservationOpen(false);
+                  handleOpenDiagnosisWithType('鱼只异常');
+                } catch {
+                  showToast(isEn ? 'Observation history could not be saved.' : '观察记录没有保存成功。', 'error');
+                }
               }}
             >
               {isEn ? 'Go to Diagnosis' : '发现异常，去诊断'}

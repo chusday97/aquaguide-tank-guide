@@ -3,6 +3,7 @@ import type { Aquarium, AquariumFish, AquariumSpeciesBatch, DeceasedRecord } fro
 import type { CareReminderRecord } from '../care/care-activity.service';
 import { apiRequest, createIdempotencyKey } from '../api/api-client';
 import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
+import { getLocalDayKey } from '../diagnosis/diagnosis-records.service';
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
@@ -434,8 +435,20 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     }
   }
 
+  async getDailyCheck(aquariumId: string, localDate: string) {
+    const saved = await apiRequest<ApiDiagnosis | null>(`/aquariums/${aquariumId}/daily-checks/${localDate}`);
+    if (!saved) return null;
+    const sourceType = (saved as ApiDiagnosis & { sourceType?: 'manual' | 'care_article' | 'home' }).sourceType;
+    const sourceTitle = (saved as ApiDiagnosis & { sourceTitle?: string }).sourceTitle;
+    return {
+      ...saved,
+      diagnosisId: saved.diagnosisKey || saved.diagnosisId,
+      source: sourceType ? { type: sourceType, title: sourceTitle } : saved.source,
+    } satisfies DiagnosisRecord;
+  }
+
   async saveDiagnosis(record: DiagnosisRecord) {
-    const date = record.createdAt.slice(0, 10);
+    const date = getLocalDayKey(record.createdAt);
     const current = await apiRequest<ApiDiagnosis | null>(`/aquariums/${record.aquariumId}/daily-checks/${date}`);
     const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/daily-checks/${date}`, {
       method: 'PUT',

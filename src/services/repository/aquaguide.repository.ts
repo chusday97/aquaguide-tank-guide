@@ -104,6 +104,7 @@ export interface AquaGuideRepository {
   getFavorites(type: FavoriteMutation['type']): Promise<FavoriteRecord[]>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
   saveDiagnosis(record: DiagnosisRecord): Promise<DiagnosisRecord>;
+  getDailyCheck(aquariumId: string, localDate: string): Promise<DiagnosisRecord | null>;
   getMemorials(): Promise<DeceasedRecord[]>;
   saveMemorial(input: MemorialSaveInput): Promise<DeceasedRecord>;
   saveLivestockMemorial(input: LivestockMemorialSaveInput): Promise<{ record: DeceasedRecord; aquarium: Aquarium }>;

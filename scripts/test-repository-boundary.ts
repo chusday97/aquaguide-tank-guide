@@ -59,6 +59,8 @@ const diagnosis = await repository.saveDiagnosis({
   followUpNotes: [],
 });
 assert.equal(diagnosis.diagnosisId, 'daily-local');
+const reloadedDiagnosis = await repository.getDailyCheck(aquarium.id, '2026-07-16');
+assert.equal(reloadedDiagnosis?.diagnosisId, 'daily-local');
 
 const memorial = await repository.saveMemorial({ speciesCatalogKey: 'sp_0001', date: '2026-07-16', reason: '完成复盘' });
 assert.equal(memorial.fishId, 'sp_0001');

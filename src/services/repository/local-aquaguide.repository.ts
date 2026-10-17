@@ -10,7 +10,7 @@ import {
 } from '../care/care-activity.service';
 import { recordCareTimelineEvent, removeCareTimelineEvent } from '../care/care-timeline.service';
 import { recordSpeciesMemorial, recordSpeciesMemorialAndDecrementBatch, updateSpeciesMemorial } from '../collection/memorial.service';
-import { persistDiagnosisRecords, upsertDiagnosisRecord } from '../diagnosis/diagnosis-records.service';
+import { findDailyPatrolRecord, persistDiagnosisRecords, upsertDiagnosisRecord } from '../diagnosis/diagnosis-records.service';
 import {
   addSpeciesFavorite,
   getCareFavorites,
@@ -140,6 +140,11 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     const current = loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[];
     persistDiagnosisRecords(upsertDiagnosisRecord(current, record));
     return record;
+  }
+
+  async getDailyCheck(aquariumId: string, localDate: string) {
+    const records = loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[];
+    return findDailyPatrolRecord(records, aquariumId, new Date(`${localDate}T12:00:00`)) || null;
   }
 
   async getMemorials() {
