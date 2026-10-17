@@ -27,7 +27,8 @@ export interface AchievementProgress {
   nextAction?: AchievementNextAction;
 }
 
-import type { MemorialCauseCode } from '../../types';
+import type { LifeStage, MemorialCauseCode, ReproductiveState } from '../../types';
+import type { CareEventType } from '../../types/database';
 
 export type MemorialItem = {
   id: string;
@@ -38,6 +39,43 @@ export type MemorialItem = {
   observation?: string;
   improvement?: string;
   version?: number;
+};
+
+export type KeepingHistoryEventType = CareEventType | 'memorial' | 'compatibility_decision';
+
+export type KeepingHistoryEvent = {
+  id: string;
+  eventType: KeepingHistoryEventType;
+  occurredAt: string;
+  title: string;
+  label?: string;
+  aquariumId?: string;
+  aquariumName?: string;
+  speciesIds: string[];
+  payload: Record<string, unknown>;
+  sourceType?: string;
+  sourceId?: string;
+  isInferred: boolean;
+};
+
+export type KeepingCohortSummary = {
+  id: string;
+  aquariumId: string;
+  aquariumName: string;
+  speciesId: string;
+  quantity: number;
+  entryDate: string;
+  lifeStage?: LifeStage;
+  reproductiveState?: ReproductiveState;
+  stateUpdatedAt?: string;
+};
+
+export type KeepingHistorySnapshot = {
+  events: KeepingHistoryEvent[];
+  activeCohorts: KeepingCohortSummary[];
+  speciesEverKeptIds: string[];
+  currentSpeciesIds: string[];
+  aquariumIds: string[];
 };
 
 export type CollectionCounts = {

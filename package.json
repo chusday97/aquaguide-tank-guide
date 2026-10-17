@@ -45,6 +45,7 @@
     "test:onboarding-goal-paths": "tsx scripts/test-onboarding-goal-paths.ts",
     "test:onboarding-activation": "tsx scripts/test-onboarding-activation.ts",
     "test:collection": "tsx scripts/test-collection-achievements.ts",
+    "test:collection-keeping-history": "node --import tsx scripts/test-collection-keeping-history.ts",
     "test:memorial": "tsx scripts/test-memorial-service.ts",
     "test:state-services": "tsx scripts/test-business-state-services.ts",
     "test:care-timeline": "node --import tsx scripts/test-care-timeline.ts",

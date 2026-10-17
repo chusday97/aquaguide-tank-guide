@@ -1463,6 +1463,7 @@ export default function AquariumManager() {
   const saveLivestockBatches = async (recordId: string, nextRecord: AquariumFish | null) => {
     const active = aquariums.find(aquarium => aquarium.id === activeId);
     if (!active) throw new Error(isEn ? 'No active aquarium was found.' : '没有找到当前鱼缸。');
+    const previousRecord = active.fishes.find(record => record.id === recordId);
     const nextAquarium = {
       ...active,
       fishes: nextRecord
@@ -1479,10 +1480,22 @@ export default function AquariumManager() {
         eventType: 'life_stage_updated',
         title: isEn ? 'Updated livestock state' : '调整缸内物种体态',
         label: isEn ? 'Quantity and state changes saved' : '已保存数量与体态变化',
-        payload: { speciesRecordId: recordId },
+        payload: { speciesRecordId: recordId, speciesId: nextRecord.fishId },
         occurredAt: new Date().toISOString(),
         sourceType: 'livestock_state',
         sourceId: `${recordId}:${latestStateUpdate}`,
+        isInferred: false,
+      });
+    } else if (previousRecord) {
+      await persistCareTimelineEvent({
+        aquariumId: active.id,
+        eventType: 'species_removed',
+        title: isEn ? 'Removed species from tank' : '移出缸内物种',
+        label: isEn ? `${previousRecord.quantity} animals` : `${previousRecord.quantity} 只/条`,
+        payload: { aquariumFishId: recordId, speciesId: previousRecord.fishId, quantity: previousRecord.quantity },
+        occurredAt: new Date().toISOString(),
+        sourceType: 'livestock_removal',
+        sourceId: `record:${recordId}:${previousRecord.entryDate}:removed`,
         isInferred: false,
       });
     }
@@ -1494,6 +1507,7 @@ export default function AquariumManager() {
   const removeLivestockQuantity = async (input: { aquariumFishId: string; batchId: string; quantity: number; operationId: string }) => {
     const active = aquariums.find(aquarium => aquarium.id === activeId);
     if (!active) throw new Error('没有找到当前鱼缸。');
+    const previousRecord = active.fishes.find(record => record.id === input.aquariumFishId);
     const repository = await getCurrentAquaGuideRepository();
     const savedAquarium = await repository.removeLivestock({
       aquariumId: active.id,
@@ -1508,7 +1522,11 @@ export default function AquariumManager() {
       eventType: 'species_removed',
       title: isEn ? 'Removed livestock' : '移出缸内生物',
       label: isEn ? `${input.quantity} animals` : `${input.quantity} 只/条`,
-      payload: { aquariumFishId: input.aquariumFishId, quantity: input.quantity },
+      payload: {
+        aquariumFishId: input.aquariumFishId,
+        ...(previousRecord?.fishId ? { speciesId: previousRecord.fishId } : {}),
+        quantity: input.quantity,
+      },
       occurredAt: new Date().toISOString(),
       sourceType: 'livestock_removal',
       sourceId: input.operationId,

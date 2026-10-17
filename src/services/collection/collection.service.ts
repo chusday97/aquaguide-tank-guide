@@ -4,6 +4,7 @@ import type {
   AchievementId,
   AchievementProgress,
   CollectionCounts,
+  KeepingHistorySnapshot,
   MemorialItem,
 } from '../../modules/collection/collection.types';
 import { evaluateTankCompatibility } from '../compatibility/compatibility.service';
@@ -19,6 +20,8 @@ import {
   type LocalAppState,
 } from '../storage/local-app-state';
 import { taskRoutes } from '../navigation/task-routes';
+import { getCareReminders, subscribeToCareActivity } from '../care/care-activity.service';
+import { buildKeepingHistory } from './keeping-history.service';
 import type { MemorialCauseCode } from '../../types';
 
 const memorialCauseCodes = new Set<MemorialCauseCode>([
@@ -33,6 +36,7 @@ export type CollectionSnapshot = {
   careFavorites: CareFavoriteMap;
   memorials: MemorialItem[];
   achievements: AchievementProgress[];
+  history: KeepingHistorySnapshot;
   counts: CollectionCounts;
 };
 
@@ -162,12 +166,19 @@ export const getCollectionSnapshot = (): CollectionSnapshot => {
   const careFavorites = getCareFavorites();
   const memorials = normalizeMemorials(appState.deceasedRecords);
   const achievements = evaluateAchievements(appState, wishlistIds.length, Object.keys(careFavorites).length, memorials);
+  const history = buildKeepingHistory({
+    appState,
+    memorials,
+    reminders: getCareReminders(),
+    speciesCatalog: fishData,
+  });
   return {
     appState,
     wishlistIds,
     careFavorites,
     memorials,
     achievements,
+    history,
     counts: {
       wishlist: wishlistIds.length,
       care: Object.keys(careFavorites).length,
@@ -180,8 +191,10 @@ export const getCollectionSnapshot = (): CollectionSnapshot => {
 export const subscribeToCollection = (listener: () => void) => {
   const unsubscribeFavorites = subscribeToFavorites(listener);
   const unsubscribeAppState = subscribeToAppState(listener);
+  const unsubscribeCareActivity = subscribeToCareActivity(listener);
   return () => {
     unsubscribeFavorites();
     unsubscribeAppState();
+    unsubscribeCareActivity();
   };
 };
