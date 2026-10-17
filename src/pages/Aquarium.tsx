@@ -1064,6 +1064,7 @@ type DiagnosisResult = {
   missing: string[];
   evidence: string[];
   nextCheckAt?: string;
+  matchedRules: string[];
 };
 
 const toDiagnosisOutput = (result: DiagnosisResult): DiagnosisOutput => ({
@@ -1078,7 +1079,7 @@ const toDiagnosisOutput = (result: DiagnosisResult): DiagnosisOutput => ({
   missingInfo: result.missing,
   evidence: result.evidence,
   keyMetrics: result.keyMetrics,
-  matchedRules: [],
+  matchedRules: result.matchedRules,
   matchedArticles: [],
   nextCheckAt: result.nextCheckAt,
 });
@@ -2804,6 +2805,7 @@ export default function AquariumManager() {
         observe: [],
         missing: ['鱼缸数据'],
         evidence: [],
+        matchedRules: ['static-no-aquarium'],
       };
     }
 
@@ -2813,6 +2815,7 @@ export default function AquariumManager() {
     const hasPlants = (targetAquarium.plants || []).length > 0;
     const problemType: DiagnosisProblemType = isDiagnosisProblemType(diagnosisIssueType) ? diagnosisIssueType : '巡检';
     const makeStaticResult = (
+      matchedRule: string,
       verdict: string,
       currentAction: string,
       actions: string[],
@@ -2839,6 +2842,7 @@ export default function AquariumManager() {
         `当前活体：${livestockNames.join('、') || '暂无活体生物'}`,
         `水体：${diagnosisTankSummary.water} · ${diagnosisTankSummary.volume} · ${diagnosisTankSummary.temperature}`,
       ],
+      matchedRules: [matchedRule],
     });
 
     const livestockProblemTypes: DiagnosisProblemType[] = [
@@ -2855,6 +2859,7 @@ export default function AquariumManager() {
     ];
     if (currentLivestock.length === 0 && (problemType === '巡检' || livestockProblemTypes.includes(problemType))) {
       return makeStaticResult(
+        'static-no-livestock',
         '当前鱼缸暂无活体生物，无法诊断鱼只状态。',
         '先添加生物，或仅查看水质/设备排查建议',
         ['先确认鱼缸过滤、温度和水体是否稳定', '如果只是水浑或设备异常，请选择对应问题类型', '添加活体后再进行鱼只状态诊断'],
@@ -2865,6 +2870,7 @@ export default function AquariumManager() {
     }
     if (problemType === '虾类死亡' && !hasShrimp) {
       return makeStaticResult(
+        'static-no-shrimp',
         '当前鱼缸没有虾类记录，无法生成虾类死亡诊断。',
         '先确认是否已把虾类添加到当前鱼缸',
         ['检查当前鱼缸活体列表是否选对', '如果实际有虾，请先添加到鱼缸记录', '如果只是水质异常，请切换到水质诊断'],
@@ -2874,6 +2880,7 @@ export default function AquariumManager() {
     }
     if (problemType === '水草黄叶 / 烂叶' && !hasPlants) {
       return makeStaticResult(
+        'static-no-plants',
         '当前鱼缸没有水草配置记录，无法判断水草黄叶或烂叶。',
         '先补充水草配置，或切换到水质/设备排查',
         ['确认当前鱼缸是否已经记录水草', '检查灯光时长和过滤是否稳定', '如果实际有水草，请先添加到设备配置'],
@@ -2925,6 +2932,7 @@ export default function AquariumManager() {
         ...output.evidence,
       ].filter(Boolean))).slice(0, 6),
       nextCheckAt: output.nextCheckAt,
+      matchedRules: output.matchedRules,
     };
   };
 
@@ -4979,7 +4987,7 @@ export default function AquariumManager() {
       missingInfo: structuredDiagnosis.missing,
       evidence: structuredDiagnosis.evidence,
       keyMetrics: structuredDiagnosis.keyMetrics,
-      matchedRules: [],
+      matchedRules: structuredDiagnosis.matchedRules,
       matchedArticles: [],
       nextCheckAt: structuredDiagnosis.nextCheckAt,
     };
@@ -4989,16 +4997,17 @@ export default function AquariumManager() {
       aquariumName: diagnosisAquarium?.name || '当前鱼缸',
       livestock: getDiagnosisLivestock(diagnosisAquarium).map(item => item.fish),
       primaryActionLabel: diagnosisIssueType === '巡检' && dailyCheckArticles[0]
-        ? '查看补救步骤'
+        ? (isEn ? 'View recovery steps' : '查看补救步骤')
         : diagnosisIssueType === '巡检'
-          ? todayDailyCheckRecord ? '更新今天记录' : '保存今天记录'
-          : '保存本次诊断',
+          ? todayDailyCheckRecord ? (isEn ? 'Update today’s record' : '更新今天记录') : (isEn ? 'Save today’s record' : '保存今天记录')
+          : (isEn ? 'Save this diagnosis' : '保存本次诊断'),
       primaryActionType: diagnosisIssueType === '巡检' && dailyCheckArticles[0] ? 'dialog' : 'mutation',
+      isEnglish: isEn,
     });
     if (dailyCheckInterpretation) {
       model.detailSections.push({
         id: 'interpretation',
-        title: '补充解读',
+        title: isEn ? 'Additional interpretation' : '补充解读',
         items: [dailyCheckInterpretation.summary, ...dailyCheckInterpretation.reasoning, dailyCheckInterpretation.disclaimer].filter(Boolean),
       });
     }

@@ -1,4 +1,4 @@
-import type { DiagnosisProblemType, DiagnosisQuestion } from './diagnosis.types';
+import type { DiagnosisOutput, DiagnosisProblemType, DiagnosisQuestion } from './diagnosis.types';
 
 type DiagnosisProblemPresentation = { label: string; description: string };
 export type DiagnosisQuestionPresentation = {
@@ -309,3 +309,313 @@ export const isDiagnosisPresentationEnglishComplete = (question: DiagnosisQuesti
   const localized = getDiagnosisQuestionPresentation(question, true);
   return !hasCjk(localized.question) && localized.options.every(option => !hasCjk(option.label));
 };
+
+type DiagnosisRuleEnglishPresentation = {
+  summary: string;
+  actions: string[];
+  avoidActions: string[];
+  possibleCauses: string[];
+  observeItems: string[];
+  missingInfo: string[];
+};
+
+const fixedRule = (presentation: DiagnosisRuleEnglishPresentation) => () => presentation;
+
+const diagnosisRuleEnglish: Record<string, (result: DiagnosisOutput) => DiagnosisRuleEnglishPresentation> = {
+  'water-breathing-high-risk': fixedRule({
+    summary: 'Surface gasping together with abnormal water suggests low oxygen or deteriorating water quality.',
+    actions: ['Increase aeration or surface agitation immediately', 'Stop feeding today', 'Change 20–30% of the water'],
+    avoidActions: ['Do not replace all tank water at once', 'Do not medicate without a clear reason', 'Do not continue heavy feeding'],
+    possibleCauses: ['Low dissolved oxygen', 'Deteriorating water quality', 'Waste or leftover-food pollution'],
+    observeItems: ['Whether breathing improves', 'Whether surface gasping continues', 'Whether the water still smells abnormal'],
+    missingInfo: ['If there is no improvement, add water-test results or a clear photo/video'],
+  }),
+  'frequent-breathing-warning': fixedRule({
+    summary: 'Frequent surface gasping or clearly rapid breathing needs prompt checks for oxygen, temperature, and filtration problems.',
+    actions: ['Increase aeration or surface agitation immediately', 'Check that the filter is flowing normally', 'Pause feeding for 12–24 hours'],
+    avoidActions: ['Do not add more fish', 'Do not medicate without a clear reason', 'Do not make multiple major tank changes at once'],
+    possibleCauses: ['Low dissolved oxygen', 'Abnormal filter flow', 'Temperature or water-quality swings'],
+    observeItems: ['Whether breathing improves within 30–60 minutes after aeration', 'Whether multiple fish are gasping', 'Whether the water becomes cloudy or develops an odor'],
+    missingInfo: ['Ammonia / nitrite readings', 'Filter-flow status', 'Recent temperature changes'],
+  }),
+  'occasional-breathing-watch': fixedRule({
+    summary: 'Occasional surface gasping is more consistent with mild oxygen shortage, short-term stress, or an environmental fluctuation.',
+    actions: ['Increase surface agitation or add short-term aeration', 'Check whether filter flow has weakened', 'Reduce the next feeding amount'],
+    avoidActions: ['Do not medicate immediately', 'Do not perform a large water change at once', 'Do not add more livestock yet'],
+    possibleCauses: ['Mild oxygen shortage', 'Short-term stress', 'Higher water load after feeding'],
+    observeItems: ['Whether gasping becomes frequent', 'Whether appetite loss or bottom resting appears', 'Whether the water becomes cloudy'],
+    missingInfo: ['How long it has lasted', 'Recent feeding amount', 'Filter and aeration status'],
+  }),
+  'multiple-death-high-risk': fixedRule({
+    summary: 'Repeated deaths or multiple affected animals are high risk; control possible pollution first and watch the remaining tankmates.',
+    actions: ['Remove dead livestock immediately', 'Stop feeding today', 'Check for cloudiness or unusual odor'],
+    avoidActions: ['Do not leave dead livestock in the tank', 'Do not dose the whole tank aggressively without a clear cause', 'Do not add new livestock'],
+    possibleCauses: ['Water-quality risk', 'Potential infectious disease', 'Stress from water changes or medication'],
+    observeItems: ['Whether other fish are gasping', 'Whether deaths continue', 'Whether white spots or fin damage appear'],
+    missingInfo: ['Recent water-change, medication, and new-livestock history'],
+  }),
+  'after-water-change-stress': fixedRule({
+    summary: 'This looks more like short-term stress or a water-quality swing after a water change.',
+    actions: ['Increase aeration', 'Keep temperature stable', 'Observe for 2–4 hours first'],
+    avoidActions: ['Do not immediately perform another large water change', 'Do not repeatedly net the fish', 'Do not medicate without a clear reason'],
+    possibleCauses: ['Temperature shock', 'Insufficient dechlorination', 'Water-quality fluctuation'],
+    observeItems: ['Whether breathing returns to normal', 'Whether bottom resting continues', 'Whether multiple fish are affected'],
+    missingInfo: ['Water-change percentage and old/new water temperature difference'],
+  }),
+  'new-fish-stress': fixedRule({
+    summary: 'Hiding or refusing food soon after introduction is most often consistent with acclimation stress.',
+    actions: ['Dim or turn off the light for half a day', 'Reduce disturbance', 'Feed lightly or skip feeding today'],
+    avoidActions: ['Do not repeatedly net the new fish for inspection', 'Do not rush to medicate', 'Do not perform a large water change on the same day'],
+    possibleCauses: ['Introduction stress', 'Incomplete acclimation', 'Harassment from tankmates'],
+    observeItems: ['Whether the fish becomes active within 24–72 hours', 'Whether it is being chased', 'Whether gasping or white spots appear'],
+    missingInfo: ['How the fish was acclimated', 'Whether established tankmates are chasing it'],
+  }),
+  'appetite-behavior-watch': fixedRule({
+    summary: 'Loss of appetite needs to be interpreted with breathing, activity, and recent changes; check water quality and stress first.',
+    actions: ['Stop extra feeding and remove leftovers', 'Check temperature, filter flow, and water odor', 'Watch for bottom resting, hiding, or rapid breathing'],
+    avoidActions: ['Do not keep offering food repeatedly as a test', 'Do not medicate without a clear cause', 'Do not repeatedly net the fish'],
+    possibleCauses: ['Environmental stress', 'Water-quality or temperature fluctuation', 'Early disease signs'],
+    observeItems: ['Whether normal feeding resumes next time', 'Whether bottom resting or gasping appears', 'Whether only one fish is affected'],
+    missingInfo: ['How long appetite loss has lasted', 'Recent water-change, medication, or new-livestock history'],
+  }),
+  'overfeeding-cloudy-water': fixedRule({
+    summary: 'This is more consistent with overfeeding or leftover food increasing the water-quality load.',
+    actions: ['Remove visible leftover food', 'Pause feeding for 12–24 hours', 'If needed, change 10–20% of the water'],
+    avoidActions: ['Do not add another feeding', 'Do not leave leftovers overnight', 'Do not replace all tank water at once'],
+    possibleCauses: ['Leftover-food pollution', 'Higher filtration load', 'Excess feeding'],
+    observeItems: ['Whether the water clears', 'Whether the abdomen remains swollen', 'Whether food continues to remain uneaten'],
+    missingInfo: ['How long each feeding takes to finish'],
+  }),
+  'aggression-space-pressure': (result) => ({
+    summary: result.riskLevel === 'high'
+      ? 'Chasing is affecting safety; reduce territory and space pressure first.'
+      : 'There is chasing or feeding pressure; add cover and identify the affected animal first.',
+    actions: ['Add plants, wood, or rock gaps as hiding areas', 'Pause adding new livestock', 'Watch whether the chased animal stops eating or is injured'],
+    avoidActions: ['Do not expand the mixed-species group yet', 'Do not repeatedly chase and net all livestock', 'Do not rely on extra food alone to solve competition'],
+    possibleCauses: ['Territorial pressure', 'High stocking density', 'Recent introduction-order changes'],
+    observeItems: ['Whether the same animal is repeatedly targeted', 'Whether fin damage or hiding appears', 'Whether feeding competition is severe'],
+    missingInfo: ['Which animal is being chased', 'Tank length and hiding space', 'Whether livestock was added recently'],
+  }),
+  'water-clarity-check': (result) => ({
+    summary: result.riskLevel === 'medium'
+      ? 'The water shows a clear abnormality; reduce the load and check filtration first.'
+      : 'The water is mildly abnormal; check leftovers, filtration, and recent changes first.',
+    actions: ['Remove visible leftovers and decaying material', 'Check that filtration is running normally', 'If needed, change 10–20% of the water'],
+    avoidActions: ['Do not replace all tank water at once', 'Do not continue overfeeding', 'Do not clean all filter media at the same time'],
+    possibleCauses: ['Leftover-food pollution', 'Higher filtration load', 'Microbial-balance fluctuation'],
+    observeItems: ['Whether cloudiness worsens', 'Whether gasping or appetite loss appears', 'Whether odor becomes stronger'],
+    missingInfo: ['Recent feeding amount', 'Filter status', 'Ammonia / nitrite readings'],
+  }),
+  'fry-care-flow': fixedRule({
+    summary: 'The priority is safe cover, first feeding, and gentle water flow for the fry.',
+    actions: ['Provide a nursery area or dense plants', 'Feed tiny portions of fine food / brine shrimp several times', 'Remove leftovers and avoid strong flow'],
+    avoidActions: ['Do not direct strong flow at the fry', 'Do not feed a large amount of powder at once', 'Do not repeatedly move the mother fish'],
+    possibleCauses: ['Breeding-stage changes', 'Predation risk from adults', 'Flow or leftover-food risk'],
+    observeItems: ['Whether adults chase the fry', 'Whether the fry begin feeding', 'Whether the water becomes cloudy'],
+    missingInfo: ['Species', 'Time since birth'],
+  }),
+  'pregnancy-care-flow': fixedRule({
+    summary: 'The priority is confirming whether birth is near while reducing stress on the mother fish.',
+    actions: ['Provide cover or a nursery box', 'Reduce chasing and disturbance', 'Watch for signs that birth is near'],
+    avoidActions: ['Do not direct strong flow at fry', 'Do not feed excessive powder', 'Do not repeatedly move the mother fish'],
+    possibleCauses: ['Breeding-stage changes', 'Predation risk from adults', 'Flow or leftover-food risk'],
+    observeItems: ['Whether the mother is being chased', 'Whether fry appear and begin feeding', 'Whether the water becomes cloudy'],
+    missingInfo: ['Species', 'Expected / actual birth timing'],
+  }),
+  'normal-patrol': (result) => ({
+    summary: result.riskLevel === 'medium'
+      ? 'There are current tank reminders; start with a light observation check.'
+      : 'No obvious abnormality was found; continue normal observation.',
+    actions: result.riskLevel === 'medium'
+      ? ['Watch for surface gasping or bottom resting', 'Check for unusual water odor', 'Record today’s status']
+      : ['Continue normal observation', 'Record feeding or water changes', 'Open the relevant check if a new abnormality appears'],
+    avoidActions: ['Do not medicate without symptoms', 'Do not perform frequent large water changes'],
+    possibleCauses: result.riskLevel === 'medium' ? ['Existing compatibility or water-condition reminders'] : ['No obvious abnormality at this time'],
+    observeItems: ['Breathing rate', 'Feeding response', 'Water odor'],
+    missingInfo: [],
+  }),
+  'generic-symptom-check': (result) => ({
+    summary: result.riskLevel === 'unknown'
+      ? 'There is not enough information yet; add observation and water-condition details first.'
+      : 'No high-risk rule was triggered; start with a light check and short-term observation.',
+    actions: ['Record when the abnormality started and how much of the tank is affected', 'Check filter flow, temperature, and water odor', 'Keep the next feeding small enough to finish within 2–3 minutes'],
+    avoidActions: ['Do not medicate without a clear reason', 'Do not repeatedly net the fish', 'Do not suddenly perform a large water change'],
+    possibleCauses: ['Insufficient information', 'Mild stress', 'Environmental fluctuation'],
+    observeItems: ['Whether breathing becomes rapid', 'Whether appetite loss continues', 'Whether the water becomes abnormal'],
+    missingInfo: ['How long the abnormality has lasted', 'Photo or video description'],
+  }),
+  'static-no-aquarium': fixedRule({
+    summary: 'Select an aquarium before running a diagnosis.',
+    actions: ['Select or create an aquarium first'],
+    avoidActions: ['Do not make a diagnosis without aquarium data'],
+    possibleCauses: [],
+    observeItems: [],
+    missingInfo: ['Aquarium data'],
+  }),
+  'static-no-livestock': fixedRule({
+    summary: 'There is no recorded livestock in this aquarium, so livestock health cannot be assessed.',
+    actions: ['Confirm that filtration, temperature, and water conditions are stable', 'If the issue is only cloudy water or equipment, choose the matching problem type', 'Add livestock records before running a livestock diagnosis'],
+    avoidActions: ['Do not diagnose fish disease without a livestock record', 'Do not apply species-specific advice from another fish'],
+    possibleCauses: ['There is not enough livestock data to assess animal condition'],
+    observeItems: ['Whether filter flow is normal', 'Whether the water is cloudy or smells abnormal', 'Whether temperature is stable'],
+    missingInfo: ['Livestock records'],
+  }),
+  'static-no-shrimp': fixedRule({
+    summary: 'There is no shrimp recorded in this aquarium, so a shrimp-death diagnosis cannot be generated.',
+    actions: ['Confirm that the correct aquarium is selected', 'If shrimp are present, add them to the aquarium record', 'If the issue is water quality, switch to the water-quality check'],
+    avoidActions: ['Do not apply shrimp molting or copper-risk conclusions to a tank without shrimp'],
+    possibleCauses: ['There is not enough livestock data to assess shrimp condition'],
+    observeItems: ['Whether the livestock record is complete', 'Whether the water is cloudy or smells abnormal'],
+    missingInfo: ['Shrimp livestock record'],
+  }),
+  'static-no-plants': fixedRule({
+    summary: 'There is no recorded plant setup in this aquarium, so yellowing or melting plants cannot be assessed.',
+    actions: ['Confirm whether plants are recorded in the aquarium', 'Check lighting duration and filter stability', 'If plants are present, add them to the aquarium setup first'],
+    avoidActions: ['Do not apply plant-deficiency conclusions to a tank with no recorded plants'],
+    possibleCauses: ['There is not enough plant-setup data to assess plant condition'],
+    observeItems: ['Whether lighting is normal', 'Whether the water is cloudy', 'Whether the substrate was disturbed recently'],
+    missingInfo: ['Plant setup record'],
+  }),
+};
+
+const diagnosisRiskEnglish: Record<DiagnosisOutput['riskLevel'], string> = {
+  low: 'Low risk',
+  medium: 'Needs attention',
+  high: 'High risk',
+  unknown: 'Insufficient information',
+};
+
+const diagnosisSummaryEnglish: Record<string, string> = {
+  '鱼浮头并伴随水体异常，优先怀疑缺氧或水质恶化。': diagnosisRuleEnglish['water-breathing-high-risk']({ riskLevel: 'high' } as DiagnosisOutput).summary,
+  '经常浮头或呼吸明显急促需要优先按缺氧、水温或过滤异常排查。': diagnosisRuleEnglish['frequent-breathing-warning']({ riskLevel: 'high' } as DiagnosisOutput).summary,
+  '偶尔浮头更像轻微缺氧、短期应激或环境波动，需要先观察并排查供氧。': diagnosisRuleEnglish['occasional-breathing-watch']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '连续死亡或多条异常属于高风险，需要先控制污染源和观察同缸鱼。': diagnosisRuleEnglish['multiple-death-high-risk']({ riskLevel: 'high' } as DiagnosisOutput).summary,
+  '更像是换水后的短期应激或水质波动。': diagnosisRuleEnglish['after-water-change-stress']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '新鱼刚入缸躲藏或拒食，多数是应激。': diagnosisRuleEnglish['new-fish-stress']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '拒食需要结合呼吸、活动和近期操作继续观察，先排除水质与应激因素。': diagnosisRuleEnglish['appetite-behavior-watch']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '更像是投喂过量或残饵导致的水质负担。': diagnosisRuleEnglish['overfeeding-cloudy-water']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '追咬已经影响安全，需要优先降低领地和空间压力。': diagnosisRuleEnglish['aggression-space-pressure']({ riskLevel: 'high' } as DiagnosisOutput).summary,
+  '当前有追逐或抢食压力，需要先增加躲避和观察对象。': diagnosisRuleEnglish['aggression-space-pressure']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '水体已经有明显异常，需要先减负并检查过滤。': diagnosisRuleEnglish['water-clarity-check']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '水体轻微异常，先排查残饵、过滤和近期操作。': diagnosisRuleEnglish['water-clarity-check']({ riskLevel: 'low' } as DiagnosisOutput).summary,
+  '当前重点是鱼苗躲避、开口和水流安全。': diagnosisRuleEnglish['fry-care-flow']({ riskLevel: 'low' } as DiagnosisOutput).summary,
+  '当前重点是确认是否临产，并减少母鱼应激。': diagnosisRuleEnglish['pregnancy-care-flow']({ riskLevel: 'low' } as DiagnosisOutput).summary,
+  '当前鱼缸有提醒，建议先做轻量观察。': diagnosisRuleEnglish['normal-patrol']({ riskLevel: 'medium' } as DiagnosisOutput).summary,
+  '当前未发现明显异常，可以正常观察。': diagnosisRuleEnglish['normal-patrol']({ riskLevel: 'low' } as DiagnosisOutput).summary,
+  '当前信息不足，建议先补充观察和水质信息。': diagnosisRuleEnglish['generic-symptom-check']({ riskLevel: 'unknown' } as DiagnosisOutput).summary,
+  '目前没有命中高风险规则，先做轻量排查和短期观察。': diagnosisRuleEnglish['generic-symptom-check']({ riskLevel: 'low' } as DiagnosisOutput).summary,
+};
+
+const diagnosisMetricEnglish: Record<string, string> = {
+  '问题类型': 'Problem type',
+  '风险等级': 'Risk level',
+  '最近换水': 'Recent water change',
+  '最近喂食': 'Recent feeding',
+  '当前鱼缸': 'Aquarium',
+  '活体数量': 'Livestock count',
+};
+
+const diagnosisEvidencePrefixEnglish: Record<string, string> = {
+  '来自当前鱼缸': 'Current aquarium',
+  '当前鱼缸': 'Aquarium',
+  '当前真实活体': 'Current livestock',
+  '当前活体': 'Current livestock',
+  '水体': 'Water',
+  '入口': 'Entry',
+  '最近诊断': 'Recent diagnosis',
+  '匹配百科': 'Matched care guide',
+  '体态观察重点': 'Observation focus',
+};
+
+const diagnosisAnswerKeyEnglish: Record<string, string> = {
+  breathing: 'Breathing',
+  waterLook: 'Water appearance',
+  surfaceLook: 'Water surface',
+  odor: 'Odor',
+  behavior: 'Fish behavior',
+  recentActions: 'Recent changes',
+};
+
+const uniqueEnglish = (values: string[]) => [...new Set(values.filter(Boolean))];
+
+export const getDiagnosisCanonicalValuePresentation = (value: string, isEnglish: boolean) => {
+  if (!isEnglish) return value;
+  if (optionEnglish[value]) return optionEnglish[value];
+  if (Object.prototype.hasOwnProperty.call(problemEnglish, value)) {
+    return problemEnglish[value as DiagnosisProblemType].label;
+  }
+  if (value === '低风险') return diagnosisRiskEnglish.low;
+  if (value === '需要关注') return diagnosisRiskEnglish.medium;
+  if (value === '高风险') return diagnosisRiskEnglish.high;
+  if (value === '信息不足') return diagnosisRiskEnglish.unknown;
+  if (value === '今天') return 'Today';
+  if (value === '昨天') return 'Yesterday';
+  if (value === '无' || value === '暂无') return 'None';
+  if (value === '未知' || value === '不确定') return 'Unknown';
+  if (value === '未记录' || value === '暂无记录') return 'Not recorded';
+  const daysAgo = value.match(/^(\d+)\s*天前$/);
+  if (daysAgo) return `${daysAgo[1]} days ago`;
+  const livestockCount = value.match(/^(\d+)\s*只\/条$/);
+  if (livestockCount) return `${livestockCount[1]} animals`;
+  return value;
+};
+
+const translateEvidence = (item: string) => {
+  const delimiter = item.includes('：') ? '：' : item.includes(':') ? ':' : '';
+  if (!delimiter) return getDiagnosisCanonicalValuePresentation(item, true);
+  const [rawKey, ...rest] = item.split(delimiter);
+  const rawValue = rest.join(delimiter).trim();
+  const key = rawKey.trim();
+  const label = diagnosisEvidencePrefixEnglish[key] || diagnosisAnswerKeyEnglish[key] || key;
+  const translatedValue = rawValue
+    .split(' · ')
+    .map(part => getDiagnosisCanonicalValuePresentation(part, true))
+    .join(' · ');
+  return `${label}: ${translatedValue}`;
+};
+
+export const projectDiagnosisOutputForPresentation = (
+  result: DiagnosisOutput,
+  isEnglish: boolean,
+): DiagnosisOutput => {
+  if (!isEnglish) return result;
+  const presentations = result.matchedRules
+    .map(ruleId => diagnosisRuleEnglish[ruleId]?.(result))
+    .filter((item): item is DiagnosisRuleEnglishPresentation => Boolean(item));
+
+  if (presentations.length === 0) {
+    return {
+      ...result,
+      riskLabel: diagnosisRiskEnglish[result.riskLevel],
+      keyMetrics: result.keyMetrics.map(metric => ({
+        label: diagnosisMetricEnglish[metric.label] || metric.label,
+        value: getDiagnosisCanonicalValuePresentation(metric.value, true),
+      })),
+      evidence: result.evidence.map(translateEvidence),
+    };
+  }
+
+  const actions = uniqueEnglish(presentations.flatMap(item => item.actions)).slice(0, 3);
+  const currentActionIndex = Math.max(0, result.actions.indexOf(result.currentAction));
+  return {
+    ...result,
+    riskLabel: diagnosisRiskEnglish[result.riskLevel],
+    summary: diagnosisSummaryEnglish[result.summary] || presentations[0].summary,
+    currentAction: actions[currentActionIndex] || actions[0] || result.currentAction,
+    actions,
+    avoidActions: uniqueEnglish(presentations.flatMap(item => item.avoidActions)).slice(0, 3),
+    possibleCauses: uniqueEnglish(presentations.flatMap(item => item.possibleCauses)).slice(0, 3),
+    observeItems: uniqueEnglish(presentations.flatMap(item => item.observeItems)).slice(0, 3),
+    missingInfo: uniqueEnglish(presentations.flatMap(item => item.missingInfo)).slice(0, 3),
+    evidence: result.evidence.map(translateEvidence),
+    keyMetrics: result.keyMetrics.map(metric => ({
+      label: diagnosisMetricEnglish[metric.label] || metric.label,
+      value: getDiagnosisCanonicalValuePresentation(metric.value, true),
+    })),
+  };
+};
+
+export const getDiagnosisResultEnglishCoverage = () => ({
+  rules: diagnosisRuleEnglish,
+  summaries: diagnosisSummaryEnglish,
+});

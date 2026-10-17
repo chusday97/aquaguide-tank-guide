@@ -6,6 +6,7 @@ import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine'
 import type { VisualResultStatus, VisualResultSubject, VisualResultViewModel } from './visual-result.types';
 import { getCompatibilityPresentation } from '../../services/compatibility/compatibility-presentation.service';
 import { buildBeginnerCompatibilityAction } from '../../services/compatibility/compatibility-action.service';
+import { getDiagnosisCanonicalValuePresentation, projectDiagnosisOutputForPresentation } from '../../modules/diagnosis/diagnosis.presentation';
 
 const riskTypeLabels: Record<CompatibilityRiskType, string> = {
   water_type: '水体冲突',
@@ -144,6 +145,14 @@ const diagnosisAnswerLabels: Record<string, string> = {
   behavior: '鱼只行为',
   recentActions: '近期操作',
 };
+const diagnosisAnswerLabelsEnglish: Record<string, string> = {
+  breathing: 'Breathing',
+  waterLook: 'Water appearance',
+  surfaceLook: 'Water surface',
+  odor: 'Odor',
+  behavior: 'Fish behavior',
+  recentActions: 'Recent changes',
+};
 
 export function buildDiagnosisVisualResult({
   result,
@@ -154,6 +163,7 @@ export function buildDiagnosisVisualResult({
   focusSpeciesId,
   primaryActionLabel,
   primaryActionType = 'mutation',
+  isEnglish = false,
 }: {
   result: DiagnosisOutput;
   answers: DiagnosisAnswerMap;
@@ -163,9 +173,11 @@ export function buildDiagnosisVisualResult({
   focusSpeciesId?: string;
   primaryActionLabel: string;
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
+  isEnglish?: boolean;
 }): VisualResultViewModel {
-  const status = diagnosisStatus(result.riskLevel);
-  const currentAction = result.currentAction || result.actions[0] || '保持环境稳定并继续观察。';
+  const presentedResult = projectDiagnosisOutputForPresentation(result, isEnglish);
+  const status = diagnosisStatus(presentedResult.riskLevel);
+  const currentAction = presentedResult.currentAction || presentedResult.actions[0] || (isEnglish ? 'Keep conditions stable and continue observing.' : '保持环境稳定并继续观察。');
   const abnormalAnswers = Object.entries(answers)
     .filter(([key, value]) => diagnosisAnswerLabels[key] && value && value !== '跳过' && !normalDiagnosisAnswers.has(value))
     .slice(0, 5);
@@ -176,33 +188,40 @@ export function buildDiagnosisVisualResult({
   const relatedLivestock = focusFish ? livestock.filter(item => item.id !== focusFish.id) : livestock;
   const subjects: VisualResultSubject[] = [{
     id: focusFish?.id || (isMultipleSpecies ? 'selected-species' : 'aquarium'),
-    name: focusFish?.name || (isMultipleSpecies ? `所选 ${livestock.length} 种生物` : aquariumName),
+    name: focusFish?.name || (isMultipleSpecies ? (isEnglish ? `Selected ${livestock.length} species` : `所选 ${livestock.length} 种生物`) : aquariumName),
     image: focusFish ? getSpeciesDisplayImage(focusFish) : undefined,
     role: 'focus',
     status,
-    shortReason: result.summary,
-    badgeLabel: focusFish ? '重点观察' : isMultipleSpecies ? '多种生物' : '全缸检查',
-    emphasis: getVisualEmphasis(result.summary),
+    shortReason: presentedResult.summary,
+    badgeLabel: focusFish
+      ? (isEnglish ? 'Focus' : '重点观察')
+      : isMultipleSpecies
+        ? (isEnglish ? 'Multiple species' : '多种生物')
+        : (isEnglish ? 'Whole-tank check' : '全缸检查'),
+    emphasis: getVisualEmphasis(presentedResult.summary),
   }, ...relatedLivestock.map<VisualResultSubject>(fish => ({
     id: fish.id,
     name: fish.name,
     image: getSpeciesDisplayImage(fish),
     role: 'related',
     status,
-    shortReason: '本次检查包含该物种',
-    badgeLabel: '检查对象',
-  })), ...abnormalAnswers.map<VisualResultSubject>(([key, value]) => ({
-    id: `answer-${key}`,
-    name: diagnosisAnswerLabels[key],
-    role: 'affected',
-    status,
-    shortReason: value,
-    badgeLabel: value.length > 8 ? `${value.slice(0, 8)}…` : value,
-    emphasis: getVisualEmphasis(value),
-  }))];
+    shortReason: isEnglish ? 'Included in this check' : '本次检查包含该物种',
+    badgeLabel: isEnglish ? 'Checked' : '检查对象',
+  })), ...abnormalAnswers.map<VisualResultSubject>(([key, value]) => {
+    const label = isEnglish ? getDiagnosisCanonicalValuePresentation(value, true) : value;
+    return {
+      id: `answer-${key}`,
+      name: isEnglish ? diagnosisAnswerLabelsEnglish[key] : diagnosisAnswerLabels[key],
+      role: 'affected',
+      status,
+      shortReason: label,
+      badgeLabel: label.length > 14 ? `${label.slice(0, 14)}…` : label,
+      emphasis: getVisualEmphasis(value),
+    };
+  })];
 
   if (subjects.length === 1) {
-    result.keyMetrics.slice(0, 3).forEach((metric, index) => subjects.push({
+    presentedResult.keyMetrics.slice(0, 3).forEach((metric, index) => subjects.push({
       id: `metric-${index}`,
       name: metric.label,
       role: 'affected',
@@ -214,19 +233,19 @@ export function buildDiagnosisVisualResult({
 
   return {
     status,
-    title: '检查结果',
-    conclusion: result.summary,
+    title: isEnglish ? 'Check result' : '检查结果',
+    conclusion: presentedResult.summary,
     emphasis: getVisualEmphasis(`${result.summary} ${result.currentAction}`),
     subjects,
     currentAction,
-    actionItems: result.actions.filter(item => item !== currentAction),
-    avoidActions: result.avoidActions,
+    actionItems: presentedResult.actions.filter(item => item !== currentAction),
+    avoidActions: presentedResult.avoidActions,
     primaryAction: { label: primaryActionLabel, actionType: primaryActionType },
     detailSections: [
-      { id: 'evidence', title: '判断依据', items: result.evidence },
-      { id: 'causes', title: '可能原因', items: result.possibleCauses },
-      { id: 'observe', title: '继续观察', items: result.observeItems },
-      { id: 'missing', title: '缺失信息', items: result.missingInfo },
+      { id: 'evidence', title: isEnglish ? 'Why this result' : '判断依据', items: presentedResult.evidence },
+      { id: 'causes', title: isEnglish ? 'Possible causes' : '可能原因', items: presentedResult.possibleCauses },
+      { id: 'observe', title: isEnglish ? 'What to watch' : '继续观察', items: presentedResult.observeItems },
+      { id: 'missing', title: isEnglish ? 'Missing information' : '缺失信息', items: presentedResult.missingInfo },
     ].filter(section => section.items.length > 0),
   };
 }

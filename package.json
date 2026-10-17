@@ -77,6 +77,7 @@
     "test:localization-ui": "node scripts/verify-localization-ui.mjs",
     "test:localization-rule-boundary": "node --import tsx scripts/test-localization-rule-boundary.ts",
     "test:diagnosis-presentation-i18n": "node --import tsx scripts/test-diagnosis-presentation-i18n.ts",
+    "test:diagnosis-result-presentation-i18n": "node --import tsx scripts/test-diagnosis-result-presentation-i18n.ts",
     "test:responsive-routes": "node scripts/verify-responsive-route-scan.mjs",
     "test:species-detail-ui": "node scripts/verify-species-detail-experience.mjs",
     "i18n:sync": "tsx scripts/sync-i18n.ts",
