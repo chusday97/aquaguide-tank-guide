@@ -27,6 +27,18 @@ export type IdentityResolutionLike = {
   reasonCode: string;
 };
 
+export const selectIdentityResolutionWithVerifiedCache = (
+  liveResolution: IdentityResolutionLike,
+  cachedResolution: IdentityResolutionLike | null | undefined,
+) => {
+  const useCachedVerified = liveResolution.status === 'provider_unavailable'
+    && cachedResolution?.status === 'verified';
+  return {
+    resolution: useCachedVerified ? cachedResolution : liveResolution,
+    usedCachedVerified: Boolean(useCachedVerified),
+  };
+};
+
 export const normalizeScientificName = (value: string) => value.trim().replace(/\s+/g, ' ');
 
 export const deriveExactBinomialBase = (scientificName: string) => {

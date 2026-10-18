@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { fishData } from '../src/data/fishData';
 import { createGbifSpeciesIdentityResolver } from '../src/services/compatibility/gbif-species-identity.service';
@@ -6,6 +6,7 @@ import {
   buildIdentityBulkPreparation,
   buildVariantResearchGroups,
   chooseVerifiedBaseResolution,
+  selectIdentityResolutionWithVerifiedCache,
   type IdentityBulkBaseItem,
   type IdentityBulkQueueManifest,
   type IdentityResolutionLike,
@@ -18,12 +19,30 @@ const arg = (name: string) => {
 
 const queuePath = arg('queue') || 'evaluation/product/compatibility-identity-review-queue.v1.json';
 const outputPath = arg('output') || 'evaluation/product/compatibility-identity-bulk-base-resolution.v1.json';
+const resume = arg('resume') !== 'false';
 const concurrency = Math.max(1, Math.min(12, Number(arg('concurrency') || 6)));
 const queue = JSON.parse(readFileSync(queuePath, 'utf8')) as IdentityBulkQueueManifest;
 const preparation = buildIdentityBulkPreparation(queue, fishData);
 const resolver = createGbifSpeciesIdentityResolver();
 
 const names = preparation.uniqueBaseCandidateNames;
+const priorVerifiedByName = new Map<string, IdentityResolutionLike>();
+if (resume && existsSync(outputPath)) {
+  try {
+    const previous = JSON.parse(readFileSync(outputPath, 'utf8')) as {
+      items?: Array<{ baseResolution?: IdentityResolutionLike | null }>;
+    };
+    for (const item of previous.items || []) {
+      const resolution = item.baseResolution;
+      if (resolution?.status === 'verified') {
+        priorVerifiedByName.set(resolution.queriedScientificName, resolution);
+      }
+    }
+  } catch {
+    // Ignore a malformed previous artifact and fail closed through the live resolver.
+  }
+}
+const cachedVerifiedFallbackNames = new Set<string>();
 const resolutions = new Map<string, IdentityResolutionLike>();
 let cursor = 0;
 
@@ -32,9 +51,22 @@ const worker = async () => {
     const index = cursor++;
     if (index >= names.length) return;
     const scientificName = names[index];
-    const resolution = await resolver.resolve(scientificName);
+    const liveResolution = await resolver.resolve(scientificName);
+    const cachedVerified = priorVerifiedByName.get(scientificName);
+    const selected = selectIdentityResolutionWithVerifiedCache(liveResolution, cachedVerified);
+    const resolution = selected.resolution;
+    if (selected.usedCachedVerified) cachedVerifiedFallbackNames.add(scientificName);
     resolutions.set(scientificName, resolution);
-    console.log('IDENTITY_BULK_GBIF', index + 1, '/', names.length, scientificName, resolution.status, resolution.canonicalName || '');
+    console.log(
+      'IDENTITY_BULK_GBIF',
+      index + 1,
+      '/',
+      names.length,
+      scientificName,
+      resolution.status,
+      resolution.canonicalName || '',
+      selected.usedCachedVerified ? 'cached_verified_fallback' : 'live',
+    );
   }
 };
 
@@ -72,6 +104,7 @@ const report = {
     uniqueBaseCandidateNames: names.length,
     gbifVerifiedBaseTaxa: [...resolutions.values()].filter(item => item.status === 'verified').length,
     gbifUnresolvedOrAmbiguousBaseTaxa: [...resolutions.values()].filter(item => item.status !== 'verified').length,
+    cachedVerifiedFallbacks: cachedVerifiedFallbackNames.size,
     itemsWithVerifiedBase: items.filter(item => item.baseResolution?.status === 'verified').length,
     itemsWithoutVerifiedBase: items.filter(item => item.baseResolution?.status !== 'verified').length,
     variantResearchGroups: groups.length,

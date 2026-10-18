@@ -130,6 +130,15 @@ const queueKinds: CompatibilityIdentityReviewQueueKind[] = [
   'catalog_structure_correction',
 ];
 
+export const hasStructurallyOpenScientificLabel = (scientificName: string) => (
+  /(?:^|\s)(?:sp\.|cf\.|aff\.)(?:\s|$)/i.test(scientificName.trim())
+);
+
+const isStructurallyOpenParentResolution = (row: CompatibilityIdentityMigrationAuditRow) => (
+  row.migrationPath === 'base_authority_or_parent_resolution'
+  && hasStructurallyOpenScientificLabel(row.scientificName)
+);
+
 const routeFor = (
   row: CompatibilityIdentityMigrationAuditRow,
 ): {
@@ -142,6 +151,9 @@ const routeFor = (
   }
   if (row.researchDebtStatus === 'catalog_label_disambiguation_required') {
     return { queue: 'manual_label_disambiguation', gate: 'manual_disambiguation', automatedResearchAllowed: false };
+  }
+  if (isStructurallyOpenParentResolution(row)) {
+    return { queue: 'trade_name_disambiguation', gate: 'manual_disambiguation', automatedResearchAllowed: false };
   }
 
   switch (row.migrationPath) {
@@ -185,6 +197,7 @@ export const buildCompatibilityIdentityReviewQueue = (
     seen.add(row.speciesId);
 
     const route = routeFor(row);
+    const structuralOpenParentResolution = isStructurallyOpenParentResolution(row);
     const searchedObjectLabels = row.identityResearchDebt?.searchedObjectLabels || [];
     const researchLabels = uniqueStrings([
       row.scientificName,
@@ -212,10 +225,18 @@ export const buildCompatibilityIdentityReviewQueue = (
       baseCandidateSpeciesIds: row.baseCandidates.map(candidate => candidate.speciesId),
       identityEvidenceStatus: row.identityEvidenceStatus,
       researchDebtStatus: row.researchDebtStatus,
-      researchBlockedReason: row.researchDebtBlockingReason,
-      reopenRequirement: row.researchDebtReopenRequirement,
+      researchBlockedReason: row.researchDebtBlockingReason
+        ?? (structuralOpenParentResolution
+          ? 'Catalog scientific label is structurally open (sp./cf./aff.) and does not identify one accepted parent species.'
+          : null),
+      reopenRequirement: row.researchDebtReopenRequirement
+        ?? (structuralOpenParentResolution
+          ? 'Provide lineage/provenance or an authoritative exact-object source that links this catalog object to one accepted parent taxon.'
+          : null),
       researchLabels,
-      nextAction: row.nextAction,
+      nextAction: structuralOpenParentResolution
+        ? 'Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.'
+        : row.nextAction,
       affectedIdentityUnknownPairs: row.affectedIdentityUnknownPairs,
       soleBoundaryIdentityUnknownPairs: row.soleBoundaryIdentityUnknownPairs,
       sharedBoundaryIdentityUnknownPairs: row.sharedBoundaryIdentityUnknownPairs,

@@ -30,7 +30,7 @@ const row = (overrides: Partial<CompatibilityIdentityMigrationAudit['rows'][numb
 
 const synthetic: CompatibilityIdentityMigrationAudit = {
   schemaVersion: 3,
-  activeIdentityBoundaries: 5,
+  activeIdentityBoundaries: 6,
   identityUnknownPairs: 42,
   rows: [
     row(),
@@ -60,6 +60,16 @@ const synthetic: CompatibilityIdentityMigrationAudit = {
       soleBoundaryIdentityUnknownPairs: 5,
     }),
     row({
+      speciesId: 'sp_open_trade',
+      name: 'Open Trade Label',
+      scientificName: 'Ancistrus sp. Gold',
+      migrationPath: 'base_authority_or_parent_resolution',
+      readyBaseCandidateCount: 0,
+      readyBaseCandidates: [],
+      baseCandidates: [],
+      soleBoundaryIdentityUnknownPairs: 4,
+    }),
+    row({
       speciesId: 'sp_hybrid',
       migrationPath: 'hybrid_object_specific_hold',
       readyBaseCandidateCount: 0,
@@ -72,7 +82,7 @@ const synthetic: CompatibilityIdentityMigrationAudit = {
 
 const syntheticQueue = buildCompatibilityIdentityReviewQueue(synthetic, '2026-10-18T00:00:00.000Z', 'synthetic');
 const syntheticById = new Map(syntheticQueue.items.map(item => [item.speciesId, item] as const));
-assert.equal(syntheticQueue.summary.total, 5);
+assert.equal(syntheticQueue.summary.total, 6);
 assert.equal(syntheticById.get('sp_test')?.queue, 'exact_object_identity_research');
 assert.equal(syntheticById.get('sp_test')?.automatedResearchAllowed, true);
 assert.equal(syntheticById.get('sp_balloon')?.queue, 'partial_inheritance_review');
@@ -81,6 +91,10 @@ assert.equal(syntheticById.get('sp_debt')?.queue, 'evidence_ceiling_hold');
 assert.equal(syntheticById.get('sp_debt')?.automatedResearchAllowed, false);
 assert.ok(syntheticById.get('sp_debt')?.researchLabels.includes('Exact Trade Label'));
 assert.equal(syntheticById.get('sp_label')?.queue, 'manual_label_disambiguation');
+assert.equal(syntheticById.get('sp_open_trade')?.queue, 'trade_name_disambiguation');
+assert.equal(syntheticById.get('sp_open_trade')?.automatedResearchAllowed, false);
+assert.match(syntheticById.get('sp_open_trade')?.researchBlockedReason || '', /structurally open/i);
+assert.match(syntheticById.get('sp_open_trade')?.reopenRequirement || '', /lineage\/provenance/i);
 assert.equal(syntheticById.get('sp_hybrid')?.queue, 'hybrid_object_hold');
 assert.equal(syntheticQueue.items.every(item => item.requiresHumanReview && !item.promotionAllowed && !item.writesAuthority), true);
 
@@ -110,6 +124,20 @@ for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
 assert.equal(byId.get('sp_0241')?.queue, 'partial_inheritance_review');
 assert.equal(byId.get('sp_0241')?.fullInheritanceAllowed, false);
 assert.equal(byId.get('sp_0021')?.queue, 'hybrid_object_hold');
+const structuralOpenParentIds = [
+  'sp_0124', 'sp_0159', 'sp_0160', 'sp_0182', 'sp_0201', 'sp_0217', 'sp_0230',
+  'sp_0280', 'sp_0281', 'sp_0297', 'sp_0392', 'sp_0414', 'sp_0418',
+];
+for (const id of structuralOpenParentIds) {
+  assert.equal(byId.get(id)?.queue, 'trade_name_disambiguation');
+  assert.equal(byId.get(id)?.automatedResearchAllowed, false);
+  assert.match(byId.get(id)?.researchBlockedReason || '', /structurally open/i);
+  assert.ok((byId.get(id)?.reopenRequirement || '').length > 0);
+}
+assert.equal(current.summary.automatedResearchEligible, 55);
+assert.equal(current.summary.manualReviewOnly, 50);
+assert.equal(current.summary.byQueue.base_or_parent_resolution, 42);
+assert.equal(current.summary.byQueue.trade_name_disambiguation, 16);
 
 const totalByQueue = Object.values(current.summary.byQueue).reduce((sum, count) => sum + count, 0);
 assert.equal(totalByQueue, current.summary.total);
