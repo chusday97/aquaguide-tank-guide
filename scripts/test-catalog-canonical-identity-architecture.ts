@@ -27,7 +27,7 @@ assert.equal(
   Object.keys(catalogIdentityCorrectionBaseSpeciesIds).length,
   'every reviewed identity correction must be represented by the canonical identity registry',
 );
-assert.equal(Object.keys(catalogCanonicalIdentities).length, 18);
+assert.equal(Object.keys(catalogCanonicalIdentities).length, 19);
 
 for (const identity of Object.values(catalogCanonicalIdentities)) {
   assert.equal(identity.identityStatus, 'reviewed');
@@ -88,6 +88,10 @@ assert.equal(getCatalogCanonicalIdentity('sp_0231')?.relationshipType, 'color_mo
 assert.equal(getCatalogCanonicalIdentity('sp_0231')?.canonicalSpeciesId, 'sp_0443');
 assert.equal(getCatalogCanonicalIdentity('sp_0411')?.relationshipType, 'geographic_variant');
 assert.equal(getCatalogCanonicalIdentity('sp_0411')?.canonicalSpeciesId, 'sp_0197');
+assert.equal(getCatalogCanonicalIdentity('sp_0442')?.relationshipType, 'same_taxon_catalog_alias');
+assert.equal(getCatalogCanonicalIdentity('sp_0442')?.canonicalSpeciesId, 'sp_0441');
+assert.equal(getCatalogIdentityBoundary('sp_0442'), undefined);
+assert.deepEqual(getApprovedCatalogFieldReviews('sp_0442').map(review => review.field), ['identity']);
 assert.deepEqual(getApprovedCatalogFieldReviews('sp_0411').map(review => review.field), [
   'identity', 'water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation',
 ]);
@@ -189,7 +193,7 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 92);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 93);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);

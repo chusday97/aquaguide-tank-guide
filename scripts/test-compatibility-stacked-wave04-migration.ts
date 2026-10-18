@@ -6,6 +6,7 @@ import {
   nextWaveUnified04Sources,
 } from '../src/data/catalogReviewBatches/next-wave-unified-04';
 import {
+  compatibilitySourceControlledPendingProfileIds,
   compatibilityStackedWave04PendingProfileIds,
   compatibilityUnifiedNextWave,
 } from '../src/data/compatibilityNextWaveBatch';
@@ -17,7 +18,7 @@ const migrationPath = 'supabase/migrations/20261012001500_compatibility_unified_
 const migration = readFileSync(migrationPath, 'utf8');
 const audit = getCompatibilityEvidenceAudit();
 
-assert.equal(audit.reviewedProfiles.length, 122, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 123, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(buildCompatibilityProfileRolloutKeysets(audit.reviewedProfiles.map(profile => profile.speciesId)).wave04Target.size, 95);
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
@@ -78,6 +79,12 @@ for (const sourceId of predecessorSourceIds) {
 
 const supersededClassificationHolds = new Set(['sp_0077', 'sp_0089', 'sp_0334']);
 for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds) {
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(speciesId);
+  if (laterSourceControlledProfile) {
+    assert.ok(getReviewedCompatibilityProfile(speciesId), 'later reviewed identity correction may add a Profile without rewriting the frozen Wave04 migration: ' + speciesId);
+    assert.equal(getCatalogIdentityBoundary(speciesId), undefined, 'later reviewed object-level identity correction may supersede the historical Wave04 hold: ' + speciesId);
+    continue;
+  }
   assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
   if (supersededClassificationHolds.has(speciesId)) {
     assert.equal(getCatalogIdentityBoundary(speciesId), undefined, speciesId + ': later catalog classification correction must supersede the historical wave04 identity hold');

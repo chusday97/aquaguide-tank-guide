@@ -135,7 +135,19 @@ assert.ok(albinoGyrinocheilusCorrection?.citationIds.includes('seriouslyfish-gyr
 assert.ok(albinoGyrinocheilusCorrection?.citationIds.includes('tetra-gyrinocheilus-aymonieri-albino-wave24'));
 assert.equal(getCatalogIdentityBoundary('sp_0229'), undefined, 'reviewed exact-species Albino strain evidence must supersede the historical Gyrinocheilus variant hold at runtime');
 assert.ok(getReviewedCompatibilityProfile('sp_0229'), 'resolved Albino Gyrinocheilus must have an explicit same-species Compatibility bridge');
-assert.equal(getCatalogIdentityBoundary('sp_0442')?.code, 'catalog_scientific_name_unresolved', 'blank-variety Gyrinocheilus must remain fail-closed without an exact object-level identity bridge');
+const historicalChineseAlgaeEaterHold = catalogIdentityBoundaries.sp_0442;
+assert.equal(historicalChineseAlgaeEaterHold?.code, 'catalog_scientific_name_unresolved');
+const chineseAlgaeEaterCorrection = getCatalogFieldReviews('sp_0442').filter(review => review.field === 'identity').at(-1);
+assert.equal(chineseAlgaeEaterCorrection?.resolution, 'supported');
+assert.deepEqual(chineseAlgaeEaterCorrection?.proposedValue, {
+  scientificName: 'Gyrinocheilus aymonieri',
+  baseSpeciesKey: 'Gyrinocheilus aymonieri',
+  variantKey: 'same taxon / Chinese Algae Eater catalog alias',
+});
+assert.ok(chineseAlgaeEaterCorrection?.citationIds.includes('aquariumfishsale-gyrinocheilus-aymonieri-chinese-phase2-08'));
+assert.ok(chineseAlgaeEaterCorrection?.citationIds.includes('aquariumfishsale-gyrinocheilus-aymonieri-gold-phase2-08'));
+assert.equal(getCatalogIdentityBoundary('sp_0442'), undefined, 'reviewed exact-taxon Chinese Algae Eater evidence must supersede the legacy blank-variety hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0442'), 'resolved Chinese Algae Eater alias must inherit the reviewed Gyrinocheilus aymonieri Compatibility authority');
 
 
 const historicalFireRedAgassiziiHold = catalogIdentityBoundaries.sp_0221;

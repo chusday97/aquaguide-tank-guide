@@ -4,7 +4,7 @@ import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/da
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
-import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { compatibilitySourceControlledPendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import {
   nextWaveUnified08AllSpeciesIds,
   nextWaveUnified08DomainOutcomes,
@@ -23,14 +23,25 @@ assert.deepEqual(batch.members.map(item => item.speciesId), [...nextWaveUnified0
 const authority = readFileSync(batch.authorityOwner, 'utf8');
 for (const speciesId of nextWaveUnified08AllSpeciesIds) {
   assert.equal(authority.includes(speciesId), true);
-  assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(speciesId);
+  if (laterSourceControlledProfile) {
+    assert.ok(getReviewedCompatibilityProfile(speciesId), 'later reviewed identity correction may add a Profile without rewriting frozen Wave08 authority: ' + speciesId);
+  } else {
+    assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
+  }
 }
 
 const supersededClassificationOutcomes = new Set(['sp_0077', 'sp_0089']);
 for (const outcome of nextWaveUnified08IdentityOutcomes) {
   const boundary = getCatalogIdentityBoundary(outcome.speciesId);
-  if (supersededClassificationOutcomes.has(outcome.speciesId)) {
-    const historicalBoundary = catalogIdentityBoundaries[outcome.speciesId];
+  const historicalBoundary = catalogIdentityBoundaries[outcome.speciesId];
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(outcome.speciesId);
+  if (laterSourceControlledProfile) {
+    assert.ok(historicalBoundary, 'wave08 historical identity outcome must remain auditable after a later reviewed correction: ' + outcome.speciesId);
+    assert.equal(historicalBoundary.code, outcome.code);
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(boundary, undefined, 'later reviewed object-level identity correction must supersede the historical wave08 hold: ' + outcome.speciesId);
+  } else if (supersededClassificationOutcomes.has(outcome.speciesId)) {
     assert.ok(historicalBoundary, 'wave08 historical classification outcome must remain auditable: ' + outcome.speciesId);
     assert.equal(historicalBoundary.code, outcome.code);
     assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
@@ -61,7 +72,7 @@ assert.equal(nextWaveUnified08EvidenceCeilings.length, 17);
 assert.equal(nextWaveUnified08DomainOutcomes.length, 1);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 122, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 123, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

@@ -16,7 +16,7 @@ import {
 
 const audit = getCompatibilityEvidenceAudit();
 const targetIds = audit.reviewedProfiles.map(item => item.speciesId);
-assert.equal(targetIds.length, 122, 'repository authority includes twenty-one reviewed source-controlled post-target Profiles beyond the released target');
+assert.equal(targetIds.length, 123, 'repository authority includes twenty-two reviewed source-controlled post-target Profiles beyond the released target');
 
 const keysets = buildCompatibilityProfileRolloutKeysets(targetIds);
 assert.equal(keysets.currentProduction.size, 63);
@@ -25,7 +25,7 @@ assert.equal(keysets.wave04Target.size, 95);
 assert.equal(keysets.wave05Target.size, 99);
 assert.equal(keysets.wave06Target.size, 100);
 assert.equal(keysets.target.size, 101);
-assert.deepEqual([...compatibilitySourceControlledPendingProfileIds].sort(), ['sp_0112', 'sp_0115', 'sp_0120', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0221', 'sp_0229', 'sp_0231', 'sp_0234', 'sp_0236', 'sp_0240', 'sp_0242', 'sp_0257', 'sp_0266', 'sp_0272', 'sp_0284', 'sp_0388', 'sp_0407', 'sp_0408', 'sp_0411']);
+assert.deepEqual([...compatibilitySourceControlledPendingProfileIds].sort(), ['sp_0112', 'sp_0115', 'sp_0120', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0221', 'sp_0229', 'sp_0231', 'sp_0234', 'sp_0236', 'sp_0240', 'sp_0242', 'sp_0257', 'sp_0266', 'sp_0272', 'sp_0284', 'sp_0388', 'sp_0407', 'sp_0408', 'sp_0411', 'sp_0442']);
 for (const speciesId of compatibilitySourceControlledPendingProfileIds) {
   assert.equal(keysets.target.has(speciesId), false, 'source-controlled identity corrections must not silently enter the released 101-Profile target: ' + speciesId);
 }

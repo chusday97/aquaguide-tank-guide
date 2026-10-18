@@ -138,18 +138,30 @@ for (const speciesId of compatibilityUnifiedNextWave.activeQueueSpeciesIds) {
 
 const supersededClassificationIdentityHolds = new Set(['sp_0077', 'sp_0089', 'sp_0334']);
 for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds) {
-  assert.equal(
-    getReviewedCompatibilityProfile(speciesId),
-    undefined,
-    'identity-boundary hold must remain without a direct Compatibility Profile: ' + speciesId,
-  );
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(speciesId);
   const boundary = getCatalogIdentityBoundary(speciesId);
-  if (supersededClassificationIdentityHolds.has(speciesId)) {
+  if (laterSourceControlledProfile) {
+    assert.ok(
+      getReviewedCompatibilityProfile(speciesId),
+      'later reviewed identity correction may add a Profile without rewriting historical next-wave holds: ' + speciesId,
+    );
+    assert.equal(boundary, undefined, 'later reviewed object-level identity correction must supersede the historical identity hold: ' + speciesId);
+  } else if (supersededClassificationIdentityHolds.has(speciesId)) {
+    assert.equal(
+      getReviewedCompatibilityProfile(speciesId),
+      undefined,
+      'classification-only correction must not synthesize a fish Compatibility Profile: ' + speciesId,
+    );
     const fish = fishData.find(item => item.id === speciesId);
     assert.ok(fish);
     assert.notEqual(getLifeType(fish), 'fish', 'resolved classification hold must now route outside the fish Compatibility domain: ' + speciesId);
     assert.equal(boundary, undefined, 'later catalog classification correction must supersede the historical identity hold: ' + speciesId);
   } else {
+    assert.equal(
+      getReviewedCompatibilityProfile(speciesId),
+      undefined,
+      'identity-boundary hold must remain without a direct Compatibility Profile: ' + speciesId,
+    );
     assert.ok(boundary, 'identity-boundary hold must resolve an explicit boundary: ' + speciesId);
     assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
   }

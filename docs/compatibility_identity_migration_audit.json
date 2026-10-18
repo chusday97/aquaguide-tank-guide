@@ -8,17 +8,17 @@
     "migrationPathSemantics": "migrationPath is a planning lane, not authority. identity_only_after_exact_evidence still requires exact-object identity evidence before canonical inheritance can graduate.",
     "researchDebtSemantics": "identityResearchDebt records reviewed failed/insufficient evidence passes and known false bridges. It never grants authority; it can only keep or narrow a migration lane."
   },
-  "activeIdentityBoundaries": 106,
-  "fishDomainIdentityBoundaries": 104,
-  "identityUnknownPairs": 18285,
-  "identityUnknownPairsWithOneActiveBoundary": 13629,
-  "identityUnknownPairsWithTwoActiveBoundaries": 4656,
+  "activeIdentityBoundaries": 105,
+  "fishDomainIdentityBoundaries": 103,
+  "identityUnknownPairs": 18135,
+  "identityUnknownPairsWithOneActiveBoundary": 13575,
+  "identityUnknownPairsWithTwoActiveBoundaries": 4560,
   "identityUnknownPairsWithoutActiveBoundary": 0,
-  "pairAttributionCount": 22941,
+  "pairAttributionCount": 22695,
   "autoMigratableCount": 0,
   "boundaryCodeCounts": {
     "commercial_hybrid_identity_unresolved": 3,
-    "catalog_scientific_name_unresolved": 26,
+    "catalog_scientific_name_unresolved": 25,
     "catalog_parent_taxon_unresolved": 11,
     "trade_name_taxon_ambiguous": 2,
     "catalog_variant_identity_unresolved": 63,
@@ -26,7 +26,7 @@
   },
   "migrationBucketCounts": {
     "commercial_hybrid_hold": 3,
-    "variant_object_evidence_required": 88,
+    "variant_object_evidence_required": 87,
     "parent_taxon_resolution_required": 11,
     "trade_name_disambiguation_required": 2,
     "taxonomic_research_candidate": 1,
@@ -34,7 +34,7 @@
   },
   "migrationPathCounts": {
     "hybrid_object_specific_hold": 3,
-    "exact_variant_label_disambiguation": 29,
+    "exact_variant_label_disambiguation": 28,
     "base_authority_or_parent_resolution": 56,
     "trade_name_disambiguation": 3,
     "partial_inheritance_review": 10,
@@ -42,16 +42,16 @@
     "taxonomic_review": 1
   },
   "migrationPathSoleBoundaryImpact": {
-    "hybrid_object_specific_hold": 449,
-    "exact_variant_label_disambiguation": 3774,
-    "base_authority_or_parent_resolution": 7756,
-    "trade_name_disambiguation": 150,
-    "partial_inheritance_review": 1050,
-    "identity_only_after_exact_evidence": 450,
+    "hybrid_object_specific_hold": 452,
+    "exact_variant_label_disambiguation": 3650,
+    "base_authority_or_parent_resolution": 7812,
+    "trade_name_disambiguation": 151,
+    "partial_inheritance_review": 1057,
+    "identity_only_after_exact_evidence": 453,
     "taxonomic_review": 0
   },
   "identityEvidenceStatusCounts": {
-    "no_object_identity_review": 103,
+    "no_object_identity_review": 102,
     "reviewed_identity_hold_present": 3
   },
   "researchDebtStatusCounts": {
@@ -100,8 +100,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0065",
@@ -140,8 +140,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0066",
@@ -180,8 +180,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0067",
@@ -220,8 +220,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0068",
@@ -260,8 +260,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0124",
@@ -300,8 +300,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0127",
@@ -345,8 +345,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0158",
@@ -401,8 +401,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0159",
@@ -441,8 +441,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0160",
@@ -481,8 +481,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0162",
@@ -521,8 +521,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0163",
@@ -561,8 +561,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0175",
@@ -641,8 +641,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0179",
@@ -681,8 +681,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0182",
@@ -721,8 +721,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0201",
@@ -761,8 +761,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0210",
@@ -801,8 +801,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0211",
@@ -841,8 +841,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0217",
@@ -881,8 +881,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0230",
@@ -929,8 +929,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0241",
@@ -985,8 +985,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0243",
@@ -1026,8 +1026,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0247",
@@ -1082,8 +1082,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0248",
@@ -1122,8 +1122,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0263",
@@ -1162,8 +1162,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0264",
@@ -1202,8 +1202,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0265",
@@ -1242,8 +1242,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0268",
@@ -1282,8 +1282,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0269",
@@ -1322,8 +1322,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0270",
@@ -1362,8 +1362,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     }
   ],
   "rows": [
@@ -1405,8 +1405,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0065",
@@ -1445,8 +1445,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0066",
@@ -1485,8 +1485,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0067",
@@ -1525,8 +1525,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0068",
@@ -1565,8 +1565,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0124",
@@ -1605,8 +1605,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0127",
@@ -1650,8 +1650,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0158",
@@ -1706,8 +1706,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0159",
@@ -1746,8 +1746,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0160",
@@ -1786,8 +1786,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0162",
@@ -1826,8 +1826,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0163",
@@ -1866,8 +1866,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0175",
@@ -1946,8 +1946,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0179",
@@ -1986,8 +1986,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0182",
@@ -2026,8 +2026,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0201",
@@ -2066,8 +2066,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0210",
@@ -2106,8 +2106,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0211",
@@ -2146,8 +2146,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0217",
@@ -2186,8 +2186,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0230",
@@ -2234,8 +2234,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0241",
@@ -2290,8 +2290,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0243",
@@ -2331,8 +2331,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0247",
@@ -2387,8 +2387,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0248",
@@ -2427,8 +2427,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0263",
@@ -2467,8 +2467,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0264",
@@ -2507,8 +2507,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0265",
@@ -2547,8 +2547,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0268",
@@ -2587,8 +2587,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0269",
@@ -2627,8 +2627,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0270",
@@ -2667,8 +2667,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0271",
@@ -2741,8 +2741,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0273",
@@ -2781,8 +2781,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0280",
@@ -2829,8 +2829,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0281",
@@ -2869,8 +2869,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0282",
@@ -2909,8 +2909,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0286",
@@ -2949,8 +2949,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0296",
@@ -3005,8 +3005,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0338",
@@ -3045,8 +3045,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0365",
@@ -3101,8 +3101,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0366",
@@ -3141,8 +3141,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0372",
@@ -3197,8 +3197,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0373",
@@ -3253,8 +3253,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0374",
@@ -3309,8 +3309,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0376",
@@ -3393,8 +3393,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0392",
@@ -3433,8 +3433,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0399",
@@ -3511,8 +3511,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0409",
@@ -3551,8 +3551,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0410",
@@ -3591,8 +3591,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0412",
@@ -3631,8 +3631,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0414",
@@ -3671,8 +3671,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0415",
@@ -3727,8 +3727,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0416",
@@ -3783,8 +3783,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0418",
@@ -3823,8 +3823,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0420",
@@ -3863,64 +3863,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
-    },
-    {
-      "speciesId": "sp_0442",
-      "name": "青苔鼠",
-      "scientificName": "Gyrinocheilus aymonieri var.",
-      "lifeType": "fish",
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "resolvedGranularity": "scientific_name_unresolved",
-      "migrationBucket": "variant_object_evidence_required",
-      "migrationReadiness": "blocked_review_required",
-      "autoMigrationAllowed": false,
-      "candidateTaxa": [
-        "Gyrinocheilus aymonieri ornamental lineage; catalog scientificName has a blank var. suffix"
-      ],
-      "singleCandidateHint": "Gyrinocheilus aymonieri ornamental lineage; catalog scientificName has a blank var. suffix",
-      "sourceIds": [
-        "batch25-fishbase-gyrinocheilus-aymonieri-var"
-      ],
-      "reviewedAt": "2026-10-12",
-      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "exact_variant_label_disambiguation",
-      "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
-      "identityEvidenceStatus": "no_object_identity_review",
-      "identityResearchDebt": null,
-      "researchDebtStatus": null,
-      "researchDebtReviewedAt": null,
-      "researchDebtBlockingReason": null,
-      "researchDebtReopenRequirement": null,
-      "nonQualifyingReferenceCount": 0,
-      "blankVariantSuffix": true,
-      "morphologyRisk": false,
-      "strippedBaseScientificName": "Gyrinocheilus aymonieri",
-      "baseCandidates": [
-        {
-          "speciesId": "sp_0441",
-          "name": "金苔鼠",
-          "scientificName": "Gyrinocheilus aymonieri",
-          "genericOnboardingReady": true,
-          "authoritativeFieldCount": 8
-        }
-      ],
-      "readyBaseCandidates": [
-        {
-          "speciesId": "sp_0441",
-          "name": "金苔鼠",
-          "scientificName": "Gyrinocheilus aymonieri",
-          "genericOnboardingReady": true,
-          "authoritativeFieldCount": 8
-        }
-      ],
-      "readyBaseCandidateCount": 1,
-      "genericOnboardingReady": false,
-      "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0445",
@@ -3959,8 +3903,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 150,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 151,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0021",
@@ -4001,8 +3945,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 150,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0141",
@@ -4041,8 +3985,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0142",
@@ -4089,8 +4033,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0143",
@@ -4137,8 +4081,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0144",
@@ -4185,8 +4129,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0145",
@@ -4233,8 +4177,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0154",
@@ -4273,8 +4217,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0155",
@@ -4321,8 +4265,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0167",
@@ -4361,8 +4305,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0170",
@@ -4409,8 +4353,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0204",
@@ -4449,8 +4393,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0205",
@@ -4497,8 +4441,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0206",
@@ -4545,8 +4489,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0208",
@@ -4585,8 +4529,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0212",
@@ -4633,8 +4577,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0225",
@@ -4673,8 +4617,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0226",
@@ -4713,8 +4657,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0227",
@@ -4761,8 +4705,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0228",
@@ -4809,8 +4753,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0232",
@@ -4857,8 +4801,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0235",
@@ -4897,8 +4841,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0244",
@@ -4945,8 +4889,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0245",
@@ -4993,8 +4937,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0246",
@@ -5041,8 +4985,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0255",
@@ -5081,8 +5025,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0256",
@@ -5129,8 +5073,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0287",
@@ -5169,8 +5113,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0288",
@@ -5217,8 +5161,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0294",
@@ -5265,8 +5209,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0297",
@@ -5305,8 +5249,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0339",
@@ -5353,8 +5297,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0340",
@@ -5393,8 +5337,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0341",
@@ -5441,8 +5385,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0358",
@@ -5481,8 +5425,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0359",
@@ -5521,8 +5465,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0360",
@@ -5569,8 +5513,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0375",
@@ -5617,8 +5561,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0393",
@@ -5665,8 +5609,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0394",
@@ -5713,8 +5657,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0421",
@@ -5761,8 +5705,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0474",
@@ -5801,8 +5745,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
-      "soleBoundaryIdentityUnknownPairs": 127,
-      "sharedBoundaryIdentityUnknownPairs": 96
+      "soleBoundaryIdentityUnknownPairs": 128,
+      "sharedBoundaryIdentityUnknownPairs": 95
     },
     {
       "speciesId": "sp_0002",

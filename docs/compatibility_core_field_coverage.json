@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 92,
-  "coreFieldCompleteSpecies": 107,
+  "genericOnboardingReadySpecies": 93,
+  "coreFieldCompleteSpecies": 108,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 156,
-  "domainOrIdentityHeldSpecies": 271,
+  "runtimeReviewedProfileSpecies": 157,
+  "domainOrIdentityHeldSpecies": 270,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 161,
+      "reviewed_supported": 162,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 43,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 146,
+      "reviewed_supported": 147,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 140,
+      "reviewed_supported": 141,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 150,
+      "reviewed_supported": 151,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 138,
+      "reviewed_supported": 139,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 66,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 129,
+      "reviewed_supported": 130,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 75,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 92,
+      "reviewed_supported": 93,
       "reviewed_neutral_or_negative": 37,
       "reviewed_unknown": 75,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 78,
-      "reviewed_neutral_or_negative": 36,
+      "reviewed_neutral_or_negative": 37,
       "reviewed_unknown": 90,
       "needs_research": 0,
-      "missing_identity_or_domain": 271,
+      "missing_identity_or_domain": 270,
       "not_applicable": 11
     }
   },
@@ -36700,83 +36700,93 @@
       "name": "青苔鼠",
       "scientificName": "Gyrinocheilus aymonieri var.",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri-var"
+            "aquariumfishsale-gyrinocheilus-aymonieri-chinese-phase2-08",
+            "aquariumfishsale-gyrinocheilus-aymonieri-gold-phase2-08",
+            "batch25-fishbase-gyrinocheilus-aymonieri",
+            "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         }
       }
     },

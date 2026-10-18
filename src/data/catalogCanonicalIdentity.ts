@@ -13,7 +13,8 @@ export type CatalogCanonicalRelationshipType =
   | 'color_morph'
   | 'longfin_variant'
   | 'trade_strain'
-  | 'geographic_variant';
+  | 'geographic_variant'
+  | 'same_taxon_catalog_alias';
 
 export type CompatibilityInheritancePolicy = {
   mode: 'allowlist';
@@ -53,6 +54,7 @@ const relationshipBySpeciesId: Record<string, CatalogCanonicalRelationshipType> 
   sp_0234: 'color_morph',
   sp_0231: 'color_morph',
   sp_0411: 'geographic_variant',
+  sp_0442: 'same_taxon_catalog_alias',
 };
 
 const latestReviewedIdentity = (speciesId: string) => getApprovedCatalogFieldReviews(speciesId)

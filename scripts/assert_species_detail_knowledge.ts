@@ -749,7 +749,14 @@ assert.equal(albinoGyrinocheilusKnowledge.spaceAndGrowth?.adultLengthCm.max, 28)
 assert.equal(albinoGyrinocheilusKnowledge.spaceAndGrowth?.minTankLengthCm, 150);
 assert.equal(albinoGyrinocheilusKnowledge.socialBehavior?.mode, 'variable');
 assert.equal(albinoGyrinocheilusKnowledge.socialBehavior?.territoriality, 'medium');
-assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0442', scientificName: 'Gyrinocheilus aymonieri var.' }), undefined, 'unresolved blank-variety Gyrinocheilus must not inherit reviewed base authority automatically');
+const chineseAlgaeEaterKnowledge = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0442', scientificName: 'Gyrinocheilus aymonieri var.' });
+assert.ok(chineseAlgaeEaterKnowledge, 'reviewed same-taxon Chinese Algae Eater bridge must resolve Species Knowledge through Gyrinocheilus aymonieri authority');
+assert.deepEqual(chineseAlgaeEaterKnowledge.environment?.temperatureRangeC, { min: 22, max: 26 });
+assert.deepEqual(chineseAlgaeEaterKnowledge.environment?.phRange, { min: 6, max: 8 });
+assert.equal(chineseAlgaeEaterKnowledge.spaceAndGrowth?.adultLengthCm.max, 28);
+assert.equal(chineseAlgaeEaterKnowledge.spaceAndGrowth?.minTankLengthCm, 150);
+assert.equal(chineseAlgaeEaterKnowledge.socialBehavior?.mode, 'variable');
+assert.equal(chineseAlgaeEaterKnowledge.socialBehavior?.territoriality, 'medium');
 
 const gymnotusCarapo = fishData.find(fish => fish.id === 'sp_0120');
 assert.ok(gymnotusCarapo, 'corrected Gymnotus carapo must exist in catalog');
