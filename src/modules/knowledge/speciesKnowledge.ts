@@ -55,6 +55,7 @@ import { pseudorasboraParvaKnowledge } from './pseudorasboraParvaAuthority';
 import { nextWaveFreshwaterBatchKnowledge } from './nextWaveFreshwaterBatchAuthority';
 import { nextWaveUnifiedBatchKnowledge } from './nextWaveUnifiedBatchAuthority';
 import { gymnotusCarapoKnowledge } from './gymnotusCarapoAuthority';
+import { poropanchaxNormaniKnowledge, hyphessobryconAmapaensisKnowledge } from './smallSchoolingBehaviorAuthority';
 import { nextWaveUnified03ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-03';
 import { nextWaveUnified04ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified05ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-05';
@@ -71,7 +72,7 @@ export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpecies
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
   'sp_0004', 'sp_0032', 'sp_0036',
-  'sp_0052', 'sp_0112', 'sp_0115', 'sp_0141', 'sp_0143', 'sp_0144', 'sp_0145', 'sp_0154', 'sp_0155', 'sp_0167',
+  'sp_0052', 'sp_0141', 'sp_0143', 'sp_0144', 'sp_0145', 'sp_0154', 'sp_0155', 'sp_0167',
   'sp_0170', 'sp_0204', 'sp_0205', 'sp_0206', 'sp_0212', 'sp_0225', 'sp_0226', 'sp_0231', 'sp_0232', 'sp_0244',
   'sp_0245', 'sp_0246', 'sp_0255', 'sp_0287', 'sp_0339', 'sp_0358', 'sp_0360', 'sp_0362', 'sp_0375', 'sp_0002',
   'sp_0005', 'sp_0051', 'sp_0018', 'sp_0023', 'sp_0024', 'sp_0033', 'sp_0034', 'sp_0042',
@@ -919,6 +920,8 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...nextWaveUnified05BatchKnowledge,
   ...nextWaveUnified06BatchKnowledge,
   sp_0120: gymnotusCarapoKnowledge,
+  sp_0112: poropanchaxNormaniKnowledge,
+  sp_0115: hyphessobryconAmapaensisKnowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,

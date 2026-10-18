@@ -6620,13 +6620,12 @@
         "feeding": "reviewed_unknown",
         "environment": "reviewed_supported",
         "space": "reviewed_supported",
-        "social": "reviewed_unknown",
+        "social": "reviewed_supported",
         "care": "reviewed_unknown"
       },
       "gap_fields": [],
       "reviewed_unknown_fields": [
         "feeding",
-        "social",
         "care"
       ],
       "reviewed_unknown_resolutions": [
@@ -6638,13 +6637,6 @@
           "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
         },
         {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "explicit_evidence_ceiling",
-          "code": "species_social_not_established",
-          "note": "Poropanchax normani species review has reviewed environment/size authority but still does not establish a stable household aquarium social mode or defensible positive community rule. Keep this exact species fail-closed until stronger object-level reviewed social evidence is added."
-        },
-        {
           "field": "care",
           "mode": "targeted_source_expansion",
           "reason": "reviewed_unknown_no_explicit_ceiling",
@@ -6654,11 +6646,11 @@
       ],
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
+      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 2,
+      "risk_proxy": "elevated",
+      "priority_score": 5,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -6805,13 +6797,12 @@
         "feeding": "reviewed_unknown",
         "environment": "reviewed_supported",
         "space": "reviewed_supported",
-        "social": "reviewed_unknown",
+        "social": "reviewed_supported",
         "care": "reviewed_unknown"
       },
       "gap_fields": [],
       "reviewed_unknown_fields": [
         "feeding",
-        "social",
         "care"
       ],
       "reviewed_unknown_resolutions": [
@@ -6823,13 +6814,6 @@
           "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
         },
         {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "explicit_evidence_ceiling",
-          "code": "species_social_not_established",
-          "note": "Hyphessobrycon amapaensis species review has reviewed environment/size authority but still does not establish a stable household aquarium social mode or defensible positive community rule. Keep this exact species fail-closed until stronger object-level reviewed social evidence is added."
-        },
-        {
           "field": "care",
           "mode": "targeted_source_expansion",
           "reason": "reviewed_unknown_no_explicit_ceiling",
@@ -6839,11 +6823,11 @@
       ],
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
+      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 2,
+      "risk_proxy": "elevated",
+      "priority_score": 5,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -31742,8 +31726,8 @@
       "template_only": 0
     },
     "social": {
-      "reviewed_supported": 103,
-      "reviewed_unknown": 306,
+      "reviewed_supported": 105,
+      "reviewed_unknown": 304,
       "inherited_reviewed": 0,
       "not_applicable": 77,
       "needs_research": 0,

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
-import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { compatibilitySourceControlledPendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import {
   nextWaveUnified16AllSpeciesIds,
   nextWaveUnified16DomainOutcomes,
@@ -39,7 +39,15 @@ assert.ok(
 );
 
 for (const outcome of nextWaveUnified16EvidenceCeilings) {
-  assert.equal(getReviewedCompatibilityProfile(outcome.speciesId), undefined);
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(outcome.speciesId);
+  if (laterSourceControlledProfile) {
+    assert.ok(
+      getReviewedCompatibilityProfile(outcome.speciesId),
+      'later reviewed exact-taxon behavior evidence may add a Profile without rewriting frozen Wave16 history: ' + outcome.speciesId,
+    );
+  } else {
+    assert.equal(getReviewedCompatibilityProfile(outcome.speciesId), undefined);
+  }
   const ceiling = getKnowledgeEvidenceCeiling(outcome.speciesId, outcome.field);
   assert.ok(ceiling);
   assert.equal(ceiling.code, outcome.code);
@@ -54,8 +62,8 @@ for (const outcome of nextWaveUnified16DomainOutcomes) {
 }
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 118, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 120, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 
-console.log('Compatibility unified wave16 authority PASS: 1 Profile, 2 social evidence ceilings, 9 non-fish domain holds; static authority advances to 101 Profiles.');
+console.log('Compatibility unified wave16 authority PASS: frozen 1-Profile release plus 2 historical social evidence ceilings remain auditable while later reviewed behavior authority may supersede them at runtime.');

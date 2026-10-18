@@ -132,7 +132,7 @@ assert.match(missingTankAction.immediateAction, /补齐|鱼缸|再算|再判断/
 
 const missingSpeciesFact = decisionFor([
   ['sp_0014', quantityFor('sp_0014')],
-  ['sp_0112', quantityFor('sp_0112')],
+  ['sp_0362', quantityFor('sp_0362')],
 ], largeTank);
 assert.equal(missingSpeciesFact.status, 'insufficient_data');
 assert.ok(missingSpeciesFact.metadata.domainRuleCodes.includes('water_type_unknown'));

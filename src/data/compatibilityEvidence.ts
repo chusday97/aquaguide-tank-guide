@@ -36,6 +36,7 @@ import { identityCorrectionsPhase2_01Sources } from './catalogReviewBatches/iden
 import { identityCorrectionsPhase2_02Sources } from './catalogReviewBatches/identity-corrections-phase2-02';
 import { identityCorrectionsPhase2_03Sources } from './catalogReviewBatches/identity-corrections-phase2-03';
 import { catalogCorrectionPhase2_04Sources } from './catalogReviewBatches/catalog-correction-phase2-04';
+import { behaviorEvidencePhase2_05Sources } from './catalogReviewBatches/behavior-evidence-phase2-05';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from './catalogIdentityBoundaries';
@@ -827,6 +828,28 @@ const nextWaveUnified03Profiles = Object.fromEntries(
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   ...nextWaveUnified03Profiles,
+  sp_0112: {
+    speciesId: 'sp_0112',
+    waterType: 'freshwater',
+    behaviorTraits: ['schooling', 'peaceful', 'non_territorial', 'upper_water'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [behaviorEvidencePhase2_05Sources.poropanchaxNormaniAquaristAtlas],
+    requiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
+  },
+  sp_0115: {
+    speciesId: 'sp_0115',
+    waterType: 'freshwater',
+    behaviorTraits: ['schooling', 'very_peaceful', 'non_territorial', 'community_fish'],
+    minimumGroupSize: 8,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [behaviorEvidencePhase2_05Sources.hyphessobryconAmapaensisSeriouslyFish],
+    requiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
+  },
   sp_0120: {
     speciesId: 'sp_0120',
     waterType: 'freshwater',
@@ -1693,6 +1716,7 @@ const canonicalIdentitySourceById = new Map(
     ...Object.values(identityCorrectionsPhase2_02Sources),
     ...Object.values(identityCorrectionsPhase2_03Sources),
     ...Object.values(catalogCorrectionPhase2_04Sources),
+    ...Object.values(behaviorEvidencePhase2_05Sources),
   ].map(source => [source.id, source] as const),
 );
 

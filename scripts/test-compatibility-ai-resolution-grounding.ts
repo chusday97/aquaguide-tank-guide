@@ -209,7 +209,7 @@ const insufficientDecision = evaluateCompatibilityDecision({
   items: [
     { species: byId('sp_0114'), quantity: 8, origin: 'existing' },
     { species: byId('sp_0469'), quantity: 8, origin: 'existing' },
-    { species: byId('sp_0112'), quantity: 1, origin: 'candidate' },
+    { species: byId('sp_0362'), quantity: 1, origin: 'candidate' },
   ],
 });
 assert.equal(insufficientDecision.status, 'insufficient_data');
@@ -227,7 +227,7 @@ const insufficientShadow = await createCompatibilityAiCombinationAssessment({
   items: [
     { species: byId('sp_0114'), quantity: 8, origin: 'existing' },
     { species: byId('sp_0469'), quantity: 8, origin: 'existing' },
-    { species: byId('sp_0112'), quantity: 1, origin: 'planned' },
+    { species: byId('sp_0362'), quantity: 1, origin: 'planned' },
   ],
   assessmentMode: 'planned_addition',
   resolutionTargets: insufficientTargets,

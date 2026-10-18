@@ -188,8 +188,8 @@
           "quantity": 8
         },
         {
-          "id": "sp_0112",
-          "name": "蓝眼灯",
+          "id": "sp_0362",
+          "name": "黄金灯",
           "role": "candidate",
           "quantity": 1
         }
@@ -203,8 +203,9 @@
           "candidate_water_type_missing"
         ],
         "evidenceIds": [
-          "fishipedia-poropanchax-normani-numeric-husbandry",
-          "batch05-fishbase-poropanchax-normani",
+          "fishipedia-hemigrammus-rodwayi-numeric-husbandry",
+          "batch07-fishbase-hemigrammus-rodwayi",
+          "wave30-seriouslyfish-hemigrammus-rodwayi",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"
         ]

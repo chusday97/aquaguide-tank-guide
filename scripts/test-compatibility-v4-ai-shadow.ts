@@ -24,7 +24,7 @@ const cory = fish('sp_0052');
 const topmouth = fish('sp_0042');
 const reviewedA = fish('sp_0431');
 const reviewedB = fish('sp_0432');
-const normanLampEye = fish('sp_0112');
+const incompleteSpeciesFixture = fish('sp_0362');
 
 const configuredReadiness = buildCompatibilityAiProviderReadiness({
   aiApiKey: 'fixture-secret-never-returned',
@@ -225,7 +225,7 @@ assert.equal(repairedAdjustment.finalDecision.status, 'caution');
 const incomplete = evaluateTankCompatibility({
   tank,
   existingSpecies: [{ species: cory, record: { quantity: 6 } }],
-  candidateSpecies: normanLampEye,
+  candidateSpecies: incompleteSpeciesFixture,
   intent: 'planned_addition',
 });
 assert.notEqual(incomplete.metadata.decisionReadiness, 'reviewed');
@@ -238,7 +238,7 @@ const skipped = await createCompatibilityAiShadowAssessment({
   deterministicResult: incomplete,
   tank,
   existingSpecies: [{ species: cory, quantity: 6 }],
-  candidateSpecies: normanLampEye,
+  candidateSpecies: incompleteSpeciesFixture,
 }, shouldNotRunProvider);
 assert.equal(skipped.ai.status, 'skipped');
 assert.equal(skipped.ai.reason, 'deterministic_decision_not_fully_reviewed');

@@ -147,6 +147,26 @@ assert.deepEqual(approvedValue('sp_0112', 'tank_size'), { liters: 50, lengthCm: 
 assert.deepEqual(approvedValue('sp_0115', 'temperature'), { min: 24, max: 27 });
 assert.deepEqual(approvedValue('sp_0115', 'ph'), { min: 5.3, max: 6.5 });
 assert.deepEqual(approvedValue('sp_0115', 'tank_size'), { liters: 50, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0112', 'social_behavior'), { mode: 'group', minimumGroupSize: 6 });
+assert.deepEqual(approvedValue('sp_0112', 'territoriality'), { traits: [] });
+assert.deepEqual(approvedValue('sp_0112', 'predation'), { targets: [] });
+assert.equal(rowOf('sp_0112')?.authoritativeFieldCount, 8);
+assert.equal(rowOf('sp_0112')?.genericOnboardingReady, true);
+assert.deepEqual(
+  resolveKnowledgeSources(['aquaristatlas-poropanchax-normani-behavior-phase2-05']).map(source => source.id),
+  ['aquaristatlas-poropanchax-normani-behavior-phase2-05'],
+  'new exact-taxon Poropanchax behavior evidence must resolve to source metadata',
+);
+assert.deepEqual(approvedValue('sp_0115', 'social_behavior'), { mode: 'group', minimumGroupSize: 8 });
+assert.deepEqual(approvedValue('sp_0115', 'territoriality'), { traits: [] });
+assert.deepEqual(approvedValue('sp_0115', 'predation'), { targets: [] });
+assert.equal(rowOf('sp_0115')?.authoritativeFieldCount, 8);
+assert.equal(rowOf('sp_0115')?.genericOnboardingReady, true);
+assert.deepEqual(
+  resolveKnowledgeSources(['seriouslyfish-hyphessobrycon-amapaensis-behavior-phase2-05']).map(source => source.id),
+  ['seriouslyfish-hyphessobrycon-amapaensis-behavior-phase2-05'],
+  'new exact-taxon Amapá tetra behavior evidence must resolve to source metadata',
+);
 assert.deepEqual(approvedValue('sp_0362', 'temperature'), { min: 24, max: 28 });
 assert.deepEqual(approvedValue('sp_0362', 'ph'), { min: 6, max: 6.5 });
 assert.deepEqual(approvedValue('sp_0362', 'adult_size'), { min: null, max: 5 });

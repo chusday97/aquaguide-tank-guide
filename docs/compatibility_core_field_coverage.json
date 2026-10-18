@@ -11,10 +11,10 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 88,
-  "coreFieldCompleteSpecies": 103,
+  "genericOnboardingReadySpecies": 90,
+  "coreFieldCompleteSpecies": 105,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 152,
+  "runtimeReviewedProfileSpecies": 154,
   "domainOrIdentityHeldSpecies": 273,
   "fieldCounts": {
     "water": {
@@ -58,25 +58,25 @@
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 125,
+      "reviewed_supported": 127,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 77,
+      "reviewed_unknown": 75,
       "needs_research": 0,
       "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "territoriality": {
       "reviewed_supported": 91,
-      "reviewed_neutral_or_negative": 34,
-      "reviewed_unknown": 77,
+      "reviewed_neutral_or_negative": 36,
+      "reviewed_unknown": 75,
       "needs_research": 0,
       "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 77,
-      "reviewed_neutral_or_negative": 33,
-      "reviewed_unknown": 92,
+      "reviewed_neutral_or_negative": 35,
+      "reviewed_unknown": 90,
       "needs_research": 0,
       "missing_identity_or_domain": 273,
       "not_applicable": 11
@@ -9111,11 +9111,11 @@
       "name": "蓝眼灯",
       "scientificName": "Poropanchax normani",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 3,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -9163,31 +9163,31 @@
           "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-poropanchax-normani"
+            "aquaristatlas-poropanchax-normani-behavior-phase2-05"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-poropanchax-normani"
+            "aquaristatlas-poropanchax-normani-behavior-phase2-05"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-poropanchax-normani"
+            "aquaristatlas-poropanchax-normani-behavior-phase2-05"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -9371,11 +9371,11 @@
       "name": "琥珀灯",
       "scientificName": "Hyphessobrycon amapaensis",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 3,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -9423,31 +9423,31 @@
           "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-amapaensis"
+            "seriouslyfish-hyphessobrycon-amapaensis-behavior-phase2-05"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-amapaensis"
+            "seriouslyfish-hyphessobrycon-amapaensis-behavior-phase2-05"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-amapaensis"
+            "seriouslyfish-hyphessobrycon-amapaensis-behavior-phase2-05"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

@@ -7,8 +7,8 @@
   "catalog_objects": 486,
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 409,
-  "reviewed_compatibility_profiles": 118,
-  "runtime_effective_compatibility_profiles": 151,
+  "reviewed_compatibility_profiles": 120,
+  "runtime_effective_compatibility_profiles": 153,
   "inherited_compatibility_profiles": 33,
   "reviewed_pair_rules": 21,
   "reviewed_stage_risk_profiles": 1,
@@ -48,9 +48,9 @@
     },
     "social": {
       "applicable": 409,
-      "reviewed_supported": 103,
-      "reviewed_unknown": 306,
-      "supported_pct": 25.2
+      "reviewed_supported": 105,
+      "reviewed_unknown": 304,
+      "supported_pct": 25.7
     },
     "care": {
       "applicable": 475,

@@ -175,11 +175,11 @@ assert.equal(releasedTargetStatus.profiles, 101);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
-assert.equal(bootstrap.profiles.length, 118, 'reviewed source-controlled identity corrections may grow repository authority beyond the released 101-Profile target');
+assert.equal(bootstrap.profiles.length, 120, 'reviewed source-controlled post-target Profiles may grow repository authority beyond the released 101-Profile target');
 applyReviewedCompatibilityBootstrap(bootstrap);
 const postTargetStatus = getRuntimeCompatibilityStatus();
 assert.equal(postTargetStatus.source, 'reviewed-db', 'complete released target plus reviewed source-controlled Profiles must be accepted as post-target authority growth');
-assert.equal(postTargetStatus.profiles, 118);
+assert.equal(postTargetStatus.profiles, 120);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
