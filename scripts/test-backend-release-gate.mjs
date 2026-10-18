@@ -30,6 +30,7 @@ const gates = [
   ['Compatibility Core Field Coverage', 'npm', ['run', 'test:compatibility-core-field-coverage']],
   ['Compatibility Decision Audit Freshness', 'npm', ['run', 'test:compatibility-decision-audit-freshness']],
   ['Compatibility Identity Migration Audit', 'npm', ['run', 'test:compatibility-identity-migration-audit']],
+  ['Compatibility Identity Review Queue', 'npm', ['run', 'test:compatibility-identity-review-queue']],
   ['Compatibility Decision Impact Queue', 'npm', ['run', 'test:compatibility-decision-impact-queue']],
   ['Compatibility Active Completion Batch', 'npm', ['run', 'test:compatibility-active-completion-batch']],
   ['Compatibility Extraction Resume', 'npm', ['run', 'test:compatibility-extraction-resume']],
