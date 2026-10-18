@@ -1,0 +1,3507 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "source-controlled active catalog identity boundaries + deterministic Compatibility runtime",
+  "policy": {
+    "unitOfWork": "catalog-object identity debt, not precomputed pair packs",
+    "autoMigrationRule": "No active identity boundary is auto-migrated from names, suffixes, aliases, parent-taxon similarity, or pair impact. Reviewed identity evidence is required.",
+    "impactSemantics": "affectedIdentityUnknownPairs counts current unresolved-identity fish pairs in which the catalog object participates. soleBoundaryIdentityUnknownPairs is the stronger prioritization signal because the opposite fish has no active identity boundary. Neither metric guarantees a compatible verdict after migration; other evidence constraints may remain."
+  },
+  "activeIdentityBoundaries": 108,
+  "fishDomainIdentityBoundaries": 106,
+  "identityUnknownPairs": 18313,
+  "identityUnknownPairsWithOneActiveBoundary": 13560,
+  "identityUnknownPairsWithTwoActiveBoundaries": 4753,
+  "identityUnknownPairsWithoutActiveBoundary": 0,
+  "pairAttributionCount": 23066,
+  "autoMigratableCount": 0,
+  "boundaryCodeCounts": {
+    "commercial_hybrid_identity_unresolved": 3,
+    "catalog_scientific_name_unresolved": 26,
+    "catalog_parent_taxon_unresolved": 11,
+    "trade_name_taxon_ambiguous": 2,
+    "catalog_variant_identity_unresolved": 65,
+    "accepted_taxon_alias_trade_ambiguous": 1
+  },
+  "migrationBucketCounts": {
+    "commercial_hybrid_hold": 3,
+    "variant_object_evidence_required": 90,
+    "parent_taxon_resolution_required": 11,
+    "trade_name_disambiguation_required": 2,
+    "taxonomic_research_candidate": 1,
+    "accepted_alias_trade_disambiguation_required": 1
+  },
+  "topPriority": [
+    {
+      "speciesId": "sp_0055",
+      "name": "金刚鹦鹉鱼",
+      "scientificName": "Cichlasoma var.",
+      "lifeType": "fish",
+      "boundaryCode": "commercial_hybrid_identity_unresolved",
+      "resolvedGranularity": "commercial_lineage_only",
+      "migrationBucket": "commercial_hybrid_hold",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "ornamental parrot-cichlid hybrid lineage",
+        "Cichlasoma spp. trade attribution is not a resolved taxon"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch09-fishbase-cichlasoma-var"
+      ],
+      "reviewedAt": "2026-10-11",
+      "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Butterfly Tail lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Butterfly Tail lineage",
+      "sourceIds": [
+        "batch26-fishbase-carassius-auratus-butterfly-tail"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Red Cap lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Red Cap lineage",
+      "sourceIds": [
+        "batch26-fishbase-carassius-auratus-red-cap"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Pearlscale lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Pearlscale lineage",
+      "sourceIds": [
+        "batch27-fishbase-carassius-auratus-pearlscale"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Bubble Eye lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Bubble Eye lineage",
+      "sourceIds": [
+        "batch27-fishbase-carassius-auratus-bubble-eye"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0124",
+      "name": "蓝眼胡子",
+      "scientificName": "Ancistrus sp.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. trade lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. trade lineage",
+      "sourceIds": [
+        "batch27-fishbase-ancistrus-sp"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0127",
+      "name": "巴基斯坦鼠",
+      "scientificName": "Botia almorhae",
+      "lifeType": "fish",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "resolvedGranularity": "trade_name_only",
+      "migrationBucket": "trade_name_disambiguation_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Botia almorhae sensu stricto",
+        "Botia lohachata",
+        "Botia sp. Kosi",
+        "Botia sp. Teesta",
+        "aquarium-trade hybrids"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch20-fishbase-botia-almorhae",
+        "seriouslyfish-botia-almorhae-trade-boundary"
+      ],
+      "reviewedAt": "2026-10-11",
+      "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0158",
+      "name": "红苹果剑尾",
+      "scientificName": "Xiphophorus hellerii var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Xiphophorus hellerii ornamental red lineage"
+      ],
+      "singleCandidateHint": "Xiphophorus hellerii ornamental red lineage",
+      "sourceIds": [
+        "seriouslyfish-xiphophorus-hellerii"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0159",
+      "name": "黄金胡子 (异型变种)",
+      "scientificName": "Ancistrus sp. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Gold lineage",
+      "sourceIds": [
+        "batch27-fishbase-ancistrus-sp-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0160",
+      "name": "大帆白金胡子",
+      "scientificName": "Ancistrus sp. Longfin Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Longfin Platinum lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Longfin Platinum lineage",
+      "sourceIds": [
+        "batch28-fishbase-ancistrus-sp-longfin-platinum"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Red Grass lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Red Grass lineage",
+      "sourceIds": [
+        "batch28-fishbase-carassius-auratus-red-grass"
+      ],
+      "reviewedAt": "2026-10-13",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0163",
+      "name": "鸿运当头锦鲤",
+      "scientificName": "Cyprinus carpio var. Kohaku",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Cyprinus carpio ornamental Kohaku lineage"
+      ],
+      "singleCandidateHint": "Cyprinus carpio ornamental Kohaku lineage",
+      "sourceIds": [
+        "batch09-fishbase-cyprinus-carpio-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0175",
+      "name": "血钻神仙",
+      "scientificName": "Pterophyllum scalare var. Red",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pterophyllum scalare ornamental red lineage"
+      ],
+      "singleCandidateHint": "Pterophyllum scalare ornamental red lineage",
+      "sourceIds": [
+        "seriouslyfish-pterophyllum-scalare"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0179",
+      "name": "球形曼龙 (蓝/金)",
+      "scientificName": "Trichopodus trichopterus var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental balloon lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental balloon lineage",
+      "sourceIds": [
+        "seriouslyfish-trichopodus-trichopterus"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0182",
+      "name": "蓝眼异型 (L191)",
+      "scientificName": "Panaque sp. L191",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Panaque sp. L191 trade identity"
+      ],
+      "singleCandidateHint": "Panaque sp. L191 trade identity",
+      "sourceIds": [
+        "batch11-fishbase-panaque-sp-l191"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0201",
+      "name": "黑白双星异型 (L240)",
+      "scientificName": "Leporacanthicus cf. galaxias",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Leporacanthicus cf. galaxias L240 trade identity"
+      ],
+      "singleCandidateHint": "Leporacanthicus cf. galaxias L240 trade identity",
+      "sourceIds": [
+        "batch11-fishbase-leporacanthicus-cf-galaxias"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0210",
+      "name": "黄金眼镜蛇蛇鱼",
+      "scientificName": "Pangio kuhlii var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pangio kuhlii ornamental Golden Cobra lineage"
+      ],
+      "singleCandidateHint": "Pangio kuhlii ornamental Golden Cobra lineage",
+      "sourceIds": [
+        "batch34-fishbase-pangio-kuhlii-variant"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0211",
+      "name": "大点火口",
+      "scientificName": "Thorichthys meeki var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix"
+      ],
+      "singleCandidateHint": "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix",
+      "sourceIds": [
+        "batch12-fishbase-thorichthys-meeki-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0217",
+      "name": "白金黑地魔",
+      "scientificName": "Geophagus sp. var. Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Geophagus spp. (32 recognized species; exact parent taxon unresolved)"
+      ],
+      "singleCandidateHint": "Geophagus spp. (32 recognized species; exact parent taxon unresolved)",
+      "sourceIds": [
+        "batch12-fishbase-geophagus-sp-platinum"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0230",
+      "name": "大帆黄金胡子",
+      "scientificName": "Ancistrus sp. Gold Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Gold Longfin lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Gold Longfin lineage",
+      "sourceIds": [
+        "batch29-fishbase-ancistrus-sp-gold-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0241",
+      "name": "大理石神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Marble Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pterophyllum scalare ornamental Marble Balloon lineage"
+      ],
+      "singleCandidateHint": "Pterophyllum scalare ornamental Marble Balloon lineage",
+      "sourceIds": [
+        "batch13-fishbase-pterophyllum-scalare-marble-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0243",
+      "name": "球形血鹦鹉",
+      "scientificName": "Cichlasoma var. Blood Parrot Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "commercial_hybrid_identity_unresolved",
+      "resolvedGranularity": "commercial_lineage_only",
+      "migrationBucket": "commercial_hybrid_hold",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "commercial blood-parrot balloon cichlid hybrid lineage",
+        "Cichlasoma var. trade attribution is not a resolved taxon"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch13-fishbase-cichlasoma-blood-parrot-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0247",
+      "name": "蓝钻神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Blue Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pterophyllum scalare ornamental Blue Balloon lineage"
+      ],
+      "singleCandidateHint": "Pterophyllum scalare ornamental Blue Balloon lineage",
+      "sourceIds": [
+        "batch13-fishbase-pterophyllum-scalare-blue-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0248",
+      "name": "黄金战舰",
+      "scientificName": "Osphronemus goramy var. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Osphronemus goramy ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Osphronemus goramy ornamental Gold lineage",
+      "sourceIds": [
+        "batch22-fishbase-osphronemus-goramy-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0263",
+      "name": "雪中红慈鲷",
+      "scientificName": "Maylandia estherae var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Maylandia estherae ornamental Albino lineage"
+      ],
+      "singleCandidateHint": "Maylandia estherae ornamental Albino lineage",
+      "sourceIds": [
+        "batch14-fishbase-maylandia-estherae-albino"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0264",
+      "name": "白金阿里慈鲷",
+      "scientificName": "Sciaenochromis fryeri var. White",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Sciaenochromis fryeri ornamental White lineage"
+      ],
+      "singleCandidateHint": "Sciaenochromis fryeri ornamental White lineage",
+      "sourceIds": [
+        "batch14-fishbase-sciaenochromis-fryeri-white"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0265",
+      "name": "血中红慈鲷",
+      "scientificName": "Nimbochromis livingstonii var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank"
+      ],
+      "singleCandidateHint": "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank",
+      "sourceIds": [
+        "batch14-fishbase-nimbochromis-livingstonii-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0268",
+      "name": "球形蓝曼龙",
+      "scientificName": "Trichopodus trichopterus var. Blue Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental Blue Balloon lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental Blue Balloon lineage",
+      "sourceIds": [
+        "batch22-fishbase-trichopodus-trichopterus-blue-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0269",
+      "name": "球形金曼龙",
+      "scientificName": "Trichopodus trichopterus var. Gold Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental Gold Balloon lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental Gold Balloon lineage",
+      "sourceIds": [
+        "batch22-fishbase-trichopodus-trichopterus-gold-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0270",
+      "name": "白子红眼关刀",
+      "scientificName": "Geophagus surinamensis var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Geophagus surinamensis ornamental Albino lineage"
+      ],
+      "singleCandidateHint": "Geophagus surinamensis ornamental Albino lineage",
+      "sourceIds": [
+        "batch14-fishbase-geophagus-surinamensis-albino"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    }
+  ],
+  "rows": [
+    {
+      "speciesId": "sp_0055",
+      "name": "金刚鹦鹉鱼",
+      "scientificName": "Cichlasoma var.",
+      "lifeType": "fish",
+      "boundaryCode": "commercial_hybrid_identity_unresolved",
+      "resolvedGranularity": "commercial_lineage_only",
+      "migrationBucket": "commercial_hybrid_hold",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "ornamental parrot-cichlid hybrid lineage",
+        "Cichlasoma spp. trade attribution is not a resolved taxon"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch09-fishbase-cichlasoma-var"
+      ],
+      "reviewedAt": "2026-10-11",
+      "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Butterfly Tail lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Butterfly Tail lineage",
+      "sourceIds": [
+        "batch26-fishbase-carassius-auratus-butterfly-tail"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Red Cap lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Red Cap lineage",
+      "sourceIds": [
+        "batch26-fishbase-carassius-auratus-red-cap"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Pearlscale lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Pearlscale lineage",
+      "sourceIds": [
+        "batch27-fishbase-carassius-auratus-pearlscale"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Bubble Eye lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Bubble Eye lineage",
+      "sourceIds": [
+        "batch27-fishbase-carassius-auratus-bubble-eye"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0124",
+      "name": "蓝眼胡子",
+      "scientificName": "Ancistrus sp.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. trade lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. trade lineage",
+      "sourceIds": [
+        "batch27-fishbase-ancistrus-sp"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0127",
+      "name": "巴基斯坦鼠",
+      "scientificName": "Botia almorhae",
+      "lifeType": "fish",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "resolvedGranularity": "trade_name_only",
+      "migrationBucket": "trade_name_disambiguation_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Botia almorhae sensu stricto",
+        "Botia lohachata",
+        "Botia sp. Kosi",
+        "Botia sp. Teesta",
+        "aquarium-trade hybrids"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch20-fishbase-botia-almorhae",
+        "seriouslyfish-botia-almorhae-trade-boundary"
+      ],
+      "reviewedAt": "2026-10-11",
+      "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0158",
+      "name": "红苹果剑尾",
+      "scientificName": "Xiphophorus hellerii var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Xiphophorus hellerii ornamental red lineage"
+      ],
+      "singleCandidateHint": "Xiphophorus hellerii ornamental red lineage",
+      "sourceIds": [
+        "seriouslyfish-xiphophorus-hellerii"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0159",
+      "name": "黄金胡子 (异型变种)",
+      "scientificName": "Ancistrus sp. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Gold lineage",
+      "sourceIds": [
+        "batch27-fishbase-ancistrus-sp-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0160",
+      "name": "大帆白金胡子",
+      "scientificName": "Ancistrus sp. Longfin Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Longfin Platinum lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Longfin Platinum lineage",
+      "sourceIds": [
+        "batch28-fishbase-ancistrus-sp-longfin-platinum"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Carassius auratus ornamental Red Grass lineage"
+      ],
+      "singleCandidateHint": "Carassius auratus ornamental Red Grass lineage",
+      "sourceIds": [
+        "batch28-fishbase-carassius-auratus-red-grass"
+      ],
+      "reviewedAt": "2026-10-13",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0163",
+      "name": "鸿运当头锦鲤",
+      "scientificName": "Cyprinus carpio var. Kohaku",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Cyprinus carpio ornamental Kohaku lineage"
+      ],
+      "singleCandidateHint": "Cyprinus carpio ornamental Kohaku lineage",
+      "sourceIds": [
+        "batch09-fishbase-cyprinus-carpio-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0175",
+      "name": "血钻神仙",
+      "scientificName": "Pterophyllum scalare var. Red",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pterophyllum scalare ornamental red lineage"
+      ],
+      "singleCandidateHint": "Pterophyllum scalare ornamental red lineage",
+      "sourceIds": [
+        "seriouslyfish-pterophyllum-scalare"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0179",
+      "name": "球形曼龙 (蓝/金)",
+      "scientificName": "Trichopodus trichopterus var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental balloon lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental balloon lineage",
+      "sourceIds": [
+        "seriouslyfish-trichopodus-trichopterus"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0182",
+      "name": "蓝眼异型 (L191)",
+      "scientificName": "Panaque sp. L191",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Panaque sp. L191 trade identity"
+      ],
+      "singleCandidateHint": "Panaque sp. L191 trade identity",
+      "sourceIds": [
+        "batch11-fishbase-panaque-sp-l191"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0201",
+      "name": "黑白双星异型 (L240)",
+      "scientificName": "Leporacanthicus cf. galaxias",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Leporacanthicus cf. galaxias L240 trade identity"
+      ],
+      "singleCandidateHint": "Leporacanthicus cf. galaxias L240 trade identity",
+      "sourceIds": [
+        "batch11-fishbase-leporacanthicus-cf-galaxias"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0210",
+      "name": "黄金眼镜蛇蛇鱼",
+      "scientificName": "Pangio kuhlii var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pangio kuhlii ornamental Golden Cobra lineage"
+      ],
+      "singleCandidateHint": "Pangio kuhlii ornamental Golden Cobra lineage",
+      "sourceIds": [
+        "batch34-fishbase-pangio-kuhlii-variant"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0211",
+      "name": "大点火口",
+      "scientificName": "Thorichthys meeki var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix"
+      ],
+      "singleCandidateHint": "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix",
+      "sourceIds": [
+        "batch12-fishbase-thorichthys-meeki-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0217",
+      "name": "白金黑地魔",
+      "scientificName": "Geophagus sp. var. Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Geophagus spp. (32 recognized species; exact parent taxon unresolved)"
+      ],
+      "singleCandidateHint": "Geophagus spp. (32 recognized species; exact parent taxon unresolved)",
+      "sourceIds": [
+        "batch12-fishbase-geophagus-sp-platinum"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0230",
+      "name": "大帆黄金胡子",
+      "scientificName": "Ancistrus sp. Gold Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Gold Longfin lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Gold Longfin lineage",
+      "sourceIds": [
+        "batch29-fishbase-ancistrus-sp-gold-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0241",
+      "name": "大理石神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Marble Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pterophyllum scalare ornamental Marble Balloon lineage"
+      ],
+      "singleCandidateHint": "Pterophyllum scalare ornamental Marble Balloon lineage",
+      "sourceIds": [
+        "batch13-fishbase-pterophyllum-scalare-marble-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0243",
+      "name": "球形血鹦鹉",
+      "scientificName": "Cichlasoma var. Blood Parrot Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "commercial_hybrid_identity_unresolved",
+      "resolvedGranularity": "commercial_lineage_only",
+      "migrationBucket": "commercial_hybrid_hold",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "commercial blood-parrot balloon cichlid hybrid lineage",
+        "Cichlasoma var. trade attribution is not a resolved taxon"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch13-fishbase-cichlasoma-blood-parrot-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0247",
+      "name": "蓝钻神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Blue Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pterophyllum scalare ornamental Blue Balloon lineage"
+      ],
+      "singleCandidateHint": "Pterophyllum scalare ornamental Blue Balloon lineage",
+      "sourceIds": [
+        "batch13-fishbase-pterophyllum-scalare-blue-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0248",
+      "name": "黄金战舰",
+      "scientificName": "Osphronemus goramy var. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Osphronemus goramy ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Osphronemus goramy ornamental Gold lineage",
+      "sourceIds": [
+        "batch22-fishbase-osphronemus-goramy-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0263",
+      "name": "雪中红慈鲷",
+      "scientificName": "Maylandia estherae var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Maylandia estherae ornamental Albino lineage"
+      ],
+      "singleCandidateHint": "Maylandia estherae ornamental Albino lineage",
+      "sourceIds": [
+        "batch14-fishbase-maylandia-estherae-albino"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0264",
+      "name": "白金阿里慈鲷",
+      "scientificName": "Sciaenochromis fryeri var. White",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Sciaenochromis fryeri ornamental White lineage"
+      ],
+      "singleCandidateHint": "Sciaenochromis fryeri ornamental White lineage",
+      "sourceIds": [
+        "batch14-fishbase-sciaenochromis-fryeri-white"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0265",
+      "name": "血中红慈鲷",
+      "scientificName": "Nimbochromis livingstonii var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank"
+      ],
+      "singleCandidateHint": "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank",
+      "sourceIds": [
+        "batch14-fishbase-nimbochromis-livingstonii-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0268",
+      "name": "球形蓝曼龙",
+      "scientificName": "Trichopodus trichopterus var. Blue Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental Blue Balloon lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental Blue Balloon lineage",
+      "sourceIds": [
+        "batch22-fishbase-trichopodus-trichopterus-blue-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0269",
+      "name": "球形金曼龙",
+      "scientificName": "Trichopodus trichopterus var. Gold Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental Gold Balloon lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental Gold Balloon lineage",
+      "sourceIds": [
+        "batch22-fishbase-trichopodus-trichopterus-gold-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0270",
+      "name": "白子红眼关刀",
+      "scientificName": "Geophagus surinamensis var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Geophagus surinamensis ornamental Albino lineage"
+      ],
+      "singleCandidateHint": "Geophagus surinamensis ornamental Albino lineage",
+      "sourceIds": [
+        "batch14-fishbase-geophagus-surinamensis-albino"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0271",
+      "name": "白子红宝石",
+      "scientificName": "Hemichromis bimaculatus var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemichromis bimaculatus ornamental Albino lineage"
+      ],
+      "singleCandidateHint": "Hemichromis bimaculatus ornamental Albino lineage",
+      "sourceIds": [
+        "batch14-fishbase-hemichromis-bimaculatus-albino"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0273",
+      "name": "血钻短鲷",
+      "scientificName": "Apistogramma cacatuoides var. Super Red",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Apistogramma cacatuoides ornamental Super Red lineage"
+      ],
+      "singleCandidateHint": "Apistogramma cacatuoides ornamental Super Red lineage",
+      "sourceIds": [
+        "batch14-fishbase-apistogramma-cacatuoides-super-red"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0280",
+      "name": "黄金胡子 (长鳍)",
+      "scientificName": "Ancistrus sp. Gold Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Gold Longfin lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Gold Longfin lineage",
+      "sourceIds": [
+        "batch29-fishbase-ancistrus-sp-gold-longfin-2"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0281",
+      "name": "白金胡子 (大帆)",
+      "scientificName": "Ancistrus sp. White Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental White Longfin lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental White Longfin lineage",
+      "sourceIds": [
+        "batch29-fishbase-ancistrus-sp-white-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0282",
+      "name": "黄金达摩 (改良)",
+      "scientificName": "Parancistrus aurantiacus var. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Parancistrus aurantiacus ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Parancistrus aurantiacus ornamental Gold lineage",
+      "sourceIds": [
+        "batch14-fishbase-parancistrus-aurantiacus-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0286",
+      "name": "幻彩蓝雷龙 (改良)",
+      "scientificName": "Channa andrao var. Super Blue",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Channa andrao ornamental Super Blue lineage"
+      ],
+      "singleCandidateHint": "Channa andrao ornamental Super Blue lineage",
+      "sourceIds": [
+        "batch23-fishbase-channa-andrao-super-blue"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0296",
+      "name": "红利鱼 (改良)",
+      "scientificName": "Lutjanus kasmira var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Lutjanus kasmira ornamental lineage; catalog variant suffix is blank"
+      ],
+      "singleCandidateHint": "Lutjanus kasmira ornamental lineage; catalog variant suffix is blank",
+      "sourceIds": [
+        "batch23-fishbase-lutjanus-kasmira-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0338",
+      "name": "白金西非凤凰",
+      "scientificName": "Pelvicachromis pulcher var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pelvicachromis pulcher ornamental Platinum/Albino lineage"
+      ],
+      "singleCandidateHint": "Pelvicachromis pulcher ornamental Platinum/Albino lineage",
+      "sourceIds": [
+        "batch15-fishbase-pelvicachromis-pulcher-albino"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0365",
+      "name": "红利鱼 (长鳍型)",
+      "scientificName": "Lutjanus kasmira var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Lutjanus kasmira ornamental Longfin lineage; catalog scientificName has a blank var. suffix"
+      ],
+      "singleCandidateHint": "Lutjanus kasmira ornamental Longfin lineage; catalog scientificName has a blank var. suffix",
+      "sourceIds": [
+        "batch24-fishbase-lutjanus-kasmira-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0366",
+      "name": "五彩青蛙 (改良型)",
+      "scientificName": "Synchiropus splendidus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Synchiropus splendidus ornamental improved lineage"
+      ],
+      "singleCandidateHint": "Synchiropus splendidus ornamental improved lineage",
+      "sourceIds": [
+        "batch36-fishbase-synchiropus-splendidus-variant"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0372",
+      "name": "球形蓝宝石鱼",
+      "scientificName": "Andinoacara pulcher var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Andinoacara pulcher ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Andinoacara pulcher ornamental Balloon lineage",
+      "sourceIds": [
+        "batch16-fishbase-andinoacara-pulcher-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0373",
+      "name": "球形红宝石鱼",
+      "scientificName": "Hemichromis bimaculatus var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemichromis bimaculatus ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Hemichromis bimaculatus ornamental Balloon lineage",
+      "sourceIds": [
+        "batch16-fishbase-hemichromis-bimaculatus-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0374",
+      "name": "球形地图鱼",
+      "scientificName": "Astronotus ocellatus var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Astronotus ocellatus ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Astronotus ocellatus ornamental Balloon lineage",
+      "sourceIds": [
+        "batch16-fishbase-astronotus-ocellatus-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0376",
+      "name": "黄金斑马异型 (L134改良版)",
+      "scientificName": "Peckoltia compta var. Super Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Peckoltia compta ornamental Super Gold lineage"
+      ],
+      "singleCandidateHint": "Peckoltia compta ornamental Super Gold lineage",
+      "sourceIds": [
+        "batch16-fishbase-peckoltia-compta-super-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0392",
+      "name": "黄金胡子 (雪花型)",
+      "scientificName": "Ancistrus sp. Snowflake Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Snowflake Gold lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Snowflake Gold lineage",
+      "sourceIds": [
+        "batch30-fishbase-ancistrus-sp-snowflake-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0399",
+      "name": "白金蓝魔鬼 (海水)",
+      "scientificName": "Chrysiptera cyanea var. Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Chrysiptera cyanea ornamental Platinum lineage"
+      ],
+      "singleCandidateHint": "Chrysiptera cyanea ornamental Platinum lineage",
+      "sourceIds": [
+        "batch16-fishbase-chrysiptera-cyanea-platinum"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0409",
+      "name": "白子黑白魟",
+      "scientificName": "Potamotrygon leopoldi var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Potamotrygon leopoldi ornamental Albino lineage"
+      ],
+      "singleCandidateHint": "Potamotrygon leopoldi ornamental Albino lineage",
+      "sourceIds": [
+        "batch25-fishbase-potamotrygon-leopoldi-albino"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0410",
+      "name": "皇冠黑白魟 (点位改良)",
+      "scientificName": "Potamotrygon leopoldi var. Eclipse",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Potamotrygon leopoldi ornamental Eclipse lineage"
+      ],
+      "singleCandidateHint": "Potamotrygon leopoldi ornamental Eclipse lineage",
+      "sourceIds": [
+        "batch25-fishbase-potamotrygon-leopoldi-eclipse"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0412",
+      "name": "幻彩红雷龙 (改良)",
+      "scientificName": "Channa andrao var. Red",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Channa andrao ornamental Red lineage"
+      ],
+      "singleCandidateHint": "Channa andrao ornamental Red lineage",
+      "sourceIds": [
+        "batch25-fishbase-channa-andrao-red"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0414",
+      "name": "白金黑帝魔 (长鳍)",
+      "scientificName": "Geophagus sp. var. Longfin Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Geophagus spp. ornamental Longfin Platinum lineage"
+      ],
+      "singleCandidateHint": "Geophagus spp. ornamental Longfin Platinum lineage",
+      "sourceIds": [
+        "batch16-fishbase-geophagus-sp-longfin-platinum"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0415",
+      "name": "红眼白子红剑 (高鳍)",
+      "scientificName": "Xiphophorus hellerii var. High Fin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Xiphophorus hellerii ornamental Red-eye Albino High Fin lineage"
+      ],
+      "singleCandidateHint": "Xiphophorus hellerii ornamental Red-eye Albino High Fin lineage",
+      "sourceIds": [
+        "batch16-fishbase-xiphophorus-hellerii-high-fin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0416",
+      "name": "球形蓝宝石鱼 (特级)",
+      "scientificName": "Andinoacara pulcher var. Super Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Andinoacara pulcher ornamental Super Balloon lineage"
+      ],
+      "singleCandidateHint": "Andinoacara pulcher ornamental Super Balloon lineage",
+      "sourceIds": [
+        "batch17-fishbase-andinoacara-pulcher-super-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0418",
+      "name": "黄金大帆胡子 (红眼)",
+      "scientificName": "Ancistrus sp. Albino Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental Albino Longfin lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental Albino Longfin lineage",
+      "sourceIds": [
+        "batch31-fishbase-ancistrus-sp-albino-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0420",
+      "name": "球形金曼龙 (大规格)",
+      "scientificName": "Trichopodus trichopterus var. Balloon Gold XL",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental Balloon Gold XL lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental Balloon Gold XL lineage",
+      "sourceIds": [
+        "batch25-fishbase-trichopodus-trichopterus-balloon-gold-xl"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0442",
+      "name": "青苔鼠",
+      "scientificName": "Gyrinocheilus aymonieri var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gyrinocheilus aymonieri ornamental lineage; catalog scientificName has a blank var. suffix"
+      ],
+      "singleCandidateHint": "Gyrinocheilus aymonieri ornamental lineage; catalog scientificName has a blank var. suffix",
+      "sourceIds": [
+        "batch25-fishbase-gyrinocheilus-aymonieri-var"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0445",
+      "name": "蓝曼龙",
+      "scientificName": "Trichopodus trichopterus var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Trichopodus trichopterus ornamental Blue lineage"
+      ],
+      "singleCandidateHint": "Trichopodus trichopterus ornamental Blue lineage",
+      "sourceIds": [
+        "batch26-fishbase-trichopodus-trichopterus-blue"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 148,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0021",
+      "name": "迷你鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var.",
+      "lifeType": "fish",
+      "boundaryCode": "commercial_hybrid_identity_unresolved",
+      "resolvedGranularity": "commercial_lineage_only",
+      "migrationBucket": "commercial_hybrid_hold",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Amatitlania nigrofasciata lineage",
+        "commercial parrot/convict hybrid lineage"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch03-fishbase-amatitlania-nigrofasciata",
+        "biology-2026-mini-parrot-taxonomy-boundary"
+      ],
+      "reviewedAt": "2026-10-10",
+      "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 244,
+      "soleBoundaryIdentityUnknownPairs": 147,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0141",
+      "name": "甜心柠檬灯",
+      "scientificName": "Hyphessobrycon pulchripinnis var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hyphessobrycon pulchripinnis ornamental Sweet Lemon lineage"
+      ],
+      "singleCandidateHint": "Hyphessobrycon pulchripinnis ornamental Sweet Lemon lineage",
+      "sourceIds": [
+        "batch05-fishbase-hyphessobrycon-pulchripinnis"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0142",
+      "name": "球鱼 (玛丽变种)",
+      "scientificName": "Poecilia sphenops var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia sphenops ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Poecilia sphenops ornamental Balloon lineage",
+      "sourceIds": [
+        "batch27-fishbase-poecilia-sphenops-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia reticulata ornamental Red Grass lineage"
+      ],
+      "singleCandidateHint": "Poecilia reticulata ornamental Red Grass lineage",
+      "sourceIds": [
+        "batch05-fishbase-poecilia-reticulata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0144",
+      "name": "蓝草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia reticulata ornamental Blue Grass lineage"
+      ],
+      "singleCandidateHint": "Poecilia reticulata ornamental Blue Grass lineage",
+      "sourceIds": [
+        "batch05-fishbase-poecilia-reticulata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0145",
+      "name": "大耳孔雀鱼",
+      "scientificName": "Poecilia reticulata var. Dumbo",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia reticulata ornamental Dumbo lineage"
+      ],
+      "singleCandidateHint": "Poecilia reticulata ornamental Dumbo lineage",
+      "sourceIds": [
+        "batch05-fishbase-poecilia-reticulata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0154",
+      "name": "红鼻灯 (改良)",
+      "scientificName": "Hemigrammus bleheri var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus bleheri ornamental Improved lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus bleheri ornamental Improved lineage",
+      "sourceIds": [
+        "batch05-fishbase-hemigrammus-bleheri"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0155",
+      "name": "长鳍红绿灯",
+      "scientificName": "Paracheirodon innesi var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Paracheirodon innesi ornamental Longfin lineage"
+      ],
+      "singleCandidateHint": "Paracheirodon innesi ornamental Longfin lineage",
+      "sourceIds": [
+        "batch05-fishbase-paracheirodon-innesi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0167",
+      "name": "球形红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus bleheri ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus bleheri ornamental Balloon lineage",
+      "sourceIds": [
+        "batch05-fishbase-hemigrammus-bleheri"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0170",
+      "name": "黑金刚孔雀鱼",
+      "scientificName": "Poecilia reticulata var. Full Black",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia reticulata ornamental Full Black lineage"
+      ],
+      "singleCandidateHint": "Poecilia reticulata ornamental Full Black lineage",
+      "sourceIds": [
+        "batch06-fishbase-poecilia-reticulata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0204",
+      "name": "黑金刚红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus bleheri ornamental Black Diamond lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus bleheri ornamental Black Diamond lineage",
+      "sourceIds": [
+        "batch06-fishbase-hemigrammus-bleheri"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0205",
+      "name": "紫艳红莲灯",
+      "scientificName": "Hyphessobrycon herbertaxelrodi var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hyphessobrycon herbertaxelrodi ornamental Purple Emperor lineage"
+      ],
+      "singleCandidateHint": "Hyphessobrycon herbertaxelrodi ornamental Purple Emperor lineage",
+      "sourceIds": [
+        "batch06-fishbase-hyphessobrycon-herbertaxelrodi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0206",
+      "name": "电光红绿灯",
+      "scientificName": "Paracheirodon innesi var. Diamond",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Paracheirodon innesi ornamental Diamond lineage"
+      ],
+      "singleCandidateHint": "Paracheirodon innesi ornamental Diamond lineage",
+      "sourceIds": [
+        "batch06-fishbase-paracheirodon-innesi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0208",
+      "name": "球形红十字",
+      "scientificName": "Aphyocharax anisitsi var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Aphyocharax anisitsi ornamental balloon lineage"
+      ],
+      "singleCandidateHint": "Aphyocharax anisitsi ornamental balloon lineage",
+      "sourceIds": [
+        "batch11-fishbase-aphyocharax-anisitsi-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0212",
+      "name": "蓝眼金灯",
+      "scientificName": "Hemigrammus rodwayi var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus rodwayi ornamental Gold/Blue-eye lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus rodwayi ornamental Gold/Blue-eye lineage",
+      "sourceIds": [
+        "batch06-fishbase-hemigrammus-rodwayi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0225",
+      "name": "大帆红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var. Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus bleheri ornamental Longfin lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus bleheri ornamental Longfin lineage",
+      "sourceIds": [
+        "batch06-fishbase-hemigrammus-bleheri"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0226",
+      "name": "白金红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var. Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus bleheri ornamental Platinum lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus bleheri ornamental Platinum lineage",
+      "sourceIds": [
+        "batch06-fishbase-hemigrammus-bleheri"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0227",
+      "name": "长鳍红裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental longfin lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental longfin lineage",
+      "sourceIds": [
+        "fishbase-gymnocorymbus-ternetzi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0228",
+      "name": "球形红裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental balloon lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental balloon lineage",
+      "sourceIds": [
+        "fishbase-gymnocorymbus-ternetzi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0231",
+      "name": "红眼白子熊猫鼠",
+      "scientificName": "Corydoras panda var. Albino",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Corydoras panda ornamental Albino lineage"
+      ],
+      "singleCandidateHint": "Corydoras panda ornamental Albino lineage",
+      "sourceIds": [
+        "batch06-fishbase-corydoras-panda"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0232",
+      "name": "白金咖啡鼠",
+      "scientificName": "Corydoras aeneus var. Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Corydoras aeneus ornamental Platinum lineage"
+      ],
+      "singleCandidateHint": "Corydoras aeneus ornamental Platinum lineage",
+      "sourceIds": [
+        "batch06-fishbase-corydoras-aeneus"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0235",
+      "name": "白金黑帝王灯",
+      "scientificName": "Nematobrycon palmeri var. Platinum",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Nematobrycon palmeri ornamental platinum lineage"
+      ],
+      "singleCandidateHint": "Nematobrycon palmeri ornamental platinum lineage",
+      "sourceIds": [
+        "batch12-fishbase-nematobrycon-palmeri-platinum"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0244",
+      "name": "黄金草尾孔雀",
+      "scientificName": "Poecilia reticulata var. Yellow Grass",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia reticulata ornamental Yellow Grass lineage"
+      ],
+      "singleCandidateHint": "Poecilia reticulata ornamental Yellow Grass lineage",
+      "sourceIds": [
+        "batch06-fishbase-poecilia-reticulata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0245",
+      "name": "红白剑尾孔雀",
+      "scientificName": "Poecilia reticulata var. Kohaku",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia reticulata ornamental Kohaku lineage"
+      ],
+      "singleCandidateHint": "Poecilia reticulata ornamental Kohaku lineage",
+      "sourceIds": [
+        "batch07-fishbase-poecilia-reticulata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0246",
+      "name": "白子红白孔雀",
+      "scientificName": "Poecilia reticulata var. Albino Kohaku",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Poecilia reticulata ornamental Albino Kohaku lineage"
+      ],
+      "singleCandidateHint": "Poecilia reticulata ornamental Albino Kohaku lineage",
+      "sourceIds": [
+        "batch07-fishbase-poecilia-reticulata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0255",
+      "name": "大帆红衣梦幻旗",
+      "scientificName": "Hyphessobrycon sweglesi var. Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hyphessobrycon sweglesi ornamental Longfin lineage"
+      ],
+      "singleCandidateHint": "Hyphessobrycon sweglesi ornamental Longfin lineage",
+      "sourceIds": [
+        "batch07-fishbase-hyphessobrycon-sweglesi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0256",
+      "name": "红眼白子黑裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Albino Red Eye",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental Albino Red Eye lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental Albino Red Eye lineage",
+      "sourceIds": [
+        "batch13-fishbase-gymnocorymbus-ternetzi-albino-red-eye"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0287",
+      "name": "球形红鼻灯",
+      "scientificName": "Hemigrammus bleheri var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus bleheri ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus bleheri ornamental Balloon lineage",
+      "sourceIds": [
+        "batch07-fishbase-hemigrammus-bleheri"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0288",
+      "name": "白金黑裙鱼 (长鳍)",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage",
+      "sourceIds": [
+        "batch14-fishbase-gymnocorymbus-ternetzi-platinum-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0294",
+      "name": "红眼白子红裙 (球形)",
+      "scientificName": "Gymnocorymbus ternetzi var. Albino Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental Albino Balloon lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental Albino Balloon lineage",
+      "sourceIds": [
+        "batch15-fishbase-gymnocorymbus-ternetzi-albino-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0297",
+      "name": "黄金草莓鱼 (海水)",
+      "scientificName": "Pseudochromis sp. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Pseudochromis spp. ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Pseudochromis spp. ornamental Gold lineage",
+      "sourceIds": [
+        "batch23-fishbase-pseudochromis-sp-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0339",
+      "name": "红眼金灯",
+      "scientificName": "Hemigrammus rodwayi var. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hemigrammus rodwayi ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Hemigrammus rodwayi ornamental Gold lineage",
+      "sourceIds": [
+        "batch07-fishbase-hemigrammus-rodwayi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0340",
+      "name": "球形红十字灯",
+      "scientificName": "Aphyocharax anisitsi var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Aphyocharax anisitsi ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Aphyocharax anisitsi ornamental Balloon lineage",
+      "sourceIds": [
+        "batch15-usgs-aphyocharax-anisitsi-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0341",
+      "name": "长鳍白金黑裙",
+      "scientificName": "Gymnocorymbus ternetzi var. Longfin White",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental Longfin White lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental Longfin White lineage",
+      "sourceIds": [
+        "batch15-fishbase-gymnocorymbus-ternetzi-longfin-white"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0358",
+      "name": "红尾玻璃灯 (改良)",
+      "scientificName": "Prionobrama filigera var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Prionobrama filigera improved ornamental lineage"
+      ],
+      "singleCandidateHint": "Prionobrama filigera improved ornamental lineage",
+      "sourceIds": [
+        "batch07-fishbase-prionobrama-filigera"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0359",
+      "name": "红眼蓝钻灯",
+      "scientificName": "Boehlkea fredcochui var. Blue",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Boehlkea fredcochui ornamental Blue lineage"
+      ],
+      "singleCandidateHint": "Boehlkea fredcochui ornamental Blue lineage",
+      "sourceIds": [
+        "batch15-fishbase-boehlkea-fredcochui-blue"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0360",
+      "name": "白金黑霓虹灯",
+      "scientificName": "Hyphessobrycon herbertaxelrodi var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hyphessobrycon herbertaxelrodi ornamental Platinum lineage"
+      ],
+      "singleCandidateHint": "Hyphessobrycon herbertaxelrodi ornamental Platinum lineage",
+      "sourceIds": [
+        "batch07-fishbase-hyphessobrycon-herbertaxelrodi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0375",
+      "name": "白金黑霓虹灯 (球形)",
+      "scientificName": "Hyphessobrycon herbertaxelrodi var. Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Hyphessobrycon herbertaxelrodi ornamental Balloon lineage"
+      ],
+      "singleCandidateHint": "Hyphessobrycon herbertaxelrodi ornamental Balloon lineage",
+      "sourceIds": [
+        "batch07-fishbase-hyphessobrycon-herbertaxelrodi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0393",
+      "name": "大帆白金红裙",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage",
+      "sourceIds": [
+        "batch16-fishbase-gymnocorymbus-ternetzi-platinum-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0394",
+      "name": "荧光橙经鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Glo Orange",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental Glo Orange lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental Glo Orange lineage",
+      "sourceIds": [
+        "batch16-fishbase-gymnocorymbus-ternetzi-glo-orange"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0421",
+      "name": "白金黑裙 (球形长鳍)",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Balloon Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Gymnocorymbus ternetzi ornamental Platinum Balloon Longfin lineage"
+      ],
+      "singleCandidateHint": "Gymnocorymbus ternetzi ornamental Platinum Balloon Longfin lineage",
+      "sourceIds": [
+        "batch17-fishbase-gymnocorymbus-ternetzi-platinum-balloon-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0474",
+      "name": "观背青鳉",
+      "scientificName": "Oryzias latipes var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Oryzias latipes ornamental killifish lineage"
+      ],
+      "singleCandidateHint": "Oryzias latipes ornamental killifish lineage",
+      "sourceIds": [
+        "batch39-fishbase-oryzias-latipes-killifish-variant"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 222,
+      "soleBoundaryIdentityUnknownPairs": 125,
+      "sharedBoundaryIdentityUnknownPairs": 97
+    },
+    {
+      "speciesId": "sp_0002",
+      "name": "水晶虾",
+      "scientificName": "Caridina cantonensis var.",
+      "lifeType": "invertebrate",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "resolvedGranularity": "trade_name_only",
+      "migrationBucket": "trade_name_disambiguation_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Caridina logemanni",
+        "Caridina cantonensis complex"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch03-itis-caridina-cantonensis",
+        "identity-zootaxa-caridina-logemanni",
+        "identity-worms-caridina-logemanni"
+      ],
+      "reviewedAt": "2026-09-22",
+      "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0110",
+      "name": "蓝月光雷龙",
+      "scientificName": "Channa lorti",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "taxonomic_research_candidate",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Channa lorti (catalog string; authoritative taxon unresolved)"
+      ],
+      "singleCandidateHint": "Channa lorti (catalog string; authoritative taxon unresolved)",
+      "sourceIds": [
+        "batch19-fishbase-channa-lorti"
+      ],
+      "reviewedAt": "2026-10-11",
+      "blockingRequirement": "Confirm the exact scientific taxon in an authoritative taxonomy source before identity review can graduate.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0216",
+      "name": "黄金雷龙",
+      "scientificName": "Channa aurantimaculata var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Channa aurantimaculata ornamental golden lineage"
+      ],
+      "singleCandidateHint": "Channa aurantimaculata ornamental golden lineage",
+      "sourceIds": [
+        "batch19-fishbase-channa-aurantimaculata"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0219",
+      "name": "球形金波子",
+      "scientificName": "Mikrogeophagus ramirezi var. Gold Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Mikrogeophagus ramirezi ornamental gold-balloon lineage"
+      ],
+      "singleCandidateHint": "Mikrogeophagus ramirezi ornamental gold-balloon lineage",
+      "sourceIds": [
+        "seriouslyfish-mikrogeophagus-ramirezi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0220",
+      "name": "白金波子 (球形)",
+      "scientificName": "Mikrogeophagus ramirezi var. Platinum Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Mikrogeophagus ramirezi ornamental platinum balloon lineage"
+      ],
+      "singleCandidateHint": "Mikrogeophagus ramirezi ornamental platinum balloon lineage",
+      "sourceIds": [
+        "seriouslyfish-mikrogeophagus-ramirezi"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0285",
+      "name": "黄金眼镜蛇雷龙 (改良)",
+      "scientificName": "Channa aurantimaculata var. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Channa aurantimaculata ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Channa aurantimaculata ornamental Gold lineage",
+      "sourceIds": [
+        "batch23-fishbase-channa-aurantimaculata-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0361",
+      "name": "长鳍白云金丝 (改良)",
+      "scientificName": "Tanichthys albonubes var.",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Tanichthys albonubes ornamental Longfin lineage"
+      ],
+      "singleCandidateHint": "Tanichthys albonubes ornamental Longfin lineage",
+      "sourceIds": [
+        "batch35-fishbase-tanichthys-albonubes-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0411",
+      "name": "蓝宝石雷龙 (特级选育)",
+      "scientificName": "Channa stewartii var. Karbi Anglong",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Channa stewartii ornamental Karbi Anglong lineage"
+      ],
+      "singleCandidateHint": "Channa stewartii ornamental Karbi Anglong lineage",
+      "sourceIds": [
+        "batch25-fishbase-channa-stewartii-karbi-anglong"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0417",
+      "name": "血钻波子 (球形)",
+      "scientificName": "Mikrogeophagus ramirezi var. Super Red Balloon",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Mikrogeophagus ramirezi ornamental Super Red Balloon lineage"
+      ],
+      "singleCandidateHint": "Mikrogeophagus ramirezi ornamental Super Red Balloon lineage",
+      "sourceIds": [
+        "batch17-fishbase-mikrogeophagus-ramirezi-super-red-balloon"
+      ],
+      "reviewedAt": "2026-10-12",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    },
+    {
+      "speciesId": "sp_0428",
+      "name": "斑马螺",
+      "scientificName": "Neritina natalensis",
+      "lifeType": "invertebrate",
+      "boundaryCode": "accepted_taxon_alias_trade_ambiguous",
+      "resolvedGranularity": "accepted_taxon_alias_only",
+      "migrationBucket": "accepted_alias_trade_disambiguation_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Vittina natalensis",
+        "other aquarium-trade zebra nerites"
+      ],
+      "singleCandidateHint": null,
+      "sourceIds": [
+        "batch03-obis-neritina-natalensis"
+      ],
+      "reviewedAt": "2026-09-22",
+      "blockingRequirement": "An accepted taxonomic alias is known, but the trade object still needs exact-taxon disambiguation before migration.",
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 0,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "sharedBoundaryIdentityUnknownPairs": 0
+    }
+  ]
+}
