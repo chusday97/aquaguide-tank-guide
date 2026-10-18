@@ -31,6 +31,8 @@ const gates = [
   ['Compatibility Decision Audit Freshness', 'npm', ['run', 'test:compatibility-decision-audit-freshness']],
   ['Compatibility User Path Scope', 'npm', ['run', 'test:compatibility-user-path-scope']],
   ['Session Analytics Privacy + Compatibility Reason', 'npm', ['run', 'test:session-events']],
+  ['Analytics Readiness Contract', 'npm', ['run', 'test:analytics-readiness']],
+  ['Analytics Production Readiness', 'npm', ['run', 'check:analytics-production-readiness']],
   ['Compatibility Identity Migration Audit', 'npm', ['run', 'test:compatibility-identity-migration-audit']],
   ['Compatibility Identity Review Queue', 'npm', ['run', 'test:compatibility-identity-review-queue']],
   ['Compatibility Identity Bulk Review', 'npm', ['run', 'test:compatibility-identity-bulk-review']],

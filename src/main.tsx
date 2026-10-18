@@ -10,14 +10,22 @@ import './index.css';
 import './styles/aquarium-stage-layout-v4.css';
 import './styles/immersive-detail-layout-v5.css';
 import { initializeSessionAnalytics } from './services/analytics/session-events.service';
+import { getSafeAnalyticsReadinessSummary, resolveAnalyticsRuntimeConfig } from './services/analytics/analytics-readiness.service';
 
 const isSyntheticTest = typeof window !== 'undefined' && window.location.search.includes('synthetic_test=1');
-const posthogKey = import.meta.env.VITE_POSTHOG_KEY || (isSyntheticTest ? 'phc_synthetic_dummy_key_123' : '');
-const posthogHost = import.meta.env.VITE_POSTHOG_HOST || 'https://app.posthog.com';
+const analyticsConfig = resolveAnalyticsRuntimeConfig({
+  projectKey: import.meta.env.VITE_POSTHOG_KEY,
+  host: import.meta.env.VITE_POSTHOG_HOST,
+  syntheticTest: isSyntheticTest,
+});
 
-if (posthogKey) {
-  posthog.init(posthogKey, {
-    api_host: posthogHost,
+if (import.meta.env.PROD && !isSyntheticTest && analyticsConfig.readiness.status !== 'ready') {
+  console.warn('[analytics-readiness]', getSafeAnalyticsReadinessSummary(analyticsConfig));
+}
+
+if (analyticsConfig.enabled) {
+  posthog.init(analyticsConfig.key, {
+    api_host: analyticsConfig.host,
     autocapture: false,
     capture_pageview: false,
     loaded: (ph) => {
