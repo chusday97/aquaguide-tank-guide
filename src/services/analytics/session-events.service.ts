@@ -46,6 +46,13 @@ export type AiSafetyFilterType =
   | 'invalid_action'
   | 'invalid_observation';
 
+export type AnalyticsCompatibilityUnknownReason =
+  | 'missing_user_input'
+  | 'unresolved_identity'
+  | 'public_evidence_insufficient'
+  | 'missing_species_fact'
+  | 'system_gap';
+
 export type SafeAnalyticsProperties = {
   action: string;
   status?: string;
@@ -61,6 +68,7 @@ export type SafeAnalyticsProperties = {
   appVersion?: string;
   filterType?: AiSafetyFilterType;
   pairKey?: string;
+  unknownReason?: AnalyticsCompatibilityUnknownReason;
 };
 
 export type AquaGuideEvent = SafeAnalyticsProperties & {
@@ -108,6 +116,9 @@ const sanitizeProperties = (properties: SafeAnalyticsProperties): SafeAnalyticsP
   const candidateCount = Number.isFinite(properties.candidateCount)
     ? Math.max(0, Math.min(100, Math.round(Number(properties.candidateCount))))
     : undefined;
+  const unknownReason = ['missing_user_input', 'unresolved_identity', 'public_evidence_insufficient', 'missing_species_fact', 'system_gap'].includes(String(properties.unknownReason))
+    ? properties.unknownReason
+    : undefined;
   return {
     action: trim(properties.action, 80) || 'unknown',
     status: trim(properties.status, 40),
@@ -123,6 +134,7 @@ const sanitizeProperties = (properties: SafeAnalyticsProperties): SafeAnalyticsP
     appVersion: trim(properties.appVersion, 40) || appVersion(),
     filterType,
     pairKey: sanitizePairKey(properties.pairKey),
+    unknownReason,
   };
 };
 

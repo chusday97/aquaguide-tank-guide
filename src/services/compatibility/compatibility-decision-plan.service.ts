@@ -8,7 +8,7 @@ import {
   type CompatibilityAssessmentMode,
 } from './compatibility-action.service';
 import { buildCompatibilityReadableConclusion } from './compatibility-readable-copy.service';
-import type { TankCompatibilityRule } from './compatibility.service';
+import type { TankCompatibilityResult, TankCompatibilityRule } from './compatibility.service';
 
 export type CompatibilityUnknownReason =
   | 'missing_user_input'
@@ -59,7 +59,11 @@ const unique = (values: Array<string | null | undefined>) => Array.from(new Set(
   values.map(value => value?.trim()).filter((value): value is string => Boolean(value)),
 ));
 
-const decisionCodes = (decision: CompatibilityDecision) => new Set([
+type CompatibilityUnknownReasonInput = Pick<TankCompatibilityResult,
+  'status' | 'metadata' | 'blockingRules' | 'warningRules' | 'missingData'
+>;
+
+const decisionCodes = (decision: CompatibilityUnknownReasonInput) => new Set([
   ...(decision.metadata.domainRuleCodes || []),
   ...decision.blockingRules.map(rule => rule.code),
   ...decision.warningRules.map(rule => rule.code),
@@ -71,7 +75,7 @@ export const isCompatibilityDecisionFullyInformed = (decision: CompatibilityDeci
   && decision.missingData.length === 0
 );
 
-const unknownReasonFor = (decision: CompatibilityDecision): CompatibilityUnknownReason => {
+export const getCompatibilityUnknownReason = (decision: CompatibilityUnknownReasonInput): CompatibilityUnknownReason => {
   if (decision.status !== 'insufficient_data') return null;
   const codes = decisionCodes(decision);
   if (
@@ -601,7 +605,7 @@ export const buildCompatibilityDecisionPlan = (
     expectedAfterAdjustment: expectedOutcomeFor(decision, action.verdict, sourceRules),
     reviewCheckpoint: reviewCheckpointFor(decision, sourceRules, action.observeAfterAction),
     stopCondition: stopConditionForPlan(decision, mode, sourceRules, action.stopCondition),
-    unknownReason: unknownReasonFor(decision),
+    unknownReason: getCompatibilityUnknownReason(decision),
     resolutionTargets: buildCompatibilityResolutionTargets(decision, mode),
     evidence: {
       authorityLevel: action.authorityLevel,

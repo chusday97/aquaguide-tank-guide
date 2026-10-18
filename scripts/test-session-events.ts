@@ -29,6 +29,7 @@ assert.deepEqual(Object.keys(events[0]).sort(), [
   'source',
   'status',
   'task',
+  'unknownReason',
 ]);
 assert.equal(JSON.stringify(events).includes('这里不应被记录'), false);
 assert.equal(JSON.stringify(events).includes('明显异味'), false);
@@ -39,18 +40,22 @@ trackSessionEvent('compatibility_pair_evaluated', {
   entry: 'compatibility_v2',
   source: 'rules',
   pairKey: 'sp_0436__sp_0431',
+  unknownReason: 'unresolved_identity',
 });
 events = getSessionEvents();
 assert.equal(events[1].pairKey, 'sp_0431__sp_0436', 'catalog pair keys must be direction-independent and normalized');
 assert.equal(events[1].status, 'insufficient_data');
+assert.equal(events[1].unknownReason, 'unresolved_identity');
 
 trackSessionEvent('compatibility_pair_evaluated', {
   action: 'evaluate_pair',
   status: 'caution',
   pairKey: '../../user-text__sp_0431',
+  unknownReason: '../../user-text' as any,
 });
 events = getSessionEvents();
 assert.equal(events[2].pairKey, undefined, 'free text/path-like values must not enter pair telemetry');
+assert.equal(events[2].unknownReason, undefined, 'unknown reasons must be restricted to the machine-readable compatibility allowlist');
 assert.equal(JSON.stringify(events).includes('../../user-text'), false);
 
 trackSessionEvent('compatibility_pair_evaluated', {
