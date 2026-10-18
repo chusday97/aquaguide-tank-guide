@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
 import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
@@ -19,16 +19,36 @@ assert.equal(batch.members.filter(item => item.expectProfile).length, 0);
 assert.deepEqual(batch.members.map(item => item.speciesId), [...nextWaveUnified12AllSpeciesIds]);
 
 const authority = readFileSync(batch.authorityOwner, 'utf8');
+const laterGraduatedProfileIds = new Set(['sp_0231']);
 for (const speciesId of nextWaveUnified12AllSpeciesIds) {
   assert.equal(authority.includes(speciesId), true);
-  assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
+  if (laterGraduatedProfileIds.has(speciesId)) {
+    assert.ok(
+      getReviewedCompatibilityProfile(speciesId),
+      'later reviewed source-controlled identity correction may graduate a historical wave12 hold: ' + speciesId,
+    );
+  } else {
+    assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
+  }
 }
 
 for (const outcome of nextWaveUnified12IdentityOutcomes) {
   const boundary = getCatalogIdentityBoundary(outcome.speciesId);
-  assert.ok(boundary, 'wave12 identity hold must resolve: ' + outcome.speciesId);
-  assert.equal(boundary.code, outcome.code);
-  assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  if (laterGraduatedProfileIds.has(outcome.speciesId)) {
+    const historicalBoundary = catalogIdentityBoundaries[outcome.speciesId];
+    assert.ok(historicalBoundary, 'wave12 historical identity hold must remain auditable: ' + outcome.speciesId);
+    assert.equal(historicalBoundary.code, outcome.code);
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(
+      boundary,
+      undefined,
+      'later reviewed exact-object identity correction must supersede the historical wave12 hold at runtime: ' + outcome.speciesId,
+    );
+  } else {
+    assert.ok(boundary, 'wave12 identity hold must resolve: ' + outcome.speciesId);
+    assert.equal(boundary.code, outcome.code);
+    assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  }
 }
 
 for (const outcome of nextWaveUnified12EvidenceCeilings) {
@@ -42,8 +62,8 @@ assert.equal(nextWaveUnified12IdentityOutcomes.length, 15);
 assert.equal(nextWaveUnified12EvidenceCeilings.length, 10);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 120, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 121, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 
-console.log('Compatibility unified wave12 authority PASS: 0 Profiles, 15 identity holds, 10 variant evidence ceilings; DB authority unchanged at 100/176.');
+console.log('Compatibility unified wave12 authority PASS: frozen batch remains 0 Profiles / 15 historical identity holds / 10 variant evidence ceilings, while later reviewed sp_0231 source-controlled authority may supersede its runtime hold.');

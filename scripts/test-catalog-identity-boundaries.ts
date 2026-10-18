@@ -296,6 +296,21 @@ assert.ok(platinumArowanaCorrection?.citationIds.includes('ijms-scleropages-form
 assert.equal(getCatalogIdentityBoundary('sp_0284'), undefined, 'reviewed Platinum Arowana evidence must supersede the historical variant hold');
 assert.ok(getReviewedCompatibilityProfile('sp_0284'));
 
+const historicalAlbinoPandaHold = catalogIdentityBoundaries.sp_0231;
+assert.equal(historicalAlbinoPandaHold?.code, 'catalog_variant_identity_unresolved');
+const albinoPandaCorrection = getCatalogFieldReviews('sp_0231').filter(review => review.field === 'identity').at(-1);
+assert.equal(albinoPandaCorrection?.resolution, 'supported');
+assert.deepEqual(albinoPandaCorrection?.proposedValue, {
+  scientificName: 'Corydoras panda var. Albino',
+  baseSpeciesKey: 'Corydoras panda',
+  variantKey: 'Albino / Hoplisoma panda albino strain',
+});
+assert.ok(albinoPandaCorrection?.citationIds.includes('aquagroup-hoplisoma-panda-albino-phase2-06'));
+assert.ok(albinoPandaCorrection?.citationIds.includes('nicks-aquarium-hoplisoma-panda-albino-phase2-06'));
+assert.ok(albinoPandaCorrection?.citationIds.includes('maidenhead-hoplisoma-panda-albino-phase2-06'));
+assert.equal(getCatalogIdentityBoundary('sp_0231'), undefined, 'reviewed Albino Panda exact-object identity evidence must supersede the historical variant hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0231'));
+
 for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0235','sp_0247','sp_0248','sp_0256','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');

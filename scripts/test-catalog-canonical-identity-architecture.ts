@@ -27,7 +27,7 @@ assert.equal(
   Object.keys(catalogIdentityCorrectionBaseSpeciesIds).length,
   'every reviewed identity correction must be represented by the canonical identity registry',
 );
-assert.equal(Object.keys(catalogCanonicalIdentities).length, 16);
+assert.equal(Object.keys(catalogCanonicalIdentities).length, 17);
 
 for (const identity of Object.values(catalogCanonicalIdentities)) {
   assert.equal(identity.identityStatus, 'reviewed');
@@ -84,6 +84,9 @@ assert.equal(getCatalogCanonicalIdentity('sp_0284')?.canonicalSpeciesId, 'sp_011
 
 assert.equal(getCatalogCanonicalIdentity('sp_0234')?.relationshipType, 'color_morph');
 assert.equal(getCatalogCanonicalIdentity('sp_0234')?.canonicalSpeciesId, 'sp_0200');
+assert.equal(getCatalogCanonicalIdentity('sp_0231')?.relationshipType, 'color_morph');
+assert.equal(getCatalogCanonicalIdentity('sp_0231')?.canonicalSpeciesId, 'sp_0443');
+assert.deepEqual(getApprovedCatalogFieldReviews('sp_0231').map(review => review.field), ['identity']);
 assert.equal(
   getCatalogCanonicalIdentity('sp_0120'),
   undefined,
@@ -181,7 +184,7 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 90);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 91);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);

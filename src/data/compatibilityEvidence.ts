@@ -37,6 +37,7 @@ import { identityCorrectionsPhase2_02Sources } from './catalogReviewBatches/iden
 import { identityCorrectionsPhase2_03Sources } from './catalogReviewBatches/identity-corrections-phase2-03';
 import { catalogCorrectionPhase2_04Sources } from './catalogReviewBatches/catalog-correction-phase2-04';
 import { behaviorEvidencePhase2_05Sources } from './catalogReviewBatches/behavior-evidence-phase2-05';
+import { identityCorrectionsPhase2_06Sources } from './catalogReviewBatches/identity-corrections-phase2-06';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from './catalogIdentityBoundaries';
@@ -1717,6 +1718,7 @@ const canonicalIdentitySourceById = new Map(
     ...Object.values(identityCorrectionsPhase2_03Sources),
     ...Object.values(catalogCorrectionPhase2_04Sources),
     ...Object.values(behaviorEvidencePhase2_05Sources),
+    ...Object.values(identityCorrectionsPhase2_06Sources),
   ].map(source => [source.id, source] as const),
 );
 
