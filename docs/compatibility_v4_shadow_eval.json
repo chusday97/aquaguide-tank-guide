@@ -188,24 +188,22 @@
           "quantity": 8
         },
         {
-          "id": "sp_0362",
-          "name": "黄金灯",
+          "id": "sp_0065",
+          "name": "蝶尾金鱼",
           "role": "candidate",
           "quantity": 1
         }
       ],
       "deterministic": {
         "status": "insufficient_data",
-        "decisionReadiness": "partial",
+        "decisionReadiness": "unknown",
         "ruleCodes": [
-          "species_evidence_ceiling",
-          "water_type_unknown",
-          "candidate_water_type_missing"
+          "species_identity_unresolved",
+          "identity_water_unresolved",
+          "ph_range_edge_overlap"
         ],
         "evidenceIds": [
-          "fishipedia-hemigrammus-rodwayi-numeric-husbandry",
-          "batch07-fishbase-hemigrammus-rodwayi",
-          "wave30-seriouslyfish-hemigrammus-rodwayi",
+          "batch26-fishbase-carassius-auratus-butterfly-tail",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"
         ]

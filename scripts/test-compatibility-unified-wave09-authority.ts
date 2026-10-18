@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
-import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { compatibilitySourceControlledPendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import {
   nextWaveUnified09AllSpeciesIds,
   nextWaveUnified09DomainOutcomes,
@@ -21,11 +21,24 @@ assert.deepEqual(batch.members.map(item => item.speciesId), [...nextWaveUnified0
 const authority = readFileSync(batch.authorityOwner, 'utf8');
 for (const speciesId of nextWaveUnified09AllSpeciesIds) {
   assert.equal(authority.includes(speciesId), true);
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(speciesId);
+  if (laterSourceControlledProfile) {
+    assert.ok(getReviewedCompatibilityProfile(speciesId), 'later reviewed authority may supersede a frozen wave09 hold without rewriting wave09: ' + speciesId);
+    continue;
+  }
   assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
 }
 
 for (const outcome of nextWaveUnified09EvidenceCeilings) {
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(outcome.speciesId);
   const ceiling = getKnowledgeEvidenceCeiling(outcome.speciesId, outcome.field);
+  if (laterSourceControlledProfile) {
+    assert.ok(getReviewedCompatibilityProfile(outcome.speciesId), 'later reviewed authority must exist when a historical wave09 ceiling is superseded: ' + outcome.speciesId);
+    assert.ok(ceiling, 'frozen wave09 evidence ceiling must remain auditable after later reviewed authority: ' + outcome.speciesId);
+    assert.equal(ceiling.code, outcome.code);
+    assert.equal(ceiling.researchDisposition, 'terminal_unknown_hold');
+    continue;
+  }
   assert.ok(ceiling, 'wave09 fish hold must resolve an evidence ceiling: ' + outcome.speciesId);
   assert.equal(ceiling.code, outcome.code);
   assert.equal(ceiling.researchDisposition, 'terminal_unknown_hold');
@@ -42,7 +55,7 @@ assert.equal(nextWaveUnified09EvidenceCeilings.length, 9);
 assert.equal(nextWaveUnified09DomainOutcomes.length, 16);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 123, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 124, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

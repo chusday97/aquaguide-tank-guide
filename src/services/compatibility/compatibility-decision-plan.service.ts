@@ -95,6 +95,8 @@ const unknownReasonFor = (decision: CompatibilityDecision): CompatibilityUnknown
     'missing_tank_volume',
     'tank_temperature_missing',
     'missing_tank_temperature',
+    'missing_ph',
+    'missing_hardness',
   ]);
   if ([...codes].some(code => missingUserInputCodes.has(code))) return 'missing_user_input';
 
@@ -107,8 +109,6 @@ const unknownReasonFor = (decision: CompatibilityDecision): CompatibilityUnknown
     'species_temperature_missing',
     'species_ph_missing',
     'behavior_evidence_unreviewed',
-    'missing_ph',
-    'missing_hardness',
   ]);
   if (
     [...codes].some(code => missingSpeciesFactCodes.has(code))
@@ -126,7 +126,10 @@ const sourceRulesForPlan = (decision: CompatibilityDecision): TankCompatibilityR
   if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules).slice(0, 2);
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules).slice(0, 2);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData).slice(0, 2);
-  return prioritizeDistinctCompatibilityRules(decision.passedRules).slice(0, 2);
+  // A compatible decision has no remediation source rules. Feeding passed
+  // rules into the action planner can turn a positive water/temperature
+  // check into conflict wording such as "不要加入" or "分缸".
+  return [];
 };
 
 const riskRulesForPair = (decision: CompatibilityDecision, pairIndex: number) => {

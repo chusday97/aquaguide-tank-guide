@@ -853,6 +853,18 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [behaviorEvidencePhase2_05Sources.hyphessobryconAmapaensisSeriouslyFish],
     requiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
   },
+  sp_0362: {
+    speciesId: 'sp_0362',
+    waterType: 'freshwater',
+    waterTypes: ['freshwater', 'brackish'],
+    behaviorTraits: ['shoaling', 'very_peaceful', 'non_territorial', 'community_fish'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [behaviorEvidencePhase2_05Sources.hemigrammusRodwayiSeriouslyFish],
+    requiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
+  },
   sp_0120: {
     speciesId: 'sp_0120',
     waterType: 'freshwater',

@@ -20,6 +20,14 @@ export const behaviorEvidencePhase2_05Sources = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  hemigrammusRodwayiSeriouslyFish: {
+    id: 'wave30-seriouslyfish-hemigrammus-rodwayi',
+    title: 'Hemigrammus rodwayi (Golden Tetra) — behaviour and compatibility',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/hemigrammus-rodwayi',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
 } satisfies Record<string, CatalogEvidenceSource>;
 
 const supported = (
@@ -43,6 +51,7 @@ const supported = (
 
 const normani = behaviorEvidencePhase2_05Sources.poropanchaxNormaniAquaristAtlas.id;
 const amapaensis = behaviorEvidencePhase2_05Sources.hyphessobryconAmapaensisSeriouslyFish.id;
+const rodwayi = behaviorEvidencePhase2_05Sources.hemigrammusRodwayiSeriouslyFish.id;
 
 export const behaviorEvidencePhase2_05FieldReviews: CatalogFieldReview[] = [
   supported('sp_0112', 'social_behavior', { mode: 'group', minimumGroupSize: 6 }, [normani], [
@@ -64,9 +73,19 @@ export const behaviorEvidencePhase2_05FieldReviews: CatalogFieldReview[] = [
   supported('sp_0115', 'predation', { targets: [] }, [amapaensis], [
     'Seriously Fish lists similarly sized characids/catfish and non-predatory small-to-medium cichlids as suitable tankmates, while the diet is small invertebrates/crustacea/algae/fruit rather than fish; no generic fish-predation target is promoted.',
   ]),
+
+  supported('sp_0362', 'social_behavior', { mode: 'group', minimumGroupSize: 6 }, [rodwayi], [
+    'Seriously Fish describes exact-taxon Hemigrammus rodwayi as a very peaceful shoaling species and recommends a group of at least six, preferably ten or more.',
+  ]),
+  supported('sp_0362', 'territoriality', { traits: [] }, [rodwayi], [
+    'The exact-taxon page describes a peaceful shoaling community fish and does not report stable territorial or resource-defence behaviour; no generic territorial trait is promoted.',
+  ], 'medium'),
+  supported('sp_0362', 'predation', { targets: [] }, [rodwayi], [
+    'Seriously Fish recommends peaceful community tankmates and describes a diet centred on small invertebrate foods; no generic fish-predation target is promoted. This does not assert safety for eggs or fry.',
+  ], 'medium'),
 ];
 
 export const behaviorEvidencePhase2_05VerifiedSourceIds = Object.values(behaviorEvidencePhase2_05Sources)
   .map(source => source.id);
 
-export const behaviorEvidencePhase2_05ProfileIds = ['sp_0112', 'sp_0115'] as const;
+export const behaviorEvidencePhase2_05ProfileIds = ['sp_0112', 'sp_0115', 'sp_0362'] as const;

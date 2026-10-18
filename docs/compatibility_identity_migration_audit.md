@@ -20,15 +20,15 @@
 
 ## Migration paths
 
-- base_authority_or_parent_resolution: 56 objects / 7812 sole-boundary pairs
+- base_authority_or_parent_resolution: 55 objects / 7684 sole-boundary pairs
 - exact_variant_label_disambiguation: 28 objects / 3650 sole-boundary pairs
 - partial_inheritance_review: 10 objects / 1057 sole-boundary pairs
-- identity_only_after_exact_evidence: 4 objects / 453 sole-boundary pairs
+- identity_only_after_exact_evidence: 5 objects / 581 sole-boundary pairs
 - hybrid_object_specific_hold: 3 objects / 452 sole-boundary pairs
 - trade_name_disambiguation: 3 objects / 151 sole-boundary pairs
 - taxonomic_review: 1 objects / 0 sole-boundary pairs
 
-- Identity-only after exact evidence: **4**
+- Identity-only after exact evidence: **5**
 - Partial inheritance review: **10**
 - Reviewed research-debt holds: **4**
 

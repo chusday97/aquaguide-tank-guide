@@ -24,7 +24,7 @@ const cory = fish('sp_0052');
 const topmouth = fish('sp_0042');
 const reviewedA = fish('sp_0431');
 const reviewedB = fish('sp_0432');
-const incompleteSpeciesFixture = fish('sp_0362');
+const incompleteSpeciesFixture = fish('sp_0106');
 
 const configuredReadiness = buildCompatibilityAiProviderReadiness({
   aiApiKey: 'fixture-secret-never-returned',

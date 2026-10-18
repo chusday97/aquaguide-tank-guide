@@ -11,10 +11,10 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 93,
-  "coreFieldCompleteSpecies": 108,
+  "genericOnboardingReadySpecies": 94,
+  "coreFieldCompleteSpecies": 109,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 157,
+  "runtimeReviewedProfileSpecies": 158,
   "domainOrIdentityHeldSpecies": 270,
   "fieldCounts": {
     "water": {
@@ -58,25 +58,25 @@
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 130,
+      "reviewed_supported": 131,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 75,
+      "reviewed_unknown": 74,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "territoriality": {
       "reviewed_supported": 93,
-      "reviewed_neutral_or_negative": 37,
-      "reviewed_unknown": 75,
+      "reviewed_neutral_or_negative": 38,
+      "reviewed_unknown": 74,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 78,
-      "reviewed_neutral_or_negative": 37,
-      "reviewed_unknown": 90,
+      "reviewed_neutral_or_negative": 38,
+      "reviewed_unknown": 89,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
@@ -29988,11 +29988,11 @@
       "name": "黄金灯",
       "scientificName": "Hemigrammus rodwayi",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 3,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -30041,31 +30041,31 @@
           "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch07-fishbase-hemigrammus-rodwayi"
+            "wave30-seriouslyfish-hemigrammus-rodwayi"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch07-fishbase-hemigrammus-rodwayi"
+            "wave30-seriouslyfish-hemigrammus-rodwayi"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch07-fishbase-hemigrammus-rodwayi"
+            "wave30-seriouslyfish-hemigrammus-rodwayi"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_social_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

@@ -6,26 +6,26 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 409,
   "fishDomainSpecies": 308,
-  "genericOnboardingReadySpecies": 93,
-  "genericReadyUniquePairs": 4278,
+  "genericOnboardingReadySpecies": 94,
+  "genericReadyUniquePairs": 4371,
   "fishPairs": 47278,
   "statuses": {
-    "compatible": 499,
-    "caution": 4274,
+    "compatible": 517,
+    "caution": 4340,
     "not_recommended": 19061,
-    "insufficient_data": 23444
+    "insufficient_data": 23360
   },
-  "decisionCoveragePct": 50.41,
-  "unknownRatePct": 49.59,
+  "decisionCoveragePct": 50.59,
+  "unknownRatePct": 49.41,
   "systemGapPairs": 0,
   "systemGapPct": 0,
-  "fullyInformedPairs": 8685,
+  "fullyInformedPairs": 8817,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
     "unresolved_identity": 18135,
     "public_evidence_insufficient": 5225,
-    "missing_species_fact": 84,
+    "missing_species_fact": 0,
     "system_gap": 0
   },
   "leverageQueues": {
@@ -60,7 +60,7 @@
       },
       {
         "reason": "species_social_not_established",
-        "speciesCount": 17
+        "speciesCount": 16
       },
       {
         "reason": "catalog_parent_taxon_unresolved",
@@ -99,23 +99,15 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 46515
+      "count": 46343
     },
     {
       "code": "missing_ph",
-      "count": 35827
+      "count": 35691
     },
     {
       "code": "missing_hardness",
-      "count": 7810
-    },
-    {
-      "code": "candidate_water_type_missing",
-      "count": 223
-    },
-    {
-      "code": "water_type_unknown",
-      "count": 87
+      "count": 7794
     }
   ],
   "coreFieldBacklog": {

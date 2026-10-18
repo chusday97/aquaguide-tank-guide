@@ -35,19 +35,19 @@
   "migrationPathCounts": {
     "hybrid_object_specific_hold": 3,
     "exact_variant_label_disambiguation": 28,
-    "base_authority_or_parent_resolution": 56,
+    "base_authority_or_parent_resolution": 55,
     "trade_name_disambiguation": 3,
     "partial_inheritance_review": 10,
-    "identity_only_after_exact_evidence": 4,
+    "identity_only_after_exact_evidence": 5,
     "taxonomic_review": 1
   },
   "migrationPathSoleBoundaryImpact": {
     "hybrid_object_specific_hold": 452,
     "exact_variant_label_disambiguation": 3650,
-    "base_authority_or_parent_resolution": 7812,
+    "base_authority_or_parent_resolution": 7684,
     "trade_name_disambiguation": 151,
     "partial_inheritance_review": 1057,
-    "identity_only_after_exact_evidence": 453,
+    "identity_only_after_exact_evidence": 581,
     "taxonomic_review": 0
   },
   "identityEvidenceStatusCounts": {
@@ -59,7 +59,7 @@
     "exact_object_evidence_not_found": 3
   },
   "researchedHighImpactHoldCount": 4,
-  "identityOnlyAfterExactEvidenceCount": 4,
+  "identityOnlyAfterExactEvidenceCount": 5,
   "partialInheritanceReviewCount": 10,
   "topPriority": [
     {
@@ -4568,12 +4568,20 @@
           "speciesId": "sp_0362",
           "name": "黄金灯",
           "scientificName": "Hemigrammus rodwayi",
-          "genericOnboardingReady": false,
-          "authoritativeFieldCount": 5
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0362",
+          "name": "黄金灯",
+          "scientificName": "Hemigrammus rodwayi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,
@@ -5271,8 +5279,8 @@
       ],
       "reviewedAt": "2026-10-12",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5288,12 +5296,20 @@
           "speciesId": "sp_0362",
           "name": "黄金灯",
           "scientificName": "Hemigrammus rodwayi",
-          "genericOnboardingReady": false,
-          "authoritativeFieldCount": 5
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0362",
+          "name": "黄金灯",
+          "scientificName": "Hemigrammus rodwayi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 223,

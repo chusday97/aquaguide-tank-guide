@@ -90,7 +90,7 @@ const fixtures: CanaryFixture[] = [
   { caseId: 'V4-LIVE-3SP-COMPATIBLE', ids: ['sp_0114', 'sp_0469', 'sp_0012'] },
   { caseId: 'V4-LIVE-3SP-CAUTION', ids: ['sp_0114', 'sp_0469', 'sp_0013'] },
   { caseId: 'V4-LIVE-3SP-BLOCKED', ids: ['sp_0199', 'sp_0200', 'sp_0448'] },
-  { caseId: 'V4-LIVE-3SP-INSUFFICIENT', ids: ['sp_0114', 'sp_0469', 'sp_0362'] },
+  { caseId: 'V4-LIVE-3SP-INSUFFICIENT', ids: ['sp_0114', 'sp_0469', 'sp_0065'] },
 ];
 
 const getFish = (id: string): Fish => {

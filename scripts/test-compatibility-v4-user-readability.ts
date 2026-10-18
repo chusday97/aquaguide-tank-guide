@@ -43,7 +43,7 @@ const fixtures: Fixture[] = [
   { id: 'R-UNKNOWN-02', ids: ['sp_0001', 'sp_0005'], expected: 'insufficient_data', reviewed: false },
   { id: 'R-UNKNOWN-03', ids: ['sp_0001', 'sp_0006'], expected: 'insufficient_data', reviewed: false },
   { id: 'R-UNKNOWN-04', ids: ['sp_0001', 'sp_0009'], expected: 'insufficient_data', reviewed: false },
-  { id: 'R-UNKNOWN-05', ids: ['sp_0114', 'sp_0362'], expected: 'insufficient_data', reviewed: false },
+  { id: 'R-UNKNOWN-05', ids: ['sp_0114', 'sp_0065'], expected: 'insufficient_data', reviewed: false },
 ];
 
 const expectedJudgment: Record<ExpectedStatus, string> = {

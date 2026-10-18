@@ -68,14 +68,14 @@ for (const item of fastLane) {
 
 const hemigrammusRodwayiRow = rows.get('sp_0362');
 assert.ok(hemigrammusRodwayiRow, 'Hemigrammus rodwayi coverage row must remain observable');
-assert.equal(hemigrammusRodwayiRow.actionableGapCount, 0, 'terminal evidence ceilings must not be re-queued as ordinary research');
-assert.equal(hemigrammusRodwayiRow.terminalGapCount, 3);
+assert.equal(hemigrammusRodwayiRow.actionableGapCount, 0, 'reviewed Hemigrammus rodwayi authority must not re-enter ordinary research');
+assert.equal(hemigrammusRodwayiRow.terminalGapCount, 0, 'exact-taxon reviewed behavior authority must clear the former terminal behavior holds');
 assert.deepEqual(
-  ['social_behavior', 'territoriality', 'predation'].filter(field => hemigrammusRodwayiRow.fields[field]?.disposition === 'terminal_hold'),
+  ['social_behavior', 'territoriality', 'predation'].filter(field => hemigrammusRodwayiRow.fields[field]?.disposition === 'ready'),
   ['social_behavior', 'territoriality', 'predation'],
 );
-assert.equal(plan.find(item => item.researchKey === 'Hemigrammus rodwayi'), undefined, 'terminal-only Hemigrammus rodwayi work must stay out of the actionable taxon research plan');
-assert.equal(blocked.find((item: { researchKey: string }) => item.researchKey === 'Hemigrammus rodwayi'), undefined, 'terminal-only work is represented by coverage terminal holds, not a repeated research job');
+assert.equal(plan.find(item => item.researchKey === 'Hemigrammus rodwayi'), undefined, 'completed Hemigrammus rodwayi authority must stay out of the actionable taxon research plan');
+assert.equal(blocked.find((item: { researchKey: string }) => item.researchKey === 'Hemigrammus rodwayi'), undefined, 'completed work must not remain in the blocked research queue');
 
 assert.equal(audit.fullyInformedUnknownPairs, 0, 'fully informed compatibility pairs must never collapse to UNKNOWN');
 assert.equal(audit.systemGapPairs, 0, 'complete-input pair audit must not contain unexplained system-gap UNKNOWN results');
