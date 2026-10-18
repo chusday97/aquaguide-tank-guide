@@ -861,7 +861,16 @@ const reviewedUnknownVariant = getReviewedSpeciesKnowledgeForFish({
 });
 assert.equal(getPhase2Authority('sp_0224')?.feeding?.status, 'reviewed_unknown');
 assert.equal(getPhase2Authority('sp_0224')?.care?.status, 'reviewed_unknown');
-assert.equal(reviewedUnknownVariant, undefined, 'matrix-only reviewed_unknown must remain fail-closed without reviewed base runtime authority');
+assert.ok(reviewedUnknownVariant, 'reviewed Platinum Channa object must expose its direct reviewed Knowledge without fabricating unresolved husbandry fields');
+assert.equal(reviewedUnknownVariant.environment?.waterType, 'freshwater');
+assert.deepEqual(reviewedUnknownVariant.environment?.temperatureRangeC, { min: 4, max: 22 });
+assert.equal(reviewedUnknownVariant.environment?.phRange, undefined);
+assert.equal(reviewedUnknownVariant.socialBehavior?.mode, 'unknown');
+assert.equal(reviewedUnknownVariant.socialBehavior?.territoriality, 'unknown');
+assert.equal(reviewedUnknownVariant.socialBehavior?.predationRisk, 'unknown', 'Species Knowledge remains conservative even though Compatibility can inherit reviewed predation authority separately');
+assert.equal(reviewedUnknownVariant.spaceAndGrowth?.adultLengthCm?.max, 100);
+assert.equal(reviewedUnknownVariant.spaceAndGrowth?.minVolumeLiters, undefined);
+assert.equal(reviewedUnknownVariant.spaceAndGrowth?.minTankLengthCm, undefined);
 
 const directReviewedSpecies = getReviewedSpeciesKnowledgeForFish({
   id: 'sp_0016',

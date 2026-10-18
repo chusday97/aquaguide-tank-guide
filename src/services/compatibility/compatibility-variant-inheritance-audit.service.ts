@@ -3,6 +3,7 @@ import {
   catalogCanonicalIdentities,
   isReviewedColorOnlyVariantKey,
   reviewedColorPolicyCanonicalSpeciesIds,
+  reviewedColorTaxonPolicyCanonicalSpeciesIds,
 } from '../../data/catalogCanonicalIdentity';
 import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
@@ -49,13 +50,12 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
       if (!species || !identity || !reviewed || !row) {
         throw new Error('Incomplete reviewed color-morph audit row: ' + speciesId);
       }
-      const base = fishData.find(item => item.id === identity.canonicalSpeciesId);
-      if (!base) throw new Error('Missing canonical color-morph base: ' + speciesId);
       return {
         speciesId,
         name: species.name,
         scientificName: species.scientificName,
         canonicalSpeciesId: identity.canonicalSpeciesId,
+        canonicalRootKind: identity.canonicalRootKind,
         canonicalScientificName: identity.canonicalScientificName,
         variantKey: identity.variantKey,
         registrySource: identity.registrySource,
@@ -96,7 +96,9 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
     invariant: 'Catalog object -> reviewed canonical identity -> field allowlist -> resolved authority -> Compatibility',
     policy: {
       autoPromotionRequiresReviewedSupportedIdentity: true,
-      requiresCanonicalCatalogRoot: true,
+      requiresCanonicalCatalogRoot: false,
+      allowsReviewedTaxonRoot: true,
+      restrictedToFishCompatibilityDomain: true,
       colorOnlyVariantKeys: ['albino', 'blue', 'color_morph', 'gold', 'green', 'platinum', 'red', 'super_red', 'white'],
       morphologyVariantsAutoPromoted: false,
       tradeOrLineageVariantsAutoPromoted: false,
@@ -108,6 +110,7 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
       genericOnboardingReadySpecies: coverage.summary.genericOnboardingReadySpecies,
       explicitReviewedCanonicalBridges: Object.keys(catalogIdentityCorrectionBaseSpeciesIds).length,
       reviewedColorPolicyCanonicalRecords: promoted.length,
+      reviewedColorTaxonRootRecords: reviewedColorTaxonPolicyCanonicalSpeciesIds.size,
       totalCanonicalIdentityRecords: Object.keys(catalogCanonicalIdentities).length,
       policyPromotedReadySpecies: promoted.filter(item => item.genericOnboardingReady).length,
       remainingReviewedVariantObjects: remainingReviewedVariants.length,

@@ -8,8 +8,8 @@
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 409,
   "reviewed_compatibility_profiles": 124,
-  "runtime_effective_compatibility_profiles": 157,
-  "inherited_compatibility_profiles": 33,
+  "runtime_effective_compatibility_profiles": 158,
+  "inherited_compatibility_profiles": 34,
   "reviewed_pair_rules": 21,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,
@@ -123,15 +123,14 @@
       "common_name": "白金雷龙",
       "blocked_pair_count": 3,
       "gap_kinds": [
-        "social",
-        "compatibility_profile"
+        "social"
       ],
       "boundary_codes": [
         "variant_authority_not_promotable",
         "variant_husbandry_not_established"
       ],
       "resolution_mode": "variant_authority_review",
-      "score": 26
+      "score": 21
     }
   ]
 }

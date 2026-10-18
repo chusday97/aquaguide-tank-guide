@@ -14,7 +14,7 @@
   "genericOnboardingReadySpecies": 97,
   "coreFieldCompleteSpecies": 109,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 158,
+  "runtimeReviewedProfileSpecies": 159,
   "domainOrIdentityHeldSpecies": 270,
   "fieldCounts": {
     "water": {
@@ -74,9 +74,9 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 78,
+      "reviewed_supported": 79,
       "reviewed_neutral_or_negative": 38,
-      "reviewed_unknown": 89,
+      "reviewed_unknown": 88,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
@@ -18751,11 +18751,11 @@
       "name": "白金雷龙",
       "scientificName": "Channa argus var. Platinum",
       "lifeType": "fish",
-      "reviewedProfile": "none",
+      "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
+      "authoritativeFieldCount": 4,
       "actionableGapCount": 0,
-      "terminalGapCount": 5,
+      "terminalGapCount": 4,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -18821,15 +18821,15 @@
           "reasonCode": "variant_husbandry_not_established"
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch03-fishbase-channa-argus",
             "northern-snakehead-fws-erss-2024",
             "northern-snakehead-usgs-diet-2012"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_husbandry_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },

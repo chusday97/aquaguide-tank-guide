@@ -228,7 +228,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       field: 'social',
       code: 'variant_husbandry_not_established',
       sourceIds: ['batch03-fishbase-channa-argus', 'northern-snakehead-fws-erss-2024', 'northern-snakehead-usgs-diet-2012'],
-      note: 'Reviewed Channa argus sources establish the base species ecology, predation risk and diet, but targeted review did not establish a Platinum-morph-specific stable social profile. Do not promote base-species behavior to the ornamental morph without an explicit reviewed bridge.',
+      note: 'Reviewed Channa argus sources establish base-species ecology and predation authority, and the reviewed Platinum identity may inherit that evidence through the canonical taxon bridge. Targeted review still does not establish a stable social mode or territoriality value, so those husbandry fields remain fail-closed; this ceiling does not block reviewed predation inheritance.',
       reviewedAt: '2026-09-22',
       researchDisposition: 'terminal_unknown_hold',
     },

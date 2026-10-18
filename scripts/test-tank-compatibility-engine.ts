@@ -1260,22 +1260,31 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'reviewed Catalog temperature overrides stale Channa legacy range without inventing behavior authority',
+    name: 'reviewed Catalog temperature overrides stale Channa legacy range while taxon predation authority does not invent social behavior',
     run: () => {
       const channa = fishData.find(item => item.id === 'sp_0224');
       if (!channa) return false;
+      const profile = getReviewedCompatibilityProfileForFish(channa);
       const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ dimensions: { length: '200', width: '80', height: '65' }, targetTemperature: '25' }),
         candidateSpecies: channa,
         candidateQuantity: 1,
       });
-      return getReviewedCompatibilityProfileForFish(channa) == null
+      return profile?.reviewStatus === 'reviewed'
+        && profile.requiredFacts?.length === 1
+        && profile.requiredFacts[0] === 'predation'
+        && profile.behaviorTraits.length === 0
+        && profile.predationTargets.includes('small_fish')
+        && profile.citations.some(citation => citation.id === 'northern-snakehead-fws-erss-2024')
+        && profile.citations.some(citation => citation.id === 'northern-snakehead-usgs-diet-2012')
         && result.status === 'not_recommended'
         && result.metadata.domainRuleCodes.includes('tank_temperature_conflict')
-        && result.metadata.domainRuleCodes.includes('species_evidence_ceiling')
         && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
-        && !result.metadata.domainRuleCodes.some(code => /territorial|predation|fin_nipping|breeding/.test(code))
-        && result.metadata.decisionReadiness === 'partial';
+        && !result.metadata.domainRuleCodes.some(code => /territorial|fin_nipping|breeding/.test(code))
+        && result.metadata.domainRuleCodes.every(code => code !== 'species_evidence_ceiling')
+        && result.evidenceIds?.includes('northern-snakehead-fws-erss-2024')
+        && result.evidenceIds?.includes('northern-snakehead-usgs-diet-2012')
+        && result.metadata.decisionReadiness === 'reviewed';
     },
   },
   {

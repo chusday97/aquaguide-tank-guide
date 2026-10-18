@@ -1841,15 +1841,22 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     // Partial policies stay fail-closed here; field-specific completion is
     // handled by direct variant authority instead of leaking the whole base.
     if (hasFullGenericCompatibilityInheritance(fish.id)) {
-      const baseKnowledge = reviewedKnowledgeBySpeciesId[canonicalIdentity.canonicalSpeciesId];
-      if (!baseKnowledge) return reviewedKnowledgeBySpeciesId[fish.id];
+      const directKnowledge = reviewedKnowledgeBySpeciesId[fish.id];
+      const baseKnowledge = canonicalIdentity.canonicalRootKind === 'catalog_species'
+        ? canonicalIdentity.canonicalSpeciesId
+          ? reviewedKnowledgeBySpeciesId[canonicalIdentity.canonicalSpeciesId]
+          : undefined
+        : reviewedKnowledgeByBaseSpeciesKey[canonicalIdentity.canonicalScientificName];
+      if (!baseKnowledge) return directKnowledge;
 
-      // A policy-promoted color morph keeps the canonical species as its
+      // A policy-promoted color morph keeps the canonical species/taxon as its
       // factual baseline while preserving any exact reviewed variant overlay.
       // Identity evidence is appended to the evidence chain so inherited facts
       // remain traceable to both the canonical source and the reviewed bridge.
-      if (canonicalIdentity.registrySource === 'reviewed_color_morph_policy') {
-        const directKnowledge = reviewedKnowledgeBySpeciesId[fish.id];
+      if (
+        canonicalIdentity.registrySource === 'reviewed_color_morph_policy'
+        || canonicalIdentity.registrySource === 'reviewed_color_morph_taxon_policy'
+      ) {
         if (hasDirectReviewedCompatibilityKnowledge(directKnowledge)) {
           return directKnowledge;
         }
@@ -1864,18 +1871,9 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     }
     return reviewedKnowledgeBySpeciesId[fish.id];
   }
-  // Channa argus Platinum has a direct Phase 2 completion record, but the
-  // existing reviewed Compatibility Profile remains the runtime authority for
-  // its predator/solitary boundary. The completion matrix reads the direct
-  // record explicitly and never counts this as inherited Knowledge.
-  //
-  // Gold ram (sp_0016) is intentionally not included here: Batch 01 contains
-  // direct variant-aware reviewed authority for that catalog object, so exact
-  // reviewed Species Knowledge must win over base-species inheritance.
-  if (fish.id === 'sp_0224') {
-    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
-    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
-  }
+  // Gold ram (sp_0016) is intentionally not included in the legacy special
+  // cases below: reviewed canonical color policy now handles exact variant
+  // authority and taxon-root inheritance before this point.
   // Mini-parrot already has an independent reviewed compatibility behavior
   // authority. Preserve that runtime inheritance; the direct completion
   // record is intentionally matrix-only until variant care is reviewed.

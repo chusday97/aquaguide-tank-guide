@@ -3,7 +3,9 @@
   "invariant": "Catalog object -> reviewed canonical identity -> field allowlist -> resolved authority -> Compatibility",
   "policy": {
     "autoPromotionRequiresReviewedSupportedIdentity": true,
-    "requiresCanonicalCatalogRoot": true,
+    "requiresCanonicalCatalogRoot": false,
+    "allowsReviewedTaxonRoot": true,
+    "restrictedToFishCompatibilityDomain": true,
     "colorOnlyVariantKeys": [
       "albino",
       "blue",
@@ -24,14 +26,14 @@
     "fishDomainSpecies": 308,
     "genericOnboardingReadySpecies": 97,
     "explicitReviewedCanonicalBridges": 19,
-    "reviewedColorPolicyCanonicalRecords": 9,
-    "totalCanonicalIdentityRecords": 28,
-    "policyPromotedReadySpecies": 9,
-    "remainingReviewedVariantObjects": 6,
+    "reviewedColorPolicyCanonicalRecords": 12,
+    "reviewedColorTaxonRootRecords": 3,
+    "totalCanonicalIdentityRecords": 31,
+    "policyPromotedReadySpecies": 11,
+    "remainingReviewedVariantObjects": 3,
     "remainingReviewedVariantsByClass": {
       "trade_or_selective_strain": 2,
-      "morphology_or_body_form_variant": 1,
-      "color_variant_without_canonical_root": 3
+      "morphology_or_body_form_variant": 1
     }
   },
   "promoted": [
@@ -40,6 +42,7 @@
       "name": "金波子",
       "scientificName": "Mikrogeophagus ramirezi var. Gold",
       "canonicalSpeciesId": "sp_0448",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Mikrogeophagus ramirezi",
       "variantKey": "gold",
       "registrySource": "reviewed_color_morph_policy",
@@ -65,6 +68,7 @@
       "name": "红龙鱼",
       "scientificName": "Scleropages formosus var. Red",
       "canonicalSpeciesId": "sp_0103",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Scleropages formosus",
       "variantKey": "red",
       "registrySource": "reviewed_color_morph_policy",
@@ -90,6 +94,7 @@
       "name": "亚洲龙鱼 (青龙)",
       "scientificName": "Scleropages formosus",
       "canonicalSpeciesId": "sp_0103",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Scleropages formosus",
       "variantKey": "green",
       "registrySource": "reviewed_color_morph_policy",
@@ -115,6 +120,7 @@
       "name": "白金波子",
       "scientificName": "Mikrogeophagus ramirezi var. Platinum",
       "canonicalSpeciesId": "sp_0448",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Mikrogeophagus ramirezi",
       "variantKey": "platinum",
       "registrySource": "reviewed_color_morph_policy",
@@ -140,6 +146,7 @@
       "name": "彩色天使鱼（彩色裙鱼）",
       "scientificName": "Gymnocorymbus ternetzi var. Color morph",
       "canonicalSpeciesId": "sp_0010",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Gymnocorymbus ternetzi",
       "variantKey": "color_morph",
       "registrySource": "reviewed_color_morph_policy",
@@ -161,10 +168,38 @@
       "authoritativeFieldCount": 8
     },
     {
+      "speciesId": "sp_0156",
+      "name": "白金蓝曼龙",
+      "scientificName": "Trichopodus trichopterus var. Platinum",
+      "canonicalSpeciesId": null,
+      "canonicalRootKind": "reviewed_taxon",
+      "canonicalScientificName": "Trichopodus trichopterus",
+      "variantKey": "platinum",
+      "registrySource": "reviewed_color_morph_taxon_policy",
+      "evidenceIds": [
+        "batch21-fishbase-trichopodus-trichopterus-platinum",
+        "seriouslyfish-trichopodus-trichopterus"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
       "speciesId": "sp_0157",
       "name": "蓝宝石短鲷",
       "scientificName": "Mikrogeophagus ramirezi var. Blue",
       "canonicalSpeciesId": "sp_0448",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Mikrogeophagus ramirezi",
       "variantKey": "blue",
       "registrySource": "reviewed_color_morph_policy",
@@ -190,6 +225,7 @@
       "name": "红眼白子红裙",
       "scientificName": "Gymnocorymbus ternetzi var. Albino",
       "canonicalSpeciesId": "sp_0010",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Gymnocorymbus ternetzi",
       "variantKey": "albino",
       "registrySource": "reviewed_color_morph_policy",
@@ -215,6 +251,7 @@
       "name": "白金黑裙",
       "scientificName": "Gymnocorymbus ternetzi var. White",
       "canonicalSpeciesId": "sp_0010",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Gymnocorymbus ternetzi",
       "variantKey": "white",
       "registrySource": "reviewed_color_morph_policy",
@@ -236,10 +273,63 @@
       "authoritativeFieldCount": 8
     },
     {
+      "speciesId": "sp_0214",
+      "name": "白金西非凤凰",
+      "scientificName": "Pelvicachromis pulcher var. Albino",
+      "canonicalSpeciesId": null,
+      "canonicalRootKind": "reviewed_taxon",
+      "canonicalScientificName": "Pelvicachromis pulcher",
+      "variantKey": "albino",
+      "registrySource": "reviewed_color_morph_taxon_policy",
+      "evidenceIds": [
+        "wave05-seriouslyfish-pelvicachromis-pulcher"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0224",
+      "name": "白金雷龙",
+      "scientificName": "Channa argus var. Platinum",
+      "canonicalSpeciesId": null,
+      "canonicalRootKind": "reviewed_taxon",
+      "canonicalScientificName": "Channa argus",
+      "variantKey": "Platinum",
+      "registrySource": "reviewed_color_morph_taxon_policy",
+      "evidenceIds": [
+        "batch03-fishbase-channa-argus"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 4
+    },
+    {
       "speciesId": "sp_0283",
       "name": "血红龙",
       "scientificName": "Scleropages formosus var. Super Red",
       "canonicalSpeciesId": "sp_0103",
+      "canonicalRootKind": "catalog_species",
       "canonicalScientificName": "Scleropages formosus",
       "variantKey": "super_red",
       "registrySource": "reviewed_color_morph_policy",
@@ -287,46 +377,6 @@
         "batch09-fishbase-cyprinus-carpio-longfin"
       ],
       "genericOnboardingReady": true
-    },
-    {
-      "speciesId": "sp_0156",
-      "name": "白金蓝曼龙",
-      "scientificName": "Trichopodus trichopterus var. Platinum",
-      "baseSpeciesKey": "Trichopodus trichopterus",
-      "variantKey": "platinum",
-      "class": "color_variant_without_canonical_root",
-      "activeIdentityBoundary": null,
-      "evidenceIds": [
-        "batch21-fishbase-trichopodus-trichopterus-platinum",
-        "seriouslyfish-trichopodus-trichopterus"
-      ],
-      "genericOnboardingReady": true
-    },
-    {
-      "speciesId": "sp_0214",
-      "name": "白金西非凤凰",
-      "scientificName": "Pelvicachromis pulcher var. Albino",
-      "baseSpeciesKey": "Pelvicachromis pulcher",
-      "variantKey": "albino",
-      "class": "color_variant_without_canonical_root",
-      "activeIdentityBoundary": null,
-      "evidenceIds": [
-        "wave05-seriouslyfish-pelvicachromis-pulcher"
-      ],
-      "genericOnboardingReady": true
-    },
-    {
-      "speciesId": "sp_0224",
-      "name": "白金雷龙",
-      "scientificName": "Channa argus var. Platinum",
-      "baseSpeciesKey": "Channa argus",
-      "variantKey": "Platinum",
-      "class": "color_variant_without_canonical_root",
-      "activeIdentityBoundary": null,
-      "evidenceIds": [
-        "batch03-fishbase-channa-argus"
-      ],
-      "genericOnboardingReady": false
     },
     {
       "speciesId": "sp_0258",

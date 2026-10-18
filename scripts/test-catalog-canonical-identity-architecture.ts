@@ -7,6 +7,7 @@ import {
   getCatalogCanonicalIdentity,
   isReviewedColorOnlyVariantKey,
   reviewedColorPolicyCanonicalSpeciesIds,
+  reviewedColorTaxonPolicyCanonicalSpeciesIds,
 } from '../src/data/catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
@@ -27,57 +28,72 @@ const allFacts = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS];
 const explicitCanonicalIds = Object.keys(catalogIdentityCorrectionBaseSpeciesIds).sort();
 const policyCanonicalIds = [...reviewedColorPolicyCanonicalSpeciesIds].sort();
 const expectedColorPolicyIds = [
-  'sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151',
-  'sp_0157', 'sp_0174', 'sp_0207', 'sp_0283',
+  'sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156',
+  'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283',
 ];
+const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224'];
 assert.equal(explicitCanonicalIds.length, 19);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
+assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
 assert.equal(Object.keys(catalogCanonicalIdentities).length, explicitCanonicalIds.length + expectedColorPolicyIds.length);
 for (const speciesId of explicitCanonicalIds) assert.ok(catalogCanonicalIdentities[speciesId]);
 
 for (const identity of Object.values(catalogCanonicalIdentities)) {
   assert.equal(identity.identityStatus, 'reviewed');
-  assert.ok(identity.registrySource === 'explicit_reviewed_bridge' || identity.registrySource === 'reviewed_color_morph_policy');
+  assert.ok([
+    'explicit_reviewed_bridge',
+    'reviewed_color_morph_policy',
+    'reviewed_color_morph_taxon_policy',
+  ].includes(identity.registrySource));
   assert.ok(identity.identityEvidenceSourceIds.length > 0);
   assert.equal(getCatalogIdentityBoundary(identity.catalogSpeciesId), undefined);
   assert.deepEqual(identity.inheritancePolicy.inheritedFacts, allFacts);
   assert.deepEqual(identity.inheritancePolicy.blockedFacts, []);
 
   const catalog = fishData.find(item => item.id === identity.catalogSpeciesId);
-  const base = fishData.find(item => item.id === identity.canonicalSpeciesId);
   assert.ok(catalog);
-  assert.ok(base);
-  assert.equal(identity.canonicalScientificName, base.scientificName);
 
-  const variantProfile = getReviewedCompatibilityProfile(identity.catalogSpeciesId);
-  const baseProfile = getReviewedCompatibilityProfile(identity.canonicalSpeciesId);
-  assert.ok(variantProfile);
-  assert.ok(baseProfile);
-  assert.equal(variantProfile.speciesId, identity.catalogSpeciesId);
-  assert.deepEqual(
-    variantProfile.requiredFacts,
-    identity.inheritancePolicy.inheritedFacts,
-    'canonical variant requiredFacts must mirror the reviewed inheritance allowlist; runtime availability is checked separately',
-  );
-  assert.deepEqual(variantProfile.behaviorTraits, baseProfile.behaviorTraits);
-  assert.deepEqual(variantProfile.predationTargets, baseProfile.predationTargets);
-  for (const sourceId of identity.identityEvidenceSourceIds) {
-    assert.ok(variantProfile.citations.some(source => source.id === sourceId));
+  if (identity.canonicalRootKind === 'catalog_species') {
+    assert.ok(identity.canonicalSpeciesId);
+    const base = fishData.find(item => item.id === identity.canonicalSpeciesId);
+    assert.ok(base);
+    assert.equal(identity.canonicalScientificName, base.scientificName);
+
+    const variantProfile = getReviewedCompatibilityProfile(identity.catalogSpeciesId);
+    const baseProfile = getReviewedCompatibilityProfile(identity.canonicalSpeciesId);
+    assert.ok(variantProfile);
+    assert.ok(baseProfile);
+    assert.equal(variantProfile.speciesId, identity.catalogSpeciesId);
+    assert.deepEqual(
+      variantProfile.requiredFacts,
+      identity.inheritancePolicy.inheritedFacts,
+      'catalog-root variant requiredFacts must mirror the reviewed inheritance allowlist',
+    );
+    assert.deepEqual(variantProfile.behaviorTraits, baseProfile.behaviorTraits);
+    assert.deepEqual(variantProfile.predationTargets, baseProfile.predationTargets);
+    for (const sourceId of identity.identityEvidenceSourceIds) {
+      assert.ok(variantProfile.citations.some(source => source.id === sourceId));
+    }
+
+    const resolvedKnowledge = getReviewedSpeciesKnowledgeForFish(catalog);
+    const baseKnowledge = getReviewedSpeciesKnowledgeForFish(base);
+    assert.ok(resolvedKnowledge);
+    assert.ok(baseKnowledge);
+  } else {
+    assert.equal(identity.canonicalRootKind, 'reviewed_taxon');
+    assert.equal(identity.canonicalSpeciesId, null);
+    assert.equal(identity.registrySource, 'reviewed_color_morph_taxon_policy');
+    assert.ok(getReviewedCompatibilityProfileForFish(catalog));
   }
-
-  const resolvedKnowledge = getReviewedSpeciesKnowledgeForFish(catalog);
-  const baseKnowledge = getReviewedSpeciesKnowledgeForFish(base);
-  assert.ok(resolvedKnowledge);
-  assert.ok(baseKnowledge);
-  // Variant-specific reviewed Knowledge may override a base presentation/evidence
-  // detail. Compatibility authority itself is enforced below by the field-level
-  // allowlist and readiness matrix, so direct reviewed evidence is never erased.
 }
 
 for (const speciesId of expectedColorPolicyIds) {
   const identity = getCatalogCanonicalIdentity(speciesId);
   assert.ok(identity);
-  assert.equal(identity.registrySource, 'reviewed_color_morph_policy');
+  assert.ok(
+    identity.registrySource === 'reviewed_color_morph_policy'
+    || identity.registrySource === 'reviewed_color_morph_taxon_policy',
+  );
   assert.equal(identity.relationshipType, 'color_morph');
   assert.ok(isReviewedColorOnlyVariantKey(identity.variantKey || ''));
   assert.deepEqual(identity.inheritancePolicy.inheritedFacts, allFacts);
@@ -87,6 +103,18 @@ for (const speciesId of expectedColorPolicyIds) {
 assert.equal(getCatalogCanonicalIdentity('sp_0070'), undefined, 'longfin must never be auto-promoted by the color-only policy');
 assert.equal(getCatalogCanonicalIdentity('sp_0258'), undefined, 'Koi trade strain must never be auto-promoted by the color-only policy');
 assert.equal(getCatalogCanonicalIdentity('sp_0069'), undefined, 'generic ornamental variety must remain outside the color-only policy');
+assert.equal(getCatalogCanonicalIdentity('sp_0001'), undefined, 'non-fish color morphs must stay outside the fish Compatibility canonical policy');
+for (const [speciesId, taxon] of [
+  ['sp_0156', 'Trichopodus trichopterus'],
+  ['sp_0214', 'Pelvicachromis pulcher'],
+  ['sp_0224', 'Channa argus'],
+] as const) {
+  const identity = getCatalogCanonicalIdentity(speciesId);
+  assert.ok(identity);
+  assert.equal(identity.canonicalRootKind, 'reviewed_taxon');
+  assert.equal(identity.canonicalSpeciesId, null);
+  assert.equal(identity.canonicalScientificName, taxon);
+}
 
 const platinum = fishData.find(item => item.id === 'sp_0240');
 const blackLongfin = fishData.find(item => item.id === 'sp_0272');
@@ -222,7 +250,18 @@ assert.equal(coverage.summary.genericOnboardingReadySpecies, 97);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);
-  assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant must remain generic-ready: ' + speciesId);
+  if (speciesId !== 'sp_0224') {
+    assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant with complete authority must remain generic-ready: ' + speciesId);
+  }
+}
+const platinumSnakeheadCoverage = coverage.rows.find(item => item.speciesId === 'sp_0224');
+assert.ok(platinumSnakeheadCoverage);
+assert.equal(platinumSnakeheadCoverage.genericOnboardingReady, false);
+assert.equal(platinumSnakeheadCoverage.authoritativeFieldCount, 4);
+assert.equal(platinumSnakeheadCoverage.fields.predation.authoritySource, 'canonical_inheritance');
+assert.equal(platinumSnakeheadCoverage.fields.predation.disposition, 'ready');
+for (const field of ['ph', 'tank_size', 'social_behavior', 'territoriality'] as const) {
+  assert.equal(platinumSnakeheadCoverage.fields[field].disposition, 'terminal_hold');
 }
 assert.equal(getCompatibilityEvidenceAudit().reviewedPairRules.length, 21, 'canonical identity migration must not add Pair Rules');
 
@@ -230,6 +269,7 @@ console.log(JSON.stringify({
   canonicalIdentityRecords: Object.keys(catalogCanonicalIdentities).length,
   explicitCanonicalIdentityRecords: explicitCanonicalIds.length,
   reviewedColorPolicyRecords: policyCanonicalIds.length,
+  reviewedColorTaxonRootRecords: reviewedColorTaxonPolicyCanonicalSpeciesIds.size,
   genericReadySpecies: coverage.summary.genericOnboardingReadySpecies,
   pairRules: getCompatibilityEvidenceAudit().reviewedPairRules.length,
   unresolvedVariantGate: unresolvedGate.identityReadiness,

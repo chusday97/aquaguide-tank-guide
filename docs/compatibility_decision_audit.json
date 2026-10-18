@@ -26,7 +26,7 @@
   "unknownRatePct": 49.41,
   "systemGapPairs": 0,
   "systemGapPct": 0,
-  "fullyInformedPairs": 8817,
+  "fullyInformedPairs": 8950,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,

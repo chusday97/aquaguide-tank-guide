@@ -1746,6 +1746,7 @@ const canonicalIdentitySourceById = new Map(
 );
 
 for (const identity of Object.values(catalogCanonicalIdentities)) {
+  if (identity.canonicalRootKind !== 'catalog_species' || !identity.canonicalSpeciesId) continue;
   const base = profiles[identity.canonicalSpeciesId];
   if (!base) throw new Error('Missing canonical Compatibility base Profile: ' + identity.canonicalSpeciesId);
   const citations = identity.identityEvidenceSourceIds.map(sourceId => {
@@ -1809,6 +1810,15 @@ const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [smallSnakeheadAssessment],
     requiredFacts: ['water', 'temperature', 'adult_size', 'predation', 'territoriality'],
+  },
+  'Channa argus': {
+    speciesId: 'base:Channa argus',
+    behaviorTraits: ['predatory', 'piscivorous'],
+    predationTargets: ['small_fish'],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+    requiredFacts: ['predation'],
   },
   'Betta splendens': {
     speciesId: 'base:Betta splendens',
@@ -1979,8 +1989,38 @@ export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | '
   if (getCatalogIdentityBoundary(fish.id)) return undefined;
   const direct = profiles[fish.id];
   if (direct) return direct;
+
+  const canonicalIdentity = catalogCanonicalIdentities[fish.id];
+  if (canonicalIdentity?.canonicalRootKind === 'reviewed_taxon') {
+    const base = baseSpeciesProfiles[canonicalIdentity.canonicalScientificName];
+    if (base) {
+      const availableFacts = new Set(base.requiredFacts ?? []);
+      const inheritedFacts = canonicalIdentity.inheritancePolicy.inheritedFacts
+        .filter(fact => availableFacts.has(fact));
+      const identityCitations = canonicalIdentity.identityEvidenceSourceIds.map(sourceId => {
+        const source = canonicalIdentitySourceById.get(sourceId) ?? getKnowledgeSource(sourceId);
+        if (!source) throw new Error('Missing canonical identity evidence source: ' + sourceId);
+        return source;
+      });
+      return buildCanonicalVariantCompatibilityProfile(
+        {
+          catalogSpeciesId: canonicalIdentity.catalogSpeciesId,
+          inheritancePolicy: {
+            mode: 'allowlist',
+            inheritedFacts,
+            blockedFacts: canonicalIdentity.inheritancePolicy.inheritedFacts
+              .filter(fact => !availableFacts.has(fact)),
+          },
+        },
+        base,
+        identityCitations,
+      );
+    }
+  }
+
   // Raw scientific-name morphology suffixes are not sufficient authority for
-  // inheritance. Reviewed canonical variants are already materialized above.
+  // inheritance. Reviewed canonical variants are materialized or resolved via
+  // an explicit reviewed taxon root above.
   const baseScientificName = getBaseSpeciesScientificName(fish.scientificName);
   return baseScientificName ? baseSpeciesProfiles[baseScientificName] : undefined;
 };
