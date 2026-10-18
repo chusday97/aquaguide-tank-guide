@@ -1415,6 +1415,89 @@
     },
     {
       "rank": 18,
+      "species_id": "sp_0234",
+      "common_name": "黄金变色龙 (改良)",
+      "scientific_name": "Dario dario var. Gold",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 19,
       "species_id": "sp_0236",
       "common_name": "红眼白子红剑",
       "scientific_name": "Xiphophorus hellerii var. Albino Red",
@@ -1497,7 +1580,7 @@
       ]
     },
     {
-      "rank": 19,
+      "rank": 20,
       "species_id": "sp_0238",
       "common_name": "黑金刚米虾 (极品)",
       "scientific_name": "Neocaridina davidi var. Full Black",
@@ -1580,7 +1663,7 @@
       ]
     },
     {
-      "rank": 20,
+      "rank": 21,
       "species_id": "sp_0239",
       "common_name": "血腥玛丽米虾",
       "scientific_name": "Neocaridina davidi var. Bloody Mary",
@@ -1663,7 +1746,422 @@
       ]
     },
     {
-      "rank": 21,
+      "rank": 22,
+      "species_id": "sp_0240",
+      "common_name": "白金神仙 (长鳍)",
+      "scientific_name": "Pterophyllum scalare var. Platinum Longfin",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 23,
+      "species_id": "sp_0242",
+      "common_name": "红眼白子金龙",
+      "scientific_name": "Scleropages formosus var. Albino",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 24,
+      "species_id": "sp_0257",
+      "common_name": "黄金斑马异型 (L134改良)",
+      "scientific_name": "Peckoltia compta var. Gold",
+      "life_type": "fish",
+      "category": "鲶鱼/异型",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 25,
+      "species_id": "sp_0266",
+      "common_name": "黄金珍珠虎 (改良)",
+      "scientific_name": "Altolamprologus calvus var. Gold",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 26,
+      "species_id": "sp_0272",
+      "common_name": "长鳍神仙 (黑)",
+      "scientific_name": "Pterophyllum scalare var. Black Longfin",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 27,
       "species_id": "sp_0274",
       "common_name": "黄金米虾 (极品)",
       "scientific_name": "Neocaridina davidi var. Neon Gold",
@@ -1746,7 +2244,7 @@
       ]
     },
     {
-      "rank": 22,
+      "rank": 28,
       "species_id": "sp_0275",
       "common_name": "血丝米虾",
       "scientific_name": "Neocaridina davidi var. Rili",
@@ -1829,7 +2327,7 @@
       ]
     },
     {
-      "rank": 23,
+      "rank": 29,
       "species_id": "sp_0276",
       "common_name": "蓝钻米虾",
       "scientific_name": "Neocaridina davidi var. Deep Blue",
@@ -1912,7 +2410,7 @@
       ]
     },
     {
-      "rank": 24,
+      "rank": 30,
       "species_id": "sp_0277",
       "common_name": "红白水晶虾 (S级)",
       "scientific_name": "Caridina cantonensis var. S-Class",
@@ -1995,7 +2493,7 @@
       ]
     },
     {
-      "rank": 25,
+      "rank": 31,
       "species_id": "sp_0278",
       "common_name": "黑金刚水晶虾",
       "scientific_name": "Caridina cantonensis var. Black King Kong",
@@ -2078,7 +2576,7 @@
       ]
     },
     {
-      "rank": 26,
+      "rank": 32,
       "species_id": "sp_0279",
       "common_name": "黄金背蓝丝绒虾",
       "scientific_name": "Neocaridina davidi var. Blue Gold Back",
@@ -2161,7 +2659,90 @@
       ]
     },
     {
-      "rank": 27,
+      "rank": 33,
+      "species_id": "sp_0284",
+      "common_name": "白金龙鱼",
+      "scientific_name": "Scleropages formosus var. Silver Platinum",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 34,
       "species_id": "sp_0318",
       "common_name": "气泡珊瑚",
       "scientific_name": "Plerogyra sinuosa",
@@ -2244,7 +2825,7 @@
       ]
     },
     {
-      "rank": 28,
+      "rank": 35,
       "species_id": "sp_0319",
       "common_name": "火炬珊瑚",
       "scientific_name": "Euphyllia glabrescens",
@@ -2327,7 +2908,7 @@
       ]
     },
     {
-      "rank": 29,
+      "rank": 36,
       "species_id": "sp_0321",
       "common_name": "草皮珊瑚",
       "scientific_name": "Pachyclavularia violacea",
@@ -2410,7 +2991,7 @@
       ]
     },
     {
-      "rank": 30,
+      "rank": 37,
       "species_id": "sp_0322",
       "common_name": "蛙卵珊瑚",
       "scientific_name": "Euphyllia divisas",
@@ -2493,7 +3074,7 @@
       ]
     },
     {
-      "rank": 31,
+      "rank": 38,
       "species_id": "sp_0323",
       "common_name": "尼罗河珊瑚",
       "scientific_name": "Catalaphyllia jardinei",
@@ -2576,7 +3157,7 @@
       ]
     },
     {
-      "rank": 32,
+      "rank": 39,
       "species_id": "sp_0325",
       "common_name": "紫点海葵",
       "scientific_name": "Heteractis crispa",
@@ -2659,7 +3240,7 @@
       ]
     },
     {
-      "rank": 33,
+      "rank": 40,
       "species_id": "sp_0333",
       "common_name": "蓝地毯海葵",
       "scientific_name": "Stichodactyla haddoni Blue",
@@ -2727,587 +3308,6 @@
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
       "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 34,
-      "species_id": "sp_0342",
-      "common_name": "黄金背蓝钻虾",
-      "scientific_name": "Neocaridina davidi var. Blue Gold",
-      "life_type": "invertebrate",
-      "category": "虾螺蟹",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": true,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 35,
-      "species_id": "sp_0368",
-      "common_name": "荧光绿尼罗河珊瑚",
-      "scientific_name": "Catalaphyllia jardinei var. Green",
-      "life_type": "coral",
-      "category": "珊瑚/海水无脊椎",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 36,
-      "species_id": "sp_0370",
-      "common_name": "海葵 (红奶嘴)",
-      "scientific_name": "Entacmaea quadricolor var. Red",
-      "life_type": "coral",
-      "category": "珊瑚/海水无脊椎",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 37,
-      "species_id": "sp_0379",
-      "common_name": "大西洋海刺水母",
-      "scientific_name": "Chrysaora quinquecirrha",
-      "life_type": "coral",
-      "category": "水母",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 38,
-      "species_id": "sp_0382",
-      "common_name": "黑星海刺水母",
-      "scientific_name": "Chrysaora melanaster",
-      "life_type": "coral",
-      "category": "水母",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 39,
-      "species_id": "sp_0384",
-      "common_name": "天草水母",
-      "scientific_name": "Sanderia malayensis",
-      "life_type": "coral",
-      "category": "水母",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 40,
-      "species_id": "sp_0388",
-      "common_name": "超级红神仙（Red Devil）",
-      "scientific_name": "Pterophyllum scalare var. Super Red",
-      "life_type": "fish",
-      "category": "慈鲷/斗鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
@@ -3586,49 +3586,6 @@
           "reason": "catalog_identity_boundary",
           "code": "catalog_scientific_name_unresolved",
           "note": "Catalog 中的 scientificName 为 “Channa lorti”，但本轮无法在权威分类来源中确认该精确 taxon。不能因为中文贸易名或同属 Channa 的其他物种而继承混养、体型或攻击性字段，因此该 catalog object 保持 fail-closed。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
-      "species_id": "sp_0120",
-      "common_name": "电鳗 (观赏型)",
-      "scientific_name": "Gymnotus carapo",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_common_name_identity_mismatch",
-          "note": "Gymnotus carapo 是可确认的刀鱼类 taxon，但 catalog 中文名“电鳗 (观赏型)”通常指向 Electrophorus 电鳗，名称与 scientificName 存在会直接误导混养判断的身份冲突。在名称修正前不提升为单一 Compatibility Profile。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_common_name_identity_mismatch",
-          "note": "Gymnotus carapo 是可确认的刀鱼类 taxon，但 catalog 中文名“电鳗 (观赏型)”通常指向 Electrophorus 电鳗，名称与 scientificName 存在会直接误导混养判断的身份冲突。在名称修正前不提升为单一 Compatibility Profile。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_common_name_identity_mismatch",
-          "note": "Gymnotus carapo 是可确认的刀鱼类 taxon，但 catalog 中文名“电鳗 (观赏型)”通常指向 Electrophorus 电鳗，名称与 scientificName 存在会直接误导混养判断的身份冲突。在名称修正前不提升为单一 Compatibility Profile。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_common_name_identity_mismatch",
-          "note": "Gymnotus carapo 是可确认的刀鱼类 taxon，但 catalog 中文名“电鳗 (观赏型)”通常指向 Electrophorus 电鳗，名称与 scientificName 存在会直接误导混养判断的身份冲突。在名称修正前不提升为单一 Compatibility Profile。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_common_name_identity_mismatch",
-          "note": "Gymnotus carapo 是可确认的刀鱼类 taxon，但 catalog 中文名“电鳗 (观赏型)”通常指向 Electrophorus 电鳗，名称与 scientificName 存在会直接误导混养判断的身份冲突。在名称修正前不提升为单一 Compatibility Profile。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -4279,49 +4236,6 @@
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
     },
     {
-      "species_id": "sp_0234",
-      "common_name": "黄金变色龙 (改良)",
-      "scientific_name": "Dario dario var. Gold",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "Dario dario 母种已 reviewed，但“Gold”贸易品系没有独立 reviewed 身份来源；不因 scientificName 的 var. Gold 字符串自动继承母种行为和空间 authority。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "Dario dario 母种已 reviewed，但“Gold”贸易品系没有独立 reviewed 身份来源；不因 scientificName 的 var. Gold 字符串自动继承母种行为和空间 authority。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "Dario dario 母种已 reviewed，但“Gold”贸易品系没有独立 reviewed 身份来源；不因 scientificName 的 var. Gold 字符串自动继承母种行为和空间 authority。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "Dario dario 母种已 reviewed，但“Gold”贸易品系没有独立 reviewed 身份来源；不因 scientificName 的 var. Gold 字符串自动继承母种行为和空间 authority。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "Dario dario 母种已 reviewed，但“Gold”贸易品系没有独立 reviewed 身份来源；不因 scientificName 的 var. Gold 字符串自动继承母种行为和空间 authority。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
       "species_id": "sp_0235",
       "common_name": "白金黑帝王灯",
       "scientific_name": "Nematobrycon palmeri var. Platinum",
@@ -4365,49 +4279,6 @@
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
     },
     {
-      "species_id": "sp_0240",
-      "common_name": "白金神仙 (长鳍)",
-      "scientific_name": "Pterophyllum scalare var. Platinum Longfin",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
       "species_id": "sp_0241",
       "common_name": "大理石神仙 (球形)",
       "scientific_name": "Pterophyllum scalare var. Marble Balloon",
@@ -4416,79 +4287,36 @@
           "field": "feeding",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Pterophyllum scalare 观赏变体，但 category 却是“硬景/底床”；同时 Marble Balloon 精确品系缺少对象级 reviewed 身份来源。在类别与变体身份都修正前保持 fail-closed。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Pterophyllum scalare 观赏变体，但 category 却是“硬景/底床”；同时 Marble Balloon 精确品系缺少对象级 reviewed 身份来源。在类别与变体身份都修正前保持 fail-closed。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Pterophyllum scalare 观赏变体，但 category 却是“硬景/底床”；同时 Marble Balloon 精确品系缺少对象级 reviewed 身份来源。在类别与变体身份都修正前保持 fail-closed。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Pterophyllum scalare 观赏变体，但 category 却是“硬景/底床”；同时 Marble Balloon 精确品系缺少对象级 reviewed 身份来源。在类别与变体身份都修正前保持 fail-closed。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Pterophyllum scalare 观赏变体，但 category 却是“硬景/底床”；同时 Marble Balloon 精确品系缺少对象级 reviewed 身份来源。在类别与变体身份都修正前保持 fail-closed。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
-      "species_id": "sp_0242",
-      "common_name": "红眼白子金龙",
-      "scientific_name": "Scleropages formosus var. Albino",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；Marble Balloon 精确品系仍缺少对象级 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "environment",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；Marble Balloon 精确品系仍缺少对象级 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "space",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；Marble Balloon 精确品系仍缺少对象级 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "social",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；Marble Balloon 精确品系仍缺少对象级 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "care",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；Marble Balloon 精确品系仍缺少对象级 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -4666,49 +4494,6 @@
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
     },
     {
-      "species_id": "sp_0257",
-      "common_name": "黄金斑马异型 (L134改良)",
-      "scientific_name": "Peckoltia compta var. Gold",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
       "species_id": "sp_0263",
       "common_name": "雪中红慈鲷",
       "scientific_name": "Maylandia estherae var. Albino",
@@ -4833,49 +4618,6 @@
           "reason": "catalog_identity_boundary",
           "code": "catalog_scientific_name_unresolved",
           "note": "Catalog scientificName 以空白 “var.” 结尾，无法确定“血中红慈鲷”究竟代表哪个稳定变体；在对象身份修正前不得继承 Nimbochromis livingstonii 的行为或空间 authority。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
-      "species_id": "sp_0266",
-      "common_name": "黄金珍珠虎 (改良)",
-      "scientific_name": "Altolamprologus calvus var. Gold",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Altolamprologus calvus 是坦噶尼喀湖淡水慈鲷，但 catalog category 标成“海水鱼”；Gold 精确品系也没有对象级 reviewed 身份来源。类别与变体身份修正前保持 fail-closed。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Altolamprologus calvus 是坦噶尼喀湖淡水慈鲷，但 catalog category 标成“海水鱼”；Gold 精确品系也没有对象级 reviewed 身份来源。类别与变体身份修正前保持 fail-closed。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Altolamprologus calvus 是坦噶尼喀湖淡水慈鲷，但 catalog category 标成“海水鱼”；Gold 精确品系也没有对象级 reviewed 身份来源。类别与变体身份修正前保持 fail-closed。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Altolamprologus calvus 是坦噶尼喀湖淡水慈鲷，但 catalog category 标成“海水鱼”；Gold 精确品系也没有对象级 reviewed 身份来源。类别与变体身份修正前保持 fail-closed。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Altolamprologus calvus 是坦噶尼喀湖淡水慈鲷，但 catalog category 标成“海水鱼”；Gold 精确品系也没有对象级 reviewed 身份来源。类别与变体身份修正前保持 fail-closed。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -5018,79 +4760,36 @@
           "field": "feeding",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Hemichromis bimaculatus 观赏白化品系，但 category 却是“硬景/底床”；精确 Albino 对象也缺少足够强的身份来源，因此不进入鱼类 Compatibility Profile。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Hemichromis bimaculatus 观赏白化品系，但 category 却是“硬景/底床”；精确 Albino 对象也缺少足够强的身份来源，因此不进入鱼类 Compatibility Profile。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Hemichromis bimaculatus 观赏白化品系，但 category 却是“硬景/底床”；精确 Albino 对象也缺少足够强的身份来源，因此不进入鱼类 Compatibility Profile。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Hemichromis bimaculatus 观赏白化品系，但 category 却是“硬景/底床”；精确 Albino 对象也缺少足够强的身份来源，因此不进入鱼类 Compatibility Profile。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Catalog scientificName 指向 Hemichromis bimaculatus 观赏白化品系，但 category 却是“硬景/底床”；精确 Albino 对象也缺少足够强的身份来源，因此不进入鱼类 Compatibility Profile。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
-      "species_id": "sp_0272",
-      "common_name": "长鳍神仙 (黑)",
-      "scientific_name": "Pterophyllum scalare var. Black Longfin",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；精确 Albino 对象仍缺少足够强的 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "environment",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；精确 Albino 对象仍缺少足够强的 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "space",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；精确 Albino 对象仍缺少足够强的 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "social",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；精确 Albino 对象仍缺少足够强的 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         },
         {
           "field": "care",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
+          "note": "Catalog category 已纠正为慈鲷/斗鱼；精确 Albino 对象仍缺少足够强的 reviewed 身份来源，因此继续按变体身份边界 fail-closed。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -5142,49 +4841,6 @@
       "species_id": "sp_0282",
       "common_name": "黄金达摩 (改良)",
       "scientific_name": "Parancistrus aurantiacus var. Gold",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或相近 catalog 记录可以辨认，但本轮没有同行评审、政府或等价对象级来源确认该精确观赏变体身份可以继承母种 Compatibility authority；旧 Phase 2 的 FishBase 基准页只作为母种线索，不作为变体放行证据。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
-      "species_id": "sp_0284",
-      "common_name": "白金龙鱼",
-      "scientific_name": "Scleropages formosus var. Silver Platinum",
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
@@ -5483,49 +5139,6 @@
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
     },
     {
-      "species_id": "sp_0334",
-      "common_name": "长须地毯",
-      "scientific_name": "Stichodactyla gigantea",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_object_type_mismatch",
-          "note": "Stichodactyla gigantea 是海葵而非鱼类，但当前 catalog 将该对象放在“海水鱼”类别。鱼类 Compatibility Profile 的行为、空间和捕食字段不能套用到刺胞动物，因此该对象在类型修正前保持 terminal hold。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_object_type_mismatch",
-          "note": "Stichodactyla gigantea 是海葵而非鱼类，但当前 catalog 将该对象放在“海水鱼”类别。鱼类 Compatibility Profile 的行为、空间和捕食字段不能套用到刺胞动物，因此该对象在类型修正前保持 terminal hold。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_object_type_mismatch",
-          "note": "Stichodactyla gigantea 是海葵而非鱼类，但当前 catalog 将该对象放在“海水鱼”类别。鱼类 Compatibility Profile 的行为、空间和捕食字段不能套用到刺胞动物，因此该对象在类型修正前保持 terminal hold。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_object_type_mismatch",
-          "note": "Stichodactyla gigantea 是海葵而非鱼类，但当前 catalog 将该对象放在“海水鱼”类别。鱼类 Compatibility Profile 的行为、空间和捕食字段不能套用到刺胞动物，因此该对象在类型修正前保持 terminal hold。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_object_type_mismatch",
-          "note": "Stichodactyla gigantea 是海葵而非鱼类，但当前 catalog 将该对象放在“海水鱼”类别。鱼类 Compatibility Profile 的行为、空间和捕食字段不能套用到刺胞动物，因此该对象在类型修正前保持 terminal hold。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
       "species_id": "sp_0338",
       "common_name": "白金西非凤凰",
       "scientific_name": "Pelvicachromis pulcher var. Albino",
@@ -5749,36 +5362,36 @@
           "field": "feeding",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "environment",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "space",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "social",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "care",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -5792,36 +5405,36 @@
           "field": "feeding",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "environment",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "space",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "social",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         },
         {
           "field": "care",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续按 variant identity unresolved fail-closed。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -6042,49 +5655,6 @@
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
     },
     {
-      "species_id": "sp_0408",
-      "common_name": "金头过背金龙",
-      "scientific_name": "Scleropages formosus var. Gold Head",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_variant_identity_unresolved",
-          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
       "species_id": "sp_0409",
       "common_name": "白子黑白魟",
       "scientific_name": "Potamotrygon leopoldi var. Albino",
@@ -6179,36 +5749,36 @@
           "field": "feeding",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但 Karbi Anglong 标签仍没有对象级 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "environment",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但 Karbi Anglong 标签仍没有对象级 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "space",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但 Karbi Anglong 标签仍没有对象级 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "social",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但 Karbi Anglong 标签仍没有对象级 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "care",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但 Karbi Anglong 标签仍没有对象级 reviewed 变体身份桥接，因此继续 fail-closed。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -6351,36 +5921,36 @@
           "field": "feeding",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Super Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "environment",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Super Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "space",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Super Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "social",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Super Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续 fail-closed。"
         },
         {
           "field": "care",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
+          "code": "catalog_variant_identity_unresolved",
+          "note": "Catalog category 已纠正为鱼类；但精确 Super Balloon 对象仍没有可提升的 reviewed 变体身份桥接，因此继续 fail-closed。"
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
@@ -6768,92 +6338,6 @@
           "reason": "catalog_identity_boundary",
           "code": "catalog_scientific_name_unresolved",
           "note": "The catalog scientific name ends at “Carassius auratus var.” without a variant identifier. The Bubble Eye object review does not repair that incomplete scientific identity or authorize generic goldfish Compatibility inheritance."
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
-      "species_id": "sp_0077",
-      "common_name": "绿菊",
-      "scientific_name": "Cabomba caroliniana",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Cabomba caroliniana as an aquatic plant while the catalog category is “鱼类”. Do not force plant light/growth/placement needs into fish social Compatibility fields; correct life type/category before domain-specific compatibility work."
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Cabomba caroliniana as an aquatic plant while the catalog category is “鱼类”. Do not force plant light/growth/placement needs into fish social Compatibility fields; correct life type/category before domain-specific compatibility work."
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Cabomba caroliniana as an aquatic plant while the catalog category is “鱼类”. Do not force plant light/growth/placement needs into fish social Compatibility fields; correct life type/category before domain-specific compatibility work."
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Cabomba caroliniana as an aquatic plant while the catalog category is “鱼类”. Do not force plant light/growth/placement needs into fish social Compatibility fields; correct life type/category before domain-specific compatibility work."
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Cabomba caroliniana as an aquatic plant while the catalog category is “鱼类”. Do not force plant light/growth/placement needs into fish social Compatibility fields; correct life type/category before domain-specific compatibility work."
-        }
-      ],
-      "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."
-    },
-    {
-      "species_id": "sp_0089",
-      "common_name": "大宝塔",
-      "scientific_name": "Limnophila aquatica",
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Limnophila aquatica as an aquatic plant while the catalog category is “鱼类”. Plant light, nutrient, growth and placement semantics must not be represented as a fish Compatibility Profile."
-        },
-        {
-          "field": "environment",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Limnophila aquatica as an aquatic plant while the catalog category is “鱼类”. Plant light, nutrient, growth and placement semantics must not be represented as a fish Compatibility Profile."
-        },
-        {
-          "field": "space",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Limnophila aquatica as an aquatic plant while the catalog category is “鱼类”. Plant light, nutrient, growth and placement semantics must not be represented as a fish Compatibility Profile."
-        },
-        {
-          "field": "social",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Limnophila aquatica as an aquatic plant while the catalog category is “鱼类”. Plant light, nutrient, growth and placement semantics must not be represented as a fish Compatibility Profile."
-        },
-        {
-          "field": "care",
-          "mode": "do_not_repeat_ordinary_research",
-          "reason": "catalog_identity_boundary",
-          "code": "catalog_category_mismatch",
-          "note": "Reviewed authority identifies Limnophila aquatica as an aquatic plant while the catalog category is “鱼类”. Plant light, nutrient, growth and placement semantics must not be represented as a fish Compatibility Profile."
         }
       ],
       "hold_reason": "All remaining unknown fields are blocked by an explicit evidence ceiling or catalog identity boundary. Ordinary repeated research should not consume active backlog capacity."

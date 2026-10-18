@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 87,
-  "coreFieldCompleteSpecies": 102,
+  "genericOnboardingReadySpecies": 88,
+  "coreFieldCompleteSpecies": 103,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 151,
-  "domainOrIdentityHeldSpecies": 274,
+  "runtimeReviewedProfileSpecies": 152,
+  "domainOrIdentityHeldSpecies": 273,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 158,
+      "reviewed_supported": 159,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 43,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 143,
+      "reviewed_supported": 144,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 137,
+      "reviewed_supported": 138,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 147,
+      "reviewed_supported": 148,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 135,
+      "reviewed_supported": 136,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 66,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 124,
+      "reviewed_supported": 125,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 90,
+      "reviewed_supported": 91,
       "reviewed_neutral_or_negative": 34,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 76,
+      "reviewed_supported": 77,
       "reviewed_neutral_or_negative": 33,
       "reviewed_unknown": 92,
       "needs_research": 0,
-      "missing_identity_or_domain": 274,
+      "missing_identity_or_domain": 273,
       "not_applicable": 11
     }
   },
@@ -9818,86 +9818,91 @@
     },
     {
       "speciesId": "sp_0120",
-      "name": "电鳗 (观赏型)",
+      "name": "圭亚那裸背电鳗",
       "scientificName": "Gymnotus carapo",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "fishbase-gymnotus-carapo-phase2-04",
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "fishbase-gymnotus-carapo-phase2-04",
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "fishbase-gymnotus-carapo-phase2-04",
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "fishbase-gymnotus-carapo-phase2-04",
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-gymnotus-carapo"
+            "fishbase-gymnotus-carapo-phase2-04",
+            "seriouslyfish-gymnotus-carapo-phase2-04"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_common_name_identity_mismatch"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

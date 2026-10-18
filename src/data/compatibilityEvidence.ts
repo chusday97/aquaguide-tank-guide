@@ -35,6 +35,7 @@ import { identityCorrectionsWave29Sources } from './catalogReviewBatches/identit
 import { identityCorrectionsPhase2_01Sources } from './catalogReviewBatches/identity-corrections-phase2-01';
 import { identityCorrectionsPhase2_02Sources } from './catalogReviewBatches/identity-corrections-phase2-02';
 import { identityCorrectionsPhase2_03Sources } from './catalogReviewBatches/identity-corrections-phase2-03';
+import { catalogCorrectionPhase2_04Sources } from './catalogReviewBatches/catalog-correction-phase2-04';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from './catalogIdentityBoundaries';
@@ -826,6 +827,21 @@ const nextWaveUnified03Profiles = Object.fromEntries(
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   ...nextWaveUnified03Profiles,
+  sp_0120: {
+    speciesId: 'sp_0120',
+    waterType: 'freshwater',
+    behaviorTraits: ['solitary', 'conspecific_territoriality', 'predatory', 'weakly_electric'],
+    minimumGroupSize: 1,
+    predationTargets: ['small_fish'],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [
+      catalogCorrectionPhase2_04Sources.fishBaseGymnotusCarapo,
+      catalogCorrectionPhase2_04Sources.seriouslyFishGymnotusCarapo,
+      catalogCorrectionPhase2_04Sources.taiwanFishDbGymnotusCarapo,
+    ],
+    requiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
+  },
   sp_0019: {
     speciesId: 'sp_0019',
     waterType: 'freshwater',
@@ -1676,6 +1692,7 @@ const canonicalIdentitySourceById = new Map(
     ...Object.values(identityCorrectionsPhase2_01Sources),
     ...Object.values(identityCorrectionsPhase2_02Sources),
     ...Object.values(identityCorrectionsPhase2_03Sources),
+    ...Object.values(catalogCorrectionPhase2_04Sources),
   ].map(source => [source.id, source] as const),
 );
 

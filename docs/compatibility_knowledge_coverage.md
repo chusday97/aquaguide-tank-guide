@@ -12,8 +12,8 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 409
-- Direct reviewed compatibility profiles: 117
-- Runtime effective compatibility profiles: 150 (33 inherited through reviewed-safe resolution)
+- Direct reviewed compatibility profiles: 118
+- Runtime effective compatibility profiles: 151 (33 inherited through reviewed-safe resolution)
 - Reviewed pair rules: 21
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
@@ -29,10 +29,10 @@
 
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
-| feeding | 411 | 26 | 385 | 6.3% |
-| environment | 475 | 107 | 368 | 22.5% |
-| space | 475 | 108 | 367 | 22.7% |
-| social | 411 | 102 | 309 | 24.8% |
+| feeding | 409 | 26 | 383 | 6.4% |
+| environment | 475 | 111 | 364 | 23.4% |
+| space | 475 | 109 | 366 | 22.9% |
+| social | 409 | 103 | 306 | 25.2% |
 | care | 475 | 26 | 449 | 5.5% |
 
 ## Highest-priority species gaps

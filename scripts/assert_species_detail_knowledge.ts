@@ -751,6 +751,26 @@ assert.equal(albinoGyrinocheilusKnowledge.socialBehavior?.mode, 'variable');
 assert.equal(albinoGyrinocheilusKnowledge.socialBehavior?.territoriality, 'medium');
 assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0442', scientificName: 'Gyrinocheilus aymonieri var.' }), undefined, 'unresolved blank-variety Gyrinocheilus must not inherit reviewed base authority automatically');
 
+const gymnotusCarapo = fishData.find(fish => fish.id === 'sp_0120');
+assert.ok(gymnotusCarapo, 'corrected Gymnotus carapo must exist in catalog');
+const gymnotusCarapoKnowledge = getReviewedSpeciesKnowledgeForFish(gymnotusCarapo);
+assert.ok(gymnotusCarapoKnowledge, 'direct Gymnotus carapo correction must resolve Species Knowledge V2 authority');
+assert.deepEqual(gymnotusCarapoKnowledge.environment?.temperatureRangeC, { min: 22, max: 28 });
+assert.deepEqual(gymnotusCarapoKnowledge.environment?.phRange, { min: 6, max: 7.5 });
+assert.equal(gymnotusCarapoKnowledge.spaceAndGrowth?.adultLengthCm.max, 76);
+assert.equal(gymnotusCarapoKnowledge.spaceAndGrowth?.adultLengthCm.measurement, 'TL');
+assert.equal(gymnotusCarapoKnowledge.spaceAndGrowth?.minTankLengthCm, 180);
+assert.equal(gymnotusCarapoKnowledge.spaceAndGrowth?.minVolumeLiters, 648);
+assert.equal(gymnotusCarapoKnowledge.socialBehavior?.mode, 'solitary');
+assert.equal(gymnotusCarapoKnowledge.socialBehavior?.minimumGroupSize, 1);
+assert.equal(gymnotusCarapoKnowledge.socialBehavior?.territoriality, 'high');
+assert.equal(gymnotusCarapoKnowledge.socialBehavior?.predationRisk, 'high');
+assert.equal(
+  resolveKnowledgeSources(gymnotusCarapoKnowledge.socialBehavior?.evidence.sourceIds || []).length,
+  2,
+  'Gymnotus social authority sources must resolve through the evidence registry',
+);
+
 const reviewedAuthorityGaps = fishData
   .filter(fish => getReviewedCompatibilityProfileForFish(fish) && !getReviewedSpeciesKnowledgeForFish(fish))
   .map(fish => ({ id: fish.id, name: fish.name, scientificName: fish.scientificName }));

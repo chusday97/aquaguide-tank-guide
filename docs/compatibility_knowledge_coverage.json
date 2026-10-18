@@ -7,8 +7,8 @@
   "catalog_objects": 486,
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 409,
-  "reviewed_compatibility_profiles": 117,
-  "runtime_effective_compatibility_profiles": 150,
+  "reviewed_compatibility_profiles": 118,
+  "runtime_effective_compatibility_profiles": 151,
   "inherited_compatibility_profiles": 33,
   "reviewed_pair_rules": 21,
   "reviewed_stage_risk_profiles": 1,
@@ -29,28 +29,28 @@
   ],
   "field_coverage": {
     "feeding": {
-      "applicable": 411,
+      "applicable": 409,
       "reviewed_supported": 26,
-      "reviewed_unknown": 385,
-      "supported_pct": 6.3
+      "reviewed_unknown": 383,
+      "supported_pct": 6.4
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 107,
-      "reviewed_unknown": 368,
-      "supported_pct": 22.5
+      "reviewed_supported": 111,
+      "reviewed_unknown": 364,
+      "supported_pct": 23.4
     },
     "space": {
       "applicable": 475,
-      "reviewed_supported": 108,
-      "reviewed_unknown": 367,
-      "supported_pct": 22.7
+      "reviewed_supported": 109,
+      "reviewed_unknown": 366,
+      "supported_pct": 22.9
     },
     "social": {
-      "applicable": 411,
-      "reviewed_supported": 102,
-      "reviewed_unknown": 309,
-      "supported_pct": 24.8
+      "applicable": 409,
+      "reviewed_supported": 103,
+      "reviewed_unknown": 306,
+      "supported_pct": 25.2
     },
     "care": {
       "applicable": 475,

@@ -84,6 +84,11 @@ assert.equal(getCatalogCanonicalIdentity('sp_0284')?.canonicalSpeciesId, 'sp_011
 
 assert.equal(getCatalogCanonicalIdentity('sp_0234')?.relationshipType, 'color_morph');
 assert.equal(getCatalogCanonicalIdentity('sp_0234')?.canonicalSpeciesId, 'sp_0200');
+assert.equal(
+  getCatalogCanonicalIdentity('sp_0120'),
+  undefined,
+  'an exact-taxon catalog name correction must remain direct authority rather than masquerading as a canonical variant',
+);
 const darioGoldReviews = getApprovedCatalogFieldReviews('sp_0234');
 assert.deepEqual(
   darioGoldReviews.map(review => review.field),
@@ -176,7 +181,7 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 87);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 88);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);

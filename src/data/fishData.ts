@@ -4709,7 +4709,7 @@ export const fishData: Fish[] = [
   },
   {
     "id": "sp_0120",
-    "name": "电鳗 (观赏型)",
+    "name": "圭亚那裸背电鳗",
     "scientificName": "Gymnotus carapo",
     "category": "鱼类",
     "image": "/species-transparent/batch_009_species_sheet_09_电鳗_观赏型_Gymnotus_carapo.png?v=cutfix5_20260601",
@@ -4717,25 +4717,25 @@ export const fishData: Fish[] = [
     "waterTemperature": "22-28°C",
     "phLevel": "6.0-7.5",
     "waterChangeCycle": 5,
-    "description": "能发出微弱电流感知周围。性格暴躁，会电击同类和室友。视力极差，夜行性，必须提供山洞躲避。",
-    "diet": "肉食性：高蛋白肉食颗粒+冻虾+冻鱼肉。频率：幼体每天少量，成体每周2-4次。",
-    "tankSize": "至少 320 升",
+    "description": "南美裸背电鳗科的刀鱼类，并非 Electrophorus 真正的电鳗属。会产生用于感知、导航和交流的弱电场，而不是用强电电击缸友；夜行、体型大，会捕食小鱼，同种间领地性很强。",
+    "diet": "肉食性：以红虫、虾、蚯蚓、Tubifex 等活饵或冻饵为主；多数个体不接受干饲料。",
+    "tankSize": "至少 180 × 60 × 60 cm（约 648 升），建议更大",
     "temperament": "Aggressive",
     "size": "Large",
     "housingMode": "建议单养",
-    "housingReason": "性情偏凶或捕食倾向明显，和温和小型鱼混养容易造成追咬、压迫或吞食。",
+    "housingReason": "会吞食小型鱼；可在足够大的水体中与体型接近的稳健鱼类谨慎混养，但同种间领地性很强，默认单只饲养。",
     "feedingProfile": {
       "dietType": "Carnivore",
       "feedingType": "肉食性",
-      "recommendedFoods": "高蛋白肉食颗粒+冻虾+冻鱼肉",
+      "recommendedFoods": "红虫、虾、蚯蚓、Tubifex 等活饵或冻饵",
       "feedingFrequency": "幼体每天少量，成体每周2-4次",
       "portionRule": "腹部微鼓即可，避免长期撑食",
       "feedingLayer": "全层",
       "avoidFoods": "来源不明活饵；长期单一高脂食物",
-      "specialNotes": "肉食鱼需避免与可吞入口的小型鱼虾混养",
-      "confidence": "0.82",
-      "sourceName": "aquapedia_master_v2.csv+rules+predatory_fish_template",
-      "sourceUrl": "https://www.google.com/search?q=Gymnotus+carapo+feeding+diet+aquarium",
+      "specialNotes": "多数个体不接受干饲料；避免与可吞入口的小型鱼混养，同种默认单养",
+      "confidence": "0.95",
+      "sourceName": "Seriously Fish + FishBase",
+      "sourceUrl": "https://www.seriouslyfish.com/species/gymnotus-carapo",
       "sourceFields": [
         "Diet",
         "Feeding_Type",
@@ -4743,8 +4743,8 @@ export const fishData: Fish[] = [
         "Feeding_Layer",
         "Care_Guide"
       ],
-      "needsReview": true,
-      "reviewReason": "存在特殊喂养关键词"
+      "needsReview": false,
+      "reviewReason": ""
     }
   },
   {

@@ -54,6 +54,7 @@ import { opsariichthysBidensKnowledge } from './opsariichthysBidensAuthority';
 import { pseudorasboraParvaKnowledge } from './pseudorasboraParvaAuthority';
 import { nextWaveFreshwaterBatchKnowledge } from './nextWaveFreshwaterBatchAuthority';
 import { nextWaveUnifiedBatchKnowledge } from './nextWaveUnifiedBatchAuthority';
+import { gymnotusCarapoKnowledge } from './gymnotusCarapoAuthority';
 import { nextWaveUnified03ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-03';
 import { nextWaveUnified04ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified05ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-05';
@@ -85,7 +86,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0416', 'sp_0417', 'sp_0419', 'sp_0421', 'sp_0428', 'sp_0429', 'sp_0449', 'sp_0450', 'sp_0452', 'sp_0456',
   'sp_0001', 'sp_0007', 'sp_0008', 'sp_0009', 'sp_0022', 'sp_0038', 'sp_0047',
   'sp_0048', 'sp_0050', 'sp_0059', 'sp_0103', 'sp_0104', 'sp_0105', 'sp_0108', 'sp_0109', 'sp_0110', 'sp_0116',
-  'sp_0117', 'sp_0118', 'sp_0119', 'sp_0120', 'sp_0127', 'sp_0130', 'sp_0131', 'sp_0138', 'sp_0139', 'sp_0140',
+  'sp_0117', 'sp_0118', 'sp_0119', 'sp_0127', 'sp_0130', 'sp_0131', 'sp_0138', 'sp_0139', 'sp_0140',
   'sp_0151', 'sp_0156', 'sp_0179', 'sp_0181', 'sp_0183', 'sp_0184', 'sp_0185', 'sp_0197', 'sp_0198', 'sp_0199',
   'sp_0200', 'sp_0216', 'sp_0229', 'sp_0234', 'sp_0242', 'sp_0248', 'sp_0268', 'sp_0269', 'sp_0283', 'sp_0284',
   'sp_0285', 'sp_0286', 'sp_0296', 'sp_0297', 'sp_0318', 'sp_0319', 'sp_0321', 'sp_0322', 'sp_0323', 'sp_0325',
@@ -917,6 +918,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...nextWaveUnified04BatchKnowledge,
   ...nextWaveUnified05BatchKnowledge,
   ...nextWaveUnified06BatchKnowledge,
+  sp_0120: gymnotusCarapoKnowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
