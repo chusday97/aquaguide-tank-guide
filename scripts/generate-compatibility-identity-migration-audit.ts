@@ -5,6 +5,7 @@ import {
   type CatalogIdentityBoundaryCode,
 } from '../src/data/catalogIdentityBoundaries';
 import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
+import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
 import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
@@ -19,6 +20,22 @@ type MigrationBucket =
   | 'accepted_alias_trade_disambiguation_required'
   | 'commercial_hybrid_hold'
   | 'catalog_structure_correction_required';
+
+
+type MigrationPath =
+  | 'identity_only_after_exact_evidence'
+  | 'partial_inheritance_review'
+  | 'exact_variant_label_disambiguation'
+  | 'base_authority_or_parent_resolution'
+  | 'taxonomic_review'
+  | 'trade_name_disambiguation'
+  | 'hybrid_object_specific_hold'
+  | 'catalog_structure_correction';
+
+type ExistingIdentityEvidenceStatus =
+  | 'supported_identity_review_present'
+  | 'reviewed_identity_hold_present'
+  | 'no_object_identity_review';
 
 const outputDir = new URL('../docs/', import.meta.url).pathname;
 mkdirSync(outputDir, { recursive: true });
@@ -43,6 +60,31 @@ const baseTank: Aquarium = {
 const isPlainBinomial = (scientificName: string) => (
   /^[A-Z][a-z-]+\s+[a-z][a-z-]+$/.test(scientificName.trim())
 );
+
+
+const stripVariantSuffix = (scientificName: string) => (
+  scientificName.trim().replace(/\s+(?:var\.?|cf\.?|aff\.?).*$/i, '').trim()
+);
+
+const hasBlankVariantSuffix = (scientificName: string) => (
+  /\s+var\.?\s*$/i.test(scientificName.trim())
+);
+
+const hasMorphologyRisk = (species: Fish) => {
+  const text = (species.name || '') + ' ' + (species.scientificName || '');
+  return /balloon|super\s*balloon|short\s*body|shortbody|longfin|long\s*fin|high\s*fin|veil|double\s*tail|doubletail|球形|短身|长鳍|高鳍|大帆|蝶尾|水泡|珠鳞|狮头|虎头|鹤顶|兰寿|琉金/i.test(text);
+};
+
+const getExistingIdentityEvidenceStatus = (speciesId: string): ExistingIdentityEvidenceStatus => {
+  const identityReviews = getCatalogFieldReviews(speciesId).filter(review => review.field === 'identity');
+  if (identityReviews.some(review => review.status === 'reviewed' && review.resolution === 'supported')) {
+    return 'supported_identity_review_present';
+  }
+  if (identityReviews.some(review => review.status === 'reviewed')) {
+    return 'reviewed_identity_hold_present';
+  }
+  return 'no_object_identity_review';
+};
 
 const classifyBucket = (
   code: CatalogIdentityBoundaryCode,
@@ -93,6 +135,50 @@ type Impact = {
   affectedIdentityUnknownPairs: number;
   soleBoundaryIdentityUnknownPairs: number;
   sharedBoundaryIdentityUnknownPairs: number;
+};
+
+
+const migrationPathFor = ({
+  bucket,
+  scientificName,
+  morphologyRisk,
+  readyBaseCandidateCount,
+}: {
+  bucket: MigrationBucket;
+  scientificName: string;
+  morphologyRisk: boolean;
+  readyBaseCandidateCount: number;
+}): MigrationPath => {
+  if (bucket === 'commercial_hybrid_hold') return 'hybrid_object_specific_hold';
+  if (bucket === 'trade_name_disambiguation_required' || bucket === 'accepted_alias_trade_disambiguation_required') return 'trade_name_disambiguation';
+  if (bucket === 'parent_taxon_resolution_required') return 'base_authority_or_parent_resolution';
+  if (bucket === 'taxonomic_research_candidate') return 'taxonomic_review';
+  if (bucket === 'catalog_structure_correction_required') return 'catalog_structure_correction';
+  if (hasBlankVariantSuffix(scientificName)) return 'exact_variant_label_disambiguation';
+  if (readyBaseCandidateCount === 0) return 'base_authority_or_parent_resolution';
+  if (morphologyRisk) return 'partial_inheritance_review';
+  return 'identity_only_after_exact_evidence';
+};
+
+const nextActionForPath = (path: MigrationPath) => {
+  switch (path) {
+    case 'identity_only_after_exact_evidence':
+      return 'Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.';
+    case 'partial_inheritance_review':
+      return 'Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.';
+    case 'exact_variant_label_disambiguation':
+      return 'Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.';
+    case 'base_authority_or_parent_resolution':
+      return 'Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.';
+    case 'taxonomic_review':
+      return 'Confirm the exact accepted taxon in an authoritative taxonomy source before Compatibility onboarding.';
+    case 'trade_name_disambiguation':
+      return 'Disambiguate the trade or common-name object to one exact taxon or lineage before Compatibility onboarding.';
+    case 'hybrid_object_specific_hold':
+      return 'Keep this commercial hybrid object-specific; do not force it onto a single parent species without lineage evidence.';
+    case 'catalog_structure_correction':
+      return 'Correct the catalog identity, type, or category record and re-review the object before Compatibility onboarding.';
+  }
 };
 
 const impactBySpecies = new Map<string, Impact>();
@@ -152,6 +238,28 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
   };
   const coverageRow = coverageById.get(species.id);
   const canonicalIdentity = getCatalogCanonicalIdentity(species.id);
+  const strippedBaseScientificName = stripVariantSuffix(species.scientificName || '');
+  const baseCandidates = fishData
+    .filter(candidate => candidate.id !== species.id && (candidate.scientificName || '').trim() === strippedBaseScientificName)
+    .map(candidate => {
+      const baseCoverage = coverageById.get(candidate.id);
+      return {
+        speciesId: candidate.id,
+        name: candidate.name,
+        scientificName: candidate.scientificName || '',
+        genericOnboardingReady: baseCoverage?.genericOnboardingReady || false,
+        authoritativeFieldCount: baseCoverage?.authoritativeFieldCount || 0,
+      };
+    });
+  const readyBaseCandidates = baseCandidates.filter(candidate => candidate.genericOnboardingReady);
+  const morphologyRisk = hasMorphologyRisk(species);
+  const identityEvidenceStatus = getExistingIdentityEvidenceStatus(species.id);
+  const migrationPath = migrationPathFor({
+    bucket,
+    scientificName: species.scientificName || '',
+    morphologyRisk,
+    readyBaseCandidateCount: readyBaseCandidates.length,
+  });
   return {
     speciesId: species.id,
     name: species.name,
@@ -167,6 +275,15 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     sourceIds: boundary.sourceIds,
     reviewedAt: boundary.reviewedAt,
     blockingRequirement: blockingRequirement(bucket),
+    migrationPath,
+    nextAction: nextActionForPath(migrationPath),
+    identityEvidenceStatus,
+    blankVariantSuffix: hasBlankVariantSuffix(species.scientificName || ''),
+    morphologyRisk,
+    strippedBaseScientificName,
+    baseCandidates,
+    readyBaseCandidates,
+    readyBaseCandidateCount: readyBaseCandidates.length,
     genericOnboardingReady: coverageRow?.genericOnboardingReady || false,
     canonicalIdentityPresent: Boolean(canonicalIdentity),
     ...impact,
@@ -187,16 +304,32 @@ const boundaryCodeCounts = rows.reduce<Record<string, number>>((acc, row) => {
   return acc;
 }, {});
 
+const migrationPathCounts = rows.reduce<Record<string, number>>((acc, row) => {
+  acc[row.migrationPath] = (acc[row.migrationPath] || 0) + 1;
+  return acc;
+}, {});
+
+const migrationPathSoleBoundaryImpact = rows.reduce<Record<string, number>>((acc, row) => {
+  acc[row.migrationPath] = (acc[row.migrationPath] || 0) + row.soleBoundaryIdentityUnknownPairs;
+  return acc;
+}, {});
+
+const identityEvidenceStatusCounts = rows.reduce<Record<string, number>>((acc, row) => {
+  acc[row.identityEvidenceStatus] = (acc[row.identityEvidenceStatus] || 0) + 1;
+  return acc;
+}, {});
+
 const fishDomainBoundaryCount = rows.filter(row => row.lifeType === 'fish').length;
 const pairAttributionCount = rows.reduce((sum, row) => sum + row.affectedIdentityUnknownPairs, 0);
 
 const report = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   generatedFrom: 'source-controlled active catalog identity boundaries + deterministic Compatibility runtime',
   policy: {
     unitOfWork: 'catalog-object identity debt, not precomputed pair packs',
     autoMigrationRule: 'No active identity boundary is auto-migrated from names, suffixes, aliases, parent-taxon similarity, or pair impact. Reviewed identity evidence is required.',
     impactSemantics: 'affectedIdentityUnknownPairs counts current unresolved-identity fish pairs in which the catalog object participates. soleBoundaryIdentityUnknownPairs is the stronger prioritization signal because the opposite fish has no active identity boundary. Neither metric guarantees a compatible verdict after migration; other evidence constraints may remain.',
+    migrationPathSemantics: 'migrationPath is a planning lane, not authority. identity_only_after_exact_evidence still requires exact-object identity evidence before canonical inheritance can graduate.',
   },
   activeIdentityBoundaries: rows.length,
   fishDomainIdentityBoundaries: fishDomainBoundaryCount,
@@ -208,6 +341,11 @@ const report = {
   autoMigratableCount: rows.filter(row => row.autoMigrationAllowed).length,
   boundaryCodeCounts,
   migrationBucketCounts: bucketCounts,
+  migrationPathCounts,
+  migrationPathSoleBoundaryImpact,
+  identityEvidenceStatusCounts,
+  identityOnlyAfterExactEvidenceCount: rows.filter(row => row.migrationPath === 'identity_only_after_exact_evidence').length,
+  partialInheritanceReviewCount: rows.filter(row => row.migrationPath === 'partial_inheritance_review').length,
   topPriority: rows.slice(0, 30),
   rows,
 };
@@ -222,26 +360,29 @@ const markdown = [
   '',
   '> Species-level migration planning only. This is not a pair precompute table and does not create Compatibility authority.',
   '',
-  `- Active identity boundaries: **${report.activeIdentityBoundaries}**`,
-  `- Fish-domain identity boundaries: **${report.fishDomainIdentityBoundaries}**`,
-  `- Current unresolved-identity fish pairs: **${report.identityUnknownPairs}**`,
-  `- One-boundary pairs: **${report.identityUnknownPairsWithOneActiveBoundary}**`,
-  `- Two-boundary pairs: **${report.identityUnknownPairsWithTwoActiveBoundaries}**`,
-  `- Auto-migratable active boundaries: **${report.autoMigratableCount}**`,
+  '- Active identity boundaries: **' + report.activeIdentityBoundaries + '**',
+  '- Fish-domain identity boundaries: **' + report.fishDomainIdentityBoundaries + '**',
+  '- Current unresolved-identity fish pairs: **' + report.identityUnknownPairs + '**',
+  '- One-boundary pairs: **' + report.identityUnknownPairsWithOneActiveBoundary + '**',
+  '- Two-boundary pairs: **' + report.identityUnknownPairsWithTwoActiveBoundaries + '**',
+  '- Auto-migratable active boundaries: **' + report.autoMigratableCount + '**',
   '',
   '## Migration buckets',
   '',
-  ...Object.entries(bucketCounts)
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([bucket, count]) => `- ${bucket}: ${count}`),
+  ...Object.entries(bucketCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([bucket, count]) => '- ' + bucket + ': ' + count),
+  '',
+  '## Migration paths',
+  '',
+  ...Object.entries(migrationPathCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([path, count]) => '- ' + path + ': ' + count + ' objects / ' + (migrationPathSoleBoundaryImpact[path] || 0) + ' sole-boundary pairs'),
+  '',
+  '- Identity-only after exact evidence: **' + report.identityOnlyAfterExactEvidenceCount + '**',
+  '- Partial inheritance review: **' + report.partialInheritanceReviewCount + '**',
   '',
   '## Highest-impact catalog identity debt',
   '',
-  '| Catalog object | Boundary | Required resolution | Identity-unknown pairs | Sole-boundary pairs |',
-  '| --- | --- | --- | ---: | ---: |',
-  ...rows.slice(0, 30).map(row => (
-    `| ${row.speciesId} ${row.name} | ${row.boundaryCode} | ${row.migrationBucket} | ${row.affectedIdentityUnknownPairs} | ${row.soleBoundaryIdentityUnknownPairs} |`
-  )),
+  '| Catalog object | Boundary | Migration path | Ready base | Morphology risk | Identity-unknown pairs | Sole-boundary pairs |',
+  '| --- | --- | --- | ---: | --- | ---: | ---: |',
+  ...rows.slice(0, 30).map(row => '| ' + row.speciesId + ' ' + row.name + ' | ' + row.boundaryCode + ' | ' + row.migrationPath + ' | ' + row.readyBaseCandidateCount + ' | ' + (row.morphologyRisk ? 'yes' : 'no') + ' | ' + row.affectedIdentityUnknownPairs + ' | ' + row.soleBoundaryIdentityUnknownPairs + ' |'),
   '',
   'Pair impact is diagnostic prioritization only. A row remains fail-closed until its identity review graduates through the canonical identity/onboarding gate.',
   '',

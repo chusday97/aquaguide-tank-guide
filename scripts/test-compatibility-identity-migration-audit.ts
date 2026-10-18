@@ -36,11 +36,22 @@ const report = JSON.parse(committedJson) as {
   identityUnknownPairsWithTwoActiveBoundaries: number;
   identityUnknownPairsWithoutActiveBoundary: number;
   autoMigratableCount: number;
+  migrationPathCounts: Record<string, number>;
+  migrationPathSoleBoundaryImpact: Record<string, number>;
+  identityEvidenceStatusCounts: Record<string, number>;
+  identityOnlyAfterExactEvidenceCount: number;
+  partialInheritanceReviewCount: number;
   rows: Array<{
     speciesId: string;
     scientificName: string;
     boundaryCode: string;
     migrationBucket: string;
+    migrationPath: string;
+    identityEvidenceStatus: string;
+    blankVariantSuffix: boolean;
+    morphologyRisk: boolean;
+    readyBaseCandidateCount: number;
+    readyBaseCandidates: Array<{ speciesId: string; genericOnboardingReady: boolean; authoritativeFieldCount: number }>;
     autoMigrationAllowed: boolean;
     sourceIds: string[];
     genericOnboardingReady: boolean;
@@ -59,6 +70,15 @@ assert.equal(report.rows.length, active.length);
 assert.equal(new Set(report.rows.map(row => row.speciesId)).size, report.rows.length);
 assert.equal(report.autoMigratableCount, 0);
 assert.equal(report.identityUnknownPairsWithoutActiveBoundary, 0);
+assert.ok(report.identityOnlyAfterExactEvidenceCount > 0);
+assert.ok(report.partialInheritanceReviewCount > 0);
+assert.equal(Object.values(report.migrationPathCounts).reduce((sum, count) => sum + count, 0), report.activeIdentityBoundaries);
+assert.equal(Object.values(report.identityEvidenceStatusCounts).reduce((sum, count) => sum + count, 0), report.activeIdentityBoundaries);
+assert.equal(
+  report.identityEvidenceStatusCounts.supported_identity_review_present || 0,
+  0,
+  'a supported reviewed identity must supersede its active boundary instead of remaining in the debt queue',
+);
 assert.equal(
   report.identityUnknownPairsWithOneActiveBoundary + report.identityUnknownPairsWithTwoActiveBoundaries,
   report.identityUnknownPairs,
@@ -80,6 +100,13 @@ for (const row of report.rows) {
   assert.equal(coverageById.get(row.speciesId)?.genericOnboardingReady, false);
   assert.equal(row.canonicalIdentityPresent, false, `${row.speciesId} cannot be canonical-ready while an active boundary exists`);
   assert.equal(getCatalogCanonicalIdentity(row.speciesId), undefined);
+  assert.ok(row.migrationPath.length > 0, row.speciesId + ' must have an explicit migration path');
+  assert.ok(row.identityEvidenceStatus.length > 0, row.speciesId + ' must expose identity-review status');
+  assert.equal(row.readyBaseCandidateCount, row.readyBaseCandidates.length);
+  for (const base of row.readyBaseCandidates) {
+    assert.equal(base.genericOnboardingReady, true);
+    assert.equal(base.authoritativeFieldCount, 8);
+  }
   assert.equal(
     row.affectedIdentityUnknownPairs,
     row.soleBoundaryIdentityUnknownPairs + row.sharedBoundaryIdentityUnknownPairs,
@@ -106,6 +133,22 @@ assert.ok(report.rows.some(row => row.migrationBucket === 'variant_object_eviden
 assert.ok(report.rows.some(row => row.migrationBucket === 'parent_taxon_resolution_required'));
 assert.ok(report.rows.some(row => row.migrationBucket === 'trade_name_disambiguation_required'));
 assert.ok(report.rows.some(row => row.migrationBucket === 'commercial_hybrid_hold'));
+
+const byId = new Map(report.rows.map(row => [row.speciesId, row]));
+
+assert.equal(byId.get('sp_0175')?.migrationPath, 'identity_only_after_exact_evidence');
+assert.equal(byId.get('sp_0175')?.readyBaseCandidateCount, 1);
+assert.equal(byId.get('sp_0175')?.morphologyRisk, false);
+assert.equal(byId.get('sp_0241')?.migrationPath, 'partial_inheritance_review');
+assert.equal(byId.get('sp_0241')?.morphologyRisk, true);
+assert.equal(byId.get('sp_0241')?.readyBaseCandidateCount, 1);
+assert.equal(byId.get('sp_0415')?.migrationPath, 'partial_inheritance_review');
+assert.equal(byId.get('sp_0415')?.morphologyRisk, true);
+assert.equal(byId.get('sp_0158')?.migrationPath, 'exact_variant_label_disambiguation');
+assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
+assert.equal(byId.get('sp_0158')?.readyBaseCandidateCount, 1);
+assert.equal(byId.get('sp_0021')?.migrationPath, 'hybrid_object_specific_hold');
+assert.equal(byId.get('sp_0021')?.identityEvidenceStatus, 'reviewed_identity_hold_present');
 
 console.log(
   `Compatibility identity migration audit PASS: ${report.activeIdentityBoundaries} active catalog boundaries reconcile to ${report.identityUnknownPairs} unresolved-identity fish pairs; 0 are auto-migrated and all remain species-level fail-closed work.`,
