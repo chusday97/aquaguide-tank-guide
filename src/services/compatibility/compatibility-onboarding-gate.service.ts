@@ -8,6 +8,7 @@ import {
   type CatalogIdentityReadiness,
 } from '../../data/catalogCanonicalIdentity';
 import type { Fish } from '../../types';
+import { isCompatibilitySupportedLifeType } from './compatibility-domain-scope.service';
 
 export type CompatibilityOnboardingGateResult = {
   ready: boolean;
@@ -40,7 +41,7 @@ export const assessCompatibilityOnboardingGate = (
   const missingAuthoritativeFacts = required.filter(field => !authoritative.has(field));
   const reasons: string[] = [];
 
-  if (input.lifeType !== 'fish') reasons.push('unsupported_compatibility_domain');
+  if (!isCompatibilitySupportedLifeType(input.lifeType)) reasons.push('unsupported_compatibility_domain');
   if (!isCompatibilityIdentityReady(identityReadiness)) reasons.push(identityReadiness);
   if (!input.hasReviewedCompatibilityProfile) reasons.push('reviewed_compatibility_profile_missing');
   if (missingDeclaredFacts.length) reasons.push('required_fact_contract_incomplete');

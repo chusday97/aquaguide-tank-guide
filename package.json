@@ -394,6 +394,7 @@
     "dryrun:compatibility-active-completion": "node --import tsx scripts/run-compatibility-active-completion-batch.ts",
     "test:compatibility-active-completion-batch": "node --import tsx scripts/test-compatibility-active-completion-batch.ts",
     "test:compatibility-decision-audit-freshness": "node --import tsx scripts/test-compatibility-decision-audit-freshness.ts",
+    "test:compatibility-user-path-scope": "node --import tsx scripts/test-compatibility-user-path-scope.ts",
     "test:compatibility-identity-migration-audit": "node --import tsx scripts/test-compatibility-identity-migration-audit.ts",
     "test:compatibility-identity-review-queue": "node --import tsx scripts/test-compatibility-identity-review-queue.ts",
     "test:compatibility-identity-bulk-review": "node --import tsx scripts/test-compatibility-identity-bulk-review.ts",

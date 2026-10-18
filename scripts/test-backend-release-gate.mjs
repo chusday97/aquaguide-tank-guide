@@ -29,6 +29,7 @@ const gates = [
   ['Compatibility Research Batch Dry Run', 'npm', ['run', 'test:compatibility-research-batch-dryrun']],
   ['Compatibility Core Field Coverage', 'npm', ['run', 'test:compatibility-core-field-coverage']],
   ['Compatibility Decision Audit Freshness', 'npm', ['run', 'test:compatibility-decision-audit-freshness']],
+  ['Compatibility User Path Scope', 'npm', ['run', 'test:compatibility-user-path-scope']],
   ['Compatibility Identity Migration Audit', 'npm', ['run', 'test:compatibility-identity-migration-audit']],
   ['Compatibility Identity Review Queue', 'npm', ['run', 'test:compatibility-identity-review-queue']],
   ['Compatibility Identity Bulk Review', 'npm', ['run', 'test:compatibility-identity-bulk-review']],

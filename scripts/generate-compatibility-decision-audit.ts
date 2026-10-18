@@ -11,6 +11,7 @@ import {
   isCompatibilityDecisionFullyInformed,
 } from '../src/services/compatibility/compatibility-decision-plan.service';
 import type { Aquarium } from '../src/types';
+import { isCompatibilityCalculatorSelectableSpecies } from '../src/services/compatibility/compatibility-domain-scope.service';
 
 const root = new URL('../', import.meta.url).pathname;
 const outputDir = `${root}docs`;
@@ -24,6 +25,13 @@ const researchKeyBySpeciesId = new Map(
 const compatibilityDomainObjects = fishData.filter(
   species => !['plant', 'hardscape'].includes(getLifeType(species)),
 );
+const calculatorSelectableSpecies = fishData.filter(isCompatibilityCalculatorSelectableSpecies);
+const unsupportedSelectorObjects = compatibilityDomainObjects.filter(species => !isCompatibilityCalculatorSelectableSpecies(species));
+const unsupportedSelectorByLifeType = unsupportedSelectorObjects.reduce<Record<string, number>>((acc, species) => {
+  const lifeType = getLifeType(species);
+  acc[lifeType] = (acc[lifeType] || 0) + 1;
+  return acc;
+}, {});
 const fishDomainSpecies = fishData.filter(species => getLifeType(species) === 'fish');
 const readyIds = new Set(
   coverage.rows.filter(row => row.genericOnboardingReady).map(row => row.speciesId),
@@ -176,6 +184,23 @@ for (const item of speciesImpactRows) {
   }
 }
 
+const maxOppositeSpecies = Math.max(1, fishDomainSpecies.length - 1);
+const terminalUserExposureTargets = speciesImpactRows
+  .filter(item => item.terminalReasons.length > 0)
+  .map(item => {
+    const exposureSharePct = Number(((item.unknownPairs / maxOppositeSpecies) * 100).toFixed(2));
+    return {
+      ...item,
+      exposureSharePct,
+      impactBand: exposureSharePct >= 80
+        ? 'high'
+        : exposureSharePct >= 40
+          ? 'medium'
+          : 'low',
+    };
+  })
+  .sort((a, b) => b.unknownPairs - a.unknownPairs || a.speciesId.localeCompare(b.speciesId));
+
 const fishPairs = (fishDomainSpecies.length * (fishDomainSpecies.length - 1)) / 2;
 const unknownRatePct = fishPairs === 0 ? 0 : Number(((statuses.insufficient_data / fishPairs) * 100).toFixed(2));
 const systemGapPairs = unknownReasons.system_gap || 0;
@@ -187,6 +212,9 @@ const report = {
   },
   catalogObjects: fishData.length,
   compatibilityDomainObjects: compatibilityDomainObjects.length,
+  calculatorSelectableSpecies: calculatorSelectableSpecies.length,
+  unsupportedSelectorObjects: unsupportedSelectorObjects.length,
+  unsupportedSelectorByLifeType,
   fishDomainSpecies: fishDomainSpecies.length,
   genericOnboardingReadySpecies: readySpecies.length,
   genericReadyUniquePairs: (readySpecies.length * (readySpecies.length - 1)) / 2,
@@ -199,6 +227,19 @@ const report = {
   fullyInformedPairs,
   fullyInformedUnknownPairs,
   unknownReasons,
+  userPathExposure: {
+    scope: 'uniform unique-pair exposure across species currently selectable in the fish Compatibility calculator',
+    calculatorSelectableSpecies: calculatorSelectableSpecies.length,
+    uniqueSelectablePairs: fishPairs,
+    unknownPairs: statuses.insufficient_data,
+    uniformUnknownRatePct: unknownRatePct,
+    observedTrafficProbability: null,
+    note: 'uniformUnknownRatePct is a catalog-pair stress metric, not observed user traffic probability. Unsupported non-fish livestock are excluded from the calculator because the current deterministic domain is explicitly fish-only.',
+    unknownReasons,
+    fullyInformedUnknownPairs,
+    systemGapPairs,
+    terminalUserExposureTargets,
+  },
   leverageQueues: {
     policy: 'Prioritize reviewed evidence work by actual UNKNOWN-pair impact. affectedUnknownPairs means the taxon participates in that many current UNKNOWN pairs; it is not a guarantee that resolving the taxon alone will unlock every pair because the opposite species or non-core facts can remain blocking.',
     highestLeverageEvidenceTargets,

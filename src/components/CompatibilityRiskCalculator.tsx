@@ -109,11 +109,12 @@ import { getCompatibilityPreviewSpecies } from '../services/compatibility/compat
 import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
+import { isCompatibilityCalculatorSelectableSpecies } from '../services/compatibility/compatibility-domain-scope.service';
 import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
-const isCompatibilityLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
+const isCompatibilityLivestock = isCompatibilityCalculatorSelectableSpecies;
 
 const isReviewedSolitaryRequirement = (fish: Fish) => getSpeciesHousingAuthority(fish).solitaryRequired;
 
@@ -604,7 +605,9 @@ export function CompatibilityRiskCalculator({
   }, [activeSpeciesIds, currentLivestock, selectedAquarium]);
 
   const selectedSpecies = useMemo(
-    () => activeSpeciesIds.map(id => fishData.find(fish => fish.id === id)).filter(Boolean) as Fish[],
+    () => activeSpeciesIds
+      .map(id => fishData.find(fish => fish.id === id))
+      .filter((fish): fish is Fish => Boolean(fish) && isCompatibilityLivestock(fish)),
     [activeSpeciesIds]
   );
   const selectedItems = useMemo(() => selectedSpecies.map(species => ({
@@ -764,7 +767,9 @@ export function CompatibilityRiskCalculator({
 
   const addSpecies = (fish: Fish) => {
     if (!isCompatibilityLivestock(fish)) {
-      setResultFeedback('水草和硬景不作为混养风险计算对象。');
+      setResultFeedback(isEn
+        ? 'The current Compatibility model supports fish only. Invertebrates, reptiles and reef organisms stay in the catalog until dedicated compatibility domains are available.'
+        : '当前混养模型仅支持鱼类；虾螺蟹、爬宠和珊瑚等仍保留在图鉴中，待对应兼容性模型完成后再开放计算。');
       return;
     }
     updateSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
@@ -978,6 +983,10 @@ export function CompatibilityRiskCalculator({
               className="h-10 rounded-[14px] border-amber-200 bg-white pl-8 text-[12px] font-medium text-ink placeholder:text-ink/40"
             />
           </div>
+
+          <p className="mt-1.5 text-[10px] font-bold leading-4 text-ink/45">
+            {isEn ? 'Current calculator scope: fish only. Reef organisms, invertebrates and reptiles require dedicated compatibility models.' : '当前计算范围：鱼类。珊瑚、虾螺蟹和爬宠需要独立兼容性模型，不会在这里给出伪结论。'}
+          </p>
 
           {searchResults.length > 0 && (
             <div className="mt-2 grid grid-cols-1 gap-1.5">
