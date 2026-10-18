@@ -74,6 +74,27 @@ const PH_CODES = new Set([
   'tank_ph_conflict',
 ]);
 
+const USER_INPUT_REQUIRED_CODES = new Set([
+  'candidate_missing',
+  'missing_candidate_species',
+  'missing_species_pair',
+  'empty_tank_no_existing_species',
+  'tank_missing',
+  'missing_tank',
+  'tank_water_type_missing',
+  'missing_tank_water_type',
+  'tank_volume_missing',
+  'missing_tank_volume',
+  'tank_temperature_missing',
+  'missing_tank_temperature',
+  'missing_ph',
+  'missing_hardness',
+]);
+
+const hasMissingUserInput = (codes: ReadonlySet<string>) => (
+  Array.from(codes).some(code => USER_INPUT_REQUIRED_CODES.has(code))
+);
+
 const TERRITORIAL_CODES = new Set([
   'territorial_pressure_context',
   'territorial_conflict',
@@ -240,13 +261,23 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         detailsLabel: '哪项资料无法确认？',
       };
     }
+    if (hasMissingUserInput(codes)) {
+      return {
+        verdict: 'need_information',
+        headline: '先补齐这次判断需要的信息',
+        immediateAction: '先别急着加；补齐当前鱼缸缺少的必要信息后再算一次。',
+        primaryReason: firstText(missingData, decision.summary || '当前鱼缸缺少这次判断需要的信息。'),
+        observeAfterAction: '补齐缺失的鱼缸信息后，重新运行混养判断。',
+        detailsLabel: '还缺什么？',
+      };
+    }
     return {
       verdict: 'need_information',
-      headline: '现在还不能可靠判断',
-      immediateAction: '先别急着加；补齐这次判断真正需要的鱼缸或物种信息后再算一次。',
-      primaryReason: firstText(missingData, decision.summary || '关键资料还不够。'),
-      observeAfterAction: '补齐当前缺失的鱼缸或物种信息后，重新运行混养判断。',
-      detailsLabel: '还缺什么？',
+      headline: '系统资料还没完成审核',
+      immediateAction: '这不是你少填了信息；当前物种资料尚未完成可靠审核，先不要据此新增。',
+      primaryReason: '当前缺口来自系统内部物种资料审核，不能让你靠猜测或补填鱼缸信息来解决。',
+      observeAfterAction: '资料审核完成并重新计算后，再决定是否加入。',
+      detailsLabel: '为什么现在不判断？',
     };
   }
 
@@ -416,12 +447,16 @@ const buildCurrentTankCompatibilityAction = (
         ? '先确认准确学名或具体品系，再判断当前组合是否需要调整。'
         : hasPublicEvidenceInsufficient
           ? '现有可靠公开资料不足以确认关键风险；先维持谨慎观察，不要据此继续扩大当前组合。'
-          : '先补齐这次判断真正需要的信息，再重新判断当前组合是否需要调整。',
+          : hasMissingUserInput(codes)
+            ? '先补齐这次判断真正需要的鱼缸信息，再重新判断当前组合是否需要调整。'
+            : '这不是你少填了信息；当前物种资料尚未完成可靠审核，先不要据此扩大当前组合。',
       observeAfterAction: hasIdentityUnresolved
         ? '确认准确身份后重新评估当前组合。'
         : hasPublicEvidenceInsufficient
           ? '获得更可靠的公开依据并重新审核后，再重新评估当前组合。'
-          : '补齐缺失信息后重新评估当前组合。',
+          : hasMissingUserInput(codes)
+            ? '补齐缺失的鱼缸信息后重新评估当前组合。'
+            : '资料审核完成并重新计算后，再重新评估当前组合。',
     };
   }
 

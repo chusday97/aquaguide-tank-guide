@@ -80,7 +80,13 @@ assert.equal(blocked.find((item: { researchKey: string }) => item.researchKey ==
 assert.equal(audit.fullyInformedUnknownPairs, 0, 'fully informed compatibility pairs must never collapse to UNKNOWN');
 assert.equal(audit.systemGapPairs, 0, 'complete-input pair audit must not contain unexplained system-gap UNKNOWN results');
 assert.equal(audit.unknownReasons?.system_gap, 0, 'all UNKNOWN outcomes must map to an explicit product/evidence boundary');
+assert.equal(audit.unknownReasons?.missing_species_fact, 0, 'internal species-review backlog must never surface as a user-facing UNKNOWN');
 assert.equal(audit.unknownReasons?.missing_user_input, 0, 'complete synthetic tank inputs must not be mislabeled as missing user input');
+assert.equal(
+  (audit.unknownReasons?.unresolved_identity || 0) + (audit.unknownReasons?.public_evidence_insufficient || 0),
+  audit.statuses?.insufficient_data,
+  'with complete tank inputs, every UNKNOWN must be explained only by unresolved identity or genuinely insufficient public evidence',
+);
 
 console.log(
   'Compatibility decision-impact queue PASS:',

@@ -1,7 +1,7 @@
 {
   "auditPolicy": {
     "scope": "all unique fish-domain pairs under complete synthetic tank inputs",
-    "note": "The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; the hard invariants are fully-informed UNKNOWN = 0 and unexplained system_gap UNKNOWN = 0."
+    "note": "The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; with complete tank inputs the hard invariants are fully-informed UNKNOWN = 0, internal missing_species_fact/system_gap UNKNOWN = 0, and every remaining UNKNOWN must be unresolved identity or genuinely insufficient public evidence."
   },
   "catalogObjects": 486,
   "compatibilityDomainObjects": 409,

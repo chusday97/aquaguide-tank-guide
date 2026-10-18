@@ -126,8 +126,10 @@ const missingTank = decisionFor([
 assert.equal(missingTank.status, 'insufficient_data');
 assert.ok(missingTank.metadata.domainRuleCodes.includes('tank_missing'));
 const missingTankAction = assertActionContract('missing tank input', missingTank);
+const missingTankPlan = buildCompatibilityDecisionPlan(missingTank);
 assert.equal(missingTankAction.authorityLevel, 'information_required');
 assert.ok(missingTankAction.sourceRuleCodes.includes('tank_missing'));
+assert.equal(missingTankPlan.unknownReason, 'missing_user_input');
 assert.match(missingTankAction.immediateAction, /补齐|鱼缸|再算|再判断/);
 
 const resolvedSpeciesAuthority = decisionFor([
@@ -168,7 +170,9 @@ assert.equal(hardEvidenceCeiling.status, 'insufficient_data');
 assert.equal(hardEvidenceCeiling.metadata.decisionReadiness, 'unknown');
 assert.ok(hardEvidenceCeiling.metadata.domainRuleCodes.includes('species_public_evidence_insufficient'));
 const evidenceAction = assertActionContract('hard public evidence ceiling', hardEvidenceCeiling);
+const hardEvidencePlan = buildCompatibilityDecisionPlan(hardEvidenceCeiling);
 assert.ok(evidenceAction.sourceRuleCodes.includes('species_public_evidence_insufficient'));
+assert.equal(hardEvidencePlan.unknownReason, 'public_evidence_insufficient');
 assert.match(evidenceAction.headline, /公开资料|可靠公开/);
 assert.match(evidenceAction.primaryReason, /可靠公开|来源|风险边界/);
 assert.match(evidenceAction.immediateAction, /不是你少填|可靠公开来源不足/);
@@ -181,7 +185,9 @@ const unresolvedIdentity = decisionFor([
 assert.equal(unresolvedIdentity.status, 'insufficient_data');
 assert.ok(unresolvedIdentity.metadata.domainRuleCodes.includes('species_identity_unresolved'));
 const identityAction = assertActionContract('unresolved identity', unresolvedIdentity);
+const unresolvedIdentityPlan = buildCompatibilityDecisionPlan(unresolvedIdentity);
 assert.ok(identityAction.sourceRuleCodes.includes('species_identity_unresolved'));
+assert.equal(unresolvedIdentityPlan.unknownReason, 'unresolved_identity');
 assert.match(identityAction.headline, /具体物种|身份/);
 assert.match(identityAction.primaryReason, /身份|物种|品系/);
 assert.match(identityAction.observeAfterAction || '', /确认|重新/);

@@ -147,8 +147,8 @@ const plainRuleText = (
     const fact = code.slice('required_fact_'.length, -'_missing'.length);
     return `这个物种的${factLabels[fact] || '关键混养资料'}还没有达到可靠判断要求。`;
   }
-  if (code === 'species_evidence_unreviewed') {
-    return '其中有物种的关键混养资料还没有审核完整。';
+  if (code === 'species_evidence_unreviewed' || code === 'behavior_evidence_unreviewed') {
+    return '其中有物种的关键混养资料还没有完成可靠审核。';
   }
   if (code === 'tank_missing') return '还缺少当前鱼缸的基础信息。';
   if (code === 'tank_water_type_missing' || code === 'water_type_unknown' || code === 'candidate_water_type_missing') {
@@ -282,10 +282,10 @@ const deterministicActionsFor = (
         ? '先补齐缺失的物种核心资料，再重新判断当前组合。'
         : '先不要加入；补齐缺失的物种核心资料后再重新判断。'];
     }
-    if (codes.has('species_evidence_unreviewed')) {
+    if (codes.has('species_evidence_unreviewed') || codes.has('behavior_evidence_unreviewed')) {
       return [assessmentMode === 'current_tank'
-        ? '等关键混养资料审核完整后，再重新判断当前组合是否需要调整。'
-        : '先不要加入；等关键混养资料审核完整后再重新判断。'];
+        ? '这不是你少填了信息；等关键混养资料完成可靠审核后，再重新判断当前组合。'
+        : '这不是你少填了信息；先不要加入，等关键混养资料完成可靠审核后再判断。'];
     }
     if (codes.has('tank_water_type_missing') || codes.has('water_type_unknown') || codes.has('candidate_water_type_missing')) {
       return ['先确认双方需要的水体类型，再重新判断是否适合同缸。'];
@@ -294,8 +294,8 @@ const deterministicActionsFor = (
       return ['先补充当前稳定水温和物种适温范围，再重新判断。'];
     }
     return [assessmentMode === 'current_tank'
-      ? '先补齐缺失信息，再重新判断当前组合是否需要调整。'
-      : '先不要加入；补齐缺失信息后再重新判断。'];
+      ? '这不是你少填了信息；当前系统资料未完成可靠审核，审核完成后再重新判断当前组合。'
+      : '这不是你少填了信息；当前系统资料未完成可靠审核，先不要加入。'];
   }
 
   if (decision.status === 'caution' && codes.has('predation_scope_uncertain')) {

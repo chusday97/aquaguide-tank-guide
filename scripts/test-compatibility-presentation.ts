@@ -70,8 +70,11 @@ const model = buildCompatibilityVisualResult({
 });
 assert.equal(model.presentationMode, 'confirmed_facts');
 assert.equal(model.title, '暂时无法判断');
-assert.equal(model.statusLabel, '现在还不能可靠判断');
+assert.equal(model.statusLabel, '系统资料还没完成审核');
+assert.match(partial.primaryActionText, /不是你少填|审核/);
+assert.match(unavailable.primaryActionText, /不是你少填|审核/);
 assert.doesNotMatch(JSON.stringify(model), /资料不足|信息不足/);
+assert.doesNotMatch(model.statusLabel, /补齐|少填/);
 
 for (const file of [
   'src/components/CompatibilityRiskCalculator.tsx',
