@@ -1279,6 +1279,28 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Karbi Anglong authority overrides stale 18-24C catalog temperature at 25C',
+    run: () => {
+      const karbiAnglong = fishData.find(item => item.id === 'sp_0411');
+      if (!karbiAnglong) return false;
+      const profile = getReviewedCompatibilityProfileForFish(karbiAnglong);
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '200', width: '80', height: '65' }, targetTemperature: '25' }),
+        candidateSpecies: karbiAnglong,
+        candidateQuantity: 1,
+      });
+      return karbiAnglong.waterTemperature === '18-24°C'
+        && profile?.reviewStatus === 'reviewed'
+        && profile.citations.some(citation => citation.id === 'batch21-fishbase-channa-stewartii')
+        && result.status === 'compatible'
+        && result.metadata.domainRuleCodes.includes('compatibility_clear')
+        && result.metadata.domainRuleCodes.every(code => code !== 'tank_temperature_conflict')
+        && result.blockingRules.every(rule => rule.code !== 'tank_temperature_conflict')
+        && result.evidenceIds?.includes('fishbook-channa-stewartii-karbi-anglong-phase2-07')
+        && result.evidenceIds?.includes('batch21-fishbase-channa-stewartii');
+    },
+  },
+  {
     name: 'reviewed Catalog temperature overrides stale Oscar legacy range while scoped behavior authority is preserved',
     run: () => {
       const oscar = fishData.find(item => item.id === 'sp_0451');

@@ -52,6 +52,7 @@ const relationshipBySpeciesId: Record<string, CatalogCanonicalRelationshipType> 
   sp_0284: 'color_morph',
   sp_0234: 'color_morph',
   sp_0231: 'color_morph',
+  sp_0411: 'geographic_variant',
 };
 
 const latestReviewedIdentity = (speciesId: string) => getApprovedCatalogFieldReviews(speciesId)

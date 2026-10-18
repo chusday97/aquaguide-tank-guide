@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 91,
-  "coreFieldCompleteSpecies": 106,
+  "genericOnboardingReadySpecies": 92,
+  "coreFieldCompleteSpecies": 107,
   "oneFieldGapSpecies": 8,
-  "runtimeReviewedProfileSpecies": 155,
-  "domainOrIdentityHeldSpecies": 272,
+  "runtimeReviewedProfileSpecies": 156,
+  "domainOrIdentityHeldSpecies": 271,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 160,
+      "reviewed_supported": 161,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 43,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 145,
+      "reviewed_supported": 146,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 139,
+      "reviewed_supported": 140,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 149,
+      "reviewed_supported": 150,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 137,
+      "reviewed_supported": 138,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 66,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 128,
+      "reviewed_supported": 129,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 75,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 91,
+      "reviewed_supported": 92,
       "reviewed_neutral_or_negative": 37,
       "reviewed_unknown": 75,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 78,
-      "reviewed_neutral_or_negative": 35,
+      "reviewed_neutral_or_negative": 36,
       "reviewed_unknown": 90,
       "needs_research": 0,
-      "missing_identity_or_domain": 272,
+      "missing_identity_or_domain": 271,
       "not_applicable": 11
     }
   },
@@ -34135,83 +34135,103 @@
       "name": "蓝宝石雷龙 (特级选育)",
       "scientificName": "Channa stewartii var. Karbi Anglong",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "batch21-fishbase-channa-stewartii",
+            "seriouslyfish-channa-stewartii"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "batch21-fishbase-channa-stewartii",
+            "seriouslyfish-channa-stewartii"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "batch21-fishbase-channa-stewartii",
+            "seriouslyfish-channa-stewartii"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "batch21-fishbase-channa-stewartii",
+            "seriouslyfish-channa-stewartii"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "seriouslyfish-channa-stewartii"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "seriouslyfish-channa-stewartii"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "seriouslyfish-channa-stewartii"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-channa-stewartii-karbi-anglong"
+            "fishbook-channa-stewartii-karbi-anglong-phase2-07",
+            "golden-aquaria-channa-stewartii-karbi-anglong-phase2-07",
+            "icar-cifa-channa-stewartii-live-fish"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

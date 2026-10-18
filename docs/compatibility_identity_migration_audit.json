@@ -6,25 +6,25 @@
     "autoMigrationRule": "No active identity boundary is auto-migrated from names, suffixes, aliases, parent-taxon similarity, or pair impact. Reviewed identity evidence is required.",
     "impactSemantics": "affectedIdentityUnknownPairs counts current unresolved-identity fish pairs in which the catalog object participates. soleBoundaryIdentityUnknownPairs is the stronger prioritization signal because the opposite fish has no active identity boundary. Neither metric guarantees a compatible verdict after migration; other evidence constraints may remain."
   },
-  "activeIdentityBoundaries": 107,
-  "fishDomainIdentityBoundaries": 105,
-  "identityUnknownPairs": 18188,
-  "identityUnknownPairsWithOneActiveBoundary": 13532,
+  "activeIdentityBoundaries": 106,
+  "fishDomainIdentityBoundaries": 104,
+  "identityUnknownPairs": 18285,
+  "identityUnknownPairsWithOneActiveBoundary": 13629,
   "identityUnknownPairsWithTwoActiveBoundaries": 4656,
   "identityUnknownPairsWithoutActiveBoundary": 0,
-  "pairAttributionCount": 22844,
+  "pairAttributionCount": 22941,
   "autoMigratableCount": 0,
   "boundaryCodeCounts": {
     "commercial_hybrid_identity_unresolved": 3,
     "catalog_scientific_name_unresolved": 26,
     "catalog_parent_taxon_unresolved": 11,
     "trade_name_taxon_ambiguous": 2,
-    "catalog_variant_identity_unresolved": 64,
+    "catalog_variant_identity_unresolved": 63,
     "accepted_taxon_alias_trade_ambiguous": 1
   },
   "migrationBucketCounts": {
     "commercial_hybrid_hold": 3,
-    "variant_object_evidence_required": 89,
+    "variant_object_evidence_required": 88,
     "parent_taxon_resolution_required": 11,
     "trade_name_disambiguation_required": 2,
     "taxonomic_research_candidate": 1,
@@ -53,8 +53,8 @@
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -78,8 +78,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -103,8 +103,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -128,8 +128,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -153,8 +153,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -178,8 +178,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -208,8 +208,8 @@
       "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -233,8 +233,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -258,8 +258,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -283,8 +283,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -308,8 +308,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -333,8 +333,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -358,8 +358,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -383,8 +383,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -408,8 +408,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -433,8 +433,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -458,8 +458,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -483,8 +483,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -508,8 +508,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -533,8 +533,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -558,8 +558,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -584,8 +584,8 @@
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -609,8 +609,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -634,8 +634,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -659,8 +659,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -684,8 +684,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -709,8 +709,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -734,8 +734,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -759,8 +759,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -784,8 +784,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     }
   ],
@@ -812,8 +812,8 @@
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -837,8 +837,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -862,8 +862,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -887,8 +887,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -912,8 +912,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -937,8 +937,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -967,8 +967,8 @@
       "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -992,8 +992,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1017,8 +1017,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1042,8 +1042,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1067,8 +1067,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1092,8 +1092,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1117,8 +1117,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1142,8 +1142,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1167,8 +1167,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1192,8 +1192,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1217,8 +1217,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1242,8 +1242,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1267,8 +1267,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1292,8 +1292,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1317,8 +1317,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1343,8 +1343,8 @@
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1368,8 +1368,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1393,8 +1393,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1418,8 +1418,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1443,8 +1443,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1468,8 +1468,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1493,8 +1493,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1518,8 +1518,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1543,8 +1543,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1568,8 +1568,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1593,8 +1593,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1618,8 +1618,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1643,8 +1643,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1668,8 +1668,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1693,8 +1693,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1718,8 +1718,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1743,8 +1743,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1768,8 +1768,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1793,8 +1793,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1818,8 +1818,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1843,8 +1843,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1868,8 +1868,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1893,8 +1893,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1918,8 +1918,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1943,8 +1943,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1968,8 +1968,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -1993,8 +1993,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2018,8 +2018,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2043,8 +2043,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2068,8 +2068,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2093,8 +2093,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2118,8 +2118,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2143,8 +2143,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2168,8 +2168,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2193,8 +2193,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 245,
-      "soleBoundaryIdentityUnknownPairs": 149,
+      "affectedIdentityUnknownPairs": 246,
+      "soleBoundaryIdentityUnknownPairs": 150,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2220,8 +2220,8 @@
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 244,
-      "soleBoundaryIdentityUnknownPairs": 148,
+      "affectedIdentityUnknownPairs": 245,
+      "soleBoundaryIdentityUnknownPairs": 149,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2245,8 +2245,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2270,8 +2270,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2295,8 +2295,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2320,8 +2320,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2345,8 +2345,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2370,8 +2370,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2395,8 +2395,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2420,8 +2420,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2445,8 +2445,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2470,8 +2470,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2495,8 +2495,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2520,8 +2520,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2545,8 +2545,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2570,8 +2570,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2595,8 +2595,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2620,8 +2620,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2645,8 +2645,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2670,8 +2670,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2695,8 +2695,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2720,8 +2720,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2745,8 +2745,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2770,8 +2770,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2795,8 +2795,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2820,8 +2820,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2845,8 +2845,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2870,8 +2870,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2895,8 +2895,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2920,8 +2920,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2945,8 +2945,8 @@
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2970,8 +2970,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -2995,8 +2995,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3020,8 +3020,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3045,8 +3045,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3070,8 +3070,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3095,8 +3095,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3120,8 +3120,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3145,8 +3145,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3170,8 +3170,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3195,8 +3195,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3220,8 +3220,8 @@
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 222,
-      "soleBoundaryIdentityUnknownPairs": 126,
+      "affectedIdentityUnknownPairs": 223,
+      "soleBoundaryIdentityUnknownPairs": 127,
       "sharedBoundaryIdentityUnknownPairs": 96
     },
     {
@@ -3393,31 +3393,6 @@
       "singleCandidateHint": "Tanichthys albonubes ornamental Longfin lineage",
       "sourceIds": [
         "batch35-fishbase-tanichthys-albonubes-longfin"
-      ],
-      "reviewedAt": "2026-10-12",
-      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "genericOnboardingReady": false,
-      "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 0,
-      "soleBoundaryIdentityUnknownPairs": 0,
-      "sharedBoundaryIdentityUnknownPairs": 0
-    },
-    {
-      "speciesId": "sp_0411",
-      "name": "蓝宝石雷龙 (特级选育)",
-      "scientificName": "Channa stewartii var. Karbi Anglong",
-      "lifeType": "fish",
-      "boundaryCode": "catalog_variant_identity_unresolved",
-      "resolvedGranularity": "variant_identity_unresolved",
-      "migrationBucket": "variant_object_evidence_required",
-      "migrationReadiness": "blocked_review_required",
-      "autoMigrationAllowed": false,
-      "candidateTaxa": [
-        "Channa stewartii ornamental Karbi Anglong lineage"
-      ],
-      "singleCandidateHint": "Channa stewartii ornamental Karbi Anglong lineage",
-      "sourceIds": [
-        "batch25-fishbase-channa-stewartii-karbi-anglong"
       ],
       "reviewedAt": "2026-10-12",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",

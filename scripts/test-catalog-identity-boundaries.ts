@@ -243,7 +243,7 @@ assert.ok(albinoArowanaCorrection?.citationIds.includes('konelayan-sabah-sclerop
 assert.equal(getCatalogIdentityBoundary('sp_0242'), undefined, 'Sabah reviewed farm identity evidence must supersede the historical Albino Arowana hold');
 assert.ok(getReviewedCompatibilityProfile('sp_0242'));
 
-for (const speciesId of ['sp_0372','sp_0373','sp_0411','sp_0416']) {
+for (const speciesId of ['sp_0372','sp_0373','sp_0416']) {
   assert.equal(getCatalogIdentityBoundary(speciesId)?.code, 'catalog_variant_identity_unresolved');
 }
 for (const speciesId of ['sp_0297','sp_0414']) {
@@ -310,6 +310,20 @@ assert.ok(albinoPandaCorrection?.citationIds.includes('nicks-aquarium-hoplisoma-
 assert.ok(albinoPandaCorrection?.citationIds.includes('maidenhead-hoplisoma-panda-albino-phase2-06'));
 assert.equal(getCatalogIdentityBoundary('sp_0231'), undefined, 'reviewed Albino Panda exact-object identity evidence must supersede the historical variant hold');
 assert.ok(getReviewedCompatibilityProfile('sp_0231'));
+
+const historicalKarbiAnglongHold = catalogIdentityBoundaries.sp_0411;
+assert.equal(historicalKarbiAnglongHold?.code, 'catalog_variant_identity_unresolved');
+const karbiAnglongCorrection = getCatalogFieldReviews('sp_0411').filter(review => review.field === 'identity').at(-1);
+assert.equal(karbiAnglongCorrection?.resolution, 'supported');
+assert.deepEqual(karbiAnglongCorrection?.proposedValue, {
+  scientificName: 'Channa stewartii var. Karbi Anglong',
+  baseSpeciesKey: 'Channa stewartii',
+  variantKey: 'Karbi Anglong',
+});
+assert.ok(karbiAnglongCorrection?.citationIds.includes('fishbook-channa-stewartii-karbi-anglong-phase2-07'));
+assert.ok(karbiAnglongCorrection?.citationIds.includes('golden-aquaria-channa-stewartii-karbi-anglong-phase2-07'));
+assert.equal(getCatalogIdentityBoundary('sp_0411'), undefined, 'reviewed Karbi Anglong locality identity evidence must supersede the historical variant hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0411'));
 
 for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0235','sp_0247','sp_0248','sp_0256','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
