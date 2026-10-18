@@ -23,7 +23,7 @@ export type CompatibilityFieldCoverageCell = {
   status: CompatibilityFieldCoverageStatus;
   disposition: CompatibilityResearchDisposition;
   evidenceIds: string[];
-  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'variant_evidence_ceiling' | 'research_evidence_ceiling' | 'none';
+  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'canonical_inheritance' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'variant_evidence_ceiling' | 'research_evidence_ceiling' | 'none';
   reasonCode: string | null;
 };
 export type CompatibilityFieldCoverageRow = {
@@ -220,6 +220,19 @@ const profileCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFi
   return null;
 };
 
+const canonicalInheritedCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell | null => {
+  if (!getCatalogCanonicalIdentity(fish.id) || !canInheritCompatibilityFact(fish.id, field)) return null;
+  const inherited = knowledgeCell(fish, field) ?? profileCell(fish, field);
+  if (!inherited) return null;
+  if (inherited.disposition !== 'ready') return null;
+  if (inherited.status !== 'reviewed_supported' && inherited.status !== 'reviewed_neutral_or_negative') return null;
+  return {
+    ...inherited,
+    authoritySource: 'canonical_inheritance',
+    reasonCode: 'reviewed_canonical_variant_inheritance',
+  };
+};
+
 const evidenceCeilingForField = (fish: Fish, field: CompatibilityCoreField) => {
   const ceilings = getKnowledgeEvidenceCeilings(fish.id);
   if (field === 'territoriality' || field === 'predation') {
@@ -245,10 +258,25 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   const supported = [...exactReviews].reverse().find(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id)));
   if (supported) {
     const status = supportedValueStatus(supported);
+    if (status !== 'reviewed_unknown') {
+      return { status, disposition: 'ready', evidenceIds: supported.citationIds, authoritySource: 'catalog_field_review', reasonCode: null };
+    }
+  }
+
+  // A reviewed same-species color identity changes the authority question:
+  // the variant source does not need to restate every base-species husbandry
+  // fact. Exact positive variant evidence still wins above; otherwise an
+  // allowlisted canonical fact may inherit reviewed base authority before an
+  // old variant-specific reviewed_unknown/evidence ceiling is considered.
+  const inherited = canonicalInheritedCell(fish, field);
+  if (inherited) return inherited;
+
+  if (supported) {
+    const status = supportedValueStatus(supported);
     if (status === 'reviewed_unknown' && variantResearchCeiling) {
       return { status, disposition: 'terminal_hold', evidenceIds: supported.citationIds, authoritySource: 'variant_evidence_ceiling', reasonCode: variantResearchCeiling.reasonCode };
     }
-    return { status, disposition: status === 'reviewed_unknown' ? 'targeted_source_expansion' : 'ready', evidenceIds: supported.citationIds, authoritySource: 'catalog_field_review', reasonCode: status === 'reviewed_unknown' ? 'reviewed_supported_record_contains_unknown_value' : null };
+    return { status, disposition: 'targeted_source_expansion', evidenceIds: supported.citationIds, authoritySource: 'catalog_field_review', reasonCode: 'reviewed_supported_record_contains_unknown_value' };
   }
   // A historical reviewed_unknown means only “this source did not establish the
   // field at that time”. It must not permanently suppress a later explicit,

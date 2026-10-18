@@ -1,5 +1,5 @@
 import type { Fish } from '../../types';
-import type { SpeciesKnowledgeProfile } from './knowledge.types';
+import type { KnowledgeFieldEvidence, SpeciesKnowledgeProfile } from './knowledge.types';
 import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 import { getCatalogCanonicalIdentity, hasFullGenericCompatibilityInheritance } from '../../data/catalogCanonicalIdentity';
 import { phase2Batch02Knowledge } from './phase2Batch02Authority';
@@ -1774,6 +1774,65 @@ export const getReviewedSpeciesKnowledge = (speciesId: string) => (
     : reviewedKnowledgeBySpeciesId[speciesId]
 );
 
+const hasDirectReviewedCompatibilityKnowledge = (knowledge?: SpeciesKnowledgeProfile['knowledge']) => (
+  knowledge?.environment?.evidence.reviewStatus === 'reviewed'
+  && knowledge.socialBehavior?.evidence.reviewStatus === 'reviewed'
+  && knowledge.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
+);
+
+const mergeCanonicalColorMorphKnowledge = (
+  base: SpeciesKnowledgeProfile['knowledge'],
+  direct: SpeciesKnowledgeProfile['knowledge'] | undefined,
+  identityEvidenceSourceIds: string[],
+): SpeciesKnowledgeProfile['knowledge'] => {
+  const mergeEvidence = (
+    baseEvidence?: KnowledgeFieldEvidence,
+    directEvidence?: KnowledgeFieldEvidence,
+  ): KnowledgeFieldEvidence | undefined => {
+    const authority = directEvidence ?? baseEvidence;
+    if (!authority) return undefined;
+    return {
+      ...baseEvidence,
+      ...directEvidence,
+      sourceIds: Array.from(new Set([
+        ...(baseEvidence?.sourceIds || []),
+        ...(directEvidence?.sourceIds || []),
+        ...identityEvidenceSourceIds,
+      ])),
+    };
+  };
+
+  const mergeReviewedBlock = <T extends { evidence: KnowledgeFieldEvidence }>(
+    baseBlock?: T,
+    directBlock?: T,
+  ): T | undefined => {
+    if (!baseBlock && !directBlock) return undefined;
+    const evidence = mergeEvidence(baseBlock?.evidence, directBlock?.evidence);
+    if (!evidence) return undefined;
+    return {
+      ...(baseBlock || {}),
+      ...(directBlock || {}),
+      evidence,
+    } as T;
+  };
+
+  const baseSex = base.sexIdentification;
+  const directSex = direct?.sexIdentification;
+  return {
+    sexIdentification: {
+      ...baseSex,
+      ...(directSex || {}),
+      ...(baseSex.evidence || directSex?.evidence
+        ? { evidence: mergeEvidence(baseSex.evidence, directSex?.evidence) }
+        : {}),
+    },
+    reproduction: mergeReviewedBlock(base.reproduction, direct?.reproduction),
+    environment: mergeReviewedBlock(base.environment, direct?.environment),
+    socialBehavior: mergeReviewedBlock(base.socialBehavior, direct?.socialBehavior),
+    spaceAndGrowth: mergeReviewedBlock(base.spaceAndGrowth, direct?.spaceAndGrowth),
+  };
+};
+
 export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
   const canonicalIdentity = getCatalogCanonicalIdentity(fish.id);
   if (canonicalIdentity) {
@@ -1782,7 +1841,26 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     // Partial policies stay fail-closed here; field-specific completion is
     // handled by direct variant authority instead of leaking the whole base.
     if (hasFullGenericCompatibilityInheritance(fish.id)) {
-      return reviewedKnowledgeBySpeciesId[canonicalIdentity.canonicalSpeciesId];
+      const baseKnowledge = reviewedKnowledgeBySpeciesId[canonicalIdentity.canonicalSpeciesId];
+      if (!baseKnowledge) return reviewedKnowledgeBySpeciesId[fish.id];
+
+      // A policy-promoted color morph keeps the canonical species as its
+      // factual baseline while preserving any exact reviewed variant overlay.
+      // Identity evidence is appended to the evidence chain so inherited facts
+      // remain traceable to both the canonical source and the reviewed bridge.
+      if (canonicalIdentity.registrySource === 'reviewed_color_morph_policy') {
+        const directKnowledge = reviewedKnowledgeBySpeciesId[fish.id];
+        if (hasDirectReviewedCompatibilityKnowledge(directKnowledge)) {
+          return directKnowledge;
+        }
+        return mergeCanonicalColorMorphKnowledge(
+          baseKnowledge,
+          directKnowledge,
+          canonicalIdentity.identityEvidenceSourceIds,
+        );
+      }
+
+      return baseKnowledge;
     }
     return reviewedKnowledgeBySpeciesId[fish.id];
   }

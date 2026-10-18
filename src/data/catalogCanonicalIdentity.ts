@@ -16,6 +16,10 @@ export type CatalogCanonicalRelationshipType =
   | 'geographic_variant'
   | 'same_taxon_catalog_alias';
 
+export type CatalogCanonicalRegistrySource =
+  | 'explicit_reviewed_bridge'
+  | 'reviewed_color_morph_policy';
+
 export type CompatibilityInheritancePolicy = {
   mode: 'allowlist';
   inheritedFacts: CompatibilityRequiredFact[];
@@ -30,10 +34,33 @@ export type CatalogCanonicalIdentity = {
   identityStatus: 'reviewed';
   variantKey: string;
   identityEvidenceSourceIds: string[];
+  registrySource: CatalogCanonicalRegistrySource;
   inheritancePolicy: CompatibilityInheritancePolicy;
 };
 
 const allGenericFacts = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityRequiredFact[];
+
+const reviewedColorOnlyVariantKeys = new Set([
+  'albino',
+  'blue',
+  'color_morph',
+  'gold',
+  'green',
+  'platinum',
+  'red',
+  'super_red',
+  'white',
+]);
+
+const normalizeVariantKey = (value: string) => value
+  .trim()
+  .toLowerCase()
+  .replace(/[\s/-]+/g, '_')
+  .replace(/_+/g, '_');
+
+export const isReviewedColorOnlyVariantKey = (variantKey: string) => (
+  reviewedColorOnlyVariantKeys.has(normalizeVariantKey(variantKey))
+);
 
 const relationshipBySpeciesId: Record<string, CatalogCanonicalRelationshipType> = {
   sp_0176: 'color_morph',
@@ -58,12 +85,14 @@ const relationshipBySpeciesId: Record<string, CatalogCanonicalRelationshipType> 
 };
 
 const latestReviewedIdentity = (speciesId: string) => getApprovedCatalogFieldReviews(speciesId)
-  .filter(review => review.field === 'identity')
+  .filter(review => review.field === 'identity' && review.resolution === 'supported')
   .at(-1);
 
 const buildCanonicalIdentity = (
   catalogSpeciesId: string,
   canonicalSpeciesId: string,
+  relationshipType: CatalogCanonicalRelationshipType,
+  registrySource: CatalogCanonicalRegistrySource,
 ): CatalogCanonicalIdentity => {
   const catalog = fishData.find(item => item.id === catalogSpeciesId);
   const canonical = fishData.find(item => item.id === canonicalSpeciesId);
@@ -85,9 +114,6 @@ const buildCanonicalIdentity = (
     throw new Error('Canonical identity variant key missing: ' + catalogSpeciesId);
   }
 
-  const relationshipType = relationshipBySpeciesId[catalogSpeciesId];
-  if (!relationshipType) throw new Error('Canonical identity relationship type missing: ' + catalogSpeciesId);
-
   return {
     catalogSpeciesId,
     canonicalSpeciesId,
@@ -96,6 +122,7 @@ const buildCanonicalIdentity = (
     identityStatus: 'reviewed',
     variantKey: value.variantKey.trim(),
     identityEvidenceSourceIds: [...identityReview.citationIds],
+    registrySource,
     inheritancePolicy: {
       mode: 'allowlist',
       inheritedFacts: [...allGenericFacts],
@@ -104,12 +131,67 @@ const buildCanonicalIdentity = (
   };
 };
 
-export const catalogCanonicalIdentities: Record<string, CatalogCanonicalIdentity> = Object.fromEntries(
-  Object.entries(catalogIdentityCorrectionBaseSpeciesIds)
-    .map(([catalogSpeciesId, canonicalSpeciesId]) => [
+const explicitCanonicalIdentityEntries = Object.entries(catalogIdentityCorrectionBaseSpeciesIds)
+  .map(([catalogSpeciesId, canonicalSpeciesId]) => {
+    const relationshipType = relationshipBySpeciesId[catalogSpeciesId];
+    if (!relationshipType) throw new Error('Canonical identity relationship type missing: ' + catalogSpeciesId);
+    return [
       catalogSpeciesId,
-      buildCanonicalIdentity(catalogSpeciesId, canonicalSpeciesId),
-    ]),
+      buildCanonicalIdentity(
+        catalogSpeciesId,
+        canonicalSpeciesId,
+        relationshipType,
+        'explicit_reviewed_bridge',
+      ),
+    ] as const;
+  });
+
+const findCanonicalBaseCatalogSpeciesId = (
+  catalogSpeciesId: string,
+  canonicalScientificName: string,
+) => fishData.find(item => {
+  if (item.id === catalogSpeciesId) return false;
+  if (item.scientificName.trim() !== canonicalScientificName.trim()) return false;
+  if (getCatalogIdentityBoundary(item.id)) return false;
+  const identity = latestReviewedIdentity(item.id);
+  if (!identity || typeof identity.proposedValue !== 'object' || identity.proposedValue === null) return true;
+  const value = identity.proposedValue as { variantKey?: unknown };
+  return typeof value.variantKey !== 'string' || !value.variantKey.trim();
+})?.id ?? null;
+
+const explicitCanonicalSpeciesIds = new Set(Object.keys(catalogIdentityCorrectionBaseSpeciesIds));
+
+const reviewedColorPolicyEntries = fishData.flatMap(catalog => {
+  if (explicitCanonicalSpeciesIds.has(catalog.id)) return [];
+  if (getCatalogIdentityBoundary(catalog.id)) return [];
+
+  const identityReview = latestReviewedIdentity(catalog.id);
+  if (!identityReview || typeof identityReview.proposedValue !== 'object' || identityReview.proposedValue === null) return [];
+  const value = identityReview.proposedValue as { baseSpeciesKey?: unknown; variantKey?: unknown };
+  if (typeof value.baseSpeciesKey !== 'string' || !value.baseSpeciesKey.trim()) return [];
+  if (typeof value.variantKey !== 'string' || !isReviewedColorOnlyVariantKey(value.variantKey)) return [];
+
+  const canonicalSpeciesId = findCanonicalBaseCatalogSpeciesId(catalog.id, value.baseSpeciesKey);
+  if (!canonicalSpeciesId) return [];
+
+  return [[
+    catalog.id,
+    buildCanonicalIdentity(
+      catalog.id,
+      canonicalSpeciesId,
+      'color_morph',
+      'reviewed_color_morph_policy',
+    ),
+  ] as const];
+});
+
+export const catalogCanonicalIdentities: Record<string, CatalogCanonicalIdentity> = Object.fromEntries([
+  ...explicitCanonicalIdentityEntries,
+  ...reviewedColorPolicyEntries,
+]);
+
+export const reviewedColorPolicyCanonicalSpeciesIds = new Set(
+  reviewedColorPolicyEntries.map(([speciesId]) => speciesId),
 );
 
 export const getCatalogCanonicalIdentity = (speciesId: string) => catalogCanonicalIdentities[speciesId];

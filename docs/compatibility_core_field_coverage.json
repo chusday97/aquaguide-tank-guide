@@ -11,7 +11,7 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 94,
+  "genericOnboardingReadySpecies": 97,
   "coreFieldCompleteSpecies": 109,
   "oneFieldGapSpecies": 8,
   "runtimeReviewedProfileSpecies": 158,
@@ -1380,7 +1380,7 @@
       "scientificName": "Mikrogeophagus ramirezi var. Gold",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -1445,8 +1445,8 @@
           "evidenceIds": [
             "aquarium-industries-ramirezi-care-sheet"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -1454,8 +1454,8 @@
           "evidenceIds": [
             "aquarium-industries-ramirezi-care-sheet"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -12173,8 +12173,8 @@
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",
@@ -12184,8 +12184,8 @@
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "compatibility_profile",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -12567,8 +12567,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
           "status": "reviewed_neutral_or_negative",
@@ -12578,8 +12578,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -13088,8 +13088,8 @@
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",
@@ -13099,8 +13099,8 @@
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "compatibility_profile",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -14426,7 +14426,7 @@
       "scientificName": "Gymnocorymbus ternetzi var. Albino",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -14494,8 +14494,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
           "status": "reviewed_neutral_or_negative",
@@ -14505,8 +14505,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -14516,8 +14516,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -17309,7 +17309,7 @@
       "scientificName": "Gymnocorymbus ternetzi var. White",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -17377,8 +17377,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
           "status": "reviewed_neutral_or_negative",
@@ -17388,8 +17388,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -17399,8 +17399,8 @@
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -19379,8 +19379,8 @@
           "evidenceIds": [
             "batch33-fishbase-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -19388,8 +19388,8 @@
           "evidenceIds": [
             "batch33-fishbase-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
           "status": "reviewed_supported",
@@ -19397,8 +19397,8 @@
           "evidenceIds": [
             "batch33-fishbase-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -19406,8 +19406,8 @@
           "evidenceIds": [
             "seriouslyfish-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
           "status": "reviewed_supported",
@@ -19415,8 +19415,8 @@
           "evidenceIds": [
             "seriouslyfish-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -19424,8 +19424,8 @@
           "evidenceIds": [
             "seriouslyfish-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
           "status": "reviewed_neutral_or_negative",
@@ -19433,8 +19433,8 @@
           "evidenceIds": [
             "seriouslyfish-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -19442,8 +19442,8 @@
           "evidenceIds": [
             "seriouslyfish-corydoras-panda"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -19625,8 +19625,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -19635,8 +19635,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
           "status": "reviewed_supported",
@@ -19645,8 +19645,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -19655,8 +19655,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
           "status": "reviewed_supported",
@@ -19665,8 +19665,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -19675,8 +19675,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -19685,8 +19685,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",
@@ -19697,8 +19697,8 @@
             "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
-          "authoritySource": "compatibility_profile",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -36713,8 +36713,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -36723,8 +36723,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
           "status": "reviewed_supported",
@@ -36733,8 +36733,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -36743,8 +36743,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
           "status": "reviewed_supported",
@@ -36753,8 +36753,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -36763,8 +36763,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -36773,8 +36773,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",
@@ -36785,8 +36785,8 @@
             "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
-          "authoritySource": "compatibility_profile",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },

@@ -43,6 +43,7 @@ import { identityCorrectionsPhase2_08Sources } from './catalogReviewBatches/iden
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from './catalogIdentityBoundaries';
+import { getKnowledgeSource } from '../modules/knowledge/knowledgeSources';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1578,7 +1579,13 @@ export const buildCanonicalVariantCompatibilityProfile = (
       ...identityCitations,
       ...base.citations.filter(source => !identityCitations.some(identitySource => identitySource.id === source.id)),
     ],
-    requiredFacts: base.requiredFacts?.filter(field => inherited.has(field)),
+    // The canonical identity allowlist is the declaration of which reviewed
+    // base-species fact families this catalog variant may rely on. Runtime
+    // availability is still checked independently, so declaring an inherited
+    // fact here cannot fabricate a missing physical value.
+    requiredFacts: identity.inheritancePolicy.inheritedFacts.length
+      ? [...identity.inheritancePolicy.inheritedFacts]
+      : undefined,
     ...(base.stockingGuidance && inherited.has('tank_size') && inherited.has('social_behavior')
       ? {
           stockingGuidance: {
@@ -1742,7 +1749,7 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
   const base = profiles[identity.canonicalSpeciesId];
   if (!base) throw new Error('Missing canonical Compatibility base Profile: ' + identity.canonicalSpeciesId);
   const citations = identity.identityEvidenceSourceIds.map(sourceId => {
-    const source = canonicalIdentitySourceById.get(sourceId);
+    const source = canonicalIdentitySourceById.get(sourceId) ?? getKnowledgeSource(sourceId);
     if (!source) throw new Error('Missing canonical identity evidence source: ' + sourceId);
     return source;
   });
