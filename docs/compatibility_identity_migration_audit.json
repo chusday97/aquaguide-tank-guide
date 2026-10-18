@@ -6,7 +6,8 @@
     "autoMigrationRule": "No active identity boundary is auto-migrated from names, suffixes, aliases, parent-taxon similarity, or pair impact. Reviewed identity evidence is required.",
     "impactSemantics": "affectedIdentityUnknownPairs counts current unresolved-identity fish pairs in which the catalog object participates. soleBoundaryIdentityUnknownPairs is the stronger prioritization signal because the opposite fish has no active identity boundary. Neither metric guarantees a compatible verdict after migration; other evidence constraints may remain.",
     "migrationPathSemantics": "migrationPath is a planning lane, not authority. identity_only_after_exact_evidence still requires exact-object identity evidence before canonical inheritance can graduate.",
-    "researchDebtSemantics": "identityResearchDebt records reviewed failed/insufficient evidence passes and known false bridges. It never grants authority; it can only keep or narrow a migration lane."
+    "researchDebtSemantics": "identityResearchDebt records reviewed failed/insufficient evidence passes and known false bridges. It never grants authority; it can only keep or narrow a migration lane.",
+    "terminalDispositionSemantics": "catalogIdentityBoundaries.researchDisposition=terminal_unknown_hold means the reviewed identity lane is closed to automatic re-search until new qualifying evidence or an explicit catalog correction reopens it."
   },
   "activeIdentityBoundaries": 105,
   "fishDomainIdentityBoundaries": 103,
@@ -59,6 +60,7 @@
     "exact_object_evidence_not_found": 3
   },
   "researchedHighImpactHoldCount": 4,
+  "terminalIdentityHoldCount": 105,
   "identityOnlyAfterExactEvidenceCount": 5,
   "partialInheritanceReviewCount": 10,
   "topPriority": [
@@ -81,6 +83,7 @@
         "batch09-fishbase-cichlasoma-var"
       ],
       "reviewedAt": "2026-10-11",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "migrationPath": "hybrid_object_specific_hold",
       "nextAction": "Keep this commercial hybrid object-specific; do not force it onto a single parent species without lineage evidence.",
@@ -121,6 +124,7 @@
         "batch26-fishbase-carassius-auratus-butterfly-tail"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -161,6 +165,7 @@
         "batch26-fishbase-carassius-auratus-red-cap"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -201,6 +206,7 @@
         "batch27-fishbase-carassius-auratus-pearlscale"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -241,6 +247,7 @@
         "batch27-fishbase-carassius-auratus-bubble-eye"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -281,6 +288,7 @@
         "batch27-fishbase-ancistrus-sp"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -326,6 +334,7 @@
         "seriouslyfish-botia-almorhae-trade-boundary"
       ],
       "reviewedAt": "2026-10-11",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
       "migrationPath": "trade_name_disambiguation",
       "nextAction": "Disambiguate the trade or common-name object to one exact taxon or lineage before Compatibility onboarding.",
@@ -366,6 +375,7 @@
         "seriouslyfish-xiphophorus-hellerii"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -422,6 +432,7 @@
         "batch27-fishbase-ancistrus-sp-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -462,6 +473,7 @@
         "batch28-fishbase-ancistrus-sp-longfin-platinum"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -502,6 +514,7 @@
         "batch28-fishbase-carassius-auratus-red-grass"
       ],
       "reviewedAt": "2026-10-13",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -542,6 +555,7 @@
         "batch09-fishbase-cyprinus-carpio-var"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -582,6 +596,7 @@
         "seriouslyfish-pterophyllum-scalare"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -662,6 +677,7 @@
         "seriouslyfish-trichopodus-trichopterus"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -702,6 +718,7 @@
         "batch11-fishbase-panaque-sp-l191"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -742,6 +759,7 @@
         "batch11-fishbase-leporacanthicus-cf-galaxias"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -782,6 +800,7 @@
         "batch34-fishbase-pangio-kuhlii-variant"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -822,6 +841,7 @@
         "batch12-fishbase-thorichthys-meeki-var"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -862,6 +882,7 @@
         "batch12-fishbase-geophagus-sp-platinum"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -902,6 +923,7 @@
         "batch29-fishbase-ancistrus-sp-gold-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -950,6 +972,7 @@
         "batch13-fishbase-pterophyllum-scalare-marble-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -1007,6 +1030,7 @@
         "batch13-fishbase-cichlasoma-blood-parrot-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "migrationPath": "hybrid_object_specific_hold",
       "nextAction": "Keep this commercial hybrid object-specific; do not force it onto a single parent species without lineage evidence.",
@@ -1047,6 +1071,7 @@
         "batch13-fishbase-pterophyllum-scalare-blue-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -1103,6 +1128,7 @@
         "batch22-fishbase-osphronemus-goramy-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1143,6 +1169,7 @@
         "batch14-fishbase-maylandia-estherae-albino"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1183,6 +1210,7 @@
         "batch14-fishbase-sciaenochromis-fryeri-white"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1223,6 +1251,7 @@
         "batch14-fishbase-nimbochromis-livingstonii-var"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1263,6 +1292,7 @@
         "batch22-fishbase-trichopodus-trichopterus-blue-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1303,6 +1333,7 @@
         "batch22-fishbase-trichopodus-trichopterus-gold-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1343,6 +1374,7 @@
         "batch14-fishbase-geophagus-surinamensis-albino"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1386,6 +1418,7 @@
         "batch09-fishbase-cichlasoma-var"
       ],
       "reviewedAt": "2026-10-11",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "migrationPath": "hybrid_object_specific_hold",
       "nextAction": "Keep this commercial hybrid object-specific; do not force it onto a single parent species without lineage evidence.",
@@ -1426,6 +1459,7 @@
         "batch26-fishbase-carassius-auratus-butterfly-tail"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1466,6 +1500,7 @@
         "batch26-fishbase-carassius-auratus-red-cap"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1506,6 +1541,7 @@
         "batch27-fishbase-carassius-auratus-pearlscale"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1546,6 +1582,7 @@
         "batch27-fishbase-carassius-auratus-bubble-eye"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1586,6 +1623,7 @@
         "batch27-fishbase-ancistrus-sp"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1631,6 +1669,7 @@
         "seriouslyfish-botia-almorhae-trade-boundary"
       ],
       "reviewedAt": "2026-10-11",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
       "migrationPath": "trade_name_disambiguation",
       "nextAction": "Disambiguate the trade or common-name object to one exact taxon or lineage before Compatibility onboarding.",
@@ -1671,6 +1710,7 @@
         "seriouslyfish-xiphophorus-hellerii"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1727,6 +1767,7 @@
         "batch27-fishbase-ancistrus-sp-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1767,6 +1808,7 @@
         "batch28-fishbase-ancistrus-sp-longfin-platinum"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1807,6 +1849,7 @@
         "batch28-fishbase-carassius-auratus-red-grass"
       ],
       "reviewedAt": "2026-10-13",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1847,6 +1890,7 @@
         "batch09-fishbase-cyprinus-carpio-var"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -1887,6 +1931,7 @@
         "seriouslyfish-pterophyllum-scalare"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -1967,6 +2012,7 @@
         "seriouslyfish-trichopodus-trichopterus"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2007,6 +2053,7 @@
         "batch11-fishbase-panaque-sp-l191"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2047,6 +2094,7 @@
         "batch11-fishbase-leporacanthicus-cf-galaxias"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2087,6 +2135,7 @@
         "batch34-fishbase-pangio-kuhlii-variant"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -2127,6 +2176,7 @@
         "batch12-fishbase-thorichthys-meeki-var"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -2167,6 +2217,7 @@
         "batch12-fishbase-geophagus-sp-platinum"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2207,6 +2258,7 @@
         "batch29-fishbase-ancistrus-sp-gold-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2255,6 +2307,7 @@
         "batch13-fishbase-pterophyllum-scalare-marble-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -2312,6 +2365,7 @@
         "batch13-fishbase-cichlasoma-blood-parrot-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "migrationPath": "hybrid_object_specific_hold",
       "nextAction": "Keep this commercial hybrid object-specific; do not force it onto a single parent species without lineage evidence.",
@@ -2352,6 +2406,7 @@
         "batch13-fishbase-pterophyllum-scalare-blue-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -2408,6 +2463,7 @@
         "batch22-fishbase-osphronemus-goramy-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2448,6 +2504,7 @@
         "batch14-fishbase-maylandia-estherae-albino"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2488,6 +2545,7 @@
         "batch14-fishbase-sciaenochromis-fryeri-white"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2528,6 +2586,7 @@
         "batch14-fishbase-nimbochromis-livingstonii-var"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -2568,6 +2627,7 @@
         "batch22-fishbase-trichopodus-trichopterus-blue-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2608,6 +2668,7 @@
         "batch22-fishbase-trichopodus-trichopterus-gold-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2648,6 +2709,7 @@
         "batch14-fishbase-geophagus-surinamensis-albino"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2688,6 +2750,7 @@
         "batch14-fishbase-hemichromis-bimaculatus-albino"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "identity_only_after_exact_evidence",
       "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
@@ -2762,6 +2825,7 @@
         "batch14-fishbase-apistogramma-cacatuoides-super-red"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2802,6 +2866,7 @@
         "batch29-fishbase-ancistrus-sp-gold-longfin-2"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2850,6 +2915,7 @@
         "batch29-fishbase-ancistrus-sp-white-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2890,6 +2956,7 @@
         "batch14-fishbase-parancistrus-aurantiacus-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2930,6 +2997,7 @@
         "batch23-fishbase-channa-andrao-super-blue"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -2970,6 +3038,7 @@
         "batch23-fishbase-lutjanus-kasmira-var"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -3026,6 +3095,7 @@
         "batch15-fishbase-pelvicachromis-pulcher-albino"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3066,6 +3136,7 @@
         "batch24-fishbase-lutjanus-kasmira-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -3122,6 +3193,7 @@
         "batch36-fishbase-synchiropus-splendidus-variant"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -3162,6 +3234,7 @@
         "batch16-fishbase-andinoacara-pulcher-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -3218,6 +3291,7 @@
         "batch16-fishbase-hemichromis-bimaculatus-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -3274,6 +3348,7 @@
         "batch16-fishbase-astronotus-ocellatus-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -3330,6 +3405,7 @@
         "batch16-fishbase-peckoltia-compta-super-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "identity_only_after_exact_evidence",
       "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
@@ -3414,6 +3490,7 @@
         "batch30-fishbase-ancistrus-sp-snowflake-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3454,6 +3531,7 @@
         "batch16-fishbase-chrysiptera-cyanea-platinum"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "identity_only_after_exact_evidence",
       "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
@@ -3532,6 +3610,7 @@
         "batch25-fishbase-potamotrygon-leopoldi-albino"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3572,6 +3651,7 @@
         "batch25-fishbase-potamotrygon-leopoldi-eclipse"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3612,6 +3692,7 @@
         "batch25-fishbase-channa-andrao-red"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3652,6 +3733,7 @@
         "batch16-fishbase-geophagus-sp-longfin-platinum"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3692,6 +3774,7 @@
         "batch16-fishbase-xiphophorus-hellerii-high-fin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -3748,6 +3831,7 @@
         "batch17-fishbase-andinoacara-pulcher-super-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -3804,6 +3888,7 @@
         "batch31-fishbase-ancistrus-sp-albino-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3844,6 +3929,7 @@
         "batch25-fishbase-trichopodus-trichopterus-balloon-gold-xl"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -3884,6 +3970,7 @@
         "batch26-fishbase-trichopodus-trichopterus-blue"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -3926,6 +4013,7 @@
         "biology-2026-mini-parrot-taxonomy-boundary"
       ],
       "reviewedAt": "2026-10-10",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Keep commercial hybrid lineage authority object-specific; do not coerce the object into a single parent taxon.",
       "migrationPath": "hybrid_object_specific_hold",
       "nextAction": "Keep this commercial hybrid object-specific; do not force it onto a single parent species without lineage evidence.",
@@ -3966,6 +4054,7 @@
         "batch05-fishbase-hyphessobrycon-pulchripinnis"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4006,6 +4095,7 @@
         "batch27-fishbase-poecilia-sphenops-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4054,6 +4144,7 @@
         "batch05-fishbase-poecilia-reticulata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4102,6 +4193,7 @@
         "batch05-fishbase-poecilia-reticulata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4150,6 +4242,7 @@
         "batch05-fishbase-poecilia-reticulata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4198,6 +4291,7 @@
         "batch05-fishbase-hemigrammus-bleheri"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4238,6 +4332,7 @@
         "batch05-fishbase-paracheirodon-innesi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4286,6 +4381,7 @@
         "batch05-fishbase-hemigrammus-bleheri"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4326,6 +4422,7 @@
         "batch06-fishbase-poecilia-reticulata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4374,6 +4471,7 @@
         "batch06-fishbase-hemigrammus-bleheri"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4414,6 +4512,7 @@
         "batch06-fishbase-hyphessobrycon-herbertaxelrodi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4462,6 +4561,7 @@
         "batch06-fishbase-paracheirodon-innesi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4510,6 +4610,7 @@
         "batch11-fishbase-aphyocharax-anisitsi-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4550,6 +4651,7 @@
         "batch06-fishbase-hemigrammus-rodwayi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -4606,6 +4708,7 @@
         "batch06-fishbase-hemigrammus-bleheri"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4646,6 +4749,7 @@
         "batch06-fishbase-hemigrammus-bleheri"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4686,6 +4790,7 @@
         "fishbase-gymnocorymbus-ternetzi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4734,6 +4839,7 @@
         "fishbase-gymnocorymbus-ternetzi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4782,6 +4888,7 @@
         "batch06-fishbase-corydoras-aeneus"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4830,6 +4937,7 @@
         "batch12-fishbase-nematobrycon-palmeri-platinum"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4870,6 +4978,7 @@
         "batch06-fishbase-poecilia-reticulata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4918,6 +5027,7 @@
         "batch07-fishbase-poecilia-reticulata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -4966,6 +5076,7 @@
         "batch07-fishbase-poecilia-reticulata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5014,6 +5125,7 @@
         "batch07-fishbase-hyphessobrycon-sweglesi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5054,6 +5166,7 @@
         "batch13-fishbase-gymnocorymbus-ternetzi-albino-red-eye"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5102,6 +5215,7 @@
         "batch07-fishbase-hemigrammus-bleheri"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5142,6 +5256,7 @@
         "batch14-fishbase-gymnocorymbus-ternetzi-platinum-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5190,6 +5305,7 @@
         "batch15-fishbase-gymnocorymbus-ternetzi-albino-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5238,6 +5354,7 @@
         "batch23-fishbase-pseudochromis-sp-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5278,6 +5395,7 @@
         "batch07-fishbase-hemigrammus-rodwayi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "identity_only_after_exact_evidence",
       "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
@@ -5334,6 +5452,7 @@
         "batch15-usgs-aphyocharax-anisitsi-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5374,6 +5493,7 @@
         "batch15-fishbase-gymnocorymbus-ternetzi-longfin-white"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5422,6 +5542,7 @@
         "batch07-fishbase-prionobrama-filigera"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -5462,6 +5583,7 @@
         "batch15-fishbase-boehlkea-fredcochui-blue"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5502,6 +5624,7 @@
         "batch07-fishbase-hyphessobrycon-herbertaxelrodi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -5550,6 +5673,7 @@
         "batch07-fishbase-hyphessobrycon-herbertaxelrodi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5598,6 +5722,7 @@
         "batch16-fishbase-gymnocorymbus-ternetzi-platinum-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5646,6 +5771,7 @@
         "batch16-fishbase-gymnocorymbus-ternetzi-glo-orange"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5694,6 +5820,7 @@
         "batch17-fishbase-gymnocorymbus-ternetzi-platinum-balloon-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "base_authority_or_parent_resolution",
       "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
@@ -5742,6 +5869,7 @@
         "batch39-fishbase-oryzias-latipes-killifish-variant"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -5785,6 +5913,7 @@
         "identity-worms-caridina-logemanni"
       ],
       "reviewedAt": "2026-09-22",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
       "migrationPath": "trade_name_disambiguation",
       "nextAction": "Disambiguate the trade or common-name object to one exact taxon or lineage before Compatibility onboarding.",
@@ -5825,6 +5954,7 @@
         "batch19-fishbase-channa-lorti"
       ],
       "reviewedAt": "2026-10-11",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Confirm the exact scientific taxon in an authoritative taxonomy source before identity review can graduate.",
       "migrationPath": "taxonomic_review",
       "nextAction": "Confirm the exact accepted taxon in an authoritative taxonomy source before Compatibility onboarding.",
@@ -5865,6 +5995,7 @@
         "batch19-fishbase-channa-aurantimaculata"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -5921,6 +6052,7 @@
         "seriouslyfish-mikrogeophagus-ramirezi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -5977,6 +6109,7 @@
         "seriouslyfish-mikrogeophagus-ramirezi"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -6033,6 +6166,7 @@
         "batch23-fishbase-channa-aurantimaculata-gold"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "identity_only_after_exact_evidence",
       "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
@@ -6089,6 +6223,7 @@
         "batch35-fishbase-tanichthys-albonubes-longfin"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "exact_variant_label_disambiguation",
       "nextAction": "Resolve the missing or blank ornamental variant label before canonical mapping; base-species similarity alone is insufficient.",
@@ -6137,6 +6272,7 @@
         "batch17-fishbase-mikrogeophagus-ramirezi-super-red-balloon"
       ],
       "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
       "migrationPath": "partial_inheritance_review",
       "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
@@ -6194,6 +6330,7 @@
         "batch03-obis-neritina-natalensis"
       ],
       "reviewedAt": "2026-09-22",
+      "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "An accepted taxonomic alias is known, but the trade object still needs exact-taxon disambiguation before migration.",
       "migrationPath": "trade_name_disambiguation",
       "nextAction": "Disambiguate the trade or common-name object to one exact taxon or lineage before Compatibility onboarding.",

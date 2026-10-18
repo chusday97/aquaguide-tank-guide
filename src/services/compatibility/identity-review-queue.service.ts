@@ -25,6 +25,7 @@ export type CompatibilityIdentityMigrationAuditRow = {
   readyBaseCandidates: Array<{ speciesId: string; scientificName: string }>;
   baseCandidates: Array<{ speciesId: string; scientificName: string }>;
   identityEvidenceStatus: string;
+  researchDisposition: 'terminal_unknown_hold' | null;
   researchDebtStatus: CompatibilityIdentityResearchDebtStatus | null;
   researchDebtBlockingReason: string | null;
   researchDebtReopenRequirement: string | null;
@@ -80,6 +81,7 @@ export type CompatibilityIdentityReviewQueueItem = {
   readyBaseSpeciesIds: string[];
   baseCandidateSpeciesIds: string[];
   identityEvidenceStatus: string;
+  researchDisposition: 'terminal_unknown_hold' | null;
   researchDebtStatus: CompatibilityIdentityResearchDebtStatus | null;
   researchBlockedReason: string | null;
   reopenRequirement: string | null;
@@ -139,6 +141,10 @@ const isStructurallyOpenParentResolution = (row: CompatibilityIdentityMigrationA
   && hasStructurallyOpenScientificLabel(row.scientificName)
 );
 
+const isTerminalUnknownHold = (row: CompatibilityIdentityMigrationAuditRow) => (
+  row.researchDisposition === 'terminal_unknown_hold'
+);
+
 const routeFor = (
   row: CompatibilityIdentityMigrationAuditRow,
 ): {
@@ -151,6 +157,21 @@ const routeFor = (
   }
   if (row.researchDebtStatus === 'catalog_label_disambiguation_required') {
     return { queue: 'manual_label_disambiguation', gate: 'manual_disambiguation', automatedResearchAllowed: false };
+  }
+  if (isTerminalUnknownHold(row)) {
+    if (row.migrationPath === 'exact_variant_label_disambiguation') {
+      return { queue: 'manual_label_disambiguation', gate: 'manual_disambiguation', automatedResearchAllowed: false };
+    }
+    if (isStructurallyOpenParentResolution(row) || row.migrationPath === 'trade_name_disambiguation') {
+      return { queue: 'trade_name_disambiguation', gate: 'manual_disambiguation', automatedResearchAllowed: false };
+    }
+    if (row.migrationPath === 'hybrid_object_specific_hold') {
+      return { queue: 'hybrid_object_hold', gate: 'object_specific_hold', automatedResearchAllowed: false };
+    }
+    if (row.migrationPath === 'catalog_structure_correction') {
+      return { queue: 'catalog_structure_correction', gate: 'catalog_correction', automatedResearchAllowed: false };
+    }
+    return { queue: 'evidence_ceiling_hold', gate: 'evidence_ceiling', automatedResearchAllowed: false };
   }
   if (isStructurallyOpenParentResolution(row)) {
     return { queue: 'trade_name_disambiguation', gate: 'manual_disambiguation', automatedResearchAllowed: false };
@@ -198,6 +219,7 @@ export const buildCompatibilityIdentityReviewQueue = (
 
     const route = routeFor(row);
     const structuralOpenParentResolution = isStructurallyOpenParentResolution(row);
+    const terminalUnknownHold = isTerminalUnknownHold(row);
     const searchedObjectLabels = row.identityResearchDebt?.searchedObjectLabels || [];
     const researchLabels = uniqueStrings([
       row.scientificName,
@@ -224,19 +246,26 @@ export const buildCompatibilityIdentityReviewQueue = (
       readyBaseSpeciesIds: row.readyBaseCandidates.map(candidate => candidate.speciesId),
       baseCandidateSpeciesIds: row.baseCandidates.map(candidate => candidate.speciesId),
       identityEvidenceStatus: row.identityEvidenceStatus,
+      researchDisposition: row.researchDisposition,
       researchDebtStatus: row.researchDebtStatus,
       researchBlockedReason: row.researchDebtBlockingReason
         ?? (structuralOpenParentResolution
           ? 'Catalog scientific label is structurally open (sp./cf./aff.) and does not identify one accepted parent species.'
-          : null),
+          : terminalUnknownHold
+            ? 'Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.'
+            : null),
       reopenRequirement: row.researchDebtReopenRequirement
         ?? (structuralOpenParentResolution
           ? 'Provide lineage/provenance or an authoritative exact-object source that links this catalog object to one accepted parent taxon.'
-          : null),
+          : terminalUnknownHold
+            ? 'Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.'
+            : null),
       researchLabels,
       nextAction: structuralOpenParentResolution
         ? 'Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.'
-        : row.nextAction,
+        : terminalUnknownHold
+          ? 'Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.'
+          : row.nextAction,
       affectedIdentityUnknownPairs: row.affectedIdentityUnknownPairs,
       soleBoundaryIdentityUnknownPairs: row.soleBoundaryIdentityUnknownPairs,
       sharedBoundaryIdentityUnknownPairs: row.sharedBoundaryIdentityUnknownPairs,

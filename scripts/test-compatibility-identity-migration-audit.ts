@@ -41,6 +41,7 @@ const report = JSON.parse(committedJson) as {
   identityEvidenceStatusCounts: Record<string, number>;
   researchDebtStatusCounts: Record<string, number>;
   researchedHighImpactHoldCount: number;
+  terminalIdentityHoldCount: number;
   identityOnlyAfterExactEvidenceCount: number;
   partialInheritanceReviewCount: number;
   rows: Array<{
@@ -50,6 +51,7 @@ const report = JSON.parse(committedJson) as {
     migrationBucket: string;
     migrationPath: string;
     identityEvidenceStatus: string;
+    researchDisposition: 'terminal_unknown_hold' | null;
     researchDebtStatus: string | null;
     researchDebtReviewedAt: string | null;
     researchDebtBlockingReason: string | null;
@@ -76,6 +78,7 @@ assert.equal(report.activeIdentityBoundaries, active.length);
 assert.equal(report.rows.length, active.length);
 assert.equal(new Set(report.rows.map(row => row.speciesId)).size, report.rows.length);
 assert.equal(report.autoMigratableCount, 0);
+assert.equal(report.terminalIdentityHoldCount, report.activeIdentityBoundaries);
 assert.equal(report.identityUnknownPairsWithoutActiveBoundary, 0);
 assert.ok(report.identityOnlyAfterExactEvidenceCount > 0);
 assert.ok(report.partialInheritanceReviewCount > 0);
@@ -106,6 +109,7 @@ const coverageById = new Map(coverage.rows.map(row => [row.speciesId, row]));
 for (const row of report.rows) {
   assert.equal(row.autoMigrationAllowed, false, `${row.speciesId} active boundary must never auto-migrate`);
   assert.ok(row.sourceIds.length > 0, `${row.speciesId} active identity hold must retain reviewed source provenance`);
+  assert.equal(row.researchDisposition, 'terminal_unknown_hold', `${row.speciesId} active identity boundary must preserve source-controlled terminal disposition`);
   assert.equal(row.genericOnboardingReady, false, `${row.speciesId} active identity boundary cannot be generic-ready`);
   assert.equal(coverageById.get(row.speciesId)?.genericOnboardingReady, false);
   assert.equal(row.canonicalIdentityPresent, false, `${row.speciesId} cannot be canonical-ready while an active boundary exists`);
@@ -169,6 +173,7 @@ assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
 assert.equal(byId.get('sp_0158')?.readyBaseCandidateCount, 1);
 assert.equal(byId.get('sp_0021')?.migrationPath, 'hybrid_object_specific_hold');
 assert.equal(byId.get('sp_0021')?.identityEvidenceStatus, 'reviewed_identity_hold_present');
+assert.equal(byId.get('sp_0110')?.researchDisposition, 'terminal_unknown_hold');
 
 console.log(
   `Compatibility identity migration audit PASS: ${report.activeIdentityBoundaries} active catalog boundaries reconcile to ${report.identityUnknownPairs} unresolved-identity fish pairs; 0 are auto-migrated and all remain species-level fail-closed work.`,

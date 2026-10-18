@@ -73,8 +73,8 @@ const automated = queue.items.filter(item => item.automatedResearchAllowed);
 const manual = queue.items.filter(item => !item.automatedResearchAllowed);
 const preparation = buildIdentityBulkPreparation(queue, fishData);
 
-assert.equal(automated.length, 55);
-assert.equal(manual.length, 50);
+assert.equal(automated.length, 0);
+assert.equal(manual.length, 105);
 assert.equal(base.summary.totalAutomatedItems, automated.length);
 assert.equal(base.items.length, automated.length);
 assert.equal(review.summary.total, automated.length);
@@ -115,7 +115,9 @@ assert.equal(
   base.summary.variantResearchObjects,
 );
 assert.equal(preparation.items.length, automated.length);
-assert.ok(preparation.items.filter(item => item.hasDeterministicBaseCandidate).length >= 50);
+assert.equal(preparation.items.length, 0);
+assert.equal(base.groups.length, 0);
+assert.equal(base.summary.variantResearchObjects, 0);
 assert.equal(
   review.summary.identityCandidateReady
   + review.summary.partialInheritanceCandidateReady

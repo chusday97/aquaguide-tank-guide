@@ -31,6 +31,7 @@
 - Identity-only after exact evidence: **5**
 - Partial inheritance review: **10**
 - Reviewed research-debt holds: **4**
+- Source-controlled terminal identity holds: **105**
 
 ## Reviewed evidence-debt holds
 

@@ -281,6 +281,7 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     singleCandidateHint: boundary.candidateTaxa.length === 1 ? boundary.candidateTaxa[0] : null,
     sourceIds: boundary.sourceIds,
     reviewedAt: boundary.reviewedAt,
+    researchDisposition: boundary.researchDisposition || null,
     blockingRequirement: blockingRequirement(bucket),
     migrationPath,
     nextAction: nextActionForPath(migrationPath),
@@ -338,6 +339,8 @@ const researchDebtStatusCounts = rows.reduce<Record<string, number>>((acc, row) 
   return acc;
 }, {});
 
+const terminalIdentityHoldCount = rows.filter(row => row.researchDisposition === 'terminal_unknown_hold').length;
+
 const fishDomainBoundaryCount = rows.filter(row => row.lifeType === 'fish').length;
 const pairAttributionCount = rows.reduce((sum, row) => sum + row.affectedIdentityUnknownPairs, 0);
 
@@ -350,6 +353,7 @@ const report = {
     impactSemantics: 'affectedIdentityUnknownPairs counts current unresolved-identity fish pairs in which the catalog object participates. soleBoundaryIdentityUnknownPairs is the stronger prioritization signal because the opposite fish has no active identity boundary. Neither metric guarantees a compatible verdict after migration; other evidence constraints may remain.',
     migrationPathSemantics: 'migrationPath is a planning lane, not authority. identity_only_after_exact_evidence still requires exact-object identity evidence before canonical inheritance can graduate.',
     researchDebtSemantics: 'identityResearchDebt records reviewed failed/insufficient evidence passes and known false bridges. It never grants authority; it can only keep or narrow a migration lane.',
+    terminalDispositionSemantics: 'catalogIdentityBoundaries.researchDisposition=terminal_unknown_hold means the reviewed identity lane is closed to automatic re-search until new qualifying evidence or an explicit catalog correction reopens it.',
   },
   activeIdentityBoundaries: rows.length,
   fishDomainIdentityBoundaries: fishDomainBoundaryCount,
@@ -366,6 +370,7 @@ const report = {
   identityEvidenceStatusCounts,
   researchDebtStatusCounts,
   researchedHighImpactHoldCount: rows.filter(row => row.identityResearchDebt).length,
+  terminalIdentityHoldCount,
   identityOnlyAfterExactEvidenceCount: rows.filter(row => row.migrationPath === 'identity_only_after_exact_evidence').length,
   partialInheritanceReviewCount: rows.filter(row => row.migrationPath === 'partial_inheritance_review').length,
   topPriority: rows.slice(0, 30),
@@ -400,6 +405,7 @@ const markdown = [
   '- Identity-only after exact evidence: **' + report.identityOnlyAfterExactEvidenceCount + '**',
   '- Partial inheritance review: **' + report.partialInheritanceReviewCount + '**',
   '- Reviewed research-debt holds: **' + report.researchedHighImpactHoldCount + '**',
+  '- Source-controlled terminal identity holds: **' + report.terminalIdentityHoldCount + '**',
   '',
   '## Reviewed evidence-debt holds',
   '',
