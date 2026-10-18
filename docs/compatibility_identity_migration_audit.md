@@ -21,15 +21,25 @@
 ## Migration paths
 
 - base_authority_or_parent_resolution: 56 objects / 7756 sole-boundary pairs
-- exact_variant_label_disambiguation: 28 objects / 3624 sole-boundary pairs
+- exact_variant_label_disambiguation: 29 objects / 3774 sole-boundary pairs
 - partial_inheritance_review: 10 objects / 1050 sole-boundary pairs
-- identity_only_after_exact_evidence: 5 objects / 600 sole-boundary pairs
+- identity_only_after_exact_evidence: 4 objects / 450 sole-boundary pairs
 - hybrid_object_specific_hold: 3 objects / 449 sole-boundary pairs
 - trade_name_disambiguation: 3 objects / 150 sole-boundary pairs
 - taxonomic_review: 1 objects / 0 sole-boundary pairs
 
-- Identity-only after exact evidence: **5**
+- Identity-only after exact evidence: **4**
 - Partial inheritance review: **10**
+- Reviewed research-debt holds: **4**
+
+## Reviewed evidence-debt holds
+
+| Catalog object | Research status | Blocking reason | Reopen requirement |
+| --- | --- | --- | --- |
+| sp_0175 血钻神仙 | catalog_label_disambiguation_required | The catalog scientific variant label "Red" is broader than the Chinese object label 血钻 and does not uniquely identify Red Devil, Super Red, Red Diamond, Blood Diamond, koi-derived red, or another red ornamental lineage. | First establish the exact trade/lineage label represented by 血钻神仙, then provide an object-level professional source that ties that exact line to Pterophyllum scalare. |
+| sp_0271 白子红宝石 | exact_object_evidence_not_found | The reviewed base-species record does not prove that the aquarium-trade Albino / 白子红宝石 object is specifically Hemichromis bimaculatus rather than another Hemichromis trade lineage. | Provide an exact-object professional/breeder/importer page that names the Albino or Albino Red Jewel object and explicitly identifies it as Hemichromis bimaculatus. |
+| sp_0376 黄金斑马异型 (L134改良版) | exact_object_evidence_not_found | Multiple professional retailers corroborate ordinary L134 = Peckoltia compta, but this does not prove that the catalog Super Gold object is the same lineage or that Super Gold is only a color form. | Provide a professional breeder/importer/catalog page that explicitly labels L134 Super Gold / Peckoltia compta Super Gold and ties that exact ornamental line to Peckoltia compta. |
+| sp_0399 白金蓝魔鬼 (海水) | exact_object_evidence_not_found | The base species Chrysiptera cyanea is well supported, but no reviewed exact-object source currently establishes Platinum / 白金蓝魔鬼 as a Chrysiptera cyanea ornamental form. | Provide an exact professional marine-fish supplier/breeder/catalog source that names Platinum Blue Devil (or equivalent exact object) and explicitly identifies Chrysiptera cyanea. |
 
 ## Highest-impact catalog identity debt
 
@@ -47,7 +57,7 @@
 | sp_0160 大帆白金胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 246 | 150 |
 | sp_0162 红草鱼 | catalog_scientific_name_unresolved | exact_variant_label_disambiguation | 0 | no | 246 | 150 |
 | sp_0163 鸿运当头锦鲤 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 246 | 150 |
-| sp_0175 血钻神仙 | catalog_variant_identity_unresolved | identity_only_after_exact_evidence | 1 | no | 246 | 150 |
+| sp_0175 血钻神仙 | catalog_variant_identity_unresolved | exact_variant_label_disambiguation | 1 | no | 246 | 150 |
 | sp_0179 球形曼龙 (蓝/金) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | yes | 246 | 150 |
 | sp_0182 蓝眼异型 (L191) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 246 | 150 |
 | sp_0201 黑白双星异型 (L240) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 246 | 150 |

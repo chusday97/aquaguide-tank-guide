@@ -6,6 +6,7 @@ import {
 } from '../src/data/catalogIdentityBoundaries';
 import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
+import { getCatalogIdentityResearchDebt } from '../src/data/catalogIdentityResearchDebt';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
 import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
@@ -139,16 +140,20 @@ type Impact = {
 
 
 const migrationPathFor = ({
+  speciesId,
   bucket,
   scientificName,
   morphologyRisk,
   readyBaseCandidateCount,
 }: {
+  speciesId: string;
   bucket: MigrationBucket;
   scientificName: string;
   morphologyRisk: boolean;
   readyBaseCandidateCount: number;
 }): MigrationPath => {
+  const researchDebt = getCatalogIdentityResearchDebt(speciesId);
+  if (researchDebt?.migrationPathOverride) return researchDebt.migrationPathOverride;
   if (bucket === 'commercial_hybrid_hold') return 'hybrid_object_specific_hold';
   if (bucket === 'trade_name_disambiguation_required' || bucket === 'accepted_alias_trade_disambiguation_required') return 'trade_name_disambiguation';
   if (bucket === 'parent_taxon_resolution_required') return 'base_authority_or_parent_resolution';
@@ -254,7 +259,9 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
   const readyBaseCandidates = baseCandidates.filter(candidate => candidate.genericOnboardingReady);
   const morphologyRisk = hasMorphologyRisk(species);
   const identityEvidenceStatus = getExistingIdentityEvidenceStatus(species.id);
+  const identityResearchDebt = getCatalogIdentityResearchDebt(species.id);
   const migrationPath = migrationPathFor({
+    speciesId: species.id,
     bucket,
     scientificName: species.scientificName || '',
     morphologyRisk,
@@ -278,6 +285,12 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     migrationPath,
     nextAction: nextActionForPath(migrationPath),
     identityEvidenceStatus,
+    identityResearchDebt: identityResearchDebt || null,
+    researchDebtStatus: identityResearchDebt?.status || null,
+    researchDebtReviewedAt: identityResearchDebt?.reviewedAt || null,
+    researchDebtBlockingReason: identityResearchDebt?.blockingReason || null,
+    researchDebtReopenRequirement: identityResearchDebt?.reopenRequirement || null,
+    nonQualifyingReferenceCount: identityResearchDebt?.nonQualifyingReferences.length || 0,
     blankVariantSuffix: hasBlankVariantSuffix(species.scientificName || ''),
     morphologyRisk,
     strippedBaseScientificName,
@@ -319,17 +332,24 @@ const identityEvidenceStatusCounts = rows.reduce<Record<string, number>>((acc, r
   return acc;
 }, {});
 
+const researchDebtStatusCounts = rows.reduce<Record<string, number>>((acc, row) => {
+  if (!row.researchDebtStatus) return acc;
+  acc[row.researchDebtStatus] = (acc[row.researchDebtStatus] || 0) + 1;
+  return acc;
+}, {});
+
 const fishDomainBoundaryCount = rows.filter(row => row.lifeType === 'fish').length;
 const pairAttributionCount = rows.reduce((sum, row) => sum + row.affectedIdentityUnknownPairs, 0);
 
 const report = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   generatedFrom: 'source-controlled active catalog identity boundaries + deterministic Compatibility runtime',
   policy: {
     unitOfWork: 'catalog-object identity debt, not precomputed pair packs',
     autoMigrationRule: 'No active identity boundary is auto-migrated from names, suffixes, aliases, parent-taxon similarity, or pair impact. Reviewed identity evidence is required.',
     impactSemantics: 'affectedIdentityUnknownPairs counts current unresolved-identity fish pairs in which the catalog object participates. soleBoundaryIdentityUnknownPairs is the stronger prioritization signal because the opposite fish has no active identity boundary. Neither metric guarantees a compatible verdict after migration; other evidence constraints may remain.',
     migrationPathSemantics: 'migrationPath is a planning lane, not authority. identity_only_after_exact_evidence still requires exact-object identity evidence before canonical inheritance can graduate.',
+    researchDebtSemantics: 'identityResearchDebt records reviewed failed/insufficient evidence passes and known false bridges. It never grants authority; it can only keep or narrow a migration lane.',
   },
   activeIdentityBoundaries: rows.length,
   fishDomainIdentityBoundaries: fishDomainBoundaryCount,
@@ -344,6 +364,8 @@ const report = {
   migrationPathCounts,
   migrationPathSoleBoundaryImpact,
   identityEvidenceStatusCounts,
+  researchDebtStatusCounts,
+  researchedHighImpactHoldCount: rows.filter(row => row.identityResearchDebt).length,
   identityOnlyAfterExactEvidenceCount: rows.filter(row => row.migrationPath === 'identity_only_after_exact_evidence').length,
   partialInheritanceReviewCount: rows.filter(row => row.migrationPath === 'partial_inheritance_review').length,
   topPriority: rows.slice(0, 30),
@@ -377,6 +399,18 @@ const markdown = [
   '',
   '- Identity-only after exact evidence: **' + report.identityOnlyAfterExactEvidenceCount + '**',
   '- Partial inheritance review: **' + report.partialInheritanceReviewCount + '**',
+  '- Reviewed research-debt holds: **' + report.researchedHighImpactHoldCount + '**',
+  '',
+  '## Reviewed evidence-debt holds',
+  '',
+  '| Catalog object | Research status | Blocking reason | Reopen requirement |',
+  '| --- | --- | --- | --- |',
+  ...rows.filter(row => row.identityResearchDebt).map(row => (
+    '| ' + row.speciesId + ' ' + row.name
+    + ' | ' + row.researchDebtStatus
+    + ' | ' + row.researchDebtBlockingReason
+    + ' | ' + row.researchDebtReopenRequirement + ' |'
+  )),
   '',
   '## Highest-impact catalog identity debt',
   '',

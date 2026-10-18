@@ -39,6 +39,8 @@ const report = JSON.parse(committedJson) as {
   migrationPathCounts: Record<string, number>;
   migrationPathSoleBoundaryImpact: Record<string, number>;
   identityEvidenceStatusCounts: Record<string, number>;
+  researchDebtStatusCounts: Record<string, number>;
+  researchedHighImpactHoldCount: number;
   identityOnlyAfterExactEvidenceCount: number;
   partialInheritanceReviewCount: number;
   rows: Array<{
@@ -48,6 +50,11 @@ const report = JSON.parse(committedJson) as {
     migrationBucket: string;
     migrationPath: string;
     identityEvidenceStatus: string;
+    researchDebtStatus: string | null;
+    researchDebtReviewedAt: string | null;
+    researchDebtBlockingReason: string | null;
+    researchDebtReopenRequirement: string | null;
+    nonQualifyingReferenceCount: number;
     blankVariantSuffix: boolean;
     morphologyRisk: boolean;
     readyBaseCandidateCount: number;
@@ -72,6 +79,9 @@ assert.equal(report.autoMigratableCount, 0);
 assert.equal(report.identityUnknownPairsWithoutActiveBoundary, 0);
 assert.ok(report.identityOnlyAfterExactEvidenceCount > 0);
 assert.ok(report.partialInheritanceReviewCount > 0);
+assert.equal(report.researchedHighImpactHoldCount, 4);
+assert.equal(report.researchDebtStatusCounts.catalog_label_disambiguation_required, 1);
+assert.equal(report.researchDebtStatusCounts.exact_object_evidence_not_found, 3);
 assert.equal(Object.values(report.migrationPathCounts).reduce((sum, count) => sum + count, 0), report.activeIdentityBoundaries);
 assert.equal(Object.values(report.identityEvidenceStatusCounts).reduce((sum, count) => sum + count, 0), report.activeIdentityBoundaries);
 assert.equal(
@@ -136,9 +146,19 @@ assert.ok(report.rows.some(row => row.migrationBucket === 'commercial_hybrid_hol
 
 const byId = new Map(report.rows.map(row => [row.speciesId, row]));
 
-assert.equal(byId.get('sp_0175')?.migrationPath, 'identity_only_after_exact_evidence');
+assert.equal(byId.get('sp_0175')?.migrationPath, 'exact_variant_label_disambiguation');
 assert.equal(byId.get('sp_0175')?.readyBaseCandidateCount, 1);
 assert.equal(byId.get('sp_0175')?.morphologyRisk, false);
+assert.equal(byId.get('sp_0175')?.researchDebtStatus, 'catalog_label_disambiguation_required');
+assert.ok((byId.get('sp_0175')?.researchDebtReopenRequirement || '').includes('exact trade/lineage'));
+
+for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
+  assert.equal(byId.get(id)?.migrationPath, 'identity_only_after_exact_evidence');
+  assert.equal(byId.get(id)?.researchDebtStatus, 'exact_object_evidence_not_found');
+  assert.equal(byId.get(id)?.researchDebtReviewedAt, '2026-10-18');
+  assert.ok((byId.get(id)?.nonQualifyingReferenceCount || 0) > 0);
+  assert.ok((byId.get(id)?.researchDebtReopenRequirement || '').length > 0);
+}
 assert.equal(byId.get('sp_0241')?.migrationPath, 'partial_inheritance_review');
 assert.equal(byId.get('sp_0241')?.morphologyRisk, true);
 assert.equal(byId.get('sp_0241')?.readyBaseCandidateCount, 1);
