@@ -1,11 +1,11 @@
-## TOP CURRENT BRANCH — 2026-10-19 main trade identity + runtime placeholder guard
+## TOP CURRENT BRANCH — 2026-10-19 main goldfish exact-identity closure
 
-- Canonical local branch: `main`, continuing from `2413cbb3`.
-- Current change resolves Golden Cobra as a same-taxon `Channa aurantimaculata` alias and Red/Blue Grass as identity-only `Poecilia reticulata` strains; it also generalises the runtime guard so reviewed `unknown` enum placeholders never masquerade as concrete Knowledge authority.
-- Current scope: 308 fish-domain / **100 generic-ready / 112 core-complete / 93 fish identity-held**; **95 active identity boundaries / 17,056 unresolved pair impacts / 18 blank-`var.` catalog corrections**.
-- Coverage exposes **134 research-debt fields = 56 completion-eligible strain/morphology fields + 78 deferred predation fields**. Active research = 4 guarded taxon jobs / 7 variant objects / 0 exact objects.
-- Canonical authority: **42 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 8 field policies**; fully-informed matrix is **100 species / 4,950 pairs / 0 insufficient_data**.
-- Repository authority is **126 Profiles / 21 Pair Rules**; `sp_0216` remains post-target source-controlled authority, so released generations remain exact **63 / 85 / 95 / 99 / 100 / 101**.
+- Canonical local branch: `main`, continuing from `be687583`.
+- Current change resolves `sp_0065 Butterfly Tail` and `sp_0162 Red Grass Goldfish` under reviewed `Carassius auratus` taxon roots using exact government/peer-reviewed evidence, with **zero Compatibility inheritance** for both.
+- Current scope: 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts / 16 blank-`var.` catalog corrections**.
+- Coverage exposes **150 research-debt fields = 72 completion-eligible strain/morphology fields + 78 deferred predation fields**. Active research remains 4 guarded taxon jobs / 9 variant objects / 0 exact objects.
+- Canonical authority: **44 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 10 field policies**; fully-informed matrix remains **100 species / 4,950 pairs / 0 insufficient_data**.
+- Repository authority remains **126 Profiles / 21 Pair Rules** and released generations remain exact **63 / 85 / 95 / 99 / 100 / 101**; no release ownership changes.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

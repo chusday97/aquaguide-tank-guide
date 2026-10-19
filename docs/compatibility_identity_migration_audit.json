@@ -9,53 +9,53 @@
     "researchDebtSemantics": "identityResearchDebt records reviewed failed/insufficient evidence passes and known false bridges. It never grants authority; it can only keep or narrow a migration lane.",
     "terminalDispositionSemantics": "catalogIdentityBoundaries.researchDisposition=terminal_unknown_hold means the reviewed identity lane is closed to automatic re-search until new qualifying evidence or an explicit catalog correction reopens it."
   },
-  "activeIdentityBoundaries": 95,
-  "fishDomainIdentityBoundaries": 93,
-  "identityUnknownPairs": 17056,
-  "identityUnknownPairsWithOneActiveBoundary": 13228,
-  "identityUnknownPairsWithTwoActiveBoundaries": 3828,
+  "activeIdentityBoundaries": 93,
+  "fishDomainIdentityBoundaries": 91,
+  "identityUnknownPairs": 16735,
+  "identityUnknownPairsWithOneActiveBoundary": 13080,
+  "identityUnknownPairsWithTwoActiveBoundaries": 3655,
   "identityUnknownPairsWithoutActiveBoundary": 0,
-  "pairAttributionCount": 20884,
+  "pairAttributionCount": 20390,
   "autoMigratableCount": 0,
   "boundaryCodeCounts": {
     "commercial_hybrid_identity_unresolved": 3,
-    "catalog_scientific_name_unresolved": 18,
     "catalog_parent_taxon_unresolved": 11,
     "trade_name_taxon_ambiguous": 2,
     "catalog_variant_identity_unresolved": 60,
+    "catalog_scientific_name_unresolved": 16,
     "accepted_taxon_alias_trade_ambiguous": 1
   },
   "migrationBucketCounts": {
     "commercial_hybrid_hold": 3,
-    "catalog_structure_correction_required": 18,
     "parent_taxon_resolution_required": 11,
     "trade_name_disambiguation_required": 2,
+    "catalog_structure_correction_required": 16,
     "variant_object_evidence_required": 59,
     "taxonomic_research_candidate": 1,
     "accepted_alias_trade_disambiguation_required": 1
   },
   "migrationPathCounts": {
     "hybrid_object_specific_hold": 3,
-    "catalog_structure_correction": 18,
     "base_authority_or_parent_resolution": 54,
     "trade_name_disambiguation": 3,
+    "catalog_structure_correction": 16,
     "exact_variant_label_disambiguation": 1,
     "partial_inheritance_review": 10,
     "identity_only_after_exact_evidence": 5,
     "taxonomic_review": 1
   },
   "migrationPathSoleBoundaryImpact": {
-    "hybrid_object_specific_hold": 479,
-    "catalog_structure_correction": 2673,
-    "base_authority_or_parent_resolution": 8019,
-    "trade_name_disambiguation": 160,
-    "exact_variant_label_disambiguation": 160,
-    "partial_inheritance_review": 1120,
-    "identity_only_after_exact_evidence": 617,
+    "hybrid_object_specific_hold": 485,
+    "base_authority_or_parent_resolution": 8127,
+    "trade_name_disambiguation": 162,
+    "catalog_structure_correction": 2385,
+    "exact_variant_label_disambiguation": 162,
+    "partial_inheritance_review": 1134,
+    "identity_only_after_exact_evidence": 625,
     "taxonomic_review": 0
   },
   "identityEvidenceStatusCounts": {
-    "no_object_identity_review": 92,
+    "no_object_identity_review": 90,
     "reviewed_identity_hold_present": 3
   },
   "researchDebtStatusCounts": {
@@ -63,7 +63,7 @@
     "exact_object_evidence_not_found": 3
   },
   "researchedHighImpactHoldCount": 4,
-  "terminalIdentityHoldCount": 95,
+  "terminalIdentityHoldCount": 93,
   "identityOnlyAfterExactEvidenceCount": 5,
   "partialInheritanceReviewCount": 10,
   "topPriority": [
@@ -106,49 +106,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
-    },
-    {
-      "speciesId": "sp_0065",
-      "name": "蝶尾金鱼",
-      "scientificName": "Carassius auratus var.",
-      "lifeType": "fish",
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "resolvedGranularity": "scientific_name_unresolved",
-      "migrationBucket": "catalog_structure_correction_required",
-      "migrationReadiness": "blocked_review_required",
-      "autoMigrationAllowed": false,
-      "candidateTaxa": [
-        "Carassius auratus ornamental Butterfly Tail lineage"
-      ],
-      "singleCandidateHint": "Carassius auratus ornamental Butterfly Tail lineage",
-      "sourceIds": [
-        "batch26-fishbase-carassius-auratus-butterfly-tail"
-      ],
-      "reviewedAt": "2026-10-12",
-      "researchDisposition": "terminal_unknown_hold",
-      "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
-      "migrationPath": "catalog_structure_correction",
-      "nextAction": "Correct the catalog identity, type, or category record and re-review the object before Compatibility onboarding.",
-      "identityEvidenceStatus": "no_object_identity_review",
-      "identityResearchDebt": null,
-      "researchDebtStatus": null,
-      "researchDebtReviewedAt": null,
-      "researchDebtBlockingReason": null,
-      "researchDebtReopenRequirement": null,
-      "nonQualifyingReferenceCount": 0,
-      "blankVariantSuffix": true,
-      "morphologyRisk": true,
-      "strippedBaseScientificName": "Carassius auratus",
-      "baseCandidates": [],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
-      "genericOnboardingReady": false,
-      "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0124",
@@ -188,8 +147,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0127",
@@ -234,8 +193,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0158",
@@ -291,8 +250,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0159",
@@ -332,8 +291,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0160",
@@ -373,49 +332,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "scientificName": "Carassius auratus var.",
-      "lifeType": "fish",
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "resolvedGranularity": "scientific_name_unresolved",
-      "migrationBucket": "catalog_structure_correction_required",
-      "migrationReadiness": "blocked_review_required",
-      "autoMigrationAllowed": false,
-      "candidateTaxa": [
-        "Carassius auratus ornamental Red Grass lineage"
-      ],
-      "singleCandidateHint": "Carassius auratus ornamental Red Grass lineage",
-      "sourceIds": [
-        "batch28-fishbase-carassius-auratus-red-grass"
-      ],
-      "reviewedAt": "2026-10-13",
-      "researchDisposition": "terminal_unknown_hold",
-      "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
-      "migrationPath": "catalog_structure_correction",
-      "nextAction": "Correct the catalog identity, type, or category record and re-review the object before Compatibility onboarding.",
-      "identityEvidenceStatus": "no_object_identity_review",
-      "identityResearchDebt": null,
-      "researchDebtStatus": null,
-      "researchDebtReviewedAt": null,
-      "researchDebtBlockingReason": null,
-      "researchDebtReopenRequirement": null,
-      "nonQualifyingReferenceCount": 0,
-      "blankVariantSuffix": true,
-      "morphologyRisk": false,
-      "strippedBaseScientificName": "Carassius auratus",
-      "baseCandidates": [],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
-      "genericOnboardingReady": false,
-      "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0163",
@@ -455,8 +373,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0175",
@@ -536,8 +454,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0179",
@@ -577,8 +495,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0182",
@@ -618,8 +536,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0201",
@@ -659,8 +577,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0210",
@@ -700,8 +618,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0211",
@@ -741,8 +659,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0217",
@@ -782,8 +700,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0230",
@@ -831,8 +749,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0241",
@@ -888,8 +806,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0243",
@@ -930,8 +848,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0247",
@@ -987,8 +905,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0248",
@@ -1028,8 +946,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0263",
@@ -1069,8 +987,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0264",
@@ -1110,8 +1028,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0265",
@@ -1151,8 +1069,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0268",
@@ -1192,8 +1110,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0269",
@@ -1233,8 +1151,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0270",
@@ -1274,8 +1192,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0271",
@@ -1349,8 +1267,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0273",
@@ -1390,8 +1308,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0280",
@@ -1439,8 +1357,90 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
+    },
+    {
+      "speciesId": "sp_0281",
+      "name": "白金胡子 (大帆)",
+      "scientificName": "Ancistrus sp. White Longfin",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_parent_taxon_unresolved",
+      "resolvedGranularity": "parent_taxon_unresolved",
+      "migrationBucket": "parent_taxon_resolution_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Ancistrus spp. ornamental White Longfin lineage"
+      ],
+      "singleCandidateHint": "Ancistrus spp. ornamental White Longfin lineage",
+      "sourceIds": [
+        "batch29-fishbase-ancistrus-sp-white-longfin"
+      ],
+      "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
+      "blockingRequirement": "Resolve the catalog object to one exact parent taxon before any base-species Compatibility authority can be inherited.",
+      "migrationPath": "base_authority_or_parent_resolution",
+      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "identityEvidenceStatus": "no_object_identity_review",
+      "identityResearchDebt": null,
+      "researchDebtStatus": null,
+      "researchDebtReviewedAt": null,
+      "researchDebtBlockingReason": null,
+      "researchDebtReopenRequirement": null,
+      "nonQualifyingReferenceCount": 0,
+      "blankVariantSuffix": false,
+      "morphologyRisk": true,
+      "strippedBaseScientificName": "Ancistrus sp. White Longfin",
+      "baseCandidates": [],
+      "readyBaseCandidates": [],
+      "readyBaseCandidateCount": 0,
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 247,
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
+    },
+    {
+      "speciesId": "sp_0282",
+      "name": "黄金达摩 (改良)",
+      "scientificName": "Parancistrus aurantiacus var. Gold",
+      "lifeType": "fish",
+      "boundaryCode": "catalog_variant_identity_unresolved",
+      "resolvedGranularity": "variant_identity_unresolved",
+      "migrationBucket": "variant_object_evidence_required",
+      "migrationReadiness": "blocked_review_required",
+      "autoMigrationAllowed": false,
+      "candidateTaxa": [
+        "Parancistrus aurantiacus ornamental Gold lineage"
+      ],
+      "singleCandidateHint": "Parancistrus aurantiacus ornamental Gold lineage",
+      "sourceIds": [
+        "batch14-fishbase-parancistrus-aurantiacus-gold"
+      ],
+      "reviewedAt": "2026-10-12",
+      "researchDisposition": "terminal_unknown_hold",
+      "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
+      "migrationPath": "base_authority_or_parent_resolution",
+      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "identityEvidenceStatus": "no_object_identity_review",
+      "identityResearchDebt": null,
+      "researchDebtStatus": null,
+      "researchDebtReviewedAt": null,
+      "researchDebtBlockingReason": null,
+      "researchDebtReopenRequirement": null,
+      "nonQualifyingReferenceCount": 0,
+      "blankVariantSuffix": false,
+      "morphologyRisk": false,
+      "strippedBaseScientificName": "Parancistrus aurantiacus",
+      "baseCandidates": [],
+      "readyBaseCandidates": [],
+      "readyBaseCandidateCount": 0,
+      "genericOnboardingReady": false,
+      "canonicalIdentityPresent": false,
+      "affectedIdentityUnknownPairs": 247,
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     }
   ],
   "rows": [
@@ -1483,49 +1483,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
-    },
-    {
-      "speciesId": "sp_0065",
-      "name": "蝶尾金鱼",
-      "scientificName": "Carassius auratus var.",
-      "lifeType": "fish",
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "resolvedGranularity": "scientific_name_unresolved",
-      "migrationBucket": "catalog_structure_correction_required",
-      "migrationReadiness": "blocked_review_required",
-      "autoMigrationAllowed": false,
-      "candidateTaxa": [
-        "Carassius auratus ornamental Butterfly Tail lineage"
-      ],
-      "singleCandidateHint": "Carassius auratus ornamental Butterfly Tail lineage",
-      "sourceIds": [
-        "batch26-fishbase-carassius-auratus-butterfly-tail"
-      ],
-      "reviewedAt": "2026-10-12",
-      "researchDisposition": "terminal_unknown_hold",
-      "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
-      "migrationPath": "catalog_structure_correction",
-      "nextAction": "Correct the catalog identity, type, or category record and re-review the object before Compatibility onboarding.",
-      "identityEvidenceStatus": "no_object_identity_review",
-      "identityResearchDebt": null,
-      "researchDebtStatus": null,
-      "researchDebtReviewedAt": null,
-      "researchDebtBlockingReason": null,
-      "researchDebtReopenRequirement": null,
-      "nonQualifyingReferenceCount": 0,
-      "blankVariantSuffix": true,
-      "morphologyRisk": true,
-      "strippedBaseScientificName": "Carassius auratus",
-      "baseCandidates": [],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
-      "genericOnboardingReady": false,
-      "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0124",
@@ -1565,8 +1524,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0127",
@@ -1611,8 +1570,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0158",
@@ -1668,8 +1627,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0159",
@@ -1709,8 +1668,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0160",
@@ -1750,49 +1709,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "scientificName": "Carassius auratus var.",
-      "lifeType": "fish",
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "resolvedGranularity": "scientific_name_unresolved",
-      "migrationBucket": "catalog_structure_correction_required",
-      "migrationReadiness": "blocked_review_required",
-      "autoMigrationAllowed": false,
-      "candidateTaxa": [
-        "Carassius auratus ornamental Red Grass lineage"
-      ],
-      "singleCandidateHint": "Carassius auratus ornamental Red Grass lineage",
-      "sourceIds": [
-        "batch28-fishbase-carassius-auratus-red-grass"
-      ],
-      "reviewedAt": "2026-10-13",
-      "researchDisposition": "terminal_unknown_hold",
-      "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
-      "migrationPath": "catalog_structure_correction",
-      "nextAction": "Correct the catalog identity, type, or category record and re-review the object before Compatibility onboarding.",
-      "identityEvidenceStatus": "no_object_identity_review",
-      "identityResearchDebt": null,
-      "researchDebtStatus": null,
-      "researchDebtReviewedAt": null,
-      "researchDebtBlockingReason": null,
-      "researchDebtReopenRequirement": null,
-      "nonQualifyingReferenceCount": 0,
-      "blankVariantSuffix": true,
-      "morphologyRisk": false,
-      "strippedBaseScientificName": "Carassius auratus",
-      "baseCandidates": [],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
-      "genericOnboardingReady": false,
-      "canonicalIdentityPresent": false,
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0163",
@@ -1832,8 +1750,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0175",
@@ -1913,8 +1831,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0179",
@@ -1954,8 +1872,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0182",
@@ -1995,8 +1913,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0201",
@@ -2036,8 +1954,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0210",
@@ -2077,8 +1995,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0211",
@@ -2118,8 +2036,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0217",
@@ -2159,8 +2077,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0230",
@@ -2208,8 +2126,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0241",
@@ -2265,8 +2183,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0243",
@@ -2307,8 +2225,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0247",
@@ -2364,8 +2282,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0248",
@@ -2405,8 +2323,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0263",
@@ -2446,8 +2364,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0264",
@@ -2487,8 +2405,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0265",
@@ -2528,8 +2446,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0268",
@@ -2569,8 +2487,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0269",
@@ -2610,8 +2528,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0270",
@@ -2651,8 +2569,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0271",
@@ -2726,8 +2644,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0273",
@@ -2767,8 +2685,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0280",
@@ -2816,8 +2734,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0281",
@@ -2857,8 +2775,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0282",
@@ -2898,8 +2816,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0286",
@@ -2939,8 +2857,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0296",
@@ -2996,8 +2914,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0365",
@@ -3053,8 +2971,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0366",
@@ -3094,8 +3012,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0372",
@@ -3151,8 +3069,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0373",
@@ -3208,8 +3126,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0374",
@@ -3265,8 +3183,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0376",
@@ -3350,8 +3268,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0392",
@@ -3391,8 +3309,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0399",
@@ -3470,8 +3388,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0409",
@@ -3511,8 +3429,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0410",
@@ -3552,8 +3470,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0412",
@@ -3593,8 +3511,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0414",
@@ -3634,8 +3552,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0415",
@@ -3691,8 +3609,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0416",
@@ -3748,8 +3666,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0418",
@@ -3789,8 +3707,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0420",
@@ -3830,8 +3748,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0021",
@@ -3873,8 +3791,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 159,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 161,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0141",
@@ -3914,8 +3832,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0142",
@@ -3963,8 +3881,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0145",
@@ -4012,8 +3930,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0154",
@@ -4053,8 +3971,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0167",
@@ -4094,8 +4012,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0170",
@@ -4143,8 +4061,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0204",
@@ -4184,8 +4102,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0205",
@@ -4233,8 +4151,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0206",
@@ -4282,8 +4200,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0208",
@@ -4323,8 +4241,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0212",
@@ -4380,8 +4298,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0225",
@@ -4421,8 +4339,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0226",
@@ -4462,8 +4380,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0227",
@@ -4511,8 +4429,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0228",
@@ -4560,8 +4478,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0232",
@@ -4609,8 +4527,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0235",
@@ -4650,8 +4568,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0244",
@@ -4699,8 +4617,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0245",
@@ -4748,8 +4666,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0246",
@@ -4797,8 +4715,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0255",
@@ -4838,8 +4756,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0256",
@@ -4887,8 +4805,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0287",
@@ -4928,8 +4846,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0288",
@@ -4977,8 +4895,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0294",
@@ -5026,8 +4944,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0297",
@@ -5067,8 +4985,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0339",
@@ -5124,8 +5042,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0340",
@@ -5165,8 +5083,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0341",
@@ -5214,8 +5132,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0358",
@@ -5255,8 +5173,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0359",
@@ -5296,8 +5214,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0360",
@@ -5345,8 +5263,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0375",
@@ -5394,8 +5312,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0393",
@@ -5443,8 +5361,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0394",
@@ -5492,8 +5410,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0421",
@@ -5541,8 +5459,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0474",
@@ -5582,8 +5500,8 @@
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0002",

@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "field-oriented evidence debt only; terminal fields are excluded as gaps, but actionable fields on completion-blocked objects stay visible with completionEligible=false and companionTerminalGapCount; no ordinary Pair Rule generation",
-  "totalItems": 134,
+  "totalItems": 150,
   "items": [
     {
       "rank": 1,
@@ -425,8 +425,8 @@
     },
     {
       "rank": 36,
-      "speciesId": "sp_0066",
-      "name": "鹤顶红金鱼",
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
       "scientificName": "Carassius auratus var.",
       "field": "social_behavior",
       "status": "reviewed_unknown",
@@ -437,6 +437,30 @@
     },
     {
       "rank": 37,
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "water",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 38,
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "social_behavior",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 39,
       "speciesId": "sp_0066",
       "name": "鹤顶红金鱼",
       "scientificName": "Carassius auratus var.",
@@ -448,33 +472,9 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 38,
-      "speciesId": "sp_0067",
-      "name": "珠鳞金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "social_behavior",
-      "status": "reviewed_unknown",
-      "priorityScore": 110,
-      "reason": "reviewed_unknown_targeted_expansion",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 39,
-      "speciesId": "sp_0067",
-      "name": "珠鳞金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "water",
-      "status": "reviewed_unknown",
-      "priorityScore": 110,
-      "reason": "reviewed_unknown_targeted_expansion",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
       "rank": 40,
-      "speciesId": "sp_0068",
-      "name": "水泡金鱼",
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
       "scientificName": "Carassius auratus var.",
       "field": "social_behavior",
       "status": "reviewed_unknown",
@@ -485,6 +485,30 @@
     },
     {
       "rank": 41,
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "water",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 42,
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "social_behavior",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 43,
       "speciesId": "sp_0068",
       "name": "水泡金鱼",
       "scientificName": "Carassius auratus var.",
@@ -496,33 +520,9 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 42,
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "social_behavior",
-      "status": "reviewed_unknown",
-      "priorityScore": 110,
-      "reason": "reviewed_unknown_targeted_expansion",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 43,
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "water",
-      "status": "reviewed_unknown",
-      "priorityScore": 110,
-      "reason": "reviewed_unknown_targeted_expansion",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
       "rank": 44,
-      "speciesId": "sp_0144",
-      "name": "蓝草尾孔雀鱼",
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
       "field": "social_behavior",
       "status": "reviewed_unknown",
@@ -533,6 +533,30 @@
     },
     {
       "rank": 45,
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "water",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 46,
+      "speciesId": "sp_0144",
+      "name": "蓝草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "social_behavior",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 47,
       "speciesId": "sp_0144",
       "name": "蓝草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
@@ -544,34 +568,10 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 46,
-      "speciesId": "sp_0155",
-      "name": "长鳍红绿灯",
-      "scientificName": "Paracheirodon innesi var.",
-      "field": "social_behavior",
-      "status": "reviewed_unknown",
-      "priorityScore": 110,
-      "reason": "reviewed_unknown_targeted_expansion",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 47,
-      "speciesId": "sp_0155",
-      "name": "长鳍红绿灯",
-      "scientificName": "Paracheirodon innesi var.",
-      "field": "water",
-      "status": "reviewed_unknown",
-      "priorityScore": 110,
-      "reason": "reviewed_unknown_targeted_expansion",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
       "rank": 48,
-      "speciesId": "sp_0361",
-      "name": "长鳍白云金丝 (改良)",
-      "scientificName": "Tanichthys albonubes var.",
+      "speciesId": "sp_0155",
+      "name": "长鳍红绿灯",
+      "scientificName": "Paracheirodon innesi var.",
       "field": "social_behavior",
       "status": "reviewed_unknown",
       "priorityScore": 110,
@@ -581,6 +581,54 @@
     },
     {
       "rank": 49,
+      "speciesId": "sp_0155",
+      "name": "长鳍红绿灯",
+      "scientificName": "Paracheirodon innesi var.",
+      "field": "water",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 50,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "social_behavior",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 51,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "water",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 52,
+      "speciesId": "sp_0361",
+      "name": "长鳍白云金丝 (改良)",
+      "scientificName": "Tanichthys albonubes var.",
+      "field": "social_behavior",
+      "status": "reviewed_unknown",
+      "priorityScore": 110,
+      "reason": "reviewed_unknown_targeted_expansion",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 53,
       "speciesId": "sp_0361",
       "name": "长鳍白云金丝 (改良)",
       "scientificName": "Tanichthys albonubes var.",
@@ -592,7 +640,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 50,
+      "rank": 54,
       "speciesId": "sp_0063",
       "name": "兰寿金鱼",
       "scientificName": "Carassius auratus var. Ranchu",
@@ -604,7 +652,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 51,
+      "rank": 55,
       "speciesId": "sp_0064",
       "name": "泰狮金鱼",
       "scientificName": "Carassius auratus var. Oranda",
@@ -616,59 +664,11 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 52,
-      "speciesId": "sp_0066",
-      "name": "鹤顶红金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 53,
-      "speciesId": "sp_0066",
-      "name": "鹤顶红金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "temperature",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 54,
-      "speciesId": "sp_0066",
-      "name": "鹤顶红金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "territoriality",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 55,
-      "speciesId": "sp_0067",
-      "name": "珠鳞金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
       "rank": 56,
-      "speciesId": "sp_0067",
-      "name": "珠鳞金鱼",
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
       "scientificName": "Carassius auratus var.",
-      "field": "temperature",
+      "field": "predation",
       "status": "needs_research",
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
@@ -677,6 +677,90 @@
     },
     {
       "rank": 57,
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "temperature",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 58,
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "territoriality",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 59,
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "predation",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 60,
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "temperature",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 61,
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "territoriality",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 62,
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "predation",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 63,
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "temperature",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 64,
       "speciesId": "sp_0067",
       "name": "珠鳞金鱼",
       "scientificName": "Carassius auratus var.",
@@ -688,95 +772,11 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 58,
-      "speciesId": "sp_0068",
-      "name": "水泡金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 59,
-      "speciesId": "sp_0068",
-      "name": "水泡金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "temperature",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 60,
-      "speciesId": "sp_0068",
-      "name": "水泡金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "territoriality",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 61,
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 62,
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "temperature",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 63,
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "territoriality",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 64,
-      "speciesId": "sp_0144",
-      "name": "蓝草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
       "rank": 65,
-      "speciesId": "sp_0144",
-      "name": "蓝草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "temperature",
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "predation",
       "status": "needs_research",
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
@@ -785,6 +785,90 @@
     },
     {
       "rank": 66,
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "temperature",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 67,
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "territoriality",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 68,
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "predation",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 69,
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "temperature",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 70,
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "territoriality",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 71,
+      "speciesId": "sp_0144",
+      "name": "蓝草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "predation",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 72,
+      "speciesId": "sp_0144",
+      "name": "蓝草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "temperature",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 73,
       "speciesId": "sp_0144",
       "name": "蓝草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
@@ -796,7 +880,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 67,
+      "rank": 74,
       "speciesId": "sp_0149",
       "name": "熊猫金鱼",
       "scientificName": "Carassius auratus var. Panda",
@@ -808,7 +892,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 68,
+      "rank": 75,
       "speciesId": "sp_0150",
       "name": "短尾狮头金鱼",
       "scientificName": "Carassius auratus var. Oranda",
@@ -820,7 +904,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 69,
+      "rank": 76,
       "speciesId": "sp_0152",
       "name": "荧光斑马鱼",
       "scientificName": "Danio rerio var. GloFish",
@@ -832,7 +916,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 70,
+      "rank": 77,
       "speciesId": "sp_0153",
       "name": "球形珍珠马甲",
       "scientificName": "Trichopodus leerii var. Balloon",
@@ -844,7 +928,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 71,
+      "rank": 78,
       "speciesId": "sp_0155",
       "name": "长鳍红绿灯",
       "scientificName": "Paracheirodon innesi var.",
@@ -856,7 +940,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 72,
+      "rank": 79,
       "speciesId": "sp_0155",
       "name": "长鳍红绿灯",
       "scientificName": "Paracheirodon innesi var.",
@@ -868,7 +952,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 73,
+      "rank": 80,
       "speciesId": "sp_0155",
       "name": "长鳍红绿灯",
       "scientificName": "Paracheirodon innesi var.",
@@ -880,7 +964,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 74,
+      "rank": 81,
       "speciesId": "sp_0161",
       "name": "巧克力皮球",
       "scientificName": "Poecilia sphenops var. Chocolate",
@@ -892,7 +976,43 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 75,
+      "rank": 82,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "predation",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 83,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "temperature",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 84,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "territoriality",
+      "status": "needs_research",
+      "priorityScore": 100,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 85,
       "speciesId": "sp_0168",
       "name": "金玛丽",
       "scientificName": "Poecilia latipinna var. Gold",
@@ -904,7 +1024,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 76,
+      "rank": 86,
       "speciesId": "sp_0169",
       "name": "银玛丽",
       "scientificName": "Poecilia latipinna var. Silver",
@@ -916,7 +1036,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 77,
+      "rank": 87,
       "speciesId": "sp_0171",
       "name": "白玉金丝鱼",
       "scientificName": "Tanichthys albonubes var. Albino",
@@ -928,7 +1048,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 78,
+      "rank": 88,
       "speciesId": "sp_0172",
       "name": "长鳍白云金丝",
       "scientificName": "Tanichthys albonubes var. Longfin",
@@ -940,7 +1060,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 79,
+      "rank": 89,
       "speciesId": "sp_0180",
       "name": "龙睛金鱼",
       "scientificName": "Carassius auratus var. Telescopes",
@@ -952,7 +1072,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 80,
+      "rank": 90,
       "speciesId": "sp_0196",
       "name": "一眉道人 (黄金型)",
       "scientificName": "Sahyadria denisonii var. Gold",
@@ -964,7 +1084,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 81,
+      "rank": 91,
       "speciesId": "sp_0203",
       "name": "绿赏皮球",
       "scientificName": "Poecilia sphenops var. Green",
@@ -976,7 +1096,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 82,
+      "rank": 92,
       "speciesId": "sp_0209",
       "name": "血玛丽鱼",
       "scientificName": "Poecilia latipinna var. Blood",
@@ -988,7 +1108,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 83,
+      "rank": 93,
       "speciesId": "sp_0213",
       "name": "黑线飞狐 (金型)",
       "scientificName": "Crossocheilus langei var. Gold",
@@ -1000,7 +1120,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 84,
+      "rank": 94,
       "speciesId": "sp_0215",
       "name": "长鳍一眉道人",
       "scientificName": "Sahyadria denisonii var. Longfin",
@@ -1012,7 +1132,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 85,
+      "rank": 95,
       "speciesId": "sp_0233",
       "name": "球形珍珠马甲 (红眼)",
       "scientificName": "Trichopodus leerii var. Albino Balloon",
@@ -1024,7 +1144,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 86,
+      "rank": 96,
       "speciesId": "sp_0237",
       "name": "高鳍红玛丽",
       "scientificName": "Poecilia latipinna var. High Fin Red",
@@ -1036,7 +1156,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 87,
+      "rank": 97,
       "speciesId": "sp_0252",
       "name": "白金反游猫",
       "scientificName": "Synodontis nigriventris var. White",
@@ -1048,7 +1168,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 88,
+      "rank": 98,
       "speciesId": "sp_0253",
       "name": "红纹一眉道人",
       "scientificName": "Sahyadria denisonii var. Red Line",
@@ -1060,7 +1180,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 89,
+      "rank": 99,
       "speciesId": "sp_0254",
       "name": "白金黑线飞狐",
       "scientificName": "Crossocheilus langei var. Platinum",
@@ -1072,7 +1192,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 90,
+      "rank": 100,
       "speciesId": "sp_0267",
       "name": "红头珍珠马甲",
       "scientificName": "Trichopodus leerii var. Red Head",
@@ -1084,7 +1204,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 91,
+      "rank": 101,
       "speciesId": "sp_0289",
       "name": "荧光红斑马",
       "scientificName": "Danio rerio var. Glo Red",
@@ -1096,7 +1216,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 92,
+      "rank": 102,
       "speciesId": "sp_0290",
       "name": "荧光绿斑马",
       "scientificName": "Danio rerio var. Glo Green",
@@ -1108,7 +1228,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 93,
+      "rank": 103,
       "speciesId": "sp_0291",
       "name": "荧光橙斑马",
       "scientificName": "Danio rerio var. Glo Orange",
@@ -1120,7 +1240,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 94,
+      "rank": 104,
       "speciesId": "sp_0292",
       "name": "球形金玛丽",
       "scientificName": "Poecilia latipinna var. Gold Balloon",
@@ -1132,7 +1252,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 95,
+      "rank": 105,
       "speciesId": "sp_0293",
       "name": "球形黑玛丽",
       "scientificName": "Poecilia sphenops var. Black Balloon",
@@ -1144,7 +1264,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 96,
+      "rank": 106,
       "speciesId": "sp_0295",
       "name": "长鳍电光美人",
       "scientificName": "Melanotaenia praecox var. Longfin",
@@ -1156,7 +1276,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 97,
+      "rank": 107,
       "speciesId": "sp_0348",
       "name": "红白虎头金鱼",
       "scientificName": "Carassius auratus var. Tigerhead",
@@ -1168,7 +1288,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 98,
+      "rank": 108,
       "speciesId": "sp_0349",
       "name": "蓝寿 (五花)",
       "scientificName": "Carassius auratus var. Calico Ranchu",
@@ -1180,7 +1300,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 99,
+      "rank": 109,
       "speciesId": "sp_0350",
       "name": "黑狮头金鱼",
       "scientificName": "Carassius auratus var. Black Oranda",
@@ -1192,7 +1312,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 100,
+      "rank": 110,
       "speciesId": "sp_0351",
       "name": "红白蝶尾",
       "scientificName": "Carassius auratus var. Butterfly Tail",
@@ -1204,7 +1324,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 101,
+      "rank": 111,
       "speciesId": "sp_0361",
       "name": "长鳍白云金丝 (改良)",
       "scientificName": "Tanichthys albonubes var.",
@@ -1216,7 +1336,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 102,
+      "rank": 112,
       "speciesId": "sp_0361",
       "name": "长鳍白云金丝 (改良)",
       "scientificName": "Tanichthys albonubes var.",
@@ -1228,7 +1348,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 103,
+      "rank": 113,
       "speciesId": "sp_0361",
       "name": "长鳍白云金丝 (改良)",
       "scientificName": "Tanichthys albonubes var.",
@@ -1240,7 +1360,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 104,
+      "rank": 114,
       "speciesId": "sp_0363",
       "name": "荧光紫斑马",
       "scientificName": "Danio rerio var. Glo Purple",
@@ -1252,7 +1372,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 105,
+      "rank": 115,
       "speciesId": "sp_0364",
       "name": "荧光粉斑马",
       "scientificName": "Danio rerio var. Glo Pink",
@@ -1264,7 +1384,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 106,
+      "rank": 116,
       "speciesId": "sp_0385",
       "name": "雪白金金鱼 (改良)",
       "scientificName": "Carassius auratus var. White Gold",
@@ -1276,7 +1396,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 107,
+      "rank": 117,
       "speciesId": "sp_0386",
       "name": "黑金刚龙睛",
       "scientificName": "Carassius auratus var. Black Moor",
@@ -1288,7 +1408,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 108,
+      "rank": 118,
       "speciesId": "sp_0387",
       "name": "熊猫蝶尾 (极品)",
       "scientificName": "Carassius auratus var. Panda Butterfly",
@@ -1300,7 +1420,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 109,
+      "rank": 119,
       "speciesId": "sp_0395",
       "name": "黄金大帆飞狐",
       "scientificName": "Crossocheilus langei var. Gold Longfin",
@@ -1312,7 +1432,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 110,
+      "rank": 120,
       "speciesId": "sp_0406",
       "name": "五彩青蛙 (大规格改良)",
       "scientificName": "Synchiropus splendidus var. XL",
@@ -1324,7 +1444,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 111,
+      "rank": 121,
       "speciesId": "sp_0413",
       "name": "黄金眼镜蛇蛇鱼 (长鳍)",
       "scientificName": "Pangio kuhlii var. Longfin",
@@ -1336,7 +1456,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 112,
+      "rank": 122,
       "speciesId": "sp_0419",
       "name": "荧光橙斑马 (长鳍)",
       "scientificName": "Danio rerio var. Glo Orange Longfin",
@@ -1348,7 +1468,7 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 113,
+      "rank": 123,
       "speciesId": "sp_0426",
       "name": "极地白云金丝",
       "scientificName": "Tanichthys albonubes var. Polar",
@@ -1360,139 +1480,175 @@
       "companionTerminalGapCount": 7
     },
     {
-      "rank": 114,
-      "speciesId": "sp_0066",
-      "name": "鹤顶红金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "adult_size",
-      "status": "needs_research",
-      "priorityScore": 95,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 115,
-      "speciesId": "sp_0067",
-      "name": "珠鳞金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "adult_size",
-      "status": "needs_research",
-      "priorityScore": 95,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 116,
-      "speciesId": "sp_0068",
-      "name": "水泡金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "adult_size",
-      "status": "needs_research",
-      "priorityScore": 95,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 117,
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "adult_size",
-      "status": "needs_research",
-      "priorityScore": 95,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 118,
-      "speciesId": "sp_0144",
-      "name": "蓝草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "adult_size",
-      "status": "needs_research",
-      "priorityScore": 95,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 119,
-      "speciesId": "sp_0155",
-      "name": "长鳍红绿灯",
-      "scientificName": "Paracheirodon innesi var.",
-      "field": "adult_size",
-      "status": "needs_research",
-      "priorityScore": 95,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 120,
-      "speciesId": "sp_0361",
-      "name": "长鳍白云金丝 (改良)",
-      "scientificName": "Tanichthys albonubes var.",
-      "field": "adult_size",
-      "status": "needs_research",
-      "priorityScore": 95,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 121,
-      "speciesId": "sp_0066",
-      "name": "鹤顶红金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "tank_size",
-      "status": "needs_research",
-      "priorityScore": 90,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 122,
-      "speciesId": "sp_0067",
-      "name": "珠鳞金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "tank_size",
-      "status": "needs_research",
-      "priorityScore": 90,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
-      "rank": 123,
-      "speciesId": "sp_0068",
-      "name": "水泡金鱼",
-      "scientificName": "Carassius auratus var.",
-      "field": "tank_size",
-      "status": "needs_research",
-      "priorityScore": 90,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": true,
-      "companionTerminalGapCount": 0
-    },
-    {
       "rank": 124,
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "field": "tank_size",
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "adult_size",
       "status": "needs_research",
-      "priorityScore": 90,
+      "priorityScore": 95,
       "reason": "missing_reviewed_authority",
       "completionEligible": true,
       "companionTerminalGapCount": 0
     },
     {
       "rank": 125,
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 126,
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 127,
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 128,
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 129,
+      "speciesId": "sp_0144",
+      "name": "蓝草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 130,
+      "speciesId": "sp_0155",
+      "name": "长鳍红绿灯",
+      "scientificName": "Paracheirodon innesi var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 131,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 132,
+      "speciesId": "sp_0361",
+      "name": "长鳍白云金丝 (改良)",
+      "scientificName": "Tanichthys albonubes var.",
+      "field": "adult_size",
+      "status": "needs_research",
+      "priorityScore": 95,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 133,
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "tank_size",
+      "status": "needs_research",
+      "priorityScore": 90,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 134,
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "tank_size",
+      "status": "needs_research",
+      "priorityScore": 90,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 135,
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "tank_size",
+      "status": "needs_research",
+      "priorityScore": 90,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 136,
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "tank_size",
+      "status": "needs_research",
+      "priorityScore": 90,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 137,
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "field": "tank_size",
+      "status": "needs_research",
+      "priorityScore": 90,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 138,
       "speciesId": "sp_0144",
       "name": "蓝草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
@@ -1504,7 +1660,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 126,
+      "rank": 139,
       "speciesId": "sp_0155",
       "name": "长鳍红绿灯",
       "scientificName": "Paracheirodon innesi var.",
@@ -1516,7 +1672,19 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 127,
+      "rank": 140,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "tank_size",
+      "status": "needs_research",
+      "priorityScore": 90,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 141,
       "speciesId": "sp_0361",
       "name": "长鳍白云金丝 (改良)",
       "scientificName": "Tanichthys albonubes var.",
@@ -1528,7 +1696,19 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 128,
+      "rank": 142,
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "ph",
+      "status": "needs_research",
+      "priorityScore": 85,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 143,
       "speciesId": "sp_0066",
       "name": "鹤顶红金鱼",
       "scientificName": "Carassius auratus var.",
@@ -1540,7 +1720,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 129,
+      "rank": 144,
       "speciesId": "sp_0067",
       "name": "珠鳞金鱼",
       "scientificName": "Carassius auratus var.",
@@ -1552,7 +1732,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 130,
+      "rank": 145,
       "speciesId": "sp_0068",
       "name": "水泡金鱼",
       "scientificName": "Carassius auratus var.",
@@ -1564,7 +1744,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 131,
+      "rank": 146,
       "speciesId": "sp_0143",
       "name": "红草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
@@ -1576,7 +1756,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 132,
+      "rank": 147,
       "speciesId": "sp_0144",
       "name": "蓝草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
@@ -1588,7 +1768,7 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 133,
+      "rank": 148,
       "speciesId": "sp_0155",
       "name": "长鳍红绿灯",
       "scientificName": "Paracheirodon innesi var.",
@@ -1600,7 +1780,19 @@
       "companionTerminalGapCount": 0
     },
     {
-      "rank": 134,
+      "rank": 149,
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "field": "ph",
+      "status": "needs_research",
+      "priorityScore": 85,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": true,
+      "companionTerminalGapCount": 0
+    },
+    {
+      "rank": 150,
       "speciesId": "sp_0361",
       "name": "长鳍白云金丝 (改良)",
       "scientificName": "Tanichthys albonubes var.",

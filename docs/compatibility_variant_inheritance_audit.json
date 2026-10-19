@@ -31,8 +31,8 @@
     "explicitReviewedCanonicalBridges": 21,
     "reviewedColorPolicyCanonicalRecords": 13,
     "reviewedColorTaxonRootRecords": 4,
-    "reviewedVariantFieldPolicyRecords": 8,
-    "totalCanonicalIdentityRecords": 42,
+    "reviewedVariantFieldPolicyRecords": 10,
+    "totalCanonicalIdentityRecords": 44,
     "policyPromotedReadySpecies": 12,
     "fieldPolicyReadySpecies": 0,
     "directReviewedVariantObjects": 2,
@@ -383,6 +383,33 @@
   ],
   "fieldScopedPolicies": [
     {
+      "speciesId": "sp_0065",
+      "name": "蝶尾金鱼",
+      "scientificName": "Carassius auratus var.",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Butterfly Tail",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-14-cn-goldfish-naming-standard-butterfly-tail",
+        "phase2-14-dalian-butterfly-tail-goldfish"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
+    {
       "speciesId": "sp_0066",
       "name": "鹤顶红金鱼",
       "scientificName": "Carassius auratus var.",
@@ -528,6 +555,33 @@
       "evidenceIds": [
         "phase2-12-fishbase-paracheirodon-innesi",
         "phase2-12-aquarium-coop-neon-longfin"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
+    {
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "color_morph",
+      "variantKey": "Red Grass Goldfish",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-14-dalian-grass-goldfish",
+        "phase2-14-china-feed-red-grass-goldfish"
       ],
       "inheritedFacts": [],
       "blockedFacts": [

@@ -1,15 +1,14 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 trade identity closure + runtime placeholder guard
+## TOP CURRENT OVERRIDE — 2026-10-19 goldfish exact-identity closure
 
-- Working authority: local `main` after `2413cbb3`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- Exact identity closures: `sp_0216 黄金雷龙 -> Channa aurantimaculata` as same-taxon Golden Cobra alias (`variantKey=null`), plus `sp_0143 Red Grass` and `sp_0144 Blue Grass` as `Poecilia reticulata` trade strains.
-- Golden Cobra inherits all 8 reviewed fields from the same taxon and becomes ready. Red/Blue Grass are identity-only with **0 inherited facts / all 8 facts blocked**.
-- Runtime reviewed Knowledge now treats every enum-like `unknown` placeholder as non-concrete across water/social/territoriality/fin/predation/swimming fields; no unknown is converted into an optimistic safe value.
-- Coverage: **308 fish / 100 generic-ready / 112 core-complete / 93 fish identity-held / 260 combined held**.
-- Identity: **95 boundaries = 93 fish + 2 non-fish / 17,056 unresolved pairs**. Queue: **18 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
-- Field debt: **134 visible = 56 completion-eligible strain/morphology fields + 78 deferred predation fields**. Research plan: **4 guarded jobs / 7 variants / 0 exact objects**.
-- Canonical: **42 total / 21 explicit / 13 colour policy / 4 taxon roots / 8 field policies**; 12 policy-promoted ready, 0 field-policy ready.
+- Working authority: local `main` after `be687583`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- `sp_0065 蝶尾金鱼` is now reviewed as `Carassius auratus / Butterfly Tail`; `sp_0162 红草鱼` is reviewed as `Carassius auratus / Red Grass Goldfish`.
+- Government/peer-reviewed goldfish evidence closes identity, while both objects remain **identity-only with 0 inherited facts / all 8 Compatibility facts blocked** and no generated Profile.
+- Coverage: **308 fish / 100 generic-ready / 112 core-complete / 91 fish identity-held / 258 combined held**.
+- Identity: **93 boundaries = 91 fish + 2 non-fish / 16,735 unresolved pairs**. Queue: **16 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
+- Field debt: **150 visible = 72 completion-eligible strain/morphology fields + 78 deferred predation fields**. Research plan: **4 guarded jobs / 9 variants / 0 exact objects**; the Carassius lane now contains 5 variants.
+- Canonical: **44 total / 21 explicit / 13 colour policy / 4 taxon roots / 10 field policies**; 12 policy-promoted ready, 0 field-policy ready.
 - Fully informed: **100 species / 4,950 pairs / 0 insufficient_data**. Readability: **9,591 reviewed-fish pairs / 97 exceptional unknowns**.
-- Repository authority: **126 Profiles / 21 Pair Rules**. Release generations remain exact **63 / 85 / 95 / 99 / 100 / 101** because Golden Cobra is post-target source-controlled authority.
+- Repository authority remains **126 Profiles / 21 Pair Rules**; release generations remain exact **63 / 85 / 95 / 99 / 100 / 101**.
 - Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

@@ -11,8 +11,8 @@ assert.equal(audit.summary.fishDomainSpecies, 308);
 assert.equal(audit.summary.explicitReviewedCanonicalBridges, 21);
 assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 13);
 assert.equal(audit.summary.reviewedColorTaxonRootRecords, 4);
-assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 8);
-assert.equal(audit.summary.totalCanonicalIdentityRecords, 42);
+assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 10);
+assert.equal(audit.summary.totalCanonicalIdentityRecords, 44);
 assert.equal(audit.summary.genericOnboardingReadySpecies, 100);
 assert.equal(audit.summary.policyPromotedReadySpecies, 12);
 assert.equal(audit.summary.fieldPolicyReadySpecies, 0);
@@ -54,7 +54,23 @@ assert.equal(blueGourami.variantKey, 'Blue');
 assert.equal(blueGourami.genericOnboardingReady, true);
 assert.equal(blueGourami.authoritativeFieldCount, 8);
 
-assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0258', 'sp_0361']);
+assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0258', 'sp_0361']);
+for (const [speciesId, relationshipType, variantKey] of [
+  ['sp_0065', 'selectively_bred_variant', 'Butterfly Tail'],
+  ['sp_0162', 'color_morph', 'Red Grass Goldfish'],
+] as const) {
+  const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
+  assert.ok(policy);
+  assert.equal(policy.registrySource, 'reviewed_variant_field_policy');
+  assert.equal(policy.relationshipType, relationshipType);
+  assert.equal(policy.canonicalScientificName, 'Carassius auratus');
+  assert.equal(policy.variantKey, variantKey);
+  assert.deepEqual(policy.inheritedFacts, []);
+  assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
+  assert.equal(policy.authoritativeFieldCount, 0);
+  assert.equal(policy.genericOnboardingReady, false);
+  assert.deepEqual(policy.terminalGapFields, []);
+}
 for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
   assert.ok(policy);

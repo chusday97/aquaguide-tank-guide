@@ -38,7 +38,7 @@ const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224', 'sp_0445'];
 assert.equal(explicitCanonicalIds.length, 21);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
 assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
-const expectedVariantFieldPolicyIds = ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0258', 'sp_0361'];
+const expectedVariantFieldPolicyIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0258', 'sp_0361'];
 assert.deepEqual([...reviewedVariantFieldPolicySpeciesIds].sort(), expectedVariantFieldPolicyIds);
 assert.equal(Object.keys(catalogCanonicalIdentities).length, explicitCanonicalIds.length + expectedColorPolicyIds.length + expectedVariantFieldPolicyIds.length);
 for (const speciesId of explicitCanonicalIds) assert.ok(catalogCanonicalIdentities[speciesId]);
@@ -58,7 +58,7 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       assert.deepEqual(identity.inheritancePolicy.inheritedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation']);
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, ['social_behavior', 'territoriality']);
     } else {
-      assert.ok(['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId));
+      assert.ok(['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361'].includes(identity.catalogSpeciesId));
       assert.deepEqual(identity.inheritancePolicy.inheritedFacts, [], 'identity-only strain or morphology review must not imply husbandry inheritance');
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
     }
@@ -104,7 +104,7 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       || identity.registrySource === 'reviewed_variant_field_policy',
     );
     const resolvedProfile = getReviewedCompatibilityProfileForFish(catalog);
-    if (['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId)) {
+    if (['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361'].includes(identity.catalogSpeciesId)) {
       assert.equal(resolvedProfile, undefined, 'identity-only morphology policy must not manufacture a Compatibility Profile');
     } else {
       assert.ok(resolvedProfile);
@@ -153,6 +153,25 @@ for (const [speciesId, variantKey] of [
   assert.ok(fish);
   assert.equal(getReviewedCompatibilityProfileForFish(fish), undefined);
 }
+for (const [speciesId, relationshipType, variantKey] of [
+  ['sp_0065', 'selectively_bred_variant', 'Butterfly Tail'],
+  ['sp_0162', 'color_morph', 'Red Grass Goldfish'],
+] as const) {
+  const identity = getCatalogCanonicalIdentity(speciesId);
+  assert.ok(identity);
+  assert.equal(identity.registrySource, 'reviewed_variant_field_policy');
+  assert.equal(identity.relationshipType, relationshipType);
+  assert.equal(identity.canonicalRootKind, 'reviewed_taxon');
+  assert.equal(identity.canonicalScientificName, 'Carassius auratus');
+  assert.equal(identity.variantKey, variantKey);
+  assert.deepEqual(identity.inheritancePolicy.inheritedFacts, []);
+  assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
+  assert.equal(getCatalogIdentityBoundary(speciesId), undefined);
+  const fish = fishData.find(item => item.id === speciesId);
+  assert.ok(fish);
+  assert.equal(getReviewedCompatibilityProfileForFish(fish), undefined);
+}
+
 for (const [speciesId, variantKey] of [
   ['sp_0143', 'Red Grass'],
   ['sp_0144', 'Blue Grass'],
@@ -408,7 +427,7 @@ const blueGouramiCoverage = coverage.rows.find(item => item.speciesId === 'sp_04
 assert.ok(blueGouramiCoverage);
 assert.equal(blueGouramiCoverage.genericOnboardingReady, true);
 assert.equal(blueGouramiCoverage.authoritativeFieldCount, 8);
-const identityOnlyVariantIds = ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'];
+const identityOnlyVariantIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361'];
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);

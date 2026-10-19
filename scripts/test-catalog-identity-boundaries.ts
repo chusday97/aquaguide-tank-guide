@@ -337,6 +337,23 @@ assert.ok(karbiAnglongCorrection?.citationIds.includes('golden-aquaria-channa-st
 assert.equal(getCatalogIdentityBoundary('sp_0411'), undefined, 'reviewed Karbi Anglong locality identity evidence must supersede the historical variant hold');
 assert.ok(getReviewedCompatibilityProfile('sp_0411'));
 
+for (const [speciesId, variantKey] of [
+  ['sp_0065', 'Butterfly Tail'],
+  ['sp_0162', 'Red Grass Goldfish'],
+] as const) {
+  const historicalHold = catalogIdentityBoundaries[speciesId];
+  assert.equal(historicalHold?.code, 'catalog_scientific_name_unresolved');
+  const correction = getCatalogFieldReviews(speciesId).filter(review => review.field === 'identity').at(-1);
+  assert.equal(correction?.resolution, 'supported');
+  assert.deepEqual(correction?.proposedValue, {
+    scientificName: 'Carassius auratus',
+    baseSpeciesKey: 'Carassius auratus',
+    variantKey,
+  });
+  assert.equal(getCatalogIdentityBoundary(speciesId), undefined, `${speciesId} reviewed exact goldfish identity must supersede the historical blank-var hold`);
+  assert.equal(getReviewedCompatibilityProfile(speciesId), undefined, `${speciesId} identity-only correction must not manufacture a Compatibility Profile`);
+}
+
 const goldenCobraCorrection = getCatalogFieldReviews('sp_0216').filter(review => review.field === 'identity').at(-1);
 assert.equal(goldenCobraCorrection?.resolution, 'supported');
 assert.deepEqual(goldenCobraCorrection?.proposedValue, {

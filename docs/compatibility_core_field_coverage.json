@@ -16,7 +16,7 @@
   "oneFieldGapSpecies": 9,
   "runtimeReviewedProfileSpecies": 162,
   "fishCompatibilityDomainSpecies": 308,
-  "fishIdentityHeldSpecies": 93,
+  "fishIdentityHeldSpecies": 91,
   "unsupportedDomainSpecies": 167,
   "unsupportedDomainSpeciesByLifeType": {
     "plant": 66,
@@ -24,108 +24,108 @@
     "coral": 43,
     "reptile": 10
   },
-  "domainOrIdentityHeldSpecies": 260,
-  "visibleResearchDebtFields": 134,
-  "completionEligibleResearchDebtFields": 56,
+  "domainOrIdentityHeldSpecies": 258,
+  "visibleResearchDebtFields": 150,
+  "completionEligibleResearchDebtFields": 72,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
       "reviewed_supported": 165,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 50,
+      "reviewed_unknown": 52,
       "needs_research": 0,
-      "missing_identity_or_domain": 260,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "temperature": {
       "reviewed_supported": 150,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
-      "needs_research": 7,
-      "missing_identity_or_domain": 260,
+      "needs_research": 9,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "ph": {
       "reviewed_supported": 144,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
-      "needs_research": 7,
-      "missing_identity_or_domain": 260,
+      "needs_research": 9,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "adult_size": {
       "reviewed_supported": 154,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
-      "needs_research": 7,
-      "missing_identity_or_domain": 260,
+      "needs_research": 9,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "tank_size": {
       "reviewed_supported": 143,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 65,
-      "needs_research": 7,
-      "missing_identity_or_domain": 260,
+      "needs_research": 9,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "social_behavior": {
       "reviewed_supported": 133,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 82,
+      "reviewed_unknown": 84,
       "needs_research": 0,
-      "missing_identity_or_domain": 260,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "territoriality": {
       "reviewed_supported": 93,
       "reviewed_neutral_or_negative": 41,
       "reviewed_unknown": 74,
-      "needs_research": 7,
-      "missing_identity_or_domain": 260,
+      "needs_research": 9,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 83,
       "reviewed_neutral_or_negative": 38,
       "reviewed_unknown": 9,
-      "needs_research": 85,
-      "missing_identity_or_domain": 260,
+      "needs_research": 87,
+      "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
   },
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 85
+      "count": 87
     },
     {
       "field": "water",
-      "count": 7
+      "count": 9
     },
     {
       "field": "territoriality",
-      "count": 7
+      "count": 9
     },
     {
       "field": "temperature",
-      "count": 7
+      "count": 9
     },
     {
       "field": "tank_size",
-      "count": 7
+      "count": 9
     },
     {
       "field": "social_behavior",
-      "count": 7
+      "count": 9
     },
     {
       "field": "ph",
-      "count": 7
+      "count": 9
     },
     {
       "field": "adult_size",
-      "count": 7
+      "count": 9
     }
   ],
   "rows": [
@@ -5585,80 +5585,68 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "actionableGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch26-fishbase-carassius-auratus-butterfly-tail"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch26-fishbase-carassius-auratus-butterfly-tail"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_social_mode_unknown"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         }
       }
     },
@@ -13324,80 +13312,68 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "actionableGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch28-fishbase-carassius-auratus-red-grass"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch28-fishbase-carassius-auratus-red-grass"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch28-fishbase-carassius-auratus-red-grass"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch28-fishbase-carassius-auratus-red-grass"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch28-fishbase-carassius-auratus-red-grass"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch28-fishbase-carassius-auratus-red-grass"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_social_mode_unknown"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch28-fishbase-carassius-auratus-red-grass"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch28-fishbase-carassius-auratus-red-grass"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         }
       }
     },

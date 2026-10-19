@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-19T07:17:08.740Z",
+  "generatedAt": "2026-10-19T08:24:50.392Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
   "sourceSchemaVersion": 3,
   "promotionAllowed": false,
@@ -13,17 +13,17 @@
     "researchDebtIsTerminalUntilNewEvidence": true
   },
   "summary": {
-    "total": 95,
-    "fishIdentityBoundaries": 93,
+    "total": 93,
+    "fishIdentityBoundaries": 91,
     "nonFishIdentityBoundaries": 2,
-    "blankVariantCatalogCorrections": 18,
+    "blankVariantCatalogCorrections": 16,
     "readyBaseIdentityBoundaries": 20,
     "readyBaseMorphologySafeBoundaries": 9,
     "readyBaseMorphologyRiskBoundaries": 11,
-    "sourceActiveIdentityBoundaries": 95,
-    "sourceIdentityUnknownPairs": 17056,
+    "sourceActiveIdentityBoundaries": 93,
+    "sourceIdentityUnknownPairs": 16735,
     "automatedResearchEligible": 0,
-    "manualReviewOnly": 95,
+    "manualReviewOnly": 93,
     "evidenceCeilingHolds": 57,
     "partialInheritanceReview": 0,
     "byQueue": {
@@ -35,18 +35,18 @@
       "trade_name_disambiguation": 16,
       "evidence_ceiling_hold": 57,
       "hybrid_object_hold": 3,
-      "catalog_structure_correction": 18
+      "catalog_structure_correction": 16
     },
     "soleBoundaryPairImpactByQueue": {
       "exact_object_identity_research": 0,
       "partial_inheritance_review": 0,
-      "manual_label_disambiguation": 160,
+      "manual_label_disambiguation": 162,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 2217,
-      "evidence_ceiling_hold": 7699,
-      "hybrid_object_hold": 479,
-      "catalog_structure_correction": 2673
+      "trade_name_disambiguation": 2245,
+      "evidence_ceiling_hold": 7803,
+      "hybrid_object_hold": 485,
+      "catalog_structure_correction": 2385
     }
   },
   "items": [
@@ -82,42 +82,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
-    },
-    {
-      "speciesId": "sp_0065",
-      "name": "蝶尾金鱼",
-      "scientificName": "Carassius auratus var.",
-      "lifeType": "fish",
-      "blankVariantSuffix": true,
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "migrationPath": "catalog_structure_correction",
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
-      "automatedResearchAllowed": false,
-      "requiresHumanReview": true,
-      "fullInheritanceAllowed": false,
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
-      "baseCandidateSpeciesIds": [],
-      "identityEvidenceStatus": "no_object_identity_review",
-      "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
-      "researchLabels": [
-        "Carassius auratus var.",
-        "蝶尾金鱼",
-        "Carassius auratus ornamental Butterfly Tail lineage"
-      ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0124",
@@ -150,8 +116,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0127",
@@ -188,8 +154,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0158",
@@ -226,8 +192,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0159",
@@ -260,8 +226,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0160",
@@ -294,42 +260,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "scientificName": "Carassius auratus var.",
-      "lifeType": "fish",
-      "blankVariantSuffix": true,
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "migrationPath": "catalog_structure_correction",
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
-      "automatedResearchAllowed": false,
-      "requiresHumanReview": true,
-      "fullInheritanceAllowed": false,
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
-      "baseCandidateSpeciesIds": [],
-      "identityEvidenceStatus": "no_object_identity_review",
-      "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
-      "researchLabels": [
-        "Carassius auratus var.",
-        "红草鱼",
-        "Carassius auratus ornamental Red Grass lineage"
-      ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0163",
@@ -362,8 +294,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0175",
@@ -403,8 +335,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0179",
@@ -437,8 +369,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0182",
@@ -471,8 +403,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0201",
@@ -505,8 +437,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0210",
@@ -539,8 +471,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0211",
@@ -573,8 +505,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0217",
@@ -607,8 +539,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0230",
@@ -643,8 +575,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0241",
@@ -681,8 +613,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0243",
@@ -716,8 +648,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0247",
@@ -754,8 +686,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0248",
@@ -788,8 +720,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0263",
@@ -822,8 +754,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0264",
@@ -856,8 +788,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0265",
@@ -890,8 +822,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0268",
@@ -924,8 +856,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0269",
@@ -958,8 +890,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0270",
@@ -992,8 +924,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0271",
@@ -1032,8 +964,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0273",
@@ -1066,8 +998,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0280",
@@ -1102,8 +1034,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0281",
@@ -1136,8 +1068,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0282",
@@ -1170,8 +1102,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0286",
@@ -1204,8 +1136,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0296",
@@ -1242,8 +1174,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0365",
@@ -1280,8 +1212,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0366",
@@ -1314,8 +1246,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0372",
@@ -1352,8 +1284,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0373",
@@ -1390,8 +1322,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0374",
@@ -1428,8 +1360,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0376",
@@ -1468,8 +1400,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0392",
@@ -1502,8 +1434,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0399",
@@ -1543,8 +1475,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0409",
@@ -1577,8 +1509,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0410",
@@ -1611,8 +1543,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0412",
@@ -1645,8 +1577,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0414",
@@ -1679,8 +1611,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0415",
@@ -1717,8 +1649,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0416",
@@ -1755,8 +1687,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0418",
@@ -1789,8 +1721,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0420",
@@ -1823,8 +1755,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 160,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 162,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0021",
@@ -1858,8 +1790,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 159,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 161,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0141",
@@ -1892,8 +1824,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0142",
@@ -1928,8 +1860,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0145",
@@ -1964,8 +1896,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0154",
@@ -1998,8 +1930,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0167",
@@ -2032,8 +1964,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0170",
@@ -2068,8 +2000,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0204",
@@ -2102,8 +2034,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0205",
@@ -2138,8 +2070,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0206",
@@ -2174,8 +2106,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0208",
@@ -2208,8 +2140,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0212",
@@ -2246,8 +2178,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0225",
@@ -2280,8 +2212,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0226",
@@ -2314,8 +2246,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0227",
@@ -2350,8 +2282,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0228",
@@ -2386,8 +2318,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0232",
@@ -2422,8 +2354,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0235",
@@ -2456,8 +2388,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0244",
@@ -2492,8 +2424,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0245",
@@ -2528,8 +2460,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0246",
@@ -2564,8 +2496,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0255",
@@ -2598,8 +2530,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0256",
@@ -2634,8 +2566,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0287",
@@ -2668,8 +2600,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0288",
@@ -2704,8 +2636,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0294",
@@ -2740,8 +2672,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0297",
@@ -2774,8 +2706,8 @@
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0339",
@@ -2812,8 +2744,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0340",
@@ -2846,8 +2778,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0341",
@@ -2882,8 +2814,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0358",
@@ -2916,8 +2848,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0359",
@@ -2950,8 +2882,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0360",
@@ -2986,8 +2918,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0375",
@@ -3022,8 +2954,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0393",
@@ -3058,8 +2990,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0394",
@@ -3094,8 +3026,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0421",
@@ -3130,8 +3062,8 @@
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0474",
@@ -3164,8 +3096,8 @@
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 137,
-      "sharedBoundaryIdentityUnknownPairs": 87
+      "soleBoundaryIdentityUnknownPairs": 139,
+      "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
       "speciesId": "sp_0002",
