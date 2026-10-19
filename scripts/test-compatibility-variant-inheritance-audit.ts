@@ -11,8 +11,8 @@ assert.equal(audit.summary.fishDomainSpecies, 308);
 assert.equal(audit.summary.explicitReviewedCanonicalBridges, 20);
 assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 13);
 assert.equal(audit.summary.reviewedColorTaxonRootRecords, 4);
-assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 4);
-assert.equal(audit.summary.totalCanonicalIdentityRecords, 37);
+assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 6);
+assert.equal(audit.summary.totalCanonicalIdentityRecords, 39);
 assert.equal(audit.summary.genericOnboardingReadySpecies, 99);
 assert.equal(audit.summary.policyPromotedReadySpecies, 12);
 assert.equal(audit.summary.fieldPolicyReadySpecies, 0);
@@ -54,13 +54,28 @@ assert.equal(blueGourami.variantKey, 'Blue');
 assert.equal(blueGourami.genericOnboardingReady, true);
 assert.equal(blueGourami.authoritativeFieldCount, 8);
 
-assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0258']);
+assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0258', 'sp_0361']);
 for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
   assert.ok(policy);
   assert.equal(policy.registrySource, 'reviewed_variant_field_policy');
   assert.equal(policy.relationshipType, 'selectively_bred_variant');
   assert.equal(policy.canonicalScientificName, 'Carassius auratus');
+  assert.deepEqual(policy.inheritedFacts, []);
+  assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
+  assert.equal(policy.authoritativeFieldCount, 0);
+  assert.equal(policy.genericOnboardingReady, false);
+  assert.deepEqual(policy.terminalGapFields, []);
+}
+for (const [speciesId, taxon] of [
+  ['sp_0155', 'Paracheirodon innesi'],
+  ['sp_0361', 'Tanichthys albonubes'],
+] as const) {
+  const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
+  assert.ok(policy);
+  assert.equal(policy.registrySource, 'reviewed_variant_field_policy');
+  assert.equal(policy.relationshipType, 'longfin_variant');
+  assert.equal(policy.canonicalScientificName, taxon);
   assert.deepEqual(policy.inheritedFacts, []);
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
   assert.equal(policy.authoritativeFieldCount, 0);

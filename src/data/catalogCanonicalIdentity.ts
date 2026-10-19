@@ -107,6 +107,18 @@ const reviewedVariantFieldPolicyConfigs: Record<string, ReviewedVariantFieldPoli
     expectedVariantKey: 'Bubble Eye',
     inheritedFacts: [],
   },
+  sp_0155: {
+    canonicalScientificName: 'Paracheirodon innesi',
+    relationshipType: 'longfin_variant',
+    expectedVariantKey: 'Longfin',
+    inheritedFacts: [],
+  },
+  sp_0361: {
+    canonicalScientificName: 'Tanichthys albonubes',
+    relationshipType: 'longfin_variant',
+    expectedVariantKey: 'Longfin',
+    inheritedFacts: [],
+  },
   sp_0258: {
     canonicalScientificName: 'Betta splendens',
     relationshipType: 'trade_strain',

@@ -1,15 +1,16 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 goldfish identity-only closure + planner guard
+## TOP CURRENT OVERRIDE — 2026-10-19 Longfin identity-only closure
 
-- Working authority: local `main` after `eea224c5`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- Reviewed breed identities now close `sp_0066 Red Cap Oranda`, `sp_0067 Pearlscale`, and `sp_0068 Bubble Eye` to formal taxon `Carassius auratus`.
-- All three are identity-only `reviewed_variant_field_policy` records with **zero inherited facts / all 8 facts blocked**. They remain not-ready with 0 authoritative Compatibility fields.
-- Research planner now uses canonical relationship metadata. Formal taxon normalization can no longer make a reviewed morphology/trade variant appear to be an exact base taxon.
-- Active completion plan: one guarded `Carassius auratus` source-discovery job, **3 variants / 0 exact base / variant bridge required**; base facts must never auto-promote.
-- Coverage: **308 fish / 99 generic-ready / 111 core-complete / 98 fish identity-held / 265 combined domain-or-identity held**.
-- Identity ledger: **100 total boundaries = 98 fish + 2 non-fish / 17,461 unresolved-identity pairs**. Queue: **23 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**.
-- Field debt: **102 visible = 24 completion-eligible goldfish variant fields + 78 deferred predation fields**. Identity queue automated research remains 0; the new active research lane is field evidence, not identity inference.
-- Canonical: **37 total / 20 explicit / 13 colour policy / 4 taxon roots / 4 field policies**; 12 policy-promoted ready, 0 field-policy ready.
+- Working authority: local `main` after `0d85088d`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- `sp_0155 长鳍红绿灯` is now reviewed as `Paracheirodon innesi + Longfin`; `sp_0361 长鳍白云金丝` is reviewed as `Tanichthys albonubes + Longfin`.
+- FishBase anchors formal taxa; Aquarium Co-Op supplies exact Longfin object mapping. Old base-only citations were not promoted as variant evidence.
+- Both Longfin records are identity-only field policies with **0 inherited facts / all 8 facts blocked**. They remain not-ready with 0 authoritative Compatibility fields.
+- Coverage: **308 fish / 99 generic-ready / 111 core-complete / 96 fish identity-held / 263 combined domain-or-identity held**.
+- Identity ledger: **98 total boundaries = 96 fish + 2 non-fish / 17,327 unresolved-identity pairs**. Queue: **21 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; identity automated research = 0.
+- Field debt: **118 visible = 40 completion-eligible morphology-variant fields + 78 deferred predation fields**.
+- Active field research plan: **3 guarded taxon jobs / 5 variants / 0 exact objects**; every job requires variant bridge review and forbids base-fact auto-promotion.
+- Canonical: **39 total / 20 explicit / 13 colour policy / 4 taxon roots / 6 field policies**; 12 policy-promoted ready, 0 field-policy ready.
 - Fully informed: **99 species / 4,851 pairs / 0 insufficient_data**. Readability: **9,453 reviewed-fish pairs / 97 exceptional identity-or-public-evidence unknowns**.
+- Direct repository authority remains **125 Profiles / 21 Pair Rules**; release generations remain **63 / 85 / 95 / 99 / 100 / 101**.
 - Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

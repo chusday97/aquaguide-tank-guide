@@ -1,11 +1,11 @@
-## TOP CURRENT BRANCH — 2026-10-19 main goldfish identity-only closure
+## TOP CURRENT BRANCH — 2026-10-19 main Longfin identity-only closure
 
-- Canonical local branch: `main`, continuing from `eea224c5`.
-- Current change resolves three reviewed goldfish morphology breed identities (Red Cap Oranda / Pearlscale / Bubble Eye) with zero Compatibility inheritance and fixes taxon research planning so canonical variants cannot masquerade as exact base taxa after formal-name normalization.
-- Current scope: 308 fish-domain / 99 generic-ready / 111 core-complete / 98 fish identity-held; **100 active identity boundaries / 17,461 pair impacts / 23 blank-`var.` catalog corrections**.
-- Coverage now exposes **102 research-debt fields = 24 completion-eligible goldfish variant fields + 78 deferred predation fields**. The one active taxon job is guarded: 3 variant objects / 0 exact objects / no automatic base authority promotion.
-- Canonical authority: **37 identities / 13 colour-policy records / 4 taxon roots / 4 field policies**; fully-informed matrix remains 99 species / 4,851 pairs / 0 insufficient_data.
-- Direct repository Profiles remain 125; released Compatibility generations remain exact 63 / 85 / 95 / 99 / 100 / 101. No release ownership or Production boundary changed.
+- Canonical local branch: `main`, continuing from `0d85088d`.
+- Current change resolves reviewed Longfin identities for `sp_0155 Paracheirodon innesi` and `sp_0361 Tanichthys albonubes` using formal taxon + `variantKey=Longfin`, with **zero Compatibility inheritance**.
+- Current scope: 308 fish-domain / 99 generic-ready / 111 core-complete / 96 fish identity-held; **98 active identity boundaries / 17,327 pair impacts / 21 blank-`var.` catalog corrections**.
+- Coverage exposes **118 research-debt fields = 40 completion-eligible morphology fields + 78 deferred predation fields**. Active research = 3 guarded taxon jobs / 5 variant objects / 0 exact objects.
+- Canonical authority: **39 identities / 13 colour-policy records / 4 taxon roots / 6 field policies**; fully-informed matrix remains 99 species / 4,851 pairs / 0 insufficient_data.
+- Direct repository Profiles remain 125; Pair Rules remain 21; released Compatibility generations remain exact 63 / 85 / 95 / 99 / 100 / 101. No release ownership or Production boundary changed.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

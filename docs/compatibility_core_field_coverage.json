@@ -16,7 +16,7 @@
   "oneFieldGapSpecies": 9,
   "runtimeReviewedProfileSpecies": 161,
   "fishCompatibilityDomainSpecies": 308,
-  "fishIdentityHeldSpecies": 98,
+  "fishIdentityHeldSpecies": 96,
   "unsupportedDomainSpecies": 167,
   "unsupportedDomainSpeciesByLifeType": {
     "plant": 66,
@@ -24,108 +24,108 @@
     "coral": 43,
     "reptile": 10
   },
-  "domainOrIdentityHeldSpecies": 265,
-  "visibleResearchDebtFields": 102,
-  "completionEligibleResearchDebtFields": 24,
+  "domainOrIdentityHeldSpecies": 263,
+  "visibleResearchDebtFields": 118,
+  "completionEligibleResearchDebtFields": 40,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
       "reviewed_supported": 164,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 46,
+      "reviewed_unknown": 48,
       "needs_research": 0,
-      "missing_identity_or_domain": 265,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     },
     "temperature": {
       "reviewed_supported": 149,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
-      "needs_research": 3,
-      "missing_identity_or_domain": 265,
+      "needs_research": 5,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     },
     "ph": {
       "reviewed_supported": 143,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
-      "needs_research": 3,
-      "missing_identity_or_domain": 265,
+      "needs_research": 5,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     },
     "adult_size": {
       "reviewed_supported": 153,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
-      "needs_research": 3,
-      "missing_identity_or_domain": 265,
+      "needs_research": 5,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     },
     "tank_size": {
       "reviewed_supported": 142,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 65,
-      "needs_research": 3,
-      "missing_identity_or_domain": 265,
+      "needs_research": 5,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     },
     "social_behavior": {
       "reviewed_supported": 132,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 78,
+      "reviewed_unknown": 80,
       "needs_research": 0,
-      "missing_identity_or_domain": 265,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     },
     "territoriality": {
       "reviewed_supported": 92,
       "reviewed_neutral_or_negative": 41,
       "reviewed_unknown": 74,
-      "needs_research": 3,
-      "missing_identity_or_domain": 265,
+      "needs_research": 5,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 82,
       "reviewed_neutral_or_negative": 38,
       "reviewed_unknown": 9,
-      "needs_research": 81,
-      "missing_identity_or_domain": 265,
+      "needs_research": 83,
+      "missing_identity_or_domain": 263,
       "not_applicable": 11
     }
   },
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 81
+      "count": 83
     },
     {
       "field": "water",
-      "count": 3
+      "count": 5
     },
     {
       "field": "territoriality",
-      "count": 3
+      "count": 5
     },
     {
       "field": "temperature",
-      "count": 3
+      "count": 5
     },
     {
       "field": "tank_size",
-      "count": 3
+      "count": 5
     },
     {
       "field": "social_behavior",
-      "count": 3
+      "count": 5
     },
     {
       "field": "ph",
-      "count": 3
+      "count": 5
     },
     {
       "field": "adult_size",
-      "count": 3
+      "count": 5
     }
   ],
   "rows": [
@@ -12757,80 +12757,68 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "actionableGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch05-fishbase-paracheirodon-innesi"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch05-fishbase-paracheirodon-innesi"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_social_mode_unknown"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         }
       }
     },
@@ -29756,80 +29744,68 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "actionableGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch35-fishbase-tanichthys-albonubes-longfin"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch35-fishbase-tanichthys-albonubes-longfin"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_social_mode_unknown"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         }
       }
     },

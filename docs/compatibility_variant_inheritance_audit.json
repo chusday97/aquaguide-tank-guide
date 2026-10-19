@@ -31,8 +31,8 @@
     "explicitReviewedCanonicalBridges": 20,
     "reviewedColorPolicyCanonicalRecords": 13,
     "reviewedColorTaxonRootRecords": 4,
-    "reviewedVariantFieldPolicyRecords": 4,
-    "totalCanonicalIdentityRecords": 37,
+    "reviewedVariantFieldPolicyRecords": 6,
+    "totalCanonicalIdentityRecords": 39,
     "policyPromotedReadySpecies": 12,
     "fieldPolicyReadySpecies": 0,
     "directReviewedVariantObjects": 2,
@@ -464,6 +464,33 @@
       "terminalGapFields": []
     },
     {
+      "speciesId": "sp_0155",
+      "name": "长鳍红绿灯",
+      "scientificName": "Paracheirodon innesi var.",
+      "canonicalScientificName": "Paracheirodon innesi",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-12-fishbase-paracheirodon-innesi",
+        "phase2-12-aquarium-coop-neon-longfin"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
+    {
       "speciesId": "sp_0258",
       "name": "糖果KOI斗鱼",
       "scientificName": "Betta splendens var. Koi",
@@ -491,6 +518,33 @@
       "terminalGapFields": [
         "social_behavior"
       ]
+    },
+    {
+      "speciesId": "sp_0361",
+      "name": "长鳍白云金丝 (改良)",
+      "scientificName": "Tanichthys albonubes var.",
+      "canonicalScientificName": "Tanichthys albonubes",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-12-fishbase-tanichthys-albonubes",
+        "phase2-12-aquarium-coop-white-cloud-longfin"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
     }
   ],
   "directReviewedVariants": [

@@ -38,7 +38,7 @@ const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224', 'sp_0445'];
 assert.equal(explicitCanonicalIds.length, 20);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
 assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
-const expectedVariantFieldPolicyIds = ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0258'];
+const expectedVariantFieldPolicyIds = ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0258', 'sp_0361'];
 assert.deepEqual([...reviewedVariantFieldPolicySpeciesIds].sort(), expectedVariantFieldPolicyIds);
 assert.equal(Object.keys(catalogCanonicalIdentities).length, explicitCanonicalIds.length + expectedColorPolicyIds.length + expectedVariantFieldPolicyIds.length);
 for (const speciesId of explicitCanonicalIds) assert.ok(catalogCanonicalIdentities[speciesId]);
@@ -58,8 +58,8 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       assert.deepEqual(identity.inheritancePolicy.inheritedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation']);
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, ['social_behavior', 'territoriality']);
     } else {
-      assert.ok(['sp_0066', 'sp_0067', 'sp_0068'].includes(identity.catalogSpeciesId));
-      assert.deepEqual(identity.inheritancePolicy.inheritedFacts, [], 'morphology-changing goldfish identity review must not imply husbandry inheritance');
+      assert.ok(['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId));
+      assert.deepEqual(identity.inheritancePolicy.inheritedFacts, [], 'identity-only morphology review must not imply husbandry inheritance');
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
     }
   } else {
@@ -104,7 +104,7 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       || identity.registrySource === 'reviewed_variant_field_policy',
     );
     const resolvedProfile = getReviewedCompatibilityProfileForFish(catalog);
-    if (['sp_0066', 'sp_0067', 'sp_0068'].includes(identity.catalogSpeciesId)) {
+    if (['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId)) {
       assert.equal(resolvedProfile, undefined, 'identity-only morphology policy must not manufacture a Compatibility Profile');
     } else {
       assert.ok(resolvedProfile);
@@ -146,6 +146,24 @@ for (const [speciesId, variantKey] of [
   assert.equal(identity.canonicalRootKind, 'reviewed_taxon');
   assert.equal(identity.canonicalScientificName, 'Carassius auratus');
   assert.equal(identity.variantKey, variantKey);
+  assert.deepEqual(identity.inheritancePolicy.inheritedFacts, []);
+  assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
+  assert.equal(getCatalogIdentityBoundary(speciesId), undefined);
+  const fish = fishData.find(item => item.id === speciesId);
+  assert.ok(fish);
+  assert.equal(getReviewedCompatibilityProfileForFish(fish), undefined);
+}
+for (const [speciesId, taxon] of [
+  ['sp_0155', 'Paracheirodon innesi'],
+  ['sp_0361', 'Tanichthys albonubes'],
+] as const) {
+  const identity = getCatalogCanonicalIdentity(speciesId);
+  assert.ok(identity);
+  assert.equal(identity.registrySource, 'reviewed_variant_field_policy');
+  assert.equal(identity.relationshipType, 'longfin_variant');
+  assert.equal(identity.canonicalRootKind, 'reviewed_taxon');
+  assert.equal(identity.canonicalScientificName, taxon);
+  assert.equal(identity.variantKey, 'Longfin');
   assert.deepEqual(identity.inheritancePolicy.inheritedFacts, []);
   assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
   assert.equal(getCatalogIdentityBoundary(speciesId), undefined);
@@ -362,14 +380,15 @@ const blueGouramiCoverage = coverage.rows.find(item => item.speciesId === 'sp_04
 assert.ok(blueGouramiCoverage);
 assert.equal(blueGouramiCoverage.genericOnboardingReady, true);
 assert.equal(blueGouramiCoverage.authoritativeFieldCount, 8);
+const identityOnlyMorphologyIds = ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0361'];
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);
-  if (!['sp_0224', 'sp_0258', 'sp_0066', 'sp_0067', 'sp_0068'].includes(speciesId)) {
+  if (!['sp_0224', 'sp_0258', ...identityOnlyMorphologyIds].includes(speciesId)) {
     assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant with complete authority must remain generic-ready: ' + speciesId);
   }
-  if (['sp_0066', 'sp_0067', 'sp_0068'].includes(speciesId)) {
-    assert.equal(row.genericOnboardingReady, false, 'identity-only goldfish morphology review must remain not ready');
+  if (identityOnlyMorphologyIds.includes(speciesId)) {
+    assert.equal(row.genericOnboardingReady, false, 'identity-only morphology review must remain not ready');
     assert.equal(row.authoritativeFieldCount, 0);
     assert.equal(row.actionableGapCount, 8);
     assert.equal(row.terminalGapCount, 0);
