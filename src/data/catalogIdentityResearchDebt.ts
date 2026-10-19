@@ -224,6 +224,195 @@ export const catalogIdentityResearchDebtReviews: Record<string, CatalogIdentityR
     reopenRequirement: 'Provide a professional breeder/importer or peer-reviewed source that explicitly identifies Platinum/白金 Black Neon and states the exact taxon/provenance; if the platinum appearance is only a phenotype, do not model it as an inheritable strain.',
   },
 
+
+  sp_0158: {
+    speciesId: 'sp_0158',
+    reviewedAt: '2026-10-19',
+    status: 'exact_object_evidence_not_found',
+    searchedObjectLabels: [
+      'Xiphophorus hellerii var.',
+      '红苹果剑尾',
+      'Red Apple Swordtail',
+      'Apple Red Swordtail',
+    ],
+    nonQualifyingReferences: [
+      {
+        label: '鱼大全 — 红苹果剑尾鱼',
+        url: 'https://www.yudaquan.com/a/k-5b744bc1df',
+        reason: 'This consumer-care page calls 红苹果剑尾 a selected Xiphophorus hellerii variety, but it supplies no breeder/importer lineage provenance and cannot resolve the conflicting reviewed hybrid evidence.',
+      },
+      {
+        label: 'phase2-15-usgs-red-swordtail-hybrid',
+        reason: 'USGS documents a red swordtail hybrid lineage involving Xiphophorus hellerii × Xiphophorus maculatus, so a generic red/apple trade label cannot be promoted to pure X. hellerii without exact provenance.',
+      },
+    ],
+    blockingReason: 'The full 红苹果剑尾 / Red Apple Swordtail object still has conflicting plausible lineage interpretations: a pure Xiphophorus hellerii ornamental line versus a documented red swordtail hybrid lineage. No reviewed exact breeder/importer source uniquely maps this catalog object.',
+    reopenRequirement: 'Provide breeder/importer provenance for the exact Red Apple / 红苹果 line, including explicit parent taxon or hybrid lineage; do not resolve from red colour, swordtail morphology, or the blank-var parent alone.',
+  },
+
+  sp_0210: {
+    speciesId: 'sp_0210',
+    reviewedAt: '2026-10-19',
+    status: 'exact_object_evidence_not_found',
+    searchedObjectLabels: [
+      'Pangio kuhlii var.',
+      '黄金眼镜蛇蛇鱼',
+      'Golden Kuhli',
+      'Golden Kuhli Loach',
+      'Kuhli Golden',
+    ],
+    nonQualifyingReferences: [
+      {
+        label: 'INCOPESCA aquarium-species list — Kuhli golden',
+        url: 'https://incopesca.go.cr/acuicultura/acuariofilia/AJDIP-164-2021_Se_aprueba_lista_final_de_especies_de_interes_pesquero_y_acuicola_de_especies_de_interes_para_la_Acuariofilia_CR.pdf',
+        reason: 'The government list maps “Kuhli golden” to Pangio anguillaris, which conflicts with the legacy catalog parent rather than proving this exact catalog object.',
+      },
+      {
+        label: 'Quality Marine — Golden Kuhli Loach',
+        url: 'https://www.qualitymarine.com/aquatropic/fish/loaches/pangio/kuhli-golden-43033/',
+        reason: 'This professional supplier labels Golden Kuhli Loach as Pangio kuhlii, conflicting with other trade identifications.',
+      },
+      {
+        label: 'Whitley Aquatics — Golden Kuhli Loach',
+        url: 'https://www.whitlynaquatics.com/products/golden-kuhli-loach-pangio-kuhlii',
+        reason: 'This retailer presents the same trade name as Pangio doriae, adding another incompatible trade identification rather than resolving lineage.',
+      },
+      {
+        label: 'Judy’s Planted Tanks — Golden Kuhli Loach',
+        url: 'https://judysplantedtanks.co.za/product/golden-kuhli-loach-pangio-semicincta/',
+        reason: 'This retailer identifies Golden Kuhli Loach as Pangio semicincta, confirming that the trade label is not taxonomically stable.',
+      },
+    ],
+    blockingReason: 'Golden Kuhli is taxonomically unstable in aquarium commerce: reviewed sources variously associate the label with P. anguillaris, P. kuhlii, P. doriae and P. semicincta. The catalog object therefore cannot be promoted from any single parent hint.',
+    reopenRequirement: 'Provide provenance for the exact catalog stock line (exporter/importer or specimen-backed identification) that selects one Pangio taxon; generic Golden Kuhli pages are insufficient.',
+  },
+
+  sp_0142: {
+    speciesId: 'sp_0142',
+    reviewedAt: '2026-10-19',
+    status: 'exact_object_evidence_not_found',
+    searchedObjectLabels: [
+      'Poecilia sphenops var.',
+      '球鱼 (玛丽变种)',
+      'Balloon Molly',
+      'Balloon Molly hybrid',
+      'Poecilia sphenops Balloon',
+    ],
+    nonQualifyingReferences: [
+      {
+        label: 'Aquarium Glaser — molly trade complex review',
+        reason: 'The reviewed source explains that common molly trade stocks can involve several Poecilia species and repeated crossings, so the legacy P. sphenops attribution is not exact lineage proof.',
+      },
+      {
+        label: 'Ruinemans Group — Balloon Molly',
+        url: 'https://www.ruinemansgroup.com/aquarium-fish/livebearer/balloon-molly',
+        reason: 'The professional wholesaler describes Balloon Molly as a hybrid breeding variety of the molly (Poecilia sphenops), but does not provide lineage provenance sufficient to distinguish pure-species from multi-species domestic stock.',
+      },
+      {
+        label: 'Jurnal Perikanan Terapan — Sunkist Balloon Molly breeding study',
+        url: 'https://jurnal.polinela.ac.id/PERANAN/article/view/4048',
+        reason: 'This study labels one Sunkist Balloon Molly breeding stock as Poecilia sphenops; it establishes that some balloon lines are maintained under that taxon but does not establish the ancestry of the generic catalog Balloon Molly object.',
+      },
+    ],
+    blockingReason: 'Balloon Molly is a morphology-changing domestic trade form whose ancestry is not stable across sources. Some stocks are maintained as Poecilia sphenops while broader trade authority documents hybrid/multi-species molly ancestry. Generic Balloon Molly cannot be assigned one parent taxon safely.',
+    reopenRequirement: 'Provide exact breeder/importer lineage provenance for the catalog Balloon Molly stock and then perform field-scoped morphology inheritance review; never grant full base-profile inheritance from the Balloon label alone.',
+  },
+
+  sp_0296: {
+    speciesId: 'sp_0296',
+    reviewedAt: '2026-10-19',
+    status: 'exact_object_evidence_not_found',
+    searchedObjectLabels: [
+      'Lutjanus kasmira var.',
+      '红利鱼 (改良)',
+      '红利鱼 改良',
+      'Improved Lutjanus kasmira',
+      'Improved Bluestripe Snapper',
+    ],
+    nonQualifyingReferences: [
+      {
+        label: 'batch23-fishbase-lutjanus-kasmira-var',
+        reason: 'The stored authority establishes the base Lutjanus kasmira taxon only; no reviewed source identifies 红利鱼 (改良) as a breeder strain or even demonstrates that 改良 is a stable object label.',
+      },
+    ],
+    blockingReason: '“改良” is a generic merchandising modifier and no reviewed exact-object source identifies a stable 红利鱼 strain, lineage, or catalog correction tied to Lutjanus kasmira.',
+    reopenRequirement: 'Provide an exporter/importer/breeder catalog that names the exact 红利鱼 改良 line and its taxon, or explicitly correct the catalog object to an ordinary base taxon if 改良 is only merchandising text.',
+  },
+
+  sp_0365: {
+    speciesId: 'sp_0365',
+    reviewedAt: '2026-10-19',
+    status: 'exact_object_evidence_not_found',
+    searchedObjectLabels: [
+      'Lutjanus kasmira var.',
+      '红利鱼 (长鳍型)',
+      '长鳍红利鱼',
+      'Longfin Lutjanus kasmira',
+      'Longfin Bluestripe Snapper',
+    ],
+    nonQualifyingReferences: [
+      {
+        label: 'batch24-fishbase-lutjanus-kasmira-longfin',
+        reason: 'The stored FishBase authority establishes ordinary Lutjanus kasmira but does not document a Longfin ornamental lineage or morphology-breeding program.',
+      },
+    ],
+    blockingReason: 'No reviewed breeder/importer or scientific source currently establishes a Longfin 红利鱼 / Lutjanus kasmira lineage. Because long-fin morphology can change swimming ability and vulnerability, parent-species inheritance is unsafe.',
+    reopenRequirement: 'Provide exact provenance for a Longfin Lutjanus/红利鱼 breeding line, then run field-scoped morphology inheritance review before any Compatibility authority is reused.',
+  },
+
+  sp_0366: {
+    speciesId: 'sp_0366',
+    reviewedAt: '2026-10-19',
+    status: 'exact_object_evidence_not_found',
+    searchedObjectLabels: [
+      'Synchiropus splendidus var.',
+      '五彩青蛙 (改良型)',
+      '五彩青蛙 改良',
+      'Improved Mandarin Fish',
+      'Improved Synchiropus splendidus',
+    ],
+    nonQualifyingReferences: [
+      {
+        label: '台湾水产试验所 — 花斑连鳍䲗种鱼培育研究',
+        url: 'https://www.tfrin.gov.tw/theme_data.php?id=1269&sub_theme=special_message&theme=book_data',
+        reason: 'The government research source establishes ordinary Synchiropus splendidus / 五彩青蛙 and captive breeding, but it does not describe a distinct “改良型” strain.',
+      },
+      {
+        label: '水族名录 — 五彩青蛙 Synchiropus splendidus',
+        url: 'https://www.aquaml.com/s/Synchiropus_splendidus.html',
+        reason: 'This aquarium catalog corroborates the ordinary Chinese trade name and taxon only; no separate improved lineage is identified.',
+      },
+    ],
+    blockingReason: 'Reviewed sources support ordinary 五彩青蛙 = Synchiropus splendidus, but “改良型” is not established as a stable strain or lineage and therefore cannot be used as an inheritance identity key.',
+    reopenRequirement: 'Provide a breeder/importer line name with explicit Synchiropus splendidus provenance, or correct the catalog record to the ordinary base taxon if 改良型 has no distinct lineage meaning.',
+  },
+
+  sp_0358: {
+    speciesId: 'sp_0358',
+    reviewedAt: '2026-10-19',
+    status: 'exact_object_evidence_not_found',
+    searchedObjectLabels: [
+      'Prionobrama filigera var.',
+      '红尾玻璃灯 (改良)',
+      '红尾玻璃灯 改良',
+      'Improved Glass Bloodfin Tetra',
+      'Improved Prionobrama filigera',
+    ],
+    nonQualifyingReferences: [
+      {
+        label: '养鱼帮 — Rio Negro biotope stock list',
+        url: 'https://www.yangyubang.com/?p=4746',
+        reason: 'This aquarium reference maps ordinary 红尾玻璃灯 to Prionobrama filigera, but it does not identify any distinct 改良 strain.',
+      },
+      {
+        label: 'batch07-fishbase-prionobrama-filigera',
+        reason: 'The stored base-species authority establishes Prionobrama filigera only and provides no object-level evidence for a separate improved lineage.',
+      },
+    ],
+    blockingReason: 'Ordinary 红尾玻璃灯 is supported as Prionobrama filigera, but the catalog “改良” modifier has no reviewed breeder/lineage identity and cannot justify a separate variant object or inheritance bridge.',
+    reopenRequirement: 'Provide a professional breeder/importer source for an actual improved Red-tail Glass Tetra line, or explicitly collapse/correct the catalog object to the ordinary base taxon.',
+  },
+
 };
 
 export const getCatalogIdentityResearchDebt = (speciesId: string) => (

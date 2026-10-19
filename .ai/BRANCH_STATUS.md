@@ -1,12 +1,13 @@
-## TOP CURRENT BRANCH — 2026-10-19 main named-trade research closure
+## TOP CURRENT BRANCH — 2026-10-19 main catalog-structure research closure
 
-- Canonical local branch: `main`, continuing from `cde2f60c`.
-- Current change resolves no new identity and creates no Compatibility authority. It closes the 6 named-trade research loops by reclassifying 2 genuine trade-name ambiguities and routing 4 exhausted exact-object searches to the existing evidence-ceiling registry.
-- `sp_0204 黑金刚红鼻剪刀` and `sp_0212 蓝眼金灯` are now terminal trade-name ambiguity boundaries with multi-taxon candidate sets; `sp_0211`, `sp_0265`, `sp_0205`, `sp_0360` are terminal evidence ceilings with explicit reopen requirements.
+- Canonical local branch: `main`, continuing from `7b2bc0b5`.
+- Current change resolves no new identity and creates no Compatibility authority. It closes the remaining 8 actionable structure research loops by reclassifying `sp_0154` to trade-name ambiguity and routing the other 7 exhausted searches to the existing evidence-ceiling registry.
 - Current scope remains 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts**.
-- Review queue is now **8 catalog-structure / 20 trade-name / 61 evidence-ceiling / 3 hybrid / 1 manual-label**. Remaining actionable structure work is **3 conflict / 1 morphology / 4 generic 改良**; the four source-level named-trade structure defects are retained only as terminal evidence ceilings.
+- Review queue now has **0 catalog-structure** items and is **21 trade-name / 68 evidence-ceiling / 3 hybrid / 1 manual-label**. Source audit retains 11 truthful structure paths, but every one is terminal `exact_object_evidence_not_found` debt.
+- Source subtype distribution is **3 conflicting candidates / 1 morphology modifier / 3 generic 改良 / 4 named trade labels**. Reviewed high-impact debt is **15 total = 1 label-disambiguation + 14 exact-object evidence ceilings**.
 - Coverage remains **150 debt fields = 72 completion-eligible + 78 deferred**; active research remains 4 guarded taxon jobs / 9 variants / 0 exact objects. Canonical authority remains **44 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 10 field policies**.
 - Fully-informed matrix remains **100 / 4,950 / 0 insufficient_data**; readability stays **9,591 / 97 exceptional unknowns**; repository authority stays **126 Profiles / 21 Pair Rules** and released generations stay exact **63 / 85 / 95 / 99 / 100 / 101**.
+- Next systemic lane is field-scoped evidence for the 9 reviewed identity-known zero-inheritance variants; never whole-profile inherit.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

@@ -45,6 +45,25 @@ export const identityBoundaryCorrectionsPhase2_18Sources = {
 } satisfies Record<string, CatalogEvidenceSource>;
 
 export const identityBoundaryCorrectionsPhase2_18 = {
+  sp_0154: {
+    speciesId: 'sp_0154',
+    code: 'trade_name_taxon_ambiguous',
+    resolvedGranularity: 'trade_name_only',
+    candidateTaxa: [
+      'Petitella bleheri (formerly Hemigrammus bleheri; common firehead/rummy-nose trade taxon)',
+      'Petitella rhodostoma (true rummy-nose tetra)',
+      'Petitella georgiae (false rummy-nose tetra)',
+    ],
+    sourceIds: [
+      'batch05-fishbase-hemigrammus-bleheri',
+      identityBoundaryCorrectionsPhase2_18Sources.seriouslyFishRummynoseBleheri.id,
+      identityBoundaryCorrectionsPhase2_18Sources.seriouslyFishRummynoseRhodostoma.id,
+      identityBoundaryCorrectionsPhase2_18Sources.seriouslyFishRummynoseGeorgiae.id,
+    ],
+    note: '“红鼻灯 (改良)” contains only a generic merchandising modifier, not a reviewed strain identity. The underlying rummy-nose aquarium trade spans Petitella bleheri, P. rhodostoma and P. georgiae, so the blank Hemigrammus bleheri var. parent cannot select one lineage. Treat this as trade-name taxon ambiguity rather than an “improved strain” identity and keep Compatibility fail-closed until exact provenance identifies the catalog object.',
+    reviewedAt: '2026-10-19',
+    researchDisposition: 'terminal_unknown_hold',
+  },
   sp_0204: {
     speciesId: 'sp_0204',
     code: 'trade_name_taxon_ambiguous',

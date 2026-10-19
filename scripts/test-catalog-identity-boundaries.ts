@@ -70,6 +70,16 @@ assert.ok(sweetheartLemonTetra?.sourceIds.includes('phase2-17-daehne-muzel-red-t
 assert.ok(sweetheartLemonTetra?.sourceIds.includes('phase2-17-yangyubang-sweetheart-lemon-tetra'));
 assert.equal(getReviewedCompatibilityProfile('sp_0141'), undefined);
 
+const improvedRummyNose = getCatalogIdentityBoundary('sp_0154');
+assert.equal(improvedRummyNose?.code, 'trade_name_taxon_ambiguous');
+assert.equal(improvedRummyNose?.resolvedGranularity, 'trade_name_only');
+assert.equal(improvedRummyNose?.researchDisposition, 'terminal_unknown_hold');
+assert.ok(improvedRummyNose?.candidateTaxa.some(item => item.includes('Petitella bleheri')));
+assert.ok(improvedRummyNose?.candidateTaxa.some(item => item.includes('Petitella rhodostoma')));
+assert.ok(improvedRummyNose?.candidateTaxa.some(item => item.includes('Petitella georgiae')));
+assert.ok(improvedRummyNose?.sourceIds.includes('phase2-18-seriouslyfish-petitella-bleheri'));
+assert.equal(getReviewedCompatibilityProfile('sp_0154'), undefined);
+
 const blackDiamondRummyNose = getCatalogIdentityBoundary('sp_0204');
 assert.equal(blackDiamondRummyNose?.code, 'trade_name_taxon_ambiguous');
 assert.equal(blackDiamondRummyNose?.resolvedGranularity, 'trade_name_only');

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-19T14:12:15.780Z",
+  "generatedAt": "2026-10-19T14:28:31.314Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
   "sourceSchemaVersion": 4,
   "promotionAllowed": false,
@@ -16,11 +16,11 @@
     "total": 93,
     "fishIdentityBoundaries": 91,
     "nonFishIdentityBoundaries": 2,
-    "blankVariantCatalogCorrections": 8,
+    "blankVariantCatalogCorrections": 0,
     "catalogStructureSubtypeCounts": {
       "conflicting_candidate_lineages": 3,
       "morphology_modifier_requires_lineage": 1,
-      "generic_improvement_modifier_requires_lineage": 4,
+      "generic_improvement_modifier_requires_lineage": 3,
       "named_trade_label_requires_lineage": 4
     },
     "readyBaseIdentityBoundaries": 20,
@@ -30,7 +30,7 @@
     "sourceIdentityUnknownPairs": 16735,
     "automatedResearchEligible": 0,
     "manualReviewOnly": 93,
-    "evidenceCeilingHolds": 61,
+    "evidenceCeilingHolds": 68,
     "partialInheritanceReview": 0,
     "byQueue": {
       "exact_object_identity_research": 0,
@@ -38,10 +38,10 @@
       "manual_label_disambiguation": 1,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 20,
-      "evidence_ceiling_hold": 61,
+      "trade_name_disambiguation": 21,
+      "evidence_ceiling_hold": 68,
       "hybrid_object_hold": 3,
-      "catalog_structure_correction": 8
+      "catalog_structure_correction": 0
     },
     "soleBoundaryPairImpactByQueue": {
       "exact_object_identity_research": 0,
@@ -49,10 +49,10 @@
       "manual_label_disambiguation": 162,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 2801,
-      "evidence_ceiling_hold": 8405,
+      "trade_name_disambiguation": 2940,
+      "evidence_ceiling_hold": 9493,
       "hybrid_object_hold": 485,
-      "catalog_structure_correction": 1227
+      "catalog_structure_correction": 0
     }
   },
   "items": [
@@ -193,8 +193,8 @@
         "Xiphophorus hellerii ornamental red lineage (legacy catalog attribution)",
         "Xiphophorus hellerii × Xiphophorus maculatus red-swordtail hybrid lineage"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -210,16 +210,18 @@
       ],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "Multiple candidate lineages remain for this blank-var catalog object; the stripped catalog parent cannot resolve the conflict.",
-      "reopenRequirement": "Provide exact-object lineage evidence or an explicit catalog correction that selects one lineage; do not choose from the stripped base taxon alone.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "The full 红苹果剑尾 / Red Apple Swordtail object still has conflicting plausible lineage interpretations: a pure Xiphophorus hellerii ornamental line versus a documented red swordtail hybrid lineage. No reviewed exact breeder/importer source uniquely maps this catalog object.",
+      "reopenRequirement": "Provide breeder/importer provenance for the exact Red Apple / 红苹果 line, including explicit parent taxon or hybrid lineage; do not resolve from red colour, swordtail morphology, or the blank-var parent alone.",
       "researchLabels": [
         "Xiphophorus hellerii var.",
         "红苹果剑尾",
         "Xiphophorus hellerii ornamental red lineage (legacy catalog attribution)",
-        "Xiphophorus hellerii × Xiphophorus maculatus red-swordtail hybrid lineage"
+        "Xiphophorus hellerii × Xiphophorus maculatus red-swordtail hybrid lineage",
+        "Red Apple Swordtail",
+        "Apple Red Swordtail"
       ],
-      "nextAction": "Resolve the candidate-lineage conflict using the full catalog object/trade label and provenance; keep fail-closed until one lineage is reviewed.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -510,8 +512,8 @@
         "Pangio kuhlii (legacy catalog attribution; exact Golden Kuhli object not independently confirmed)",
         "Pangio anguillaris (government aquarium list maps “Kuhli golden” to this taxon)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -523,16 +525,19 @@
       "baseCandidateSpeciesIds": [],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "Multiple candidate lineages remain for this blank-var catalog object; the stripped catalog parent cannot resolve the conflict.",
-      "reopenRequirement": "Provide exact-object lineage evidence or an explicit catalog correction that selects one lineage; do not choose from the stripped base taxon alone.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "Golden Kuhli is taxonomically unstable in aquarium commerce: reviewed sources variously associate the label with P. anguillaris, P. kuhlii, P. doriae and P. semicincta. The catalog object therefore cannot be promoted from any single parent hint.",
+      "reopenRequirement": "Provide provenance for the exact catalog stock line (exporter/importer or specimen-backed identification) that selects one Pangio taxon; generic Golden Kuhli pages are insufficient.",
       "researchLabels": [
         "Pangio kuhlii var.",
         "黄金眼镜蛇蛇鱼",
         "Pangio kuhlii (legacy catalog attribution; exact Golden Kuhli object not independently confirmed)",
-        "Pangio anguillaris (government aquarium list maps “Kuhli golden” to this taxon)"
+        "Pangio anguillaris (government aquarium list maps “Kuhli golden” to this taxon)",
+        "Golden Kuhli",
+        "Golden Kuhli Loach",
+        "Kuhli Golden"
       ],
-      "nextAction": "Resolve the candidate-lineage conflict using the full catalog object/trade label and provenance; keep fail-closed until one lineage is reviewed.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -1295,8 +1300,8 @@
       "candidateTaxa": [
         "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -1312,15 +1317,18 @@
       ],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
-      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "“改良” is a generic merchandising modifier and no reviewed exact-object source identifies a stable 红利鱼 strain, lineage, or catalog correction tied to Lutjanus kasmira.",
+      "reopenRequirement": "Provide an exporter/importer/breeder catalog that names the exact 红利鱼 改良 line and its taxon, or explicitly correct the catalog object to an ordinary base taxon if 改良 is only merchandising text.",
       "researchLabels": [
         "Lutjanus kasmira var.",
         "红利鱼 (改良)",
-        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "红利鱼 改良",
+        "Improved Lutjanus kasmira",
+        "Improved Bluestripe Snapper"
       ],
-      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -1337,8 +1345,8 @@
       "candidateTaxa": [
         "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -1354,15 +1362,18 @@
       ],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog object carries a morphology-changing modifier but its scientific variant identity is blank; morphology-sensitive Compatibility fields cannot inherit automatically.",
-      "reopenRequirement": "Provide exact strain/lineage evidence for the morphology form, then review field-scoped inheritance before any Compatibility authority is reused.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "No reviewed breeder/importer or scientific source currently establishes a Longfin 红利鱼 / Lutjanus kasmira lineage. Because long-fin morphology can change swimming ability and vulnerability, parent-species inheritance is unsafe.",
+      "reopenRequirement": "Provide exact provenance for a Longfin Lutjanus/红利鱼 breeding line, then run field-scoped morphology inheritance review before any Compatibility authority is reused.",
       "researchLabels": [
         "Lutjanus kasmira var.",
         "红利鱼 (长鳍型)",
-        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "长鳍红利鱼",
+        "Longfin Lutjanus kasmira",
+        "Longfin Bluestripe Snapper"
       ],
-      "nextAction": "Verify the exact morphology lineage first, then run partial inheritance review; never inherit the full base profile from the blank-var label.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -1379,8 +1390,8 @@
       "candidateTaxa": [
         "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -1392,15 +1403,18 @@
       "baseCandidateSpeciesIds": [],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
-      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "Reviewed sources support ordinary 五彩青蛙 = Synchiropus splendidus, but “改良型” is not established as a stable strain or lineage and therefore cannot be used as an inheritance identity key.",
+      "reopenRequirement": "Provide a breeder/importer line name with explicit Synchiropus splendidus provenance, or correct the catalog record to the ordinary base taxon if 改良型 has no distinct lineage meaning.",
       "researchLabels": [
         "Synchiropus splendidus var.",
         "五彩青蛙 (改良型)",
-        "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "五彩青蛙 改良",
+        "Improved Mandarin Fish",
+        "Improved Synchiropus splendidus"
       ],
-      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2065,8 +2079,8 @@
         "Balloon Molly morphology-changing domestic lineage; Poecilia sphenops-like attribution is legacy-only",
         "Balloon Molly domestic Poecilia breeding complex with historical interspecific crosses"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -2080,16 +2094,19 @@
       ],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "Multiple candidate lineages remain for this blank-var catalog object; the stripped catalog parent cannot resolve the conflict.",
-      "reopenRequirement": "Provide exact-object lineage evidence or an explicit catalog correction that selects one lineage; do not choose from the stripped base taxon alone.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "Balloon Molly is a morphology-changing domestic trade form whose ancestry is not stable across sources. Some stocks are maintained as Poecilia sphenops while broader trade authority documents hybrid/multi-species molly ancestry. Generic Balloon Molly cannot be assigned one parent taxon safely.",
+      "reopenRequirement": "Provide exact breeder/importer lineage provenance for the catalog Balloon Molly stock and then perform field-scoped morphology inheritance review; never grant full base-profile inheritance from the Balloon label alone.",
       "researchLabels": [
         "Poecilia sphenops var.",
         "球鱼 (玛丽变种)",
         "Balloon Molly morphology-changing domestic lineage; Poecilia sphenops-like attribution is legacy-only",
-        "Balloon Molly domestic Poecilia breeding complex with historical interspecific crosses"
+        "Balloon Molly domestic Poecilia breeding complex with historical interspecific crosses",
+        "Balloon Molly",
+        "Balloon Molly hybrid",
+        "Poecilia sphenops Balloon"
       ],
-      "nextAction": "Resolve the candidate-lineage conflict using the full catalog object/trade label and provenance; keep fail-closed until one lineage is reviewed.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2140,14 +2157,16 @@
       "scientificName": "Hemigrammus bleheri var.",
       "lifeType": "fish",
       "blankVariantSuffix": true,
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "migrationPath": "catalog_structure_correction",
-      "catalogStructureSubtype": "generic_improvement_modifier_requires_lineage",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
-        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Petitella bleheri (formerly Hemigrammus bleheri; common firehead/rummy-nose trade taxon)",
+        "Petitella rhodostoma (true rummy-nose tetra)",
+        "Petitella georgiae (false rummy-nose tetra)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "trade_name_disambiguation",
+      "gate": "manual_disambiguation",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -2160,14 +2179,16 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
-      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
+      "researchBlockedReason": "Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.",
+      "reopenRequirement": "Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.",
       "researchLabels": [
         "Hemigrammus bleheri var.",
         "红鼻灯 (改良)",
-        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Petitella bleheri (formerly Hemigrammus bleheri; common firehead/rummy-nose trade taxon)",
+        "Petitella rhodostoma (true rummy-nose tetra)",
+        "Petitella georgiae (false rummy-nose tetra)"
       ],
-      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -3176,8 +3197,8 @@
       "candidateTaxa": [
         "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -3189,15 +3210,18 @@
       "baseCandidateSpeciesIds": [],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
-      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "Ordinary 红尾玻璃灯 is supported as Prionobrama filigera, but the catalog “改良” modifier has no reviewed breeder/lineage identity and cannot justify a separate variant object or inheritance bridge.",
+      "reopenRequirement": "Provide a professional breeder/importer source for an actual improved Red-tail Glass Tetra line, or explicitly collapse/correct the catalog object to the ordinary base taxon.",
       "researchLabels": [
         "Prionobrama filigera var.",
         "红尾玻璃灯 (改良)",
-        "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "红尾玻璃灯 改良",
+        "Improved Glass Bloodfin Tetra",
+        "Improved Prionobrama filigera"
       ],
-      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85

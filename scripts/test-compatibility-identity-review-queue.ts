@@ -146,11 +146,12 @@ for (const item of current.items) {
 assert.equal(byId.has('sp_0338'), false, 'resolved duplicate catalog alias must leave the active identity review queue');
 assert.equal(byId.get('sp_0175')?.queue, 'manual_label_disambiguation');
 assert.equal(byId.get('sp_0175')?.automatedResearchAllowed, false);
-assert.equal(byId.get('sp_0158')?.queue, 'catalog_structure_correction');
-assert.equal(byId.get('sp_0158')?.gate, 'catalog_correction');
+assert.equal(byId.get('sp_0158')?.queue, 'evidence_ceiling_hold');
+assert.equal(byId.get('sp_0158')?.gate, 'evidence_ceiling');
 assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
 for (const id of ['sp_0158', 'sp_0142', 'sp_0210']) {
-  assert.equal(byId.get(id)?.queue, 'catalog_structure_correction');
+  assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
+  assert.equal(byId.get(id)?.researchDebtStatus, 'exact_object_evidence_not_found');
   assert.equal(byId.get(id)?.automatedResearchAllowed, false);
   assert.equal(byId.get(id)?.fullInheritanceAllowed, false);
 }
@@ -188,13 +189,18 @@ for (const resolvedPhase214Id of ['sp_0065', 'sp_0162']) {
   assert.equal(byId.has(resolvedPhase214Id), false, `${resolvedPhase214Id} reviewed goldfish identity must leave the active identity review queue`);
 }
 assert.equal(byId.get('sp_0158')?.catalogStructureSubtype, 'conflicting_candidate_lineages');
-assert.match(byId.get('sp_0158')?.researchBlockedReason || '', /candidate lineages/i);
-assert.match(byId.get('sp_0158')?.reopenRequirement || '', /exact-object lineage evidence/i);
-assert.match(byId.get('sp_0158')?.nextAction || '', /candidate-lineage conflict/i);
+assert.match(byId.get('sp_0158')?.researchBlockedReason || '', /conflicting plausible lineage interpretations/i);
+assert.match(byId.get('sp_0158')?.reopenRequirement || '', /breeder\/importer provenance/i);
+assert.match(byId.get('sp_0158')?.nextAction || '', /do not retry automated identity research/i);
+for (const id of ['sp_0365', 'sp_0296', 'sp_0366', 'sp_0358']) {
+  assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
+  assert.equal(byId.get(id)?.gate, 'evidence_ceiling');
+  assert.equal(byId.get(id)?.researchDebtStatus, 'exact_object_evidence_not_found');
+  assert.equal(byId.get(id)?.automatedResearchAllowed, false);
+  assert.match(byId.get(id)?.nextAction || '', /do not retry automated identity research/i);
+}
 assert.equal(byId.get('sp_0365')?.catalogStructureSubtype, 'morphology_modifier_requires_lineage');
-assert.match(byId.get('sp_0365')?.nextAction || '', /partial inheritance review/i);
 assert.equal(byId.get('sp_0296')?.catalogStructureSubtype, 'generic_improvement_modifier_requires_lineage');
-assert.match(byId.get('sp_0296')?.nextAction || '', /actual breeder\/trade strain/i);
 for (const id of ['sp_0211', 'sp_0265', 'sp_0205', 'sp_0360']) {
   assert.equal(byId.get(id)?.catalogStructureSubtype, 'named_trade_label_requires_lineage');
   assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
@@ -203,13 +209,14 @@ for (const id of ['sp_0211', 'sp_0265', 'sp_0205', 'sp_0360']) {
   assert.equal(byId.get(id)?.automatedResearchAllowed, false);
   assert.match(byId.get(id)?.nextAction || '', /do not retry automated identity research/i);
 }
-for (const id of ['sp_0204', 'sp_0212']) {
+for (const id of ['sp_0154', 'sp_0204', 'sp_0212']) {
   assert.equal(byId.get(id)?.queue, 'trade_name_disambiguation');
   assert.equal(byId.get(id)?.gate, 'manual_disambiguation');
   assert.equal(byId.get(id)?.catalogStructureSubtype, null);
   assert.equal(byId.get(id)?.automatedResearchAllowed, false);
 }
 assert.ok((byId.get('sp_0204')?.candidateTaxa || []).some(item => item.includes('Petitella rhodostoma')));
+assert.ok((byId.get('sp_0154')?.candidateTaxa || []).some(item => item.includes('Petitella rhodostoma')));
 assert.ok((byId.get('sp_0212')?.candidateTaxa || []).some(item => item.includes('Hyphessobrycon saizi')));
 for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
   assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
@@ -239,29 +246,39 @@ assert.equal(current.summary.automatedResearchEligible, 0);
 assert.equal(current.summary.manualReviewOnly, 93);
 assert.equal(current.summary.fishIdentityBoundaries, 91);
 assert.equal(current.summary.nonFishIdentityBoundaries, 2);
-assert.equal(current.summary.blankVariantCatalogCorrections, 8);
+assert.equal(current.summary.blankVariantCatalogCorrections, 0);
 assert.deepEqual(current.summary.catalogStructureSubtypeCounts, {
   conflicting_candidate_lineages: 3,
   morphology_modifier_requires_lineage: 1,
-  generic_improvement_modifier_requires_lineage: 4,
+  generic_improvement_modifier_requires_lineage: 3,
   named_trade_label_requires_lineage: 4,
 });
 assert.equal(current.summary.readyBaseIdentityBoundaries, 20);
 assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 9);
 assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 11);
-assert.equal(current.summary.evidenceCeilingHolds, 61);
+assert.equal(current.summary.evidenceCeilingHolds, 68);
 assert.equal(current.summary.partialInheritanceReview, 0);
 assert.equal(current.summary.byQueue.exact_object_identity_research, 0);
 assert.equal(current.summary.byQueue.partial_inheritance_review, 0);
 assert.equal(current.summary.byQueue.base_or_parent_resolution, 0);
 assert.equal(current.summary.byQueue.taxonomic_review, 0);
 assert.equal(current.summary.byQueue.manual_label_disambiguation, 1);
-assert.equal(current.summary.byQueue.catalog_structure_correction, 8);
-assert.equal(current.summary.byQueue.trade_name_disambiguation, 20);
-assert.equal(current.summary.byQueue.evidence_ceiling_hold, 61);
+assert.equal(current.summary.byQueue.catalog_structure_correction, 0);
+assert.equal(current.summary.byQueue.trade_name_disambiguation, 21);
+assert.equal(current.summary.byQueue.evidence_ceiling_hold, 68);
 assert.equal(current.summary.byQueue.hybrid_object_hold, 3);
 assert.equal(current.items.every(item => item.researchDisposition === 'terminal_unknown_hold'), true);
 assert.equal(current.items.every(item => item.automatedResearchAllowed === false), true);
+assert.equal(
+  current.items.some(item => item.queue === 'catalog_structure_correction'),
+  false,
+  'review queue must contain no repeat-search catalog-structure work after all source-level structure debts have either evidence ceilings or a more accurate trade route',
+);
+for (const item of current.items.filter(item => item.migrationPath === 'catalog_structure_correction')) {
+  assert.equal(item.queue, 'evidence_ceiling_hold');
+  assert.equal(item.gate, 'evidence_ceiling');
+  assert.equal(item.researchDebtStatus, 'exact_object_evidence_not_found');
+}
 
 const totalByQueue = Object.values(current.summary.byQueue).reduce((sum, count) => sum + count, 0);
 assert.equal(totalByQueue, current.summary.total);

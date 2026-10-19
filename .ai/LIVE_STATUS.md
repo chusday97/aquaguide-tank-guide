@@ -1,16 +1,17 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 named-trade research closure + evidence-ceiling routing
+## TOP CURRENT OVERRIDE — 2026-10-19 catalog-structure research closure
 
-- Working authority: local `main` after `cde2f60c`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- All 6 previously actionable named-trade structure cases are now closed as research workflows: **2 reclassified to trade-name taxon ambiguity + 4 recorded as exact-object evidence ceilings**.
-- `sp_0204 黑金刚红鼻剪刀` now exposes the three reviewed rummy-nose candidate taxa; `sp_0212 蓝眼金灯` now exposes `Hemigrammus rodwayi` vs `Hyphessobrycon saizi`. Neither is promoted.
-- `sp_0211`, `sp_0265`, `sp_0205`, and `sp_0360` route through the existing research-debt registry to `evidence_ceiling_hold`, with searched labels, non-qualifying references and explicit reopen requirements. Automated retry remains disabled.
+- Working authority: local `main` after `7b2bc0b5`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- The remaining 8 actionable catalog-structure research loops are closed: **1 reclassified to trade-name ambiguity + 7 recorded as exact-object evidence ceilings**.
+- `sp_0154 红鼻灯 (改良)` is now trade-name ambiguity across the three rummy-nose `Petitella` taxa; “改良” is not treated as a strain key.
+- `sp_0158`, `sp_0210`, `sp_0142`, `sp_0296`, `sp_0365`, `sp_0366`, and `sp_0358` now route through source-controlled research debt to `evidence_ceiling_hold`. Automated retries are disabled until genuinely new provenance satisfies each reopen requirement.
 - Identity authority remains **93 boundaries / 16,735 unresolved pairs**; no Profile/canonical/inheritance promotion occurred.
-- Queue is now **8 catalog structure / 1 manual label / 20 trade-name / 61 evidence-ceiling / 3 hybrid**; automated identity research = 0. Source audit still records 12 structure paths because four of them are truthful terminal evidence ceilings.
-- Remaining actionable structure queue is **3 conflicting-lineage / 1 morphology / 4 generic-improvement**. The 4 named-trade subtype rows are no longer actionable repeat-research work.
+- **Review queue has zero catalog-structure work:** **21 trade-name / 68 evidence-ceiling / 3 hybrid / 1 manual-label**; all automated research queues remain 0.
+- Source audit still records **11** truthful structure paths, all terminal exact-object evidence debt. Subtypes are **3 conflict / 1 morphology / 3 generic-improvement / 4 named-trade**. Reviewed high-impact debt is **15 = 1 label + 14 exact-object evidence ceilings**.
 - Coverage remains **308 fish / 100 generic-ready / 112 core-complete / 91 fish identity-held / 258 combined held**; field debt remains **150 = 72 completion-eligible + 78 deferred**. Research plan remains **4 guarded jobs / 9 variants / 0 exact objects**. Canonical stays **44 / 21 explicit / 13 colour policy / 4 taxon roots / 10 field policies**.
 - Fully informed remains **100 / 4,950 / 0 insufficient_data**. Readability remains **9,591 / 97 exceptional unknowns**.
 - Repository authority remains **126 Profiles / 21 Pair Rules**; release generations remain exact **63 / 85 / 95 / 99 / 100 / 101**.
 - Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.
+- NEXT: move away from structure identity search and work the 9 identity-known zero-inheritance variants through field-scoped evidence only.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 
