@@ -1,11 +1,11 @@
-## TOP CURRENT BRANCH — 2026-10-19 main goldfish exact-identity closure
+## TOP CURRENT BRANCH — 2026-10-19 main unresolved identity evidence hardening
 
-- Canonical local branch: `main`, continuing from `be687583`.
-- Current change resolves `sp_0065 Butterfly Tail` and `sp_0162 Red Grass Goldfish` under reviewed `Carassius auratus` taxon roots using exact government/peer-reviewed evidence, with **zero Compatibility inheritance** for both.
-- Current scope: 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts / 16 blank-`var.` catalog corrections**.
-- Coverage exposes **150 research-debt fields = 72 completion-eligible strain/morphology fields + 78 deferred predation fields**. Active research remains 4 guarded taxon jobs / 9 variant objects / 0 exact objects.
-- Canonical authority: **44 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 10 field policies**; fully-informed matrix remains **100 species / 4,950 pairs / 0 insufficient_data**.
-- Repository authority remains **126 Profiles / 21 Pair Rules** and released generations remain exact **63 / 85 / 95 / 99 / 100 / 101**; no release ownership changes.
+- Canonical local branch: `main`, continuing from `35e7def5`.
+- Current change does not resolve any new identity. It widens three overconfident single-parent terminal holds (Golden Kuhli, Red Apple Swordtail, Balloon Molly) to evidence-backed multi-candidate boundaries and preserves Balloon morphology risk.
+- Manual identity review queue now exposes complete `candidateTaxa` from the migration audit; a global regression prevents candidate-set loss between audit and human-review tooling.
+- Current scope remains 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts / 16 blank-`var.` catalog corrections**.
+- Coverage remains **150 debt fields = 72 completion-eligible + 78 deferred**; active research remains 4 guarded taxon jobs / 9 variants / 0 exact objects. Canonical authority remains **44 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 10 field policies**.
+- Fully-informed matrix remains **100 / 4,950 / 0 insufficient_data**; repository authority stays **126 Profiles / 21 Pair Rules** and released generations stay exact **63 / 85 / 95 / 99 / 100 / 101**.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

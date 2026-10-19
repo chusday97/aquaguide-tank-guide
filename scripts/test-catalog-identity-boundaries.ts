@@ -35,6 +35,29 @@ assert.equal(unresolvedSnakehead?.code, 'catalog_scientific_name_unresolved');
 assert.equal(unresolvedSnakehead?.resolvedGranularity, 'scientific_name_unresolved');
 assert.equal(unresolvedSnakehead?.researchDisposition, 'terminal_unknown_hold');
 
+const goldenKuhli = getCatalogIdentityBoundary('sp_0210');
+assert.equal(goldenKuhli?.code, 'catalog_scientific_name_unresolved');
+assert.equal(goldenKuhli?.researchDisposition, 'terminal_unknown_hold');
+assert.ok(goldenKuhli?.candidateTaxa.some(item => item.includes('Pangio kuhlii')));
+assert.ok(goldenKuhli?.candidateTaxa.some(item => item.includes('Pangio anguillaris')));
+assert.ok(goldenKuhli?.sourceIds.includes('phase2-15-incopesca-golden-kuhli'));
+assert.match(goldenKuhli?.note || '', /conflict|conflicts/i);
+
+const redAppleSwordtail = getCatalogIdentityBoundary('sp_0158');
+assert.equal(redAppleSwordtail?.code, 'catalog_scientific_name_unresolved');
+assert.ok(redAppleSwordtail?.candidateTaxa.some(item => item.includes('Xiphophorus hellerii ornamental')));
+assert.ok(redAppleSwordtail?.candidateTaxa.some(item => item.includes('Xiphophorus maculatus')));
+assert.ok(redAppleSwordtail?.sourceIds.includes('phase2-15-usgs-red-swordtail-hybrid'));
+assert.equal(getReviewedCompatibilityProfile('sp_0158'), undefined);
+
+const balloonMolly = getCatalogIdentityBoundary('sp_0142');
+assert.equal(balloonMolly?.code, 'catalog_scientific_name_unresolved');
+assert.ok(balloonMolly?.candidateTaxa.some(item => item.includes('Poecilia sphenops-like')));
+assert.ok(balloonMolly?.candidateTaxa.some(item => item.includes('breeding complex')));
+assert.ok(balloonMolly?.sourceIds.includes('phase2-15-aquarium-glaser-molly-trade-complex'));
+assert.match(balloonMolly?.note || '', /prohibit automatic P\. sphenops Compatibility inheritance/i);
+assert.equal(getReviewedCompatibilityProfile('sp_0142'), undefined);
+
 const historicalElectricEelMismatch = catalogIdentityBoundaries.sp_0120;
 assert.equal(historicalElectricEelMismatch?.code, 'catalog_common_name_identity_mismatch');
 assert.equal(historicalElectricEelMismatch?.resolvedGranularity, 'catalog_name_mismatch');
@@ -364,7 +387,7 @@ assert.deepEqual(goldenCobraCorrection?.proposedValue, {
 assert.equal(getCatalogIdentityBoundary('sp_0216'), undefined, 'reviewed Golden Cobra same-taxon trade-name evidence must supersede the historical blank-var hold');
 assert.ok(getReviewedCompatibilityProfile('sp_0216'));
 
-for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0219','sp_0220','sp_0227','sp_0228','sp_0235','sp_0247','sp_0248','sp_0256','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0285','sp_0286','sp_0288','sp_0294']) {
+for (const speciesId of ['sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0219','sp_0220','sp_0227','sp_0228','sp_0235','sp_0247','sp_0248','sp_0256','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');

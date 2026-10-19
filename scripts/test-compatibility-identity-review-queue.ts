@@ -127,12 +127,28 @@ assert.equal(current.writesAuthority, false);
 assert.equal(current.items.every(item => item.requiresHumanReview && item.fullInheritanceAllowed === false), true);
 
 const byId = new Map(current.items.map(item => [item.speciesId, item] as const));
+const auditById = new Map(audit.rows.map(row => [row.speciesId, row] as const));
+for (const item of current.items) {
+  assert.deepEqual(
+    item.candidateTaxa,
+    [...new Set(auditById.get(item.speciesId)?.candidateTaxa || [])],
+    `${item.speciesId} review queue must preserve the complete migration-audit candidate taxon set`,
+  );
+}
 assert.equal(byId.has('sp_0338'), false, 'resolved duplicate catalog alias must leave the active identity review queue');
 assert.equal(byId.get('sp_0175')?.queue, 'manual_label_disambiguation');
 assert.equal(byId.get('sp_0175')?.automatedResearchAllowed, false);
 assert.equal(byId.get('sp_0158')?.queue, 'catalog_structure_correction');
 assert.equal(byId.get('sp_0158')?.gate, 'catalog_correction');
 assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
+for (const id of ['sp_0158', 'sp_0142', 'sp_0210']) {
+  assert.equal(byId.get(id)?.queue, 'catalog_structure_correction');
+  assert.equal(byId.get(id)?.automatedResearchAllowed, false);
+  assert.equal(byId.get(id)?.fullInheritanceAllowed, false);
+}
+assert.ok((byId.get('sp_0158')?.candidateTaxa || []).some(item => item.includes('Xiphophorus maculatus')));
+assert.ok((byId.get('sp_0142')?.candidateTaxa || []).some(item => item.includes('breeding complex')));
+assert.ok((byId.get('sp_0210')?.candidateTaxa || []).some(item => item.includes('Pangio anguillaris')));
 assert.equal(byId.has('sp_0445'), false, 'reviewed Blue Gourami identity must leave the active identity review queue');
 for (const resolvedGoldfishId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   assert.equal(byId.has(resolvedGoldfishId), false, `${resolvedGoldfishId} reviewed goldfish breed identity must leave the active identity review queue`);

@@ -73,6 +73,7 @@ export type CompatibilityIdentityReviewQueueItem = {
   blankVariantSuffix: boolean;
   boundaryCode: string;
   migrationPath: CompatibilityIdentityMigrationPath;
+  candidateTaxa: string[];
   queue: CompatibilityIdentityReviewQueueKind;
   gate: CompatibilityIdentityReviewGate;
   automatedResearchAllowed: boolean;
@@ -247,6 +248,7 @@ export const buildCompatibilityIdentityReviewQueue = (
       blankVariantSuffix: row.blankVariantSuffix,
       boundaryCode: row.boundaryCode,
       migrationPath: row.migrationPath,
+      candidateTaxa: uniqueStrings(row.candidateTaxa),
       queue: route.queue,
       gate: route.gate,
       automatedResearchAllowed: route.automatedResearchAllowed,

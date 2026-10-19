@@ -21,8 +21,8 @@
     "commercial_hybrid_identity_unresolved": 3,
     "catalog_parent_taxon_unresolved": 11,
     "trade_name_taxon_ambiguous": 2,
-    "catalog_variant_identity_unresolved": 60,
-    "catalog_scientific_name_unresolved": 16,
+    "catalog_scientific_name_unresolved": 17,
+    "catalog_variant_identity_unresolved": 59,
     "accepted_taxon_alias_trade_ambiguous": 1
   },
   "migrationBucketCounts": {
@@ -201,19 +201,21 @@
       "name": "红苹果剑尾",
       "scientificName": "Xiphophorus hellerii var.",
       "lifeType": "fish",
-      "boundaryCode": "catalog_variant_identity_unresolved",
-      "resolvedGranularity": "variant_identity_unresolved",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
       "migrationBucket": "catalog_structure_correction_required",
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Xiphophorus hellerii ornamental red lineage"
+        "Xiphophorus hellerii ornamental red lineage (legacy catalog attribution)",
+        "Xiphophorus hellerii × Xiphophorus maculatus red-swordtail hybrid lineage"
       ],
-      "singleCandidateHint": "Xiphophorus hellerii ornamental red lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
-        "seriouslyfish-xiphophorus-hellerii"
+        "seriouslyfish-xiphophorus-hellerii",
+        "phase2-15-usgs-red-swordtail-hybrid"
       ],
-      "reviewedAt": "2026-10-12",
+      "reviewedAt": "2026-10-19",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
       "migrationPath": "catalog_structure_correction",
@@ -591,13 +593,15 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Pangio kuhlii ornamental Golden Cobra lineage"
+        "Pangio kuhlii (legacy catalog attribution; exact Golden Kuhli object not independently confirmed)",
+        "Pangio anguillaris (government aquarium list maps “Kuhli golden” to this taxon)"
       ],
-      "singleCandidateHint": "Pangio kuhlii ornamental Golden Cobra lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
-        "batch34-fishbase-pangio-kuhlii-variant"
+        "batch34-fishbase-pangio-kuhlii-variant",
+        "phase2-15-incopesca-golden-kuhli"
       ],
-      "reviewedAt": "2026-10-12",
+      "reviewedAt": "2026-10-19",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
       "migrationPath": "catalog_structure_correction",
@@ -1578,19 +1582,21 @@
       "name": "红苹果剑尾",
       "scientificName": "Xiphophorus hellerii var.",
       "lifeType": "fish",
-      "boundaryCode": "catalog_variant_identity_unresolved",
-      "resolvedGranularity": "variant_identity_unresolved",
+      "boundaryCode": "catalog_scientific_name_unresolved",
+      "resolvedGranularity": "scientific_name_unresolved",
       "migrationBucket": "catalog_structure_correction_required",
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Xiphophorus hellerii ornamental red lineage"
+        "Xiphophorus hellerii ornamental red lineage (legacy catalog attribution)",
+        "Xiphophorus hellerii × Xiphophorus maculatus red-swordtail hybrid lineage"
       ],
-      "singleCandidateHint": "Xiphophorus hellerii ornamental red lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
-        "seriouslyfish-xiphophorus-hellerii"
+        "seriouslyfish-xiphophorus-hellerii",
+        "phase2-15-usgs-red-swordtail-hybrid"
       ],
-      "reviewedAt": "2026-10-12",
+      "reviewedAt": "2026-10-19",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
       "migrationPath": "catalog_structure_correction",
@@ -1968,13 +1974,15 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Pangio kuhlii ornamental Golden Cobra lineage"
+        "Pangio kuhlii (legacy catalog attribution; exact Golden Kuhli object not independently confirmed)",
+        "Pangio anguillaris (government aquarium list maps “Kuhli golden” to this taxon)"
       ],
-      "singleCandidateHint": "Pangio kuhlii ornamental Golden Cobra lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
-        "batch34-fishbase-pangio-kuhlii-variant"
+        "batch34-fishbase-pangio-kuhlii-variant",
+        "phase2-15-incopesca-golden-kuhli"
       ],
-      "reviewedAt": "2026-10-12",
+      "reviewedAt": "2026-10-19",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
       "migrationPath": "catalog_structure_correction",
@@ -3846,13 +3854,15 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Poecilia sphenops ornamental Balloon lineage"
+        "Balloon Molly morphology-changing domestic lineage; Poecilia sphenops-like attribution is legacy-only",
+        "Balloon Molly domestic Poecilia breeding complex with historical interspecific crosses"
       ],
-      "singleCandidateHint": "Poecilia sphenops ornamental Balloon lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
-        "batch27-fishbase-poecilia-sphenops-balloon"
+        "batch27-fishbase-poecilia-sphenops-balloon",
+        "phase2-15-aquarium-glaser-molly-trade-complex"
       ],
-      "reviewedAt": "2026-10-12",
+      "reviewedAt": "2026-10-19",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
       "migrationPath": "catalog_structure_correction",

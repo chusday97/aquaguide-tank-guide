@@ -51,7 +51,7 @@
 | sp_0055 金刚鹦鹉鱼 | commercial_hybrid_identity_unresolved | hybrid_object_specific_hold | 0 | no | 247 | 162 |
 | sp_0124 蓝眼胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 247 | 162 |
 | sp_0127 巴基斯坦鼠 | trade_name_taxon_ambiguous | trade_name_disambiguation | 0 | no | 247 | 162 |
-| sp_0158 红苹果剑尾 | catalog_variant_identity_unresolved | catalog_structure_correction | 1 | no | 247 | 162 |
+| sp_0158 红苹果剑尾 | catalog_scientific_name_unresolved | catalog_structure_correction | 1 | no | 247 | 162 |
 | sp_0159 黄金胡子 (异型变种) | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 247 | 162 |
 | sp_0160 大帆白金胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 247 | 162 |
 | sp_0163 鸿运当头锦鲤 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 247 | 162 |

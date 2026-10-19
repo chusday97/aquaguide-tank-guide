@@ -201,7 +201,7 @@
         "unknownPairs": 247,
         "actionableFields": [],
         "terminalReasons": [
-          "catalog_variant_identity_unresolved"
+          "catalog_scientific_name_unresolved"
         ],
         "exposureSharePct": 80.46,
         "impactBand": "high"
@@ -2414,7 +2414,7 @@
     "terminalReasonCounts": [
       {
         "reason": "catalog_variant_identity_unresolved",
-        "speciesCount": 56
+        "speciesCount": 55
       },
       {
         "reason": "variant_social_not_established",
@@ -2425,12 +2425,12 @@
         "speciesCount": 43
       },
       {
-        "reason": "species_social_not_established",
+        "reason": "catalog_scientific_name_unresolved",
         "speciesCount": 16
       },
       {
-        "reason": "catalog_scientific_name_unresolved",
-        "speciesCount": 15
+        "reason": "species_social_not_established",
+        "speciesCount": 16
       },
       {
         "reason": "catalog_parent_taxon_unresolved",
