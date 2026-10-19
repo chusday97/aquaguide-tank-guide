@@ -12,6 +12,12 @@ export type CompatibilityIdentityResearchDebtStatus =
   | 'catalog_label_disambiguation_required'
   | 'exact_object_evidence_not_found';
 
+export type CompatibilityCatalogStructureSubtype =
+  | 'conflicting_candidate_lineages'
+  | 'morphology_modifier_requires_lineage'
+  | 'generic_improvement_modifier_requires_lineage'
+  | 'named_trade_label_requires_lineage';
+
 export type CompatibilityIdentityMigrationAuditRow = {
   speciesId: string;
   name: string;
@@ -20,6 +26,9 @@ export type CompatibilityIdentityMigrationAuditRow = {
   blankVariantSuffix: boolean;
   boundaryCode: string;
   migrationPath: CompatibilityIdentityMigrationPath;
+  catalogStructureSubtype: CompatibilityCatalogStructureSubtype | null;
+  catalogStructureBlockedReason: string | null;
+  catalogStructureReopenRequirement: string | null;
   nextAction: string;
   candidateTaxa: string[];
   morphologyRisk: boolean;
@@ -73,6 +82,7 @@ export type CompatibilityIdentityReviewQueueItem = {
   blankVariantSuffix: boolean;
   boundaryCode: string;
   migrationPath: CompatibilityIdentityMigrationPath;
+  catalogStructureSubtype: CompatibilityCatalogStructureSubtype | null;
   candidateTaxa: string[];
   queue: CompatibilityIdentityReviewQueueKind;
   gate: CompatibilityIdentityReviewGate;
@@ -116,6 +126,7 @@ export type CompatibilityIdentityReviewQueueManifest = {
     fishIdentityBoundaries: number;
     nonFishIdentityBoundaries: number;
     blankVariantCatalogCorrections: number;
+    catalogStructureSubtypeCounts: Record<CompatibilityCatalogStructureSubtype, number>;
     readyBaseIdentityBoundaries: number;
     readyBaseMorphologySafeBoundaries: number;
     readyBaseMorphologyRiskBoundaries: number;
@@ -248,6 +259,7 @@ export const buildCompatibilityIdentityReviewQueue = (
       blankVariantSuffix: row.blankVariantSuffix,
       boundaryCode: row.boundaryCode,
       migrationPath: row.migrationPath,
+      catalogStructureSubtype: row.catalogStructureSubtype,
       candidateTaxa: uniqueStrings(row.candidateTaxa),
       queue: route.queue,
       gate: route.gate,
@@ -265,7 +277,7 @@ export const buildCompatibilityIdentityReviewQueue = (
       researchDebtStatus: row.researchDebtStatus,
       researchBlockedReason: row.researchDebtBlockingReason
         ?? (catalogStructureCorrection
-          ? 'Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.'
+          ? row.catalogStructureBlockedReason
           : structuralOpenParentResolution
             ? 'Catalog scientific label is structurally open (sp./cf./aff.) and does not identify one accepted parent species.'
             : terminalUnknownHold
@@ -273,7 +285,7 @@ export const buildCompatibilityIdentityReviewQueue = (
               : null),
       reopenRequirement: row.researchDebtReopenRequirement
         ?? (catalogStructureCorrection
-          ? 'Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.'
+          ? row.catalogStructureReopenRequirement
           : structuralOpenParentResolution
             ? 'Provide lineage/provenance or an authoritative exact-object source that links this catalog object to one accepted parent taxon.'
             : terminalUnknownHold
@@ -281,7 +293,7 @@ export const buildCompatibilityIdentityReviewQueue = (
               : null),
       researchLabels,
       nextAction: catalogStructureCorrection
-        ? 'Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.'
+        ? row.nextAction
         : structuralOpenParentResolution
           ? 'Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.'
           : terminalUnknownHold
@@ -298,10 +310,19 @@ export const buildCompatibilityIdentityReviewQueue = (
   ));
 
   const byQueue = Object.fromEntries(queueKinds.map(queue => [queue, 0])) as Record<CompatibilityIdentityReviewQueueKind, number>;
+  const catalogStructureSubtypeCounts = {
+    conflicting_candidate_lineages: 0,
+    morphology_modifier_requires_lineage: 0,
+    generic_improvement_modifier_requires_lineage: 0,
+    named_trade_label_requires_lineage: 0,
+  } satisfies Record<CompatibilityCatalogStructureSubtype, number>;
   const soleBoundaryPairImpactByQueue = Object.fromEntries(queueKinds.map(queue => [queue, 0])) as Record<CompatibilityIdentityReviewQueueKind, number>;
   for (const item of items) {
     byQueue[item.queue] += 1;
     soleBoundaryPairImpactByQueue[item.queue] += item.soleBoundaryIdentityUnknownPairs;
+    if (item.catalogStructureSubtype) {
+      catalogStructureSubtypeCounts[item.catalogStructureSubtype] += 1;
+    }
   }
 
   return {
@@ -323,6 +344,7 @@ export const buildCompatibilityIdentityReviewQueue = (
       fishIdentityBoundaries: items.filter(item => item.lifeType === 'fish').length,
       nonFishIdentityBoundaries: items.filter(item => item.lifeType !== 'fish').length,
       blankVariantCatalogCorrections: items.filter(item => item.queue === 'catalog_structure_correction' && item.blankVariantSuffix).length,
+      catalogStructureSubtypeCounts,
       readyBaseIdentityBoundaries: items.filter(item => item.lifeType === 'fish' && item.readyBaseCandidateCount === 1).length,
       readyBaseMorphologySafeBoundaries: items.filter(item => item.lifeType === 'fish' && item.readyBaseCandidateCount === 1 && !item.morphologyRisk).length,
       readyBaseMorphologyRiskBoundaries: items.filter(item => item.lifeType === 'fish' && item.readyBaseCandidateCount === 1 && item.morphologyRisk).length,

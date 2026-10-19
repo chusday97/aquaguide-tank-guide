@@ -1,9 +1,10 @@
-## TOP CURRENT BRANCH — 2026-10-19 main blank-var provenance hardening
+## TOP CURRENT BRANCH — 2026-10-19 main catalog-structure root-cause routing
 
-- Canonical local branch: `main`, continuing from `c502f5d4`.
-- Current change resolves no new identity. It normalizes single-candidate blank-`var.` holds to explicit legacy-only parent provenance and suppresses `singleCandidateHint` for structural corrections.
-- `sp_0474 观背青鳉` is reclassified to trade/group ambiguity from peer-reviewed ornamental-medaka evidence; it remains terminal fail-closed with no Profile or canonical promotion.
-- Current scope remains 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts**. Queue is **15 catalog-structure / 17 trade-name / 57 evidence-ceiling / 3 hybrid / 1 manual-label**.
+- Canonical local branch: `main`, continuing from `ec36ed6c`.
+- Current change resolves no new identity. It upgrades the identity migration audit to schema v4 with explicit structure subtypes and routes human review by actual root cause rather than one generic blank-`var.` instruction.
+- `sp_0141 甜心柠檬灯` is reclassified to terminal trade-name ambiguity from exact Red Cherry / Muzel trade evidence; no Profile, canonical promotion or inheritance is created.
+- Current scope remains 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts**. Queue is **14 catalog-structure / 18 trade-name / 57 evidence-ceiling / 3 hybrid / 1 manual-label**.
+- Remaining structure subtype distribution is **3 conflicting candidates / 1 morphology modifier / 4 generic 改良 / 6 named trade labels**.
 - Coverage remains **150 debt fields = 72 completion-eligible + 78 deferred**; active research remains 4 guarded taxon jobs / 9 variants / 0 exact objects. Canonical authority remains **44 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 10 field policies**.
 - Fully-informed matrix remains **100 / 4,950 / 0 insufficient_data**; repository authority stays **126 Profiles / 21 Pair Rules** and released generations stay exact **63 / 85 / 95 / 99 / 100 / 101**.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.

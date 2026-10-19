@@ -11604,73 +11604,97 @@
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "ph": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "predation": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch05-fishbase-hyphessobrycon-pulchripinnis"
+            "batch14-fishbase-hyphessobrycon-pulchripinnis-var",
+            "phase2-17-su-aquatic-red-cherry-tetra",
+            "phase2-17-daehne-muzel-red-tetra",
+            "phase2-17-yangyubang-sweetheart-lemon-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         }
       }
     },

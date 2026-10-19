@@ -38,6 +38,7 @@ const report = JSON.parse(committedJson) as {
   autoMigratableCount: number;
   migrationPathCounts: Record<string, number>;
   migrationPathSoleBoundaryImpact: Record<string, number>;
+  catalogStructureSubtypeCounts: Record<string, number>;
   identityEvidenceStatusCounts: Record<string, number>;
   researchDebtStatusCounts: Record<string, number>;
   researchedHighImpactHoldCount: number;
@@ -50,6 +51,9 @@ const report = JSON.parse(committedJson) as {
     boundaryCode: string;
     migrationBucket: string;
     migrationPath: string;
+    catalogStructureSubtype: string | null;
+    catalogStructureBlockedReason: string | null;
+    nextAction: string;
     candidateTaxa: string[];
     singleCandidateHint: string | null;
     identityEvidenceStatus: string;
@@ -58,6 +62,7 @@ const report = JSON.parse(committedJson) as {
     researchDebtReviewedAt: string | null;
     researchDebtBlockingReason: string | null;
     researchDebtReopenRequirement: string | null;
+    catalogStructureReopenRequirement: string | null;
     nonQualifyingReferenceCount: number;
     blankVariantSuffix: boolean;
     morphologyRisk: boolean;
@@ -87,7 +92,13 @@ assert.ok(report.partialInheritanceReviewCount > 0);
 assert.equal(report.researchedHighImpactHoldCount, 4);
 assert.equal(report.researchDebtStatusCounts.catalog_label_disambiguation_required, 1);
 assert.equal(report.researchDebtStatusCounts.exact_object_evidence_not_found, 3);
-assert.equal(report.migrationPathCounts.catalog_structure_correction, 15, 'true blank-var structural defects stay in catalog correction; reviewed group labels are routed by their actual identity problem');
+assert.equal(report.migrationPathCounts.catalog_structure_correction, 14, 'true blank-var structural defects stay in catalog correction; reviewed trade/group labels are routed by their actual identity problem');
+assert.deepEqual(report.catalogStructureSubtypeCounts, {
+  conflicting_candidate_lineages: 3,
+  named_trade_label_requires_lineage: 6,
+  generic_improvement_modifier_requires_lineage: 4,
+  morphology_modifier_requires_lineage: 1,
+});
 assert.equal(report.migrationPathCounts.exact_variant_label_disambiguation, 1, 'only the non-blank reviewed trade/lineage label ambiguity should remain in exact label disambiguation');
 for (const resolvedGoldfishId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   assert.equal(report.rows.some(row => row.speciesId === resolvedGoldfishId), false, `${resolvedGoldfishId} reviewed breed identity must leave the active migration audit`);
@@ -190,6 +201,25 @@ assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
 assert.equal(byId.get('sp_0158')?.readyBaseCandidateCount, 1);
 assert.equal(byId.get('sp_0142')?.migrationPath, 'catalog_structure_correction');
 assert.equal(byId.get('sp_0142')?.morphologyRisk, true, 'reviewed Balloon lineage hint must trigger morphology-risk routing even when the legacy catalog name/scientificName misses the English morphology token');
+for (const id of ['sp_0158', 'sp_0210', 'sp_0142']) {
+  assert.equal(byId.get(id)?.catalogStructureSubtype, 'conflicting_candidate_lineages');
+  assert.match(byId.get(id)?.catalogStructureBlockedReason || '', /candidate lineages/i);
+  assert.match(byId.get(id)?.catalogStructureReopenRequirement || '', /exact-object lineage evidence/i);
+}
+assert.equal(byId.get('sp_0365')?.catalogStructureSubtype, 'morphology_modifier_requires_lineage');
+assert.match(byId.get('sp_0365')?.nextAction || '', /partial inheritance review/i);
+for (const id of ['sp_0296', 'sp_0366', 'sp_0154', 'sp_0358']) {
+  assert.equal(byId.get(id)?.catalogStructureSubtype, 'generic_improvement_modifier_requires_lineage');
+  assert.match(byId.get(id)?.nextAction || '', /actual breeder\/trade strain/i);
+}
+for (const id of ['sp_0211', 'sp_0265', 'sp_0204', 'sp_0205', 'sp_0212', 'sp_0360']) {
+  assert.equal(byId.get(id)?.catalogStructureSubtype, 'named_trade_label_requires_lineage');
+  assert.match(byId.get(id)?.nextAction || '', /full catalog object\/trade label/i);
+}
+assert.equal(byId.get('sp_0141')?.migrationBucket, 'trade_name_disambiguation_required');
+assert.equal(byId.get('sp_0141')?.migrationPath, 'trade_name_disambiguation');
+assert.equal(byId.get('sp_0141')?.catalogStructureSubtype, null);
+assert.ok((byId.get('sp_0141')?.candidateTaxa || []).some(item => item.includes('Muzel Red Cherry')));
 assert.equal(byId.get('sp_0474')?.migrationBucket, 'trade_name_disambiguation_required');
 assert.equal(byId.get('sp_0474')?.migrationPath, 'trade_name_disambiguation');
 assert.equal(byId.get('sp_0474')?.blankVariantSuffix, true);

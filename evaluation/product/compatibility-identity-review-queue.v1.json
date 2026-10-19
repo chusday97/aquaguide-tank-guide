@@ -1,9 +1,9 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-19T09:11:52.431Z",
+  "generatedAt": "2026-10-19T13:50:42.652Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
-  "sourceSchemaVersion": 3,
+  "sourceSchemaVersion": 4,
   "promotionAllowed": false,
   "writesAuthority": false,
   "policy": {
@@ -16,7 +16,13 @@
     "total": 93,
     "fishIdentityBoundaries": 91,
     "nonFishIdentityBoundaries": 2,
-    "blankVariantCatalogCorrections": 15,
+    "blankVariantCatalogCorrections": 14,
+    "catalogStructureSubtypeCounts": {
+      "conflicting_candidate_lineages": 3,
+      "morphology_modifier_requires_lineage": 1,
+      "generic_improvement_modifier_requires_lineage": 4,
+      "named_trade_label_requires_lineage": 6
+    },
     "readyBaseIdentityBoundaries": 20,
     "readyBaseMorphologySafeBoundaries": 9,
     "readyBaseMorphologyRiskBoundaries": 11,
@@ -32,10 +38,10 @@
       "manual_label_disambiguation": 1,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 17,
+      "trade_name_disambiguation": 18,
       "evidence_ceiling_hold": 57,
       "hybrid_object_hold": 3,
-      "catalog_structure_correction": 15
+      "catalog_structure_correction": 14
     },
     "soleBoundaryPairImpactByQueue": {
       "exact_object_identity_research": 0,
@@ -43,10 +49,10 @@
       "manual_label_disambiguation": 162,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 2384,
+      "trade_name_disambiguation": 2523,
       "evidence_ceiling_hold": 7803,
       "hybrid_object_hold": 485,
-      "catalog_structure_correction": 2246
+      "catalog_structure_correction": 2107
     }
   },
   "items": [
@@ -58,6 +64,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "commercial_hybrid_identity_unresolved",
       "migrationPath": "hybrid_object_specific_hold",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "ornamental parrot-cichlid hybrid lineage",
         "Cichlasoma spp. trade attribution is not a resolved taxon"
@@ -97,6 +104,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. trade lineage"
       ],
@@ -134,6 +142,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "trade_name_taxon_ambiguous",
       "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Botia almorhae sensu stricto",
         "Botia lohachata",
@@ -179,6 +188,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "conflicting_candidate_lineages",
       "candidateTaxa": [
         "Xiphophorus hellerii ornamental red lineage (legacy catalog attribution)",
         "Xiphophorus hellerii × Xiphophorus maculatus red-swordtail hybrid lineage"
@@ -201,15 +211,15 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "Multiple candidate lineages remain for this blank-var catalog object; the stripped catalog parent cannot resolve the conflict.",
+      "reopenRequirement": "Provide exact-object lineage evidence or an explicit catalog correction that selects one lineage; do not choose from the stripped base taxon alone.",
       "researchLabels": [
         "Xiphophorus hellerii var.",
         "红苹果剑尾",
         "Xiphophorus hellerii ornamental red lineage (legacy catalog attribution)",
         "Xiphophorus hellerii × Xiphophorus maculatus red-swordtail hybrid lineage"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Resolve the candidate-lineage conflict using the full catalog object/trade label and provenance; keep fail-closed until one lineage is reviewed.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -222,6 +232,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. ornamental Gold lineage"
       ],
@@ -259,6 +270,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. ornamental Longfin Platinum lineage"
       ],
@@ -296,6 +308,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Cyprinus carpio ornamental Kohaku lineage"
       ],
@@ -333,6 +346,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "exact_variant_label_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Pterophyllum scalare ornamental red lineage"
       ],
@@ -377,6 +391,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Trichopodus trichopterus ornamental balloon lineage"
       ],
@@ -414,6 +429,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Panaque sp. L191 trade identity"
       ],
@@ -451,6 +467,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Leporacanthicus cf. galaxias L240 trade identity"
       ],
@@ -488,6 +505,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "conflicting_candidate_lineages",
       "candidateTaxa": [
         "Pangio kuhlii (legacy catalog attribution; exact Golden Kuhli object not independently confirmed)",
         "Pangio anguillaris (government aquarium list maps “Kuhli golden” to this taxon)"
@@ -506,15 +524,15 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "Multiple candidate lineages remain for this blank-var catalog object; the stripped catalog parent cannot resolve the conflict.",
+      "reopenRequirement": "Provide exact-object lineage evidence or an explicit catalog correction that selects one lineage; do not choose from the stripped base taxon alone.",
       "researchLabels": [
         "Pangio kuhlii var.",
         "黄金眼镜蛇蛇鱼",
         "Pangio kuhlii (legacy catalog attribution; exact Golden Kuhli object not independently confirmed)",
         "Pangio anguillaris (government aquarium list maps “Kuhli golden” to this taxon)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Resolve the candidate-lineage conflict using the full catalog object/trade label and provenance; keep fail-closed until one lineage is reviewed.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -527,6 +545,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "named_trade_label_requires_lineage",
       "candidateTaxa": [
         "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -544,14 +563,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
+      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
       "researchLabels": [
         "Thorichthys meeki var.",
         "大点火口",
         "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -564,6 +583,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Geophagus spp. (32 recognized species; exact parent taxon unresolved)"
       ],
@@ -601,6 +621,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. ornamental Gold Longfin lineage"
       ],
@@ -640,6 +661,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Pterophyllum scalare ornamental Marble Balloon lineage"
       ],
@@ -681,6 +703,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "commercial_hybrid_identity_unresolved",
       "migrationPath": "hybrid_object_specific_hold",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "commercial blood-parrot balloon cichlid hybrid lineage",
         "Cichlasoma var. trade attribution is not a resolved taxon"
@@ -720,6 +743,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Pterophyllum scalare ornamental Blue Balloon lineage"
       ],
@@ -761,6 +785,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Osphronemus goramy ornamental Gold lineage"
       ],
@@ -798,6 +823,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Maylandia estherae ornamental Albino lineage"
       ],
@@ -835,6 +861,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Sciaenochromis fryeri ornamental White lineage"
       ],
@@ -872,6 +899,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "named_trade_label_requires_lineage",
       "candidateTaxa": [
         "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -889,14 +917,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
+      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
       "researchLabels": [
         "Nimbochromis livingstonii var.",
         "血中红慈鲷",
         "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -909,6 +937,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Trichopodus trichopterus ornamental Blue Balloon lineage"
       ],
@@ -946,6 +975,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Trichopodus trichopterus ornamental Gold Balloon lineage"
       ],
@@ -983,6 +1013,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Geophagus surinamensis ornamental Albino lineage"
       ],
@@ -1020,6 +1051,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "identity_only_after_exact_evidence",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hemichromis bimaculatus ornamental Albino lineage"
       ],
@@ -1063,6 +1095,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Apistogramma cacatuoides ornamental Super Red lineage"
       ],
@@ -1100,6 +1133,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. ornamental Gold Longfin lineage"
       ],
@@ -1139,6 +1173,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. ornamental White Longfin lineage"
       ],
@@ -1176,6 +1211,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Parancistrus aurantiacus ornamental Gold lineage"
       ],
@@ -1213,6 +1249,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Channa andrao ornamental Super Blue lineage"
       ],
@@ -1250,6 +1287,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "generic_improvement_modifier_requires_lineage",
       "candidateTaxa": [
         "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -1271,14 +1309,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
+      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
       "researchLabels": [
         "Lutjanus kasmira var.",
         "红利鱼 (改良)",
         "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -1291,6 +1329,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "morphology_modifier_requires_lineage",
       "candidateTaxa": [
         "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -1312,14 +1351,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog object carries a morphology-changing modifier but its scientific variant identity is blank; morphology-sensitive Compatibility fields cannot inherit automatically.",
+      "reopenRequirement": "Provide exact strain/lineage evidence for the morphology form, then review field-scoped inheritance before any Compatibility authority is reused.",
       "researchLabels": [
         "Lutjanus kasmira var.",
         "红利鱼 (长鳍型)",
         "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Verify the exact morphology lineage first, then run partial inheritance review; never inherit the full base profile from the blank-var label.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -1332,6 +1371,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "generic_improvement_modifier_requires_lineage",
       "candidateTaxa": [
         "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -1349,14 +1389,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
+      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
       "researchLabels": [
         "Synchiropus splendidus var.",
         "五彩青蛙 (改良型)",
         "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -1369,6 +1409,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Andinoacara pulcher ornamental Balloon lineage"
       ],
@@ -1410,6 +1451,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hemichromis bimaculatus ornamental Balloon lineage"
       ],
@@ -1451,6 +1493,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Astronotus ocellatus ornamental Balloon lineage"
       ],
@@ -1492,6 +1535,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "identity_only_after_exact_evidence",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Peckoltia compta ornamental Super Gold lineage"
       ],
@@ -1535,6 +1579,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. ornamental Snowflake Gold lineage"
       ],
@@ -1572,6 +1617,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "identity_only_after_exact_evidence",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Chrysiptera cyanea ornamental Platinum lineage"
       ],
@@ -1616,6 +1662,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Potamotrygon leopoldi ornamental Albino lineage"
       ],
@@ -1653,6 +1700,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Potamotrygon leopoldi ornamental Eclipse lineage"
       ],
@@ -1690,6 +1738,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Channa andrao ornamental Red lineage"
       ],
@@ -1727,6 +1776,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Geophagus spp. ornamental Longfin Platinum lineage"
       ],
@@ -1764,6 +1814,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Xiphophorus hellerii ornamental Red-eye Albino High Fin lineage"
       ],
@@ -1805,6 +1856,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Andinoacara pulcher ornamental Super Balloon lineage"
       ],
@@ -1846,6 +1898,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Ancistrus spp. ornamental Albino Longfin lineage"
       ],
@@ -1883,6 +1936,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Trichopodus trichopterus ornamental Balloon Gold XL lineage"
       ],
@@ -1920,6 +1974,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "commercial_hybrid_identity_unresolved",
       "migrationPath": "hybrid_object_specific_hold",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Amatitlania nigrofasciata lineage",
         "commercial parrot/convict hybrid lineage"
@@ -1957,13 +2012,16 @@
       "scientificName": "Hyphessobrycon pulchripinnis var.",
       "lifeType": "fish",
       "blankVariantSuffix": true,
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "migrationPath": "catalog_structure_correction",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
-        "Hyphessobrycon pulchripinnis (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Hyphessobrycon sp. “Muzel Red Cherry” (undescribed aquarium-trade lineage)",
+        "Hemigrammus sp. “Red Muzel” (alternative genus placement proposed in curated aquarium literature)",
+        "Hyphessobrycon cf. pulchripinnis (Chinese aquarium-trade attribution)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "trade_name_disambiguation",
+      "gate": "manual_disambiguation",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -1976,14 +2034,16 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.",
+      "reopenRequirement": "Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.",
       "researchLabels": [
         "Hyphessobrycon pulchripinnis var.",
         "甜心柠檬灯",
-        "Hyphessobrycon pulchripinnis (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Hyphessobrycon sp. “Muzel Red Cherry” (undescribed aquarium-trade lineage)",
+        "Hemigrammus sp. “Red Muzel” (alternative genus placement proposed in curated aquarium literature)",
+        "Hyphessobrycon cf. pulchripinnis (Chinese aquarium-trade attribution)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -1996,6 +2056,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "conflicting_candidate_lineages",
       "candidateTaxa": [
         "Balloon Molly morphology-changing domestic lineage; Poecilia sphenops-like attribution is legacy-only",
         "Balloon Molly domestic Poecilia breeding complex with historical interspecific crosses"
@@ -2016,15 +2077,15 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "Multiple candidate lineages remain for this blank-var catalog object; the stripped catalog parent cannot resolve the conflict.",
+      "reopenRequirement": "Provide exact-object lineage evidence or an explicit catalog correction that selects one lineage; do not choose from the stripped base taxon alone.",
       "researchLabels": [
         "Poecilia sphenops var.",
         "球鱼 (玛丽变种)",
         "Balloon Molly morphology-changing domestic lineage; Poecilia sphenops-like attribution is legacy-only",
         "Balloon Molly domestic Poecilia breeding complex with historical interspecific crosses"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Resolve the candidate-lineage conflict using the full catalog object/trade label and provenance; keep fail-closed until one lineage is reviewed.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2037,6 +2098,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Dumbo lineage"
       ],
@@ -2076,6 +2138,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "generic_improvement_modifier_requires_lineage",
       "candidateTaxa": [
         "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -2093,14 +2156,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
+      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
       "researchLabels": [
         "Hemigrammus bleheri var.",
         "红鼻灯 (改良)",
         "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2113,6 +2176,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hemigrammus bleheri ornamental Balloon lineage"
       ],
@@ -2150,6 +2214,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Full Black lineage"
       ],
@@ -2189,6 +2254,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "named_trade_label_requires_lineage",
       "candidateTaxa": [
         "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -2206,14 +2272,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
+      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
       "researchLabels": [
         "Hemigrammus bleheri var.",
         "黑金刚红鼻剪刀",
         "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2226,6 +2292,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "named_trade_label_requires_lineage",
       "candidateTaxa": [
         "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -2245,14 +2312,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
+      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
       "researchLabels": [
         "Hyphessobrycon herbertaxelrodi var.",
         "紫艳红莲灯",
         "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2265,6 +2332,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Paracheirodon innesi ornamental Diamond lineage"
       ],
@@ -2304,6 +2372,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Aphyocharax anisitsi ornamental balloon lineage"
       ],
@@ -2341,6 +2410,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "named_trade_label_requires_lineage",
       "candidateTaxa": [
         "Hemigrammus rodwayi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -2362,14 +2432,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
+      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
       "researchLabels": [
         "Hemigrammus rodwayi var.",
         "蓝眼金灯",
         "Hemigrammus rodwayi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2382,6 +2452,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hemigrammus bleheri ornamental Longfin lineage"
       ],
@@ -2419,6 +2490,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hemigrammus bleheri ornamental Platinum lineage"
       ],
@@ -2456,6 +2528,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental longfin lineage"
       ],
@@ -2495,6 +2568,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental balloon lineage"
       ],
@@ -2534,6 +2608,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Corydoras aeneus ornamental Platinum lineage"
       ],
@@ -2573,6 +2648,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Nematobrycon palmeri ornamental platinum lineage"
       ],
@@ -2610,6 +2686,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Yellow Grass lineage"
       ],
@@ -2649,6 +2726,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Kohaku lineage"
       ],
@@ -2688,6 +2766,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Albino Kohaku lineage"
       ],
@@ -2727,6 +2806,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hyphessobrycon sweglesi ornamental Longfin lineage"
       ],
@@ -2764,6 +2844,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Albino Red Eye lineage"
       ],
@@ -2803,6 +2884,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hemigrammus bleheri ornamental Balloon lineage"
       ],
@@ -2840,6 +2922,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
       ],
@@ -2879,6 +2962,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Albino Balloon lineage"
       ],
@@ -2918,6 +3002,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_parent_taxon_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Pseudochromis spp. ornamental Gold lineage"
       ],
@@ -2955,6 +3040,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "identity_only_after_exact_evidence",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hemigrammus rodwayi ornamental Gold lineage"
       ],
@@ -2996,6 +3082,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Aphyocharax anisitsi ornamental Balloon lineage"
       ],
@@ -3033,6 +3120,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Longfin White lineage"
       ],
@@ -3072,6 +3160,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "generic_improvement_modifier_requires_lineage",
       "candidateTaxa": [
         "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -3089,14 +3178,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.",
+      "reopenRequirement": "Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.",
       "researchLabels": [
         "Prionobrama filigera var.",
         "红尾玻璃灯 (改良)",
         "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -3109,6 +3198,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Boehlkea fredcochui ornamental Blue lineage"
       ],
@@ -3146,6 +3236,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
+      "catalogStructureSubtype": "named_trade_label_requires_lineage",
       "candidateTaxa": [
         "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
@@ -3165,14 +3256,14 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
+      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
       "researchLabels": [
         "Hyphessobrycon herbertaxelrodi var.",
         "白金黑霓虹灯",
         "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -3185,6 +3276,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Hyphessobrycon herbertaxelrodi ornamental Balloon lineage"
       ],
@@ -3224,6 +3316,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
       ],
@@ -3263,6 +3356,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Glo Orange lineage"
       ],
@@ -3302,6 +3396,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "base_authority_or_parent_resolution",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Platinum Balloon Longfin lineage"
       ],
@@ -3341,6 +3436,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "trade_name_taxon_ambiguous",
       "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "ornamental Japanese medaka strains derived from the Oryzias latipes species complex",
         "multiple distinct ornamental medaka strains; “top-view/观背青鳉” is not one exact variant identity"
@@ -3380,6 +3476,7 @@
       "blankVariantSuffix": true,
       "boundaryCode": "trade_name_taxon_ambiguous",
       "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Caridina logemanni",
         "Caridina cantonensis complex"
@@ -3419,6 +3516,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "taxonomic_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Channa lorti (catalog string; authoritative taxon unresolved)"
       ],
@@ -3456,6 +3554,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Mikrogeophagus ramirezi ornamental gold-balloon lineage"
       ],
@@ -3497,6 +3596,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Mikrogeophagus ramirezi ornamental platinum balloon lineage"
       ],
@@ -3538,6 +3638,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "identity_only_after_exact_evidence",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Channa aurantimaculata ornamental Gold lineage"
       ],
@@ -3579,6 +3680,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
       "migrationPath": "partial_inheritance_review",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Mikrogeophagus ramirezi ornamental Super Red Balloon lineage"
       ],
@@ -3620,6 +3722,7 @@
       "blankVariantSuffix": false,
       "boundaryCode": "accepted_taxon_alias_trade_ambiguous",
       "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Vittina natalensis",
         "other aquarium-trade zebra nerites"

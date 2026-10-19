@@ -12,23 +12,30 @@
 ## Migration buckets
 
 - variant_object_evidence_required: 59
-- catalog_structure_correction_required: 15
+- catalog_structure_correction_required: 14
 - parent_taxon_resolution_required: 11
+- trade_name_disambiguation_required: 4
 - commercial_hybrid_hold: 3
-- trade_name_disambiguation_required: 3
 - accepted_alias_trade_disambiguation_required: 1
 - taxonomic_research_candidate: 1
 
 ## Migration paths
 
 - base_authority_or_parent_resolution: 54 objects / 8127 sole-boundary pairs
-- catalog_structure_correction: 15 objects / 2246 sole-boundary pairs
+- catalog_structure_correction: 14 objects / 2107 sole-boundary pairs
 - partial_inheritance_review: 10 objects / 1134 sole-boundary pairs
 - identity_only_after_exact_evidence: 5 objects / 625 sole-boundary pairs
-- trade_name_disambiguation: 4 objects / 301 sole-boundary pairs
+- trade_name_disambiguation: 5 objects / 440 sole-boundary pairs
 - hybrid_object_specific_hold: 3 objects / 485 sole-boundary pairs
 - exact_variant_label_disambiguation: 1 objects / 162 sole-boundary pairs
 - taxonomic_review: 1 objects / 0 sole-boundary pairs
+
+## Catalog structure subtypes
+
+- named_trade_label_requires_lineage: 6
+- generic_improvement_modifier_requires_lineage: 4
+- conflicting_candidate_lineages: 3
+- morphology_modifier_requires_lineage: 1
 
 - Identity-only after exact evidence: **5**
 - Partial inheritance review: **10**

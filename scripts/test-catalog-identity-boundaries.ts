@@ -58,6 +58,18 @@ assert.ok(balloonMolly?.sourceIds.includes('phase2-15-aquarium-glaser-molly-trad
 assert.match(balloonMolly?.note || '', /prohibit automatic P\. sphenops Compatibility inheritance/i);
 assert.equal(getReviewedCompatibilityProfile('sp_0142'), undefined);
 
+const sweetheartLemonTetra = getCatalogIdentityBoundary('sp_0141');
+assert.equal(sweetheartLemonTetra?.code, 'trade_name_taxon_ambiguous');
+assert.equal(sweetheartLemonTetra?.resolvedGranularity, 'trade_name_only');
+assert.equal(sweetheartLemonTetra?.researchDisposition, 'terminal_unknown_hold');
+assert.ok(sweetheartLemonTetra?.candidateTaxa.some(item => item.includes('Muzel Red Cherry')));
+assert.ok(sweetheartLemonTetra?.candidateTaxa.some(item => item.includes('Hemigrammus sp.')));
+assert.ok(sweetheartLemonTetra?.candidateTaxa.some(item => item.includes('cf. pulchripinnis')));
+assert.ok(sweetheartLemonTetra?.sourceIds.includes('phase2-17-su-aquatic-red-cherry-tetra'));
+assert.ok(sweetheartLemonTetra?.sourceIds.includes('phase2-17-daehne-muzel-red-tetra'));
+assert.ok(sweetheartLemonTetra?.sourceIds.includes('phase2-17-yangyubang-sweetheart-lemon-tetra'));
+assert.equal(getReviewedCompatibilityProfile('sp_0141'), undefined);
+
 const topViewMedaka = getCatalogIdentityBoundary('sp_0474');
 assert.equal(topViewMedaka?.code, 'trade_name_taxon_ambiguous');
 assert.equal(topViewMedaka?.resolvedGranularity, 'trade_name_only');

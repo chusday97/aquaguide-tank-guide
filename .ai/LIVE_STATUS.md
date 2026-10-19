@@ -1,11 +1,11 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 blank-var provenance + ornamental-medaka group hardening
+## TOP CURRENT OVERRIDE — 2026-10-19 catalog-structure root-cause routing + Sweetheart Lemon trade boundary
 
-- Working authority: local `main` after `c502f5d4`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- Blank-`var.` scientific-name holds with one candidate now expose the stripped parent only as **legacy catalog attribution**, never as reviewed ornamental lineage evidence.
-- Structural blank-`var.` rows no longer emit `singleCandidateHint`; full candidates remain visible for human review while automation stays fail-closed.
-- `sp_0474 观背青鳉` is now a trade/group identity boundary rather than a “missing var. name” defect: reviewed genomics supports a broad ornamental-medaka strain group from the `Oryzias latipes species complex`, not one exact variant.
+- Working authority: local `main` after `ec36ed6c`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- Catalog structure debt now has explicit machine-readable subtypes and subtype-specific manual actions: **3 conflicting-lineage / 1 morphology / 4 generic-improvement / 6 named-trade**.
+- Generic `改良` labels are no longer treated as identity keys; morphology-changing labels require exact lineage plus partial/field-scoped inheritance review; named trade labels require full-object evidence; conflicting candidates require lineage resolution.
+- `sp_0141 甜心柠檬灯` moved from blank-`var.` structure correction to terminal **trade-name taxon ambiguity** because exact trade sources disagree between `Hyphessobrycon sp. “Muzel Red Cherry”`, alternative `Hemigrammus sp.` placement and `Hyphessobrycon cf. pulchripinnis`.
 - No identity was promoted. Coverage remains **308 fish / 100 generic-ready / 112 core-complete / 91 fish identity-held / 258 combined held**.
-- Identity remains **93 boundaries / 16,735 unresolved pairs**. Queue is now **15 catalog structure / 1 manual label / 17 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
+- Identity remains **93 boundaries / 16,735 unresolved pairs**. Queue is now **14 catalog structure / 1 manual label / 18 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
 - Field debt remains **150 = 72 completion-eligible + 78 deferred**. Research plan remains **4 guarded jobs / 9 variants / 0 exact objects**. Canonical stays **44 total / 21 explicit / 13 colour policy / 4 taxon roots / 10 field policies**.
 - Fully informed remains **100 / 4,950 / 0 insufficient_data**. Readability remains **9,591 / 97 exceptional unknowns**.
 - Repository authority remains **126 Profiles / 21 Pair Rules**; release generations remain exact **63 / 85 / 95 / 99 / 100 / 101**.

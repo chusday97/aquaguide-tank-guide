@@ -13,6 +13,9 @@ const row = (overrides: Partial<CompatibilityIdentityMigrationAudit['rows'][numb
   blankVariantSuffix: false,
   boundaryCode: 'catalog_variant_identity_unresolved',
   migrationPath: 'identity_only_after_exact_evidence',
+  catalogStructureSubtype: null,
+  catalogStructureBlockedReason: null,
+  catalogStructureReopenRequirement: null,
   nextAction: 'Find exact-object evidence.',
   candidateTaxa: ['Testus fishii ornamental Blue lineage'],
   morphologyRisk: false,
@@ -32,7 +35,7 @@ const row = (overrides: Partial<CompatibilityIdentityMigrationAudit['rows'][numb
 });
 
 const synthetic: CompatibilityIdentityMigrationAudit = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   activeIdentityBoundaries: 7,
   identityUnknownPairs: 42,
   rows: [
@@ -134,6 +137,11 @@ for (const item of current.items) {
     [...new Set(auditById.get(item.speciesId)?.candidateTaxa || [])],
     `${item.speciesId} review queue must preserve the complete migration-audit candidate taxon set`,
   );
+  assert.equal(
+    item.catalogStructureSubtype,
+    auditById.get(item.speciesId)?.catalogStructureSubtype ?? null,
+    `${item.speciesId} review queue must preserve migration-audit catalog structure subtype`,
+  );
 }
 assert.equal(byId.has('sp_0338'), false, 'resolved duplicate catalog alias must leave the active identity review queue');
 assert.equal(byId.get('sp_0175')?.queue, 'manual_label_disambiguation');
@@ -153,6 +161,11 @@ assert.equal(byId.get('sp_0474')?.queue, 'trade_name_disambiguation');
 assert.equal(byId.get('sp_0474')?.gate, 'manual_disambiguation');
 assert.equal(byId.get('sp_0474')?.automatedResearchAllowed, false);
 assert.ok((byId.get('sp_0474')?.candidateTaxa || []).some(item => item.includes('Oryzias latipes species complex')));
+assert.equal(byId.get('sp_0141')?.queue, 'trade_name_disambiguation');
+assert.equal(byId.get('sp_0141')?.gate, 'manual_disambiguation');
+assert.equal(byId.get('sp_0141')?.catalogStructureSubtype, null);
+assert.equal(byId.get('sp_0141')?.automatedResearchAllowed, false);
+assert.ok((byId.get('sp_0141')?.candidateTaxa || []).some(item => item.includes('Muzel Red Cherry')));
 for (const item of current.items) {
   if (item.queue !== 'catalog_structure_correction' || item.candidateTaxa.length !== 1) continue;
   assert.match(
@@ -174,9 +187,16 @@ for (const resolvedPhase213Id of ['sp_0143', 'sp_0144', 'sp_0216']) {
 for (const resolvedPhase214Id of ['sp_0065', 'sp_0162']) {
   assert.equal(byId.has(resolvedPhase214Id), false, `${resolvedPhase214Id} reviewed goldfish identity must leave the active identity review queue`);
 }
-assert.match(byId.get('sp_0158')?.researchBlockedReason || '', /structurally incomplete/i);
-assert.match(byId.get('sp_0158')?.reopenRequirement || '', /blank var\./i);
-assert.match(byId.get('sp_0158')?.nextAction || '', /scientificName first/i);
+assert.equal(byId.get('sp_0158')?.catalogStructureSubtype, 'conflicting_candidate_lineages');
+assert.match(byId.get('sp_0158')?.researchBlockedReason || '', /candidate lineages/i);
+assert.match(byId.get('sp_0158')?.reopenRequirement || '', /exact-object lineage evidence/i);
+assert.match(byId.get('sp_0158')?.nextAction || '', /candidate-lineage conflict/i);
+assert.equal(byId.get('sp_0365')?.catalogStructureSubtype, 'morphology_modifier_requires_lineage');
+assert.match(byId.get('sp_0365')?.nextAction || '', /partial inheritance review/i);
+assert.equal(byId.get('sp_0296')?.catalogStructureSubtype, 'generic_improvement_modifier_requires_lineage');
+assert.match(byId.get('sp_0296')?.nextAction || '', /actual breeder\/trade strain/i);
+assert.equal(byId.get('sp_0211')?.catalogStructureSubtype, 'named_trade_label_requires_lineage');
+assert.match(byId.get('sp_0211')?.nextAction || '', /full catalog object\/trade label/i);
 for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
   assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
   assert.equal(byId.get(id)?.automatedResearchAllowed, false);
@@ -205,7 +225,13 @@ assert.equal(current.summary.automatedResearchEligible, 0);
 assert.equal(current.summary.manualReviewOnly, 93);
 assert.equal(current.summary.fishIdentityBoundaries, 91);
 assert.equal(current.summary.nonFishIdentityBoundaries, 2);
-assert.equal(current.summary.blankVariantCatalogCorrections, 15);
+assert.equal(current.summary.blankVariantCatalogCorrections, 14);
+assert.deepEqual(current.summary.catalogStructureSubtypeCounts, {
+  conflicting_candidate_lineages: 3,
+  morphology_modifier_requires_lineage: 1,
+  generic_improvement_modifier_requires_lineage: 4,
+  named_trade_label_requires_lineage: 6,
+});
 assert.equal(current.summary.readyBaseIdentityBoundaries, 20);
 assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 9);
 assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 11);
@@ -216,8 +242,8 @@ assert.equal(current.summary.byQueue.partial_inheritance_review, 0);
 assert.equal(current.summary.byQueue.base_or_parent_resolution, 0);
 assert.equal(current.summary.byQueue.taxonomic_review, 0);
 assert.equal(current.summary.byQueue.manual_label_disambiguation, 1);
-assert.equal(current.summary.byQueue.catalog_structure_correction, 15);
-assert.equal(current.summary.byQueue.trade_name_disambiguation, 17);
+assert.equal(current.summary.byQueue.catalog_structure_correction, 14);
+assert.equal(current.summary.byQueue.trade_name_disambiguation, 18);
 assert.equal(current.summary.byQueue.evidence_ceiling_hold, 57);
 assert.equal(current.summary.byQueue.hybrid_object_hold, 3);
 assert.equal(current.items.every(item => item.researchDisposition === 'terminal_unknown_hold'), true);

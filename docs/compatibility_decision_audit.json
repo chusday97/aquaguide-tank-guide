@@ -1098,7 +1098,7 @@
         "unknownPairs": 224,
         "actionableFields": [],
         "terminalReasons": [
-          "catalog_scientific_name_unresolved"
+          "trade_name_taxon_ambiguous"
         ],
         "exposureSharePct": 72.96,
         "impactBand": "medium"
@@ -2430,7 +2430,7 @@
       },
       {
         "reason": "catalog_scientific_name_unresolved",
-        "speciesCount": 15
+        "speciesCount": 14
       },
       {
         "reason": "catalog_parent_taxon_unresolved",
@@ -2453,11 +2453,11 @@
         "speciesCount": 3
       },
       {
-        "reason": "species_fish_predation_not_established",
-        "speciesCount": 2
+        "reason": "trade_name_taxon_ambiguous",
+        "speciesCount": 3
       },
       {
-        "reason": "trade_name_taxon_ambiguous",
+        "reason": "species_fish_predation_not_established",
         "speciesCount": 2
       },
       {

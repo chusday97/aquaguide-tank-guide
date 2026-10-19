@@ -7,6 +7,7 @@ import { nextWaveUnified14IdentityOutcomes } from './catalogReviewBatches/next-w
 import { nextWaveUnified15IdentityOutcomes } from './catalogReviewBatches/next-wave-unified-15';
 import { identityBoundaryCorrectionsPhase2_15 } from './catalogReviewBatches/identity-boundary-corrections-phase2-15';
 import { identityBoundaryCorrectionsPhase2_16 } from './catalogReviewBatches/identity-boundary-corrections-phase2-16';
+import { identityBoundaryCorrectionsPhase2_17 } from './catalogReviewBatches/identity-boundary-corrections-phase2-17';
 import { fishData } from './fishData';
 import { resolvedCatalogIdentityCorrectionSpeciesIds } from './catalogIdentityCorrections';
 
@@ -378,6 +379,7 @@ const rawCatalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> = {
   },
   ...identityBoundaryCorrectionsPhase2_15,
   ...identityBoundaryCorrectionsPhase2_16,
+  ...identityBoundaryCorrectionsPhase2_17,
 };
 
 const resolvedClassificationCorrectionSpeciesIds = new Set([

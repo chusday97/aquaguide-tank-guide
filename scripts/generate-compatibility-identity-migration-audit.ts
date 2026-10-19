@@ -38,6 +38,12 @@ type ExistingIdentityEvidenceStatus =
   | 'reviewed_identity_hold_present'
   | 'no_object_identity_review';
 
+type CatalogStructureSubtype =
+  | 'conflicting_candidate_lineages'
+  | 'morphology_modifier_requires_lineage'
+  | 'generic_improvement_modifier_requires_lineage'
+  | 'named_trade_label_requires_lineage';
+
 const outputDir = new URL('../docs/', import.meta.url).pathname;
 mkdirSync(outputDir, { recursive: true });
 
@@ -74,6 +80,57 @@ const hasBlankVariantSuffix = (scientificName: string) => (
 const hasMorphologyRisk = (species: Fish, candidateTaxa: readonly string[] = []) => {
   const text = `${species.name || ''} ${species.scientificName || ''} ${candidateTaxa.join(' ')}`;
   return /balloon|super\s*balloon|short\s*body|shortbody|longfin|long\s*fin|high\s*fin|veil|double\s*tail|doubletail|球形|短身|长鳍|高鳍|大帆|蝶尾|水泡|珠鳞|狮头|虎头|鹤顶|兰寿|琉金/i.test(text);
+};
+
+const catalogStructureSubtypeFor = ({
+  species,
+  candidateTaxa,
+  morphologyRisk,
+  bucket,
+}: {
+  species: Fish;
+  candidateTaxa: readonly string[];
+  morphologyRisk: boolean;
+  bucket: MigrationBucket;
+}): CatalogStructureSubtype | null => {
+  if (bucket !== 'catalog_structure_correction_required') return null;
+  if (candidateTaxa.length > 1) return 'conflicting_candidate_lineages';
+  if (morphologyRisk) return 'morphology_modifier_requires_lineage';
+  if (/[（(]\s*改良(?:型)?\s*[）)]/i.test(species.name || '')) {
+    return 'generic_improvement_modifier_requires_lineage';
+  }
+  return 'named_trade_label_requires_lineage';
+};
+
+const catalogStructureAction = (subtype: CatalogStructureSubtype | null) => {
+  switch (subtype) {
+    case 'conflicting_candidate_lineages':
+      return {
+        blocked: 'Multiple candidate lineages remain for this blank-var catalog object; the stripped catalog parent cannot resolve the conflict.',
+        reopen: 'Provide exact-object lineage evidence or an explicit catalog correction that selects one lineage; do not choose from the stripped base taxon alone.',
+        next: 'Resolve the candidate-lineage conflict using the full catalog object/trade label and provenance; keep fail-closed until one lineage is reviewed.',
+      };
+    case 'morphology_modifier_requires_lineage':
+      return {
+        blocked: 'The catalog object carries a morphology-changing modifier but its scientific variant identity is blank; morphology-sensitive Compatibility fields cannot inherit automatically.',
+        reopen: 'Provide exact strain/lineage evidence for the morphology form, then review field-scoped inheritance before any Compatibility authority is reused.',
+        next: 'Verify the exact morphology lineage first, then run partial inheritance review; never inherit the full base profile from the blank-var label.',
+      };
+    case 'generic_improvement_modifier_requires_lineage':
+      return {
+        blocked: 'The catalog label only says improved/改良 and does not identify a stable strain or lineage; this merchandising modifier is not an identity key.',
+        reopen: 'Replace the generic 改良 modifier with a reviewed exact strain/lineage label, or correct the object to the base taxon if no distinct lineage exists.',
+        next: 'Identify the actual breeder/trade strain behind 改良 before research or inheritance; do not treat 改良 itself as a variant identity.',
+      };
+    case 'named_trade_label_requires_lineage':
+      return {
+        blocked: 'The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.',
+        reopen: 'Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.',
+        next: 'Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.',
+      };
+    case null:
+      return null;
+  }
 };
 
 const getExistingIdentityEvidenceStatus = (speciesId: string): ExistingIdentityEvidenceStatus => {
@@ -264,6 +321,13 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     });
   const readyBaseCandidates = baseCandidates.filter(candidate => candidate.genericOnboardingReady);
   const morphologyRisk = hasMorphologyRisk(species, boundary.candidateTaxa);
+  const catalogStructureSubtype = catalogStructureSubtypeFor({
+    species,
+    candidateTaxa: boundary.candidateTaxa,
+    morphologyRisk,
+    bucket,
+  });
+  const catalogStructureActionPlan = catalogStructureAction(catalogStructureSubtype);
   const identityEvidenceStatus = getExistingIdentityEvidenceStatus(species.id);
   const identityResearchDebt = getCatalogIdentityResearchDebt(species.id);
   const blankVariantSuffix = hasBlankVariantSuffix(species.scientificName || '');
@@ -288,6 +352,8 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     boundaryCode: boundary.code,
     resolvedGranularity: boundary.resolvedGranularity,
     migrationBucket: bucket,
+    catalogStructureSubtype,
+    catalogStructureBlockedReason: catalogStructureActionPlan?.blocked ?? null,
     migrationReadiness: 'blocked_review_required' as const,
     autoMigrationAllowed: false as const,
     candidateTaxa: boundary.candidateTaxa,
@@ -295,15 +361,16 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     sourceIds: boundary.sourceIds,
     reviewedAt: boundary.reviewedAt,
     researchDisposition: boundary.researchDisposition || null,
-    blockingRequirement: blockingRequirement(bucket),
+    blockingRequirement: catalogStructureActionPlan?.blocked ?? blockingRequirement(bucket),
     migrationPath,
-    nextAction: nextActionForPath(migrationPath),
+    nextAction: catalogStructureActionPlan?.next ?? nextActionForPath(migrationPath),
     identityEvidenceStatus,
     identityResearchDebt: identityResearchDebt || null,
     researchDebtStatus: identityResearchDebt?.status || null,
     researchDebtReviewedAt: identityResearchDebt?.reviewedAt || null,
     researchDebtBlockingReason: identityResearchDebt?.blockingReason || null,
     researchDebtReopenRequirement: identityResearchDebt?.reopenRequirement || null,
+    catalogStructureReopenRequirement: catalogStructureActionPlan?.reopen ?? null,
     nonQualifyingReferenceCount: identityResearchDebt?.nonQualifyingReferences.length || 0,
     blankVariantSuffix,
     morphologyRisk,
@@ -341,6 +408,12 @@ const migrationPathSoleBoundaryImpact = rows.reduce<Record<string, number>>((acc
   return acc;
 }, {});
 
+const catalogStructureSubtypeCounts = rows.reduce<Record<string, number>>((acc, row) => {
+  if (!row.catalogStructureSubtype) return acc;
+  acc[row.catalogStructureSubtype] = (acc[row.catalogStructureSubtype] || 0) + 1;
+  return acc;
+}, {});
+
 const identityEvidenceStatusCounts = rows.reduce<Record<string, number>>((acc, row) => {
   acc[row.identityEvidenceStatus] = (acc[row.identityEvidenceStatus] || 0) + 1;
   return acc;
@@ -358,7 +431,7 @@ const fishDomainBoundaryCount = rows.filter(row => row.lifeType === 'fish').leng
 const pairAttributionCount = rows.reduce((sum, row) => sum + row.affectedIdentityUnknownPairs, 0);
 
 const report = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   generatedFrom: 'source-controlled active catalog identity boundaries + deterministic Compatibility runtime',
   policy: {
     unitOfWork: 'catalog-object identity debt, not precomputed pair packs',
@@ -380,6 +453,7 @@ const report = {
   migrationBucketCounts: bucketCounts,
   migrationPathCounts,
   migrationPathSoleBoundaryImpact,
+  catalogStructureSubtypeCounts,
   identityEvidenceStatusCounts,
   researchDebtStatusCounts,
   researchedHighImpactHoldCount: rows.filter(row => row.identityResearchDebt).length,
@@ -414,6 +488,10 @@ const markdown = [
   '## Migration paths',
   '',
   ...Object.entries(migrationPathCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([path, count]) => '- ' + path + ': ' + count + ' objects / ' + (migrationPathSoleBoundaryImpact[path] || 0) + ' sole-boundary pairs'),
+  '',
+  '## Catalog structure subtypes',
+  '',
+  ...Object.entries(catalogStructureSubtypeCounts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([subtype, count]) => '- ' + subtype + ': ' + count),
   '',
   '- Identity-only after exact evidence: **' + report.identityOnlyAfterExactEvidenceCount + '**',
   '- Partial inheritance review: **' + report.partialInheritanceReviewCount + '**',
