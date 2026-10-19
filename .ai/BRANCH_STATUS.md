@@ -1,15 +1,14 @@
-## TOP CURRENT BRANCH — 2026-10-20 main variant environment draft evidence closure
+## TOP CURRENT BRANCH — 2026-10-20 main variant field-bridge review
 
-- Canonical local branch: `main`, continuing from `da32a368`.
-- Current change writes **draft evidence/research workflow only**. It creates no Profile, Pair Rule, Catalog authority, canonical identity, inherited fact, migration or Production authority.
-- The 27 approved environment candidate slots are **25 reviewable + 2 contract-blocked**. Guppy water stays blocked because exact-taxon FishBase supports freshwater + brackish while the current candidate contract is single-valued.
-- Source-controlled evidence registry contains 11 supported taxon-level candidate facts across 9 variant objects plus 1 explicit unresolved taxon fact; the generated artifact is deterministic and **45 exact-object-sensitive slots remain excluded**.
-- Research identity resolution is shared across API/dry-run/source acquisition, with reviewed local identity taking precedence over external availability. Plan-mode source-only capture + deterministic resume supports the 4 guarded jobs without turning them into active-completion work.
-- FishBase/ADW long-page excerpting preserves scientific-name and evidence windows; deterministic extraction stays strict and does not collapse multi-environment water evidence.
+- Canonical local branch: `main`, continuing from `387e7705`.
+- Current change is **review/queue workflow only**. It creates no Profile, Pair Rule, Catalog authority, canonical identity, inherited fact, migration or Production authority.
+- The 27 environment slots are classified **15 bridge-supported / 10 variant-specific-evidence-required / 2 candidate-contract-blocked** with whole-profile inheritance explicitly forbidden.
+- All 9 target variants remain zero-inheritance. `bridge_supported` is only eligibility for a later explicit source-controlled field-policy change.
+- Remaining exact evidence is consolidated into **55 research slots**: 10 environment tolerance + 45 adult-size/tank-size/social/territorial/predation. Guppy water's 2 contract blocks stay outside the queue.
 - Compatibility authority remains **308 fish / 100 ready / 112 core-complete / 150 visible debt / 44 canonical identities / 93 boundaries / 16,735 unresolved pairs**.
 - Runtime/release remains **4,950 mature pairs / 0 insufficient_data / 97 exceptional unknowns / 126 Profiles / 21 Pair Rules / rollout 63/85/95/99/100/101**.
-- Full research workflow + generator + Compatibility/runtime/release/docs/TypeScript gates PASS.
-- NEXT: create reviewed field-bridge decisions for the 25 draft candidates only where each variant bridge is defensible; guppy water remains blocked and the 45 exact-object slots still require object-level evidence.
+- Variant bridge + exact-evidence queue + full Compatibility/runtime/release/docs/TypeScript gates PASS.
+- NEXT: grouped exact-variant evidence acquisition across the 55-slot queue; explicit inheritance changes remain a separate reviewed checkpoint.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

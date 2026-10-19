@@ -1,0 +1,640 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_environment_bridge_review",
+  "policy": {
+    "promotionAllowed": false,
+    "writesAuthority": false,
+    "grantsInheritance": false,
+    "wholeProfileInheritanceAllowed": false
+  },
+  "summary": {
+    "variantObjects": 9,
+    "reviewedSlots": 27,
+    "bridgeSupported": 15,
+    "variantSpecificEvidenceRequired": 10,
+    "blockedByCandidateContract": 2
+  },
+  "decisions": [
+    {
+      "speciesId": "sp_0065",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Butterfly Tail",
+      "field": "water",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": "freshwater",
+      "candidateSourceId": "research-93564a7e556d72f5e735",
+      "identitySourceIds": [
+        "phase2-14-cn-goldfish-naming-standard-butterfly-tail",
+        "phase2-14-dalian-butterfly-tail-goldfish"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0065",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Butterfly Tail",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 10,
+        "max": 25
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-14-cn-goldfish-naming-standard-butterfly-tail",
+        "phase2-14-dalian-butterfly-tail-goldfish"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "selective_morph_temperature_requires_variant_evidence",
+      "rationale": "Fancy/selective morphology may alter thermal performance or husbandry tolerance, so temperature remains exact-object gated.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0065",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Butterfly Tail",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 6.5,
+        "max": 8
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-14-cn-goldfish-naming-standard-butterfly-tail",
+        "phase2-14-dalian-butterfly-tail-goldfish"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0066",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Red Cap Oranda",
+      "field": "water",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": "freshwater",
+      "candidateSourceId": "research-93564a7e556d72f5e735",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-red-cap-oranda"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0066",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Red Cap Oranda",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 10,
+        "max": 25
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-red-cap-oranda"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "selective_morph_temperature_requires_variant_evidence",
+      "rationale": "Fancy/selective morphology may alter thermal performance or husbandry tolerance, so temperature remains exact-object gated.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0066",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Red Cap Oranda",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 6.5,
+        "max": 8
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-red-cap-oranda"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0067",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Pearlscale",
+      "field": "water",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": "freshwater",
+      "candidateSourceId": "research-93564a7e556d72f5e735",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-pearlscale"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0067",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Pearlscale",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 10,
+        "max": 25
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-pearlscale"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "selective_morph_temperature_requires_variant_evidence",
+      "rationale": "Fancy/selective morphology may alter thermal performance or husbandry tolerance, so temperature remains exact-object gated.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0067",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Pearlscale",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 6.5,
+        "max": 8
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-pearlscale"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0068",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Bubble Eye",
+      "field": "water",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": "freshwater",
+      "candidateSourceId": "research-93564a7e556d72f5e735",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-bubble-eye"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0068",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Bubble Eye",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 10,
+        "max": 25
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-bubble-eye"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "selective_morph_temperature_requires_variant_evidence",
+      "rationale": "Fancy/selective morphology may alter thermal performance or husbandry tolerance, so temperature remains exact-object gated.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0068",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Bubble Eye",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 6.5,
+        "max": 8
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-bubble-eye"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "selective_morph_water_chemistry_bridge_supported",
+      "rationale": "The reviewed selectively bred form remains the same taxon; coarse water class and pH may advance to explicit field-bridge review, while morphology-sensitive thermal tolerance stays object-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0143",
+      "researchKey": "Poecilia reticulata",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Red Grass",
+      "field": "water",
+      "candidateStatus": "blocked_by_contract",
+      "candidateValue": null,
+      "candidateSourceId": "research-fishbase-poecilia-water-boundary",
+      "identitySourceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-gfi-red-grass-guppy"
+      ],
+      "decisionStatus": "blocked_by_candidate_contract",
+      "reasonCode": "multi_environment_not_representable_by_single_water_value",
+      "rationale": "Verified FishBase exact-taxon Environment explicitly lists both freshwater and brackish; current Compatibility water candidate contract is single-valued, so no deterministic value is promoted.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0143",
+      "researchKey": "Poecilia reticulata",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Red Grass",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 17,
+        "max": 28
+      },
+      "candidateSourceId": "research-96ef679173e9882fbdea",
+      "identitySourceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-gfi-red-grass-guppy"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "trade_strain_tolerance_requires_variant_evidence",
+      "rationale": "Selective strain history can alter physiological tolerance, so temperature and pH require strain-specific evidence before any field bridge is considered.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0143",
+      "researchKey": "Poecilia reticulata",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Red Grass",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 7,
+        "max": 8.5
+      },
+      "candidateSourceId": "research-96ef679173e9882fbdea",
+      "identitySourceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-gfi-red-grass-guppy"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "trade_strain_tolerance_requires_variant_evidence",
+      "rationale": "Selective strain history can alter physiological tolerance, so temperature and pH require strain-specific evidence before any field bridge is considered.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0144",
+      "researchKey": "Poecilia reticulata",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Blue Grass",
+      "field": "water",
+      "candidateStatus": "blocked_by_contract",
+      "candidateValue": null,
+      "candidateSourceId": "research-fishbase-poecilia-water-boundary",
+      "identitySourceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-mas-blue-grass-guppy"
+      ],
+      "decisionStatus": "blocked_by_candidate_contract",
+      "reasonCode": "multi_environment_not_representable_by_single_water_value",
+      "rationale": "Verified FishBase exact-taxon Environment explicitly lists both freshwater and brackish; current Compatibility water candidate contract is single-valued, so no deterministic value is promoted.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0144",
+      "researchKey": "Poecilia reticulata",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Blue Grass",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 17,
+        "max": 28
+      },
+      "candidateSourceId": "research-96ef679173e9882fbdea",
+      "identitySourceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-mas-blue-grass-guppy"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "trade_strain_tolerance_requires_variant_evidence",
+      "rationale": "Selective strain history can alter physiological tolerance, so temperature and pH require strain-specific evidence before any field bridge is considered.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0144",
+      "researchKey": "Poecilia reticulata",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Blue Grass",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 7,
+        "max": 8.5
+      },
+      "candidateSourceId": "research-96ef679173e9882fbdea",
+      "identitySourceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-mas-blue-grass-guppy"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "trade_strain_tolerance_requires_variant_evidence",
+      "rationale": "Selective strain history can alter physiological tolerance, so temperature and pH require strain-specific evidence before any field bridge is considered.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0155",
+      "researchKey": "Paracheirodon innesi",
+      "canonicalScientificName": "Paracheirodon innesi",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "field": "water",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": "freshwater",
+      "candidateSourceId": "research-a8e109294b9b5d2fd459",
+      "identitySourceIds": [
+        "phase2-12-fishbase-paracheirodon-innesi",
+        "phase2-12-aquarium-coop-neon-longfin"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "longfin_water_chemistry_bridge_supported",
+      "rationale": "The reviewed long-fin change is locomotor/fin morphology; coarse water class and pH may advance to explicit field-bridge review, while thermal tolerance remains variant-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0155",
+      "researchKey": "Paracheirodon innesi",
+      "canonicalScientificName": "Paracheirodon innesi",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 20,
+        "max": 26
+      },
+      "candidateSourceId": "research-97e9ab0c5596ea9db651",
+      "identitySourceIds": [
+        "phase2-12-fishbase-paracheirodon-innesi",
+        "phase2-12-aquarium-coop-neon-longfin"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "longfin_temperature_requires_variant_evidence",
+      "rationale": "Long-fin morphology can change swimming effort and thermal stress exposure, so base-taxon temperature tolerance is not advanced without long-fin-specific evidence.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0155",
+      "researchKey": "Paracheirodon innesi",
+      "canonicalScientificName": "Paracheirodon innesi",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 6,
+        "max": 7.2
+      },
+      "candidateSourceId": "research-97e9ab0c5596ea9db651",
+      "identitySourceIds": [
+        "phase2-12-fishbase-paracheirodon-innesi",
+        "phase2-12-aquarium-coop-neon-longfin"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "longfin_water_chemistry_bridge_supported",
+      "rationale": "The reviewed long-fin change is locomotor/fin morphology; coarse water class and pH may advance to explicit field-bridge review, while thermal tolerance remains variant-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0162",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "color_morph",
+      "variantKey": "Red Grass Goldfish",
+      "field": "water",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": "freshwater",
+      "candidateSourceId": "research-93564a7e556d72f5e735",
+      "identitySourceIds": [
+        "phase2-14-dalian-grass-goldfish",
+        "phase2-14-china-feed-red-grass-goldfish"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "color_morph_environment_field_bridge_supported",
+      "rationale": "The reviewed object is a color morph with no morphology or lineage boundary; water, temperature and pH may advance to explicit field-bridge review without extending size, space, behavior or trophic authority.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0162",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "color_morph",
+      "variantKey": "Red Grass Goldfish",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 10,
+        "max": 25
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-14-dalian-grass-goldfish",
+        "phase2-14-china-feed-red-grass-goldfish"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "color_morph_environment_field_bridge_supported",
+      "rationale": "The reviewed object is a color morph with no morphology or lineage boundary; water, temperature and pH may advance to explicit field-bridge review without extending size, space, behavior or trophic authority.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0162",
+      "researchKey": "Carassius auratus",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "color_morph",
+      "variantKey": "Red Grass Goldfish",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 6.5,
+        "max": 8
+      },
+      "candidateSourceId": "research-ff4044764363ca267ede",
+      "identitySourceIds": [
+        "phase2-14-dalian-grass-goldfish",
+        "phase2-14-china-feed-red-grass-goldfish"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "color_morph_environment_field_bridge_supported",
+      "rationale": "The reviewed object is a color morph with no morphology or lineage boundary; water, temperature and pH may advance to explicit field-bridge review without extending size, space, behavior or trophic authority.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0361",
+      "researchKey": "Tanichthys albonubes",
+      "canonicalScientificName": "Tanichthys albonubes",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "field": "water",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": "freshwater",
+      "candidateSourceId": "research-b32298af7de1ff8412a6",
+      "identitySourceIds": [
+        "phase2-12-fishbase-tanichthys-albonubes",
+        "phase2-12-aquarium-coop-white-cloud-longfin"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "longfin_water_chemistry_bridge_supported",
+      "rationale": "The reviewed long-fin change is locomotor/fin morphology; coarse water class and pH may advance to explicit field-bridge review, while thermal tolerance remains variant-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0361",
+      "researchKey": "Tanichthys albonubes",
+      "canonicalScientificName": "Tanichthys albonubes",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "field": "temperature",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 2,
+        "max": 22
+      },
+      "candidateSourceId": "research-580d81074fd5681e91f5",
+      "identitySourceIds": [
+        "phase2-12-fishbase-tanichthys-albonubes",
+        "phase2-12-aquarium-coop-white-cloud-longfin"
+      ],
+      "decisionStatus": "variant_specific_evidence_required",
+      "reasonCode": "longfin_temperature_requires_variant_evidence",
+      "rationale": "Long-fin morphology can change swimming effort and thermal stress exposure, so base-taxon temperature tolerance is not advanced without long-fin-specific evidence.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    },
+    {
+      "speciesId": "sp_0361",
+      "researchKey": "Tanichthys albonubes",
+      "canonicalScientificName": "Tanichthys albonubes",
+      "relationshipType": "longfin_variant",
+      "variantKey": "Longfin",
+      "field": "ph",
+      "candidateStatus": "draft_candidate",
+      "candidateValue": {
+        "min": 6,
+        "max": 7.5
+      },
+      "candidateSourceId": "research-580d81074fd5681e91f5",
+      "identitySourceIds": [
+        "phase2-12-fishbase-tanichthys-albonubes",
+        "phase2-12-aquarium-coop-white-cloud-longfin"
+      ],
+      "decisionStatus": "bridge_supported",
+      "reasonCode": "longfin_water_chemistry_bridge_supported",
+      "rationale": "The reviewed long-fin change is locomotor/fin morphology; coarse water class and pH may advance to explicit field-bridge review, while thermal tolerance remains variant-specific.",
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "grantsInheritance": false
+    }
+  ]
+}

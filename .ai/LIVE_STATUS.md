@@ -1,15 +1,14 @@
-## TOP CURRENT OVERRIDE — 2026-10-20 variant environment draft evidence closure
+## TOP CURRENT OVERRIDE — 2026-10-20 variant field-bridge review + exact-evidence queue
 
-- Working authority: local `main` after `da32a368`; no push/deploy/Production mutation, migration, rollout or UI change.
-- The 4 guarded taxon lanes now have source-controlled draft evidence: **25/27 environment candidate slots reviewable / 2/27 blocked by contract**. All candidates remain non-authoritative and all 9 target variants remain zero-inheritance.
-- The two blocked slots are Red/Blue Grass guppy `water`: exact-taxon FishBase says freshwater + brackish, while the current water candidate is single-valued. No forced freshwater mapping is allowed.
-- Added plan-mode source-only + resume research, shared reviewed-identity resolution, and deterministic trusted-source extraction without repeated identity lookup/discovery/fetch.
-- Candidate evidence is now reproducible: **registry → builder → generated JSON**. The test rejects artifact drift from the source-controlled registry or current four-job research plan.
-- Durable artifact: `evaluation/product/compatibility-variant-environment-candidates.v1.json`; no raw text/resume/credentials and `writesAuthority=false / promotionAllowed=false / grantsInheritance=false`.
-- The other **45 exact-object slots remain untouched**.
+- Working authority: local `main` after `387e7705`; no push/deploy/Production mutation, migration, rollout or UI change.
+- 27 environment slots are now deterministically classified: **15 bridge-supported / 10 exact-variant evidence required / 2 contract-blocked**.
+- Bridge support does **not** grant inheritance; all 9 target variants remain `inheritedFacts=[]` and `promotionAllowed=false / writesAuthority=false / grantsInheritance=false`.
+- The bridge policy is field-scoped and relationship-aware: color morphs can advance all three environment fields; longfin/selectively bred morphology forms only water+pH; trade strains only single-valued water class. All tolerance-sensitive fields otherwise stay exact-variant gated.
+- Red/Blue Grass guppy water remains blocked by the freshwater+brackish single-value contract mismatch.
+- The remaining evidence work is now one generated **55-slot exact-variant queue**: 10 environment tolerance slots + 45 exact-object core slots. The 2 contract blocks are not queued for pointless re-search.
 - Runtime remains **308 fish / 100 ready / 112 core-complete / 4,950 mature pairs / 0 insufficient_data / 97 exceptional unknowns**; authority remains **126 Profiles / 21 Pair Rules**, rollout **63/85/95/99/100/101**.
-- Research-workflow, generator, Compatibility, runtime and release gates PASS.
-- NEXT: review the 25 draft field bridges one field at a time; do not auto-promote. Guppy water remains blocked unless the schema or variant-specific evidence resolves the freshwater+brackish boundary.
+- Variant bridge, exact-evidence queue, full Compatibility/runtime/release/docs/TypeScript gates PASS.
+- NEXT: execute grouped exact-variant evidence acquisition for the 55 slots, then separately review explicit field-policy promotion candidates.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 

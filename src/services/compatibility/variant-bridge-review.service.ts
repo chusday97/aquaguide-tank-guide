@@ -1,4 +1,7 @@
 import { getApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
+import { catalogCanonicalIdentities } from '../../data/catalogCanonicalIdentity';
+import { reviewVariantEnvironmentFieldBridge } from '../../data/compatibilityVariantEnvironmentBridgePolicy';
+import { getCompatibilityVariantFieldResearchPolicy } from '../../data/compatibilityVariantFieldResearchPolicy';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
 import { getCatalogReviewSourceCandidates } from '../../data/catalogReviewSourceCandidates';
 import { resolveKnowledgeSources } from '../../modules/knowledge/knowledgeSources';
@@ -8,6 +11,7 @@ import type {
   CompatibilityResearchReviewManifest,
   CompatibilityResearchReviewQueueItem,
 } from './research-review-queue.service';
+import { buildCompatibilityVariantEnvironmentCandidateReview } from './variant-environment-candidate-review.service';
 
 export type CompatibilityVariantBridgeObjectStatus =
   | 'field_bridge_review_required'
@@ -90,6 +94,49 @@ export type CompatibilityVariantBridgeReviewManifest = {
     identityBoundaryHold: number;
   };
   groups: CompatibilityVariantBridgeReviewGroup[];
+};
+
+export type CompatibilityVariantEnvironmentBridgeDecisionStatus =
+  | 'bridge_supported'
+  | 'variant_specific_evidence_required'
+  | 'blocked_by_candidate_contract';
+
+export type CompatibilityVariantEnvironmentBridgeDecision = {
+  speciesId: string;
+  researchKey: string;
+  canonicalScientificName: string;
+  relationshipType: string;
+  variantKey: string;
+  field: 'water' | 'temperature' | 'ph';
+  candidateStatus: 'draft_candidate' | 'blocked_by_contract';
+  candidateValue: unknown;
+  candidateSourceId: string;
+  identitySourceIds: string[];
+  decisionStatus: CompatibilityVariantEnvironmentBridgeDecisionStatus;
+  reasonCode: string;
+  rationale: string;
+  promotionAllowed: false;
+  writesAuthority: false;
+  grantsInheritance: false;
+};
+
+export type CompatibilityVariantEnvironmentBridgeReviewManifest = {
+  version: 1;
+  kind: 'compatibility_variant_environment_bridge_review';
+  policy: {
+    promotionAllowed: false;
+    writesAuthority: false;
+    grantsInheritance: false;
+    wholeProfileInheritanceAllowed: false;
+  };
+  summary: {
+    variantObjects: number;
+    reviewedSlots: number;
+    bridgeSupported: number;
+    variantSpecificEvidenceRequired: number;
+    blockedByCandidateContract: number;
+  };
+  decisions: CompatibilityVariantEnvironmentBridgeDecision[];
 };
 
 const normalizeScientificName = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase();
@@ -286,5 +333,104 @@ export const buildCompatibilityVariantBridgeReviewManifest = (
       identityBoundaryHold: allObjects.filter(item => item.status === 'identity_boundary_hold').length,
     },
     groups,
+  };
+};
+
+const environmentFieldOrder = ['water', 'temperature', 'ph'] as const;
+
+export const buildCompatibilityVariantEnvironmentBridgeReview = (): CompatibilityVariantEnvironmentBridgeReviewManifest => {
+  const candidateReview = buildCompatibilityVariantEnvironmentCandidateReview();
+  const decisions: CompatibilityVariantEnvironmentBridgeDecision[] = [];
+
+  for (const job of candidateReview.jobs) {
+    for (const speciesId of job.speciesIds) {
+      const identity = catalogCanonicalIdentities[speciesId];
+      const researchPolicy = getCompatibilityVariantFieldResearchPolicy(speciesId);
+      const boundary = getCatalogIdentityBoundary(speciesId);
+      if (!identity || identity.registrySource !== 'reviewed_variant_field_policy') {
+        throw new Error('compatibility_variant_environment_bridge_identity_missing:' + speciesId);
+      }
+      if (boundary) {
+        throw new Error('compatibility_variant_environment_bridge_identity_boundary:' + speciesId);
+      }
+      if (!researchPolicy) {
+        throw new Error('compatibility_variant_environment_bridge_research_policy_missing:' + speciesId);
+      }
+      if (normalizeScientificName(identity.canonicalScientificName) !== normalizeScientificName(job.researchKey)) {
+        throw new Error('compatibility_variant_environment_bridge_taxon_mismatch:' + speciesId);
+      }
+
+      for (const candidate of job.fields) {
+        if (!researchPolicy.baseTaxonCandidateFacts.includes(candidate.field)) {
+          throw new Error('compatibility_variant_environment_bridge_field_not_eligible:' + speciesId + ':' + candidate.field);
+        }
+
+        if (candidate.status === 'blocked_by_contract') {
+          decisions.push({
+            speciesId,
+            researchKey: job.researchKey,
+            canonicalScientificName: identity.canonicalScientificName,
+            relationshipType: identity.relationshipType,
+            variantKey: identity.variantKey,
+            field: candidate.field,
+            candidateStatus: candidate.status,
+            candidateValue: candidate.proposedValue,
+            candidateSourceId: candidate.source.id,
+            identitySourceIds: [...identity.identityEvidenceSourceIds],
+            decisionStatus: 'blocked_by_candidate_contract',
+            reasonCode: candidate.reasonCode || 'candidate_contract_blocked',
+            rationale: candidate.evidenceSummary || 'The candidate cannot be represented safely by the current field contract.',
+            promotionAllowed: false,
+            writesAuthority: false,
+            grantsInheritance: false,
+          });
+          continue;
+        }
+
+        const gate = reviewVariantEnvironmentFieldBridge(identity.relationshipType, candidate.field);
+        decisions.push({
+          speciesId,
+          researchKey: job.researchKey,
+          canonicalScientificName: identity.canonicalScientificName,
+          relationshipType: identity.relationshipType,
+          variantKey: identity.variantKey,
+          field: candidate.field,
+          candidateStatus: candidate.status,
+          candidateValue: candidate.proposedValue,
+          candidateSourceId: candidate.source.id,
+          identitySourceIds: [...identity.identityEvidenceSourceIds],
+          decisionStatus: gate.supported ? 'bridge_supported' : 'variant_specific_evidence_required',
+          reasonCode: gate.reasonCode,
+          rationale: gate.rationale,
+          promotionAllowed: false,
+          writesAuthority: false,
+          grantsInheritance: false,
+        });
+      }
+    }
+  }
+
+  decisions.sort((a, b) => (
+    a.speciesId.localeCompare(b.speciesId)
+    || environmentFieldOrder.indexOf(a.field) - environmentFieldOrder.indexOf(b.field)
+  ));
+
+  return {
+    version: 1,
+    kind: 'compatibility_variant_environment_bridge_review',
+    policy: {
+      promotionAllowed: false,
+      writesAuthority: false,
+      grantsInheritance: false,
+      wholeProfileInheritanceAllowed: false,
+    },
+    summary: {
+      variantObjects: new Set(decisions.map(item => item.speciesId)).size,
+      reviewedSlots: decisions.length,
+      bridgeSupported: decisions.filter(item => item.decisionStatus === 'bridge_supported').length,
+      variantSpecificEvidenceRequired: decisions.filter(item => item.decisionStatus === 'variant_specific_evidence_required').length,
+      blockedByCandidateContract: decisions.filter(item => item.decisionStatus === 'blocked_by_candidate_contract').length,
+    },
+    decisions,
   };
 };
