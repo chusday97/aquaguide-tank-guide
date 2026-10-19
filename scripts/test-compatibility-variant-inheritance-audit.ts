@@ -8,12 +8,12 @@ const disk = JSON.parse(readFileSync(resolve(process.cwd(), 'docs/compatibility_
 assert.deepEqual(disk, audit, 'variant inheritance audit artifact must be regenerated when canonical policy changes');
 
 assert.equal(audit.summary.fishDomainSpecies, 308);
-assert.equal(audit.summary.explicitReviewedCanonicalBridges, 19);
+assert.equal(audit.summary.explicitReviewedCanonicalBridges, 20);
 assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 12);
 assert.equal(audit.summary.reviewedColorTaxonRootRecords, 3);
 assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 1);
-assert.equal(audit.summary.totalCanonicalIdentityRecords, 32);
-assert.equal(audit.summary.genericOnboardingReadySpecies, 97);
+assert.equal(audit.summary.totalCanonicalIdentityRecords, 33);
+assert.equal(audit.summary.genericOnboardingReadySpecies, 98);
 assert.equal(audit.summary.policyPromotedReadySpecies, 11);
 assert.equal(audit.summary.fieldPolicyReadySpecies, 0);
 assert.equal(audit.summary.directReviewedVariantObjects, 2);

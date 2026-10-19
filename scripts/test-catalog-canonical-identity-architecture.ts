@@ -21,6 +21,8 @@ import {
 } from '../src/data/compatibilityEvidence';
 import { fishData } from '../src/data/fishData';
 import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
+import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
+import type { Aquarium } from '../src/types';
 import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
 import { assessCompatibilityOnboardingGate } from '../src/services/compatibility/compatibility-onboarding-gate.service';
 
@@ -33,7 +35,7 @@ const expectedColorPolicyIds = [
   'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283',
 ];
 const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224'];
-assert.equal(explicitCanonicalIds.length, 19);
+assert.equal(explicitCanonicalIds.length, 20);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
 assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
 assert.deepEqual([...reviewedVariantFieldPolicySpeciesIds], ['sp_0258']);
@@ -163,6 +165,58 @@ assert.equal(getCatalogCanonicalIdentity('sp_0442')?.relationshipType, 'same_tax
 assert.equal(getCatalogCanonicalIdentity('sp_0442')?.canonicalSpeciesId, 'sp_0441');
 assert.equal(getCatalogIdentityBoundary('sp_0442'), undefined);
 assert.deepEqual(getApprovedCatalogFieldReviews('sp_0442').map(review => review.field), ['identity']);
+const duplicatePelvicachromis = fishData.find(item => item.id === 'sp_0338');
+const reviewedPelvicachromis = fishData.find(item => item.id === 'sp_0214');
+assert.ok(duplicatePelvicachromis);
+assert.ok(reviewedPelvicachromis);
+assert.equal(duplicatePelvicachromis.name, reviewedPelvicachromis.name);
+assert.equal(duplicatePelvicachromis.scientificName, reviewedPelvicachromis.scientificName);
+assert.equal(duplicatePelvicachromis.category, reviewedPelvicachromis.category);
+assert.equal(getCatalogCanonicalIdentity('sp_0338')?.relationshipType, 'same_taxon_catalog_alias');
+assert.equal(getCatalogCanonicalIdentity('sp_0338')?.canonicalSpeciesId, 'sp_0214');
+assert.equal(getCatalogIdentityBoundary('sp_0338'), undefined);
+assert.deepEqual(getApprovedCatalogFieldReviews('sp_0338').map(review => review.field), ['identity']);
+const duplicateAliasTank: Aquarium = {
+  id: 'duplicate-catalog-alias-equivalence',
+  name: 'Duplicate catalog alias equivalence',
+  fishes: [],
+  dimensions: { length: '300', width: '100', height: '80' },
+  waterType: 'Freshwater',
+  targetTemperature: '25',
+};
+const duplicateProfile = getReviewedCompatibilityProfileForFish(duplicatePelvicachromis);
+const reviewedProfile = getReviewedCompatibilityProfileForFish(reviewedPelvicachromis);
+assert.ok(duplicateProfile);
+assert.ok(reviewedProfile);
+let duplicateAliasComparedPairs = 0;
+for (const thirdParty of fishData) {
+  if (thirdParty.id === duplicatePelvicachromis.id || thirdParty.id === reviewedPelvicachromis.id) continue;
+  const thirdProfile = getReviewedCompatibilityProfileForFish(thirdParty);
+  if (!thirdProfile) continue;
+  const tankWaterType = reviewedProfile.waterType === 'saltwater' && thirdProfile.waterType === 'saltwater'
+    ? 'Saltwater'
+    : 'Freshwater';
+  const quantity = Math.max(1, thirdProfile.minimumGroupSize || 1);
+  const original = evaluateCompatibilityDecision({
+    tank: { ...duplicateAliasTank, waterType: tankWaterType },
+    items: [
+      { species: reviewedPelvicachromis, quantity: Math.max(1, reviewedProfile.minimumGroupSize || 1), origin: 'existing' },
+      { species: thirdParty, quantity, origin: 'candidate' },
+    ],
+  });
+  const alias = evaluateCompatibilityDecision({
+    tank: { ...duplicateAliasTank, waterType: tankWaterType },
+    items: [
+      { species: duplicatePelvicachromis, quantity: Math.max(1, duplicateProfile.minimumGroupSize || 1), origin: 'existing' },
+      { species: thirdParty, quantity, origin: 'candidate' },
+    ],
+  });
+  assert.equal(alias.status, original.status, `duplicate catalog alias status drifted against ${thirdParty.id}`);
+  assert.equal(alias.metadata.decisionReadiness, original.metadata.decisionReadiness, `duplicate catalog alias readiness drifted against ${thirdParty.id}`);
+  assert.deepEqual([...alias.metadata.domainRuleCodes].sort(), [...original.metadata.domainRuleCodes].sort(), `duplicate catalog alias rule codes drifted against ${thirdParty.id}`);
+  duplicateAliasComparedPairs += 1;
+}
+assert.ok(duplicateAliasComparedPairs > 100, 'duplicate alias equivalence must cover the broad reviewed third-party set');
 assert.deepEqual(getApprovedCatalogFieldReviews('sp_0411').map(review => review.field), [
   'identity', 'water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation',
 ]);
@@ -264,7 +318,7 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 97);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 98);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);

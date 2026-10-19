@@ -125,6 +125,7 @@ assert.equal(current.writesAuthority, false);
 assert.equal(current.items.every(item => item.requiresHumanReview && item.fullInheritanceAllowed === false), true);
 
 const byId = new Map(current.items.map(item => [item.speciesId, item] as const));
+assert.equal(byId.has('sp_0338'), false, 'resolved duplicate catalog alias must leave the active identity review queue');
 assert.equal(byId.get('sp_0175')?.queue, 'manual_label_disambiguation');
 assert.equal(byId.get('sp_0175')?.automatedResearchAllowed, false);
 for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
@@ -152,8 +153,8 @@ for (const id of structuralOpenParentIds) {
   assert.ok((byId.get(id)?.reopenRequirement || '').length > 0);
 }
 assert.equal(current.summary.automatedResearchEligible, 0);
-assert.equal(current.summary.manualReviewOnly, 105);
-assert.equal(current.summary.evidenceCeilingHolds, 58);
+assert.equal(current.summary.manualReviewOnly, 104);
+assert.equal(current.summary.evidenceCeilingHolds, 57);
 assert.equal(current.summary.partialInheritanceReview, 0);
 assert.equal(current.summary.byQueue.exact_object_identity_research, 0);
 assert.equal(current.summary.byQueue.partial_inheritance_review, 0);
@@ -161,7 +162,7 @@ assert.equal(current.summary.byQueue.base_or_parent_resolution, 0);
 assert.equal(current.summary.byQueue.taxonomic_review, 0);
 assert.equal(current.summary.byQueue.manual_label_disambiguation, 28);
 assert.equal(current.summary.byQueue.trade_name_disambiguation, 16);
-assert.equal(current.summary.byQueue.evidence_ceiling_hold, 58);
+assert.equal(current.summary.byQueue.evidence_ceiling_hold, 57);
 assert.equal(current.summary.byQueue.hybrid_object_hold, 3);
 assert.equal(current.items.every(item => item.researchDisposition === 'terminal_unknown_hold'), true);
 assert.equal(current.items.every(item => item.automatedResearchAllowed === false), true);

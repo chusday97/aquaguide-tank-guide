@@ -1,12 +1,14 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 Compatibility convergence / hold-metric split
+## TOP CURRENT OVERRIDE — 2026-10-19 exact duplicate alias closure
 
-- Working authority is `main`; start checkpoint `89e4b172d3b663307f83637fc875dcaad8db93dc` matched `origin/main` and was clean.
-- No Production mutation/deploy/push is part of this pass.
-- Coverage now reports fish scope separately: 308 fish-domain objects; 103 fish identity-held objects; 167 unsupported-domain objects (66 plant / 48 invertebrate / 43 coral / 10 reptile). Legacy combined hold count remains 270 only for compatibility.
-- Identity ledger remains separate: 105 terminal/manual-review catalog identity boundaries affecting 18,231 unresolved-identity pair combinations; automated research eligible = 0.
-- 97 fish are generic-ready; the 97-species fully-informed matrix has 4,656/4,656 determinate pairs. Readability audit over 9,180 reviewed-fish pairs leaves 95 exceptional “暂时无法判断” identity/public-evidence cases.
-- 78 predation research fields remain visible but all are deferred (`completionEligible=0`) behind companion terminal holds.
-- User conclusion, badcase, whole-tank, V4 shadow/readability, identity queue, domain-scope and field-coverage regressions PASS. Monolithic backend wrapper hit the WebCodex time limit at the final Project Typecheck; isolated Project Typecheck + diff check PASS.
+- Working authority: local `main` after `e29ca3fc`; no push/deploy/Production mutation in this pass.
+- Resolved exact duplicate catalog object `sp_0338 -> sp_0214` as `same_taxon_catalog_alias`; exact name + scientificName + category match, backed by existing reviewed Pelvicachromis authority. No broad variant inheritance rule was introduced.
+- Alias equivalence check across 157 reviewed third parties: **0 differences** in status, decision readiness or domain rule codes.
+- Coverage: 308 fish-domain / 98 generic-ready / 110 core-field-complete / 160 runtime reviewed profiles / 102 fish identity-held / 167 unsupported-domain / legacy combined hold 269.
+- Identity queue: 104 active manual-only boundaries / 18,079 unresolved-identity pairs / 57 evidence-ceiling holds / automated research eligible 0.
+- 78 predation research fields remain visible and fully deferred; active completion queue remains empty.
+- Fully informed matrix: 98 species / 4,753 pairs / 0 insufficient_data. Readability: 9,316 reviewed-fish pairs / 96 exceptional identity-or-public-evidence unknown cases.
+- Repository Profile authority = 125; 24 are source-controlled pending beyond the frozen released 101 target. Rollout generations remain exact 63 / 85 / 95 / 99 / 100 / 101.
+- Full duplicate scan found no additional safe ready→held exact duplicate alias candidate. Compatibility, rollout/runtime authority, historical wave guards, admin ownership, TypeScript and diff checks PASS.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 

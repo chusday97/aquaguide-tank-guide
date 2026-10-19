@@ -21,7 +21,7 @@ assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpec
 assert.ok(summary.oneFieldGapSpecies > 0);
 assert.ok(summary.genericOnboardingReadySpecies >= 43, 'High-yield source-first coverage should preserve at least 43 fully sourced generic-ready profiles');
 assert.equal(summary.fishCompatibilityDomainSpecies, 308, 'fish Compatibility scope should contain only fish-domain catalog objects');
-assert.equal(summary.fishIdentityHeldSpecies, 103, 'fish identity holds must be tracked separately from unsupported life-type domains');
+assert.equal(summary.fishIdentityHeldSpecies, 102, 'fish identity holds must be tracked separately from unsupported life-type domains');
 assert.equal(summary.unsupportedDomainSpecies, 167, 'unsupported-domain objects must not inflate fish identity debt');
 assert.deepEqual(summary.unsupportedDomainSpeciesByLifeType, {
   plant: 66,

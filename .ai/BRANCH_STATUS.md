@@ -1,10 +1,11 @@
-## TOP CURRENT BRANCH — 2026-10-19 main Compatibility convergence
+## TOP CURRENT BRANCH — 2026-10-19 main exact duplicate catalog-alias closure
 
-- Canonical local branch: `main`; this pass began at clean `89e4b172d3b663307f83637fc875dcaad8db93dc`, equal to `origin/main`.
-- Current local change is a reporting/authority clarification only: split fish identity holds from unsupported-domain catalog objects, regenerate coverage artifact, add regression assertions, and refresh .ai authority.
-- Compatibility decision semantics, reviewed evidence thresholds, pair authority, UI, migrations and Production state are unchanged.
-- Current scope metrics: 308 fish-domain / 103 fish identity-held / 167 unsupported-domain / 97 generic-ready / 78 deferred research fields.
-- No remote push, deploy, merge workflow or Production mutation is authorized/executed by this generic “推进” pass.
+- Canonical local branch: `main`, continuing from local checkpoint `e29ca3fc`.
+- Current change closes exact duplicate `sp_0338 -> sp_0214` through the existing reviewed canonical-alias architecture; no UI, migration or Production data was changed.
+- Repository authority grows to 125 reviewed Profiles, but `sp_0338` is explicitly source-controlled pending; released Compatibility target remains 101 and historical rollout generations are unchanged.
+- Current scope: 308 fish-domain / 98 generic-ready / 102 fish identity-held / 167 unsupported-domain / 78 deferred field-debt entries.
+- Identity review queue is 104 manual-only boundaries / 18,079 affected unresolved-identity pairs; automated research eligible remains 0.
+- No second safe exact duplicate candidate remains. No remote push, deploy, merge workflow or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 

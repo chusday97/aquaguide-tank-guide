@@ -48,7 +48,7 @@ assert.equal(nextWaveUnified14EvidenceCeilings.length, 13);
 assert.equal(nextWaveUnified14DomainOutcomes.length, 4);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 124, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 125, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

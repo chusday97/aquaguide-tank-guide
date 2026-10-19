@@ -11,12 +11,12 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 97,
-  "coreFieldCompleteSpecies": 109,
+  "genericOnboardingReadySpecies": 98,
+  "coreFieldCompleteSpecies": 110,
   "oneFieldGapSpecies": 9,
-  "runtimeReviewedProfileSpecies": 159,
+  "runtimeReviewedProfileSpecies": 160,
   "fishCompatibilityDomainSpecies": 308,
-  "fishIdentityHeldSpecies": 103,
+  "fishIdentityHeldSpecies": 102,
   "unsupportedDomainSpecies": 167,
   "unsupportedDomainSpeciesByLifeType": {
     "plant": 66,
@@ -24,73 +24,73 @@
     "coral": 43,
     "reptile": 10
   },
-  "domainOrIdentityHeldSpecies": 270,
+  "domainOrIdentityHeldSpecies": 269,
   "visibleResearchDebtFields": 78,
   "completionEligibleResearchDebtFields": 0,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 162,
+      "reviewed_supported": 163,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 43,
       "needs_research": 0,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 147,
+      "reviewed_supported": 148,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
       "needs_research": 0,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 141,
+      "reviewed_supported": 142,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 151,
+      "reviewed_supported": 152,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
       "needs_research": 0,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 140,
+      "reviewed_supported": 141,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 65,
       "needs_research": 0,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 130,
+      "reviewed_supported": 131,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 75,
       "needs_research": 0,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 90,
+      "reviewed_supported": 91,
       "reviewed_neutral_or_negative": 41,
       "reviewed_unknown": 74,
       "needs_research": 0,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 82,
-      "reviewed_neutral_or_negative": 36,
+      "reviewed_neutral_or_negative": 37,
       "reviewed_unknown": 9,
       "needs_research": 78,
-      "missing_identity_or_domain": 270,
+      "missing_identity_or_domain": 269,
       "not_applicable": 11
     }
   },
@@ -28058,83 +28058,83 @@
       "name": "白金西非凤凰",
       "scientificName": "Pelvicachromis pulcher var. Albino",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-pelvicachromis-pulcher-albino"
+            "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
