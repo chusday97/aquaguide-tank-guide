@@ -62,6 +62,8 @@ export type CompatibilityFieldBacklogItem = {
   status: 'reviewed_unknown' | 'needs_research';
   priorityScore: number;
   reason: 'missing_reviewed_authority' | 'reviewed_unknown_targeted_expansion';
+  completionEligible: boolean;
+  companionTerminalGapCount: number;
 };
 
 export type CompatibilityTaxonResearchCatalogObject = {
@@ -257,8 +259,13 @@ const canonicalInheritedCell = (fish: Fish, field: CompatibilityCoreField): Comp
 
 const evidenceCeilingForField = (fish: Fish, field: CompatibilityCoreField) => {
   const ceilings = getKnowledgeEvidenceCeilings(fish.id);
-  if (field === 'territoriality' || field === 'predation') {
-    const fieldSpecific = ceilings.find(item => item.field === field);
+  // Predation is an independent biological claim. A social/community evidence
+  // ceiling may explain why social behavior is unknown, but it cannot prove
+  // that fish-prey scope was researched to exhaustion. Predation therefore
+  // requires its own field-specific ceiling and never falls back to social.
+  if (field === 'predation') return ceilings.find(item => item.field === 'predation');
+  if (field === 'territoriality') {
+    const fieldSpecific = ceilings.find(item => item.field === 'territoriality');
     if (fieldSpecific) return fieldSpecific;
   }
   const mapped = field === 'water' || field === 'temperature' || field === 'ph' ? 'environment' : field === 'adult_size' || field === 'tank_size' ? 'space' : 'social';
@@ -405,7 +412,17 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     const cell = row.fields[field];
     if (cell.disposition !== 'targeted_source_expansion' || (cell.status !== 'reviewed_unknown' && cell.status !== 'needs_research')) return [];
     const priorityScore = fieldWeights[field] + row.authoritativeFieldCount * 8 + (row.reviewedProfile !== 'none' ? 25 : 0) + (cell.status === 'reviewed_unknown' ? 10 : 0);
-    return [{ speciesId: row.speciesId, name: row.name, scientificName: row.scientificName, field, status: cell.status, priorityScore, reason: cell.status === 'reviewed_unknown' ? 'reviewed_unknown_targeted_expansion' as const : 'missing_reviewed_authority' as const }];
+    return [{
+      speciesId: row.speciesId,
+      name: row.name,
+      scientificName: row.scientificName,
+      field,
+      status: cell.status,
+      priorityScore,
+      reason: cell.status === 'reviewed_unknown' ? 'reviewed_unknown_targeted_expansion' as const : 'missing_reviewed_authority' as const,
+      completionEligible: row.terminalGapCount === 0,
+      companionTerminalGapCount: row.terminalGapCount,
+    }];
   }));
   const backlog: CompatibilityFieldBacklogItem[] = backlogRaw
     .sort((a, b) => b.priorityScore - a.priorityScore || a.speciesId.localeCompare(b.speciesId) || a.field.localeCompare(b.field))
@@ -415,6 +432,11 @@ export const buildCompatibilityCoreFieldCoverage = () => {
 
 export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearchPlanItem[] => {
   const { backlog } = buildCompatibilityCoreFieldCoverage();
+  // The field backlog is an evidence ledger, not an instruction to spend
+  // research capacity. Active taxon research is reserved for gaps that can
+  // actually advance an object to completion; gaps on objects with companion
+  // terminal holds remain visible in the backlog but are deferred here.
+  const completionBacklog = backlog.filter(item => item.completionEligible);
   const bySpecies = new Map<string, {
     speciesId: string;
     name: string;
@@ -423,7 +445,7 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
     priorityScore: number;
   }>();
 
-  for (const item of backlog) {
+  for (const item of completionBacklog) {
     const current = bySpecies.get(item.speciesId) ?? {
       speciesId: item.speciesId,
       name: item.name,

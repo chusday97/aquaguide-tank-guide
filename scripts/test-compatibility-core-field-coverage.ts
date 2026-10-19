@@ -4,6 +4,7 @@ import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../packages/con
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
+import { getKnowledgeEvidenceCeilings } from '../src/data/knowledgeEvidenceCeilings';
 import { getLifeType } from '../src/modules/species/species.service';
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets, buildCompatibilityTaxonResearchPlan } from '../src/services/compatibility/compatibility-field-coverage.service';
@@ -810,24 +811,47 @@ for (const row of rows) {
     assert.equal(row.genericOnboardingReady, false);
   }
 }
-assert.equal(backlog.length, 0, 'persisted variant and exact-taxon research ceilings must leave no repeatedly searchable core-field gaps');
+const pterapogon = rowOf('sp_0025');
+assert.equal(pterapogon?.fields.social_behavior.disposition, 'terminal_hold');
+assert.equal(pterapogon?.fields.predation.status, 'needs_research');
+assert.equal(pterapogon?.fields.predation.disposition, 'targeted_source_expansion');
+assert.equal(pterapogon?.fields.predation.authoritySource, 'none');
+assert.equal(pterapogon?.fields.predation.reasonCode, 'missing_reviewed_field_authority');
+
+const tachysurus = rowOf('sp_0047');
+assert.equal(tachysurus?.fields.predation.status, 'reviewed_unknown');
+assert.equal(tachysurus?.fields.predation.disposition, 'terminal_hold');
+assert.equal(tachysurus?.fields.predation.authoritySource, 'evidence_ceiling');
+assert.equal(tachysurus?.fields.predation.reasonCode, 'species_fish_predation_not_established');
+
+for (const row of rows) {
+  if (row.fields.predation.authoritySource !== 'evidence_ceiling') continue;
+  assert.ok(
+    getKnowledgeEvidenceCeilings(row.speciesId).some(item => item.field === 'predation'),
+    `${row.speciesId} predation evidence ceiling must be predation-specific and must never fall back to social evidence`,
+  );
+}
+
+assert.equal(backlog.length, 78, 'predation gaps previously hidden by social ceilings must remain visible as truthful field-level research debt');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
+assert.ok(backlog.every(item => item.field === 'predation'));
+assert.ok(backlog.every(item => item.completionEligible === false && item.companionTerminalGapCount > 0), 'field gaps with companion terminal holds must stay visible but deferred from active completion');
 assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesId)?.fields[item.field].disposition === 'targeted_source_expansion'));
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 0, 'all currently exhausted exact-taxon and variant research jobs must be terminalized');
+assert.equal(taxonResearchPlan.length, 0, 'active taxon research must exclude truthful field gaps that cannot complete an object because companion terminal holds remain');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
 assert.equal(plannedCatalogObjects.size, 0, 'no catalog object should remain in automatic research once all current source strategies are exhausted');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
-const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
-assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
+const completionEligibleBacklogGapKeys = backlog.filter(item => item.completionEligible).map(item => `${item.speciesId}:${item.field}`).sort();
+assert.deepEqual(plannedGapKeys, completionEligibleBacklogGapKeys, 'active taxon research plan must represent only completion-eligible field gaps; deferred evidence debt remains visible in the backlog');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
 assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 0, 'all currently known variant-only taxon jobs must remain terminalized and excluded from active research');
 assert.ok(taxonResearchPlan.filter(item => item.unresolvedObjectCount > 0).every(item => item.researchDisposition === 'identity_resolution_required' && item.baseScientificName === null));
 for (const closedVariantTaxon of ['Carassius auratus', 'Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii', 'Poecilia latipinna', 'Poecilia sphenops', 'Sahyadria denisonii', 'Synchiropus splendidus', 'Synodontis nigriventris', 'Tanichthys albonubes', 'Trichopodus leerii']) {
-  assert.equal(taxonResearchPlan.find(item => item.baseScientificName === closedVariantTaxon), undefined, `${closedVariantTaxon} must not re-enter ordinary research after reviewed variant evidence ceiling`);
+  assert.equal(taxonResearchPlan.find(item => item.baseScientificName === closedVariantTaxon), undefined, `${closedVariantTaxon} must not enter active completion while remaining field gaps are terminally blocked elsewhere`);
 }
 const opsariichthysTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Opsariichthys bidens');
 assert.equal(opsariichthysTaxonJob, undefined, 'Opsariichthys bidens must leave the actionable taxon research plan once its supported fields are promoted and the two remaining fields are terminally classified');
@@ -857,7 +881,15 @@ assert.equal(platinumChanna?.actionableGapCount, 0);
 assert.equal(platinumChanna?.fields.ph.authoritySource, 'variant_evidence_ceiling');
 assert.equal(platinumChanna?.fields.tank_size.authoritySource, 'variant_evidence_ceiling');
 for (const terminalVariantId of ['sp_0295', 'sp_0413', 'sp_0419']) {
-  assert.equal(rowOf(terminalVariantId)?.actionableGapCount, 0, `${terminalVariantId} variant identity ceiling must suppress repeated ordinary research`);
+  const row = rowOf(terminalVariantId);
+  assert.equal(row?.actionableGapCount, 1, `${terminalVariantId} must expose the independent predation evidence gap instead of hiding it behind a social/identity ceiling`);
+  assert.equal(row?.fields.predation.disposition, 'targeted_source_expansion');
+  assert.ok((row?.terminalGapCount ?? 0) > 0, `${terminalVariantId} must retain its independent terminal boundary`);
+  const predationDebt = backlog.find(item => item.speciesId === terminalVariantId && item.field === 'predation');
+  assert.ok(predationDebt);
+  assert.equal(predationDebt.completionEligible, false);
+  assert.ok(predationDebt.companionTerminalGapCount > 0);
+  assert.equal(taxonResearchPlan.some(item => item.catalogObjects.some(object => object.speciesId === terminalVariantId)), false, `${terminalVariantId} deferred predation debt must not consume active completion research`);
 }
 
 const matrixArtifact = JSON.parse(readFileSync('docs/compatibility_core_field_coverage.json', 'utf8')) as Record<string, unknown> & { rows: unknown[] };

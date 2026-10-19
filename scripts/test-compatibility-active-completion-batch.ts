@@ -14,10 +14,10 @@ const fullPlan = buildCompatibilityTaxonResearchPlan();
 const selected = selectCompatibilityResearchBatchJobs('active_completion');
 assert.equal(selected.sourcePlanJobs, fullPlan.length);
 assert.deepEqual(selected.jobs.map(job => job.researchKey), fullPlan.map(job => job.researchKey));
-assert.equal(selected.jobs.length, 0, 'active completion queue must stay empty once all current automatic research paths are terminalized');
+assert.equal(selected.jobs.length, 0, 'active completion queue must stay empty when every visible research gap is blocked from completing its catalog object by companion terminal holds');
 
 const bettaJob = selected.jobs.find(job => job.researchKey === 'Betta splendens');
-assert.equal(bettaJob, undefined, 'Betta variant gaps must not re-enter active completion after reviewed identity/field evidence ceilings terminalize the remaining unresolved fields');
+assert.equal(bettaJob, undefined, 'Betta predation evidence debt may remain visible, but must not enter active completion while companion terminal holds still block completion');
 for (const closedVariantTaxon of ['Carassius auratus', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii']) {
   assert.equal(selected.jobs.find(job => job.researchKey === closedVariantTaxon), undefined, `${closedVariantTaxon} must remain excluded from repeated ordinary active-completion research`);
 }

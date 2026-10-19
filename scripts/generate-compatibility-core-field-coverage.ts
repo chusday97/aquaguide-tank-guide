@@ -11,7 +11,7 @@ const taxonResearchPlan = buildCompatibilityTaxonResearchPlan();
 writeFileSync(`${outputDir}/compatibility_core_field_coverage.json`, JSON.stringify({ generatedFrom: 'source-controlled reviewed authority', ...report.summary, rows: report.rows }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_core_field_backlog.json`, JSON.stringify({
   generatedFrom: 'compatibility_core_field_coverage.json',
-  policy: 'field-oriented gaps only; no ordinary Pair Rule generation; terminal identity/evidence/domain holds excluded',
+  policy: 'field-oriented evidence debt only; terminal fields are excluded as gaps, but actionable fields on completion-blocked objects stay visible with completionEligible=false and companionTerminalGapCount; no ordinary Pair Rule generation',
   totalItems: report.backlog.length,
   items: report.backlog,
 }, null, 2) + '\n');
@@ -23,7 +23,7 @@ writeFileSync(`${outputDir}/compatibility_fast_lane_research_packets.json`, JSON
 }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_taxon_research_plan.json`, JSON.stringify({
   generatedFrom: 'compatibility_core_field_backlog.json',
-  policy: 'deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging',
+  policy: 'active completion research only: include completionEligible field gaps, defer evidence debt on objects with companion terminal holds; deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging',
   catalogObjects: new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId))).size,
   totalResearchJobs: taxonResearchPlan.length,
   variantBridgeJobs: taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length,

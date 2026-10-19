@@ -1,6 +1,6 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
-  "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
+  "policy": "active completion research only: include completionEligible field gaps, defer evidence debt on objects with companion terminal holds; deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging",
   "catalogObjects": 0,
   "totalResearchJobs": 0,
   "variantBridgeJobs": 0,
