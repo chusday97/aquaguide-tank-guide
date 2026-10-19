@@ -3,6 +3,7 @@ import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages
 import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
 import type { CompatibilityLifeStage, Fish } from '../types';
 import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy';
+import { catalogReviewBatch03Sources } from './catalogReviewBatches/batch-03';
 import { lutjanusKasmiraFishBase, zebrasomaFlavescensFishBase, paracanthurusHepatusFishBase } from './catalogReviewBatches/next-wave-marine-01';
 import { chindongoSocolofiFishBase, chindongoSocolofiSeriouslyFish } from './catalogReviewBatches/next-wave-freshwater-01';
 import { opsariichthysBidensFishBase, opsariichthysBidensDietStudy, opsariichthysBidensEnrichmentStudy } from './catalogReviewBatches/next-wave-freshwater-02';
@@ -1725,6 +1726,7 @@ for (const patch of compatibilityProfileAuthorityPatches) {
 const canonicalIdentitySourceById = new Map(
   [
     ...Object.values(profiles).flatMap(profile => profile.citations),
+    ...catalogReviewBatch03Sources,
     ...Object.values(identityCorrectionsWave21Sources),
     ...Object.values(identityCorrectionsWave22Sources),
     ...Object.values(identityCorrectionsWave23Sources),

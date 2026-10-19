@@ -4,6 +4,7 @@ import {
   isReviewedColorOnlyVariantKey,
   reviewedColorPolicyCanonicalSpeciesIds,
   reviewedColorTaxonPolicyCanonicalSpeciesIds,
+  reviewedVariantFieldPolicySpeciesIds,
 } from '../../data/catalogCanonicalIdentity';
 import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
@@ -67,11 +68,60 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
       };
     });
 
+  const fieldScopedPolicies = [...reviewedVariantFieldPolicySpeciesIds]
+    .sort()
+    .map(speciesId => {
+      const species = fishData.find(item => item.id === speciesId);
+      const identity = catalogCanonicalIdentities[speciesId];
+      const row = coverageById.get(speciesId);
+      if (!species || !identity || !row) {
+        throw new Error('Incomplete reviewed variant field-policy audit row: ' + speciesId);
+      }
+      return {
+        speciesId,
+        name: species.name,
+        scientificName: species.scientificName,
+        canonicalScientificName: identity.canonicalScientificName,
+        relationshipType: identity.relationshipType,
+        variantKey: identity.variantKey,
+        registrySource: identity.registrySource,
+        evidenceIds: [...identity.identityEvidenceSourceIds],
+        inheritedFacts: [...identity.inheritancePolicy.inheritedFacts],
+        blockedFacts: [...identity.inheritancePolicy.blockedFacts],
+        genericOnboardingReady: row.genericOnboardingReady,
+        authoritativeFieldCount: row.authoritativeFieldCount,
+        terminalGapFields: Object.entries(row.fields)
+          .filter(([, cell]) => cell.disposition === 'terminal_hold')
+          .map(([field]) => field),
+      };
+    });
+
+  const directReviewedVariants = fish
+    .flatMap(species => {
+      if (catalogCanonicalIdentities[species.id]) return [];
+      const reviewed = latestReviewedIdentityValue(species.id);
+      const row = coverageById.get(species.id);
+      if (!reviewed || !row?.genericOnboardingReady) return [];
+      return [{
+        speciesId: species.id,
+        name: species.name,
+        scientificName: species.scientificName,
+        baseSpeciesKey: reviewed.baseSpeciesKey,
+        variantKey: reviewed.variantKey,
+        class: remainingVariantClass(reviewed.variantKey),
+        evidenceIds: reviewed.evidenceIds,
+        authoritativeFieldCount: row.authoritativeFieldCount,
+        resolutionStrategy: 'direct_reviewed_authority_no_inheritance' as const,
+      }];
+    })
+    .sort((a, b) => a.speciesId.localeCompare(b.speciesId));
+
   const remainingReviewedVariants = fish
     .flatMap(species => {
       if (catalogCanonicalIdentities[species.id]) return [];
       const reviewed = latestReviewedIdentityValue(species.id);
-      if (!reviewed) return [];
+      const row = coverageById.get(species.id);
+      if (!reviewed || row?.genericOnboardingReady) return [];
       return [{
         speciesId: species.id,
         name: species.name,
@@ -81,7 +131,8 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
         class: remainingVariantClass(reviewed.variantKey),
         activeIdentityBoundary: getCatalogIdentityBoundary(species.id)?.code ?? null,
         evidenceIds: reviewed.evidenceIds,
-        genericOnboardingReady: coverageById.get(species.id)?.genericOnboardingReady ?? false,
+        genericOnboardingReady: row?.genericOnboardingReady ?? false,
+        authoritativeFieldCount: row?.authoritativeFieldCount ?? 0,
       }];
     })
     .sort((a, b) => a.speciesId.localeCompare(b.speciesId));
@@ -92,7 +143,7 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
   }, {});
 
   return {
-    version: 1,
+    version: 2,
     invariant: 'Catalog object -> reviewed canonical identity -> field allowlist -> resolved authority -> Compatibility',
     policy: {
       autoPromotionRequiresReviewedSupportedIdentity: true,
@@ -102,8 +153,11 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
       colorOnlyVariantKeys: ['albino', 'blue', 'color_morph', 'gold', 'green', 'platinum', 'red', 'super_red', 'white'],
       morphologyVariantsAutoPromoted: false,
       tradeOrLineageVariantsAutoPromoted: false,
+      explicitFieldScopedVariantPoliciesAllowed: true,
+      directReviewedVariantsRequireInheritance: false,
       unresolvedIdentityAutoPromoted: false,
       pairRulesRequiredForPromotedColorMorphs: false,
+      pairRulesRequiredForFieldScopedVariantPolicies: false,
     },
     summary: {
       fishDomainSpecies: fish.length,
@@ -111,12 +165,17 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
       explicitReviewedCanonicalBridges: Object.keys(catalogIdentityCorrectionBaseSpeciesIds).length,
       reviewedColorPolicyCanonicalRecords: promoted.length,
       reviewedColorTaxonRootRecords: reviewedColorTaxonPolicyCanonicalSpeciesIds.size,
+      reviewedVariantFieldPolicyRecords: fieldScopedPolicies.length,
       totalCanonicalIdentityRecords: Object.keys(catalogCanonicalIdentities).length,
       policyPromotedReadySpecies: promoted.filter(item => item.genericOnboardingReady).length,
+      fieldPolicyReadySpecies: fieldScopedPolicies.filter(item => item.genericOnboardingReady).length,
+      directReviewedVariantObjects: directReviewedVariants.length,
       remainingReviewedVariantObjects: remainingReviewedVariants.length,
       remainingReviewedVariantsByClass: remainingByClass,
     },
     promoted,
+    fieldScopedPolicies,
+    directReviewedVariants,
     remainingReviewedVariants,
   };
 };

@@ -107,8 +107,13 @@ assert.equal(blocked.decision.pairResults.length, 10, 'five distinct species mus
 const keyFamilies = blocked.keyRules.map(rule => getCompatibilityRuleFamily(rule.code));
 assert.deepEqual(
   keyFamilies.slice(0, 4),
-  ['water_type', 'predation', 'housing', 'temperature'],
-  'complex blocking evidence should surface distinct risk families in deterministic priority order',
+  ['water_type', 'predation', 'temperature', 'territory'],
+  'complex blocking evidence should surface distinct reviewed risk families in deterministic priority order',
+);
+assert.equal(
+  keyFamilies.includes('housing'),
+  false,
+  'Koi Betta reviewed social mode is unknown, so legacy single-housing metadata must not be promoted into reviewed housing authority',
 );
 
 const finalDecision = getCompatibilityDecision(blocked.decision.aggregateResult, 'planned_addition');
@@ -156,7 +161,7 @@ const blockedProduct = buildCompatibilityProductAssessment(blocked.decision, gen
 const productFamilies = blockedProduct.details.reasons
   .slice(0, 3)
   .map(item => getCompatibilityRuleFamily(item.ruleCodes[0] || ''));
-assert.deepEqual(productFamilies, ['water_type', 'predation', 'housing']);
+assert.deepEqual(productFamilies, ['water_type', 'predation', 'temperature']);
 assert.equal(new Set(productFamilies).size, 3);
 assert.equal(blockedProduct.details.explanation.source, 'deterministic_fallback');
 assert.equal(blockedProduct.details.explanation.narrativeAccepted, false);

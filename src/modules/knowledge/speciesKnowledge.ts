@@ -1774,6 +1774,10 @@ export const getReviewedSpeciesKnowledge = (speciesId: string) => (
     : reviewedKnowledgeBySpeciesId[speciesId]
 );
 
+export const getReviewedSpeciesKnowledgeByBaseScientificName = (scientificName: string) => (
+  reviewedKnowledgeByBaseSpeciesKey[scientificName.trim()]
+);
+
 const hasDirectReviewedCompatibilityKnowledge = (knowledge?: SpeciesKnowledgeProfile['knowledge']) => (
   knowledge?.environment?.evidence.reviewStatus === 'reviewed'
   && knowledge.socialBehavior?.evidence.reviewStatus === 'reviewed'
@@ -1952,7 +1956,9 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   }
   // These Compatibility-reviewed ornamental variants retain their existing
   // base runtime boundaries; their own completion records remain independent.
-  if (['sp_0148', 'sp_0222', 'sp_0258'].includes(fish.id)) {
+  // sp_0258 is intentionally excluded: its reviewed field-scoped canonical
+  // policy must not leak the full Betta base social profile into Species Detail.
+  if (['sp_0148', 'sp_0222'].includes(fish.id)) {
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }

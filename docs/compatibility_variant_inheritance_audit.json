@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "invariant": "Catalog object -> reviewed canonical identity -> field allowlist -> resolved authority -> Compatibility",
   "policy": {
     "autoPromotionRequiresReviewedSupportedIdentity": true,
@@ -19,8 +19,11 @@
     ],
     "morphologyVariantsAutoPromoted": false,
     "tradeOrLineageVariantsAutoPromoted": false,
+    "explicitFieldScopedVariantPoliciesAllowed": true,
+    "directReviewedVariantsRequireInheritance": false,
     "unresolvedIdentityAutoPromoted": false,
-    "pairRulesRequiredForPromotedColorMorphs": false
+    "pairRulesRequiredForPromotedColorMorphs": false,
+    "pairRulesRequiredForFieldScopedVariantPolicies": false
   },
   "summary": {
     "fishDomainSpecies": 308,
@@ -28,13 +31,13 @@
     "explicitReviewedCanonicalBridges": 19,
     "reviewedColorPolicyCanonicalRecords": 12,
     "reviewedColorTaxonRootRecords": 3,
-    "totalCanonicalIdentityRecords": 31,
+    "reviewedVariantFieldPolicyRecords": 1,
+    "totalCanonicalIdentityRecords": 32,
     "policyPromotedReadySpecies": 11,
-    "remainingReviewedVariantObjects": 3,
-    "remainingReviewedVariantsByClass": {
-      "trade_or_selective_strain": 2,
-      "morphology_or_body_form_variant": 1
-    }
+    "fieldPolicyReadySpecies": 0,
+    "directReviewedVariantObjects": 2,
+    "remainingReviewedVariantObjects": 0,
+    "remainingReviewedVariantsByClass": {}
   },
   "promoted": [
     {
@@ -351,7 +354,38 @@
       "authoritativeFieldCount": 8
     }
   ],
-  "remainingReviewedVariants": [
+  "fieldScopedPolicies": [
+    {
+      "speciesId": "sp_0258",
+      "name": "糖果KOI斗鱼",
+      "scientificName": "Betta splendens var. Koi",
+      "canonicalScientificName": "Betta splendens",
+      "relationshipType": "trade_strain",
+      "variantKey": "Koi",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "batch03-sciadv-betta-mosaic-koi"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "predation"
+      ],
+      "blockedFacts": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 7,
+      "terminalGapFields": [
+        "social_behavior"
+      ]
+    }
+  ],
+  "directReviewedVariants": [
     {
       "speciesId": "sp_0069",
       "name": "红白锦鲤",
@@ -359,11 +393,11 @@
       "baseSpeciesKey": "Cyprinus carpio",
       "variantKey": "ornamental_variety",
       "class": "trade_or_selective_strain",
-      "activeIdentityBoundary": null,
       "evidenceIds": [
         "batch09-fishbase-cyprinus-carpio-var"
       ],
-      "genericOnboardingReady": true
+      "authoritativeFieldCount": 8,
+      "resolutionStrategy": "direct_reviewed_authority_no_inheritance"
     },
     {
       "speciesId": "sp_0070",
@@ -372,24 +406,12 @@
       "baseSpeciesKey": "Cyprinus carpio",
       "variantKey": "longfin",
       "class": "morphology_or_body_form_variant",
-      "activeIdentityBoundary": null,
       "evidenceIds": [
         "batch09-fishbase-cyprinus-carpio-longfin"
       ],
-      "genericOnboardingReady": true
-    },
-    {
-      "speciesId": "sp_0258",
-      "name": "糖果KOI斗鱼",
-      "scientificName": "Betta splendens var. Koi",
-      "baseSpeciesKey": "Betta splendens",
-      "variantKey": "Koi",
-      "class": "trade_or_selective_strain",
-      "activeIdentityBoundary": null,
-      "evidenceIds": [
-        "batch03-sciadv-betta-mosaic-koi"
-      ],
-      "genericOnboardingReady": false
+      "authoritativeFieldCount": 8,
+      "resolutionStrategy": "direct_reviewed_authority_no_inheritance"
     }
-  ]
+  ],
+  "remainingReviewedVariants": []
 }

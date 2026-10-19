@@ -260,7 +260,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
         'sciadv-betta-phenotypic-diversity',
         'ygcen-betta-behavior-variation-2022',
       ],
-      note: 'Koi/candy is a reviewed mosaic commercial phenotype of domesticated Betta splendens, but published aggression work shows substantial individual/strain variation and does not establish a Koi-specific stable social mode. Keep social authority fail-closed instead of promoting the base-species profile by color-name alone.',
+      note: 'Koi/candy is a reviewed mosaic commercial phenotype of domesticated Betta splendens, but published aggression work shows substantial individual/strain variation and does not establish a Koi-specific stable social mode. Keep social authority fail-closed; this social ceiling does not block separately reviewed, field-scoped base-species space or trophic inheritance.',
       reviewedAt: '2026-09-22',
       researchDisposition: 'terminal_unknown_hold',
     },

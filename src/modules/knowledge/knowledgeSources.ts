@@ -1,5 +1,6 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 import { catalogReviewBatch02Sources } from '../../data/catalogReviewBatches/batch-02';
+import { catalogReviewBatch03Sources } from '../../data/catalogReviewBatches/batch-03';
 import { nextWaveUnified03Sources } from '../../data/catalogReviewBatches/next-wave-unified-03';
 import { nextWaveUnified04Sources } from '../../data/catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified05Sources } from '../../data/catalogReviewBatches/next-wave-unified-05';
@@ -24,6 +25,7 @@ const nextWaveUnified02KnowledgeSources = Object.fromEntries([
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
   ...Object.fromEntries(catalogReviewBatch02Sources.map(source => [source.id, source])),
+  ...Object.fromEntries(catalogReviewBatch03Sources.map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(nextWaveUnified03Sources).map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(nextWaveUnified04Sources).map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(nextWaveUnified05Sources).map(source => [source.id, source])),

@@ -19,7 +19,8 @@ export type CatalogCanonicalRelationshipType =
 export type CatalogCanonicalRegistrySource =
   | 'explicit_reviewed_bridge'
   | 'reviewed_color_morph_policy'
-  | 'reviewed_color_morph_taxon_policy';
+  | 'reviewed_color_morph_taxon_policy'
+  | 'reviewed_variant_field_policy';
 
 export type CatalogCanonicalRootKind = 'catalog_species' | 'reviewed_taxon';
 
@@ -44,6 +45,17 @@ export type CatalogCanonicalIdentity = {
 
 const allGenericFacts = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityRequiredFact[];
 
+const buildCompatibilityInheritancePolicy = (
+  inheritedFacts: readonly CompatibilityRequiredFact[],
+): CompatibilityInheritancePolicy => {
+  const inherited = new Set(inheritedFacts);
+  return {
+    mode: 'allowlist',
+    inheritedFacts: allGenericFacts.filter(field => inherited.has(field)),
+    blockedFacts: allGenericFacts.filter(field => !inherited.has(field)),
+  };
+};
+
 const reviewedColorOnlyVariantKeys = new Set([
   'albino',
   'blue',
@@ -65,6 +77,30 @@ const normalizeVariantKey = (value: string) => value
 export const isReviewedColorOnlyVariantKey = (variantKey: string) => (
   reviewedColorOnlyVariantKeys.has(normalizeVariantKey(variantKey))
 );
+
+type ReviewedVariantFieldPolicyConfig = {
+  canonicalScientificName: string;
+  relationshipType: CatalogCanonicalRelationshipType;
+  expectedVariantKey: string;
+  inheritedFacts: CompatibilityRequiredFact[];
+};
+
+// Trade/selective and morphology variants are never auto-promoted as a class.
+// A reviewed object may opt into a field-scoped policy only after its identity
+// and the biological relevance of each inherited fact have been reviewed.
+const reviewedVariantFieldPolicyConfigs: Record<string, ReviewedVariantFieldPolicyConfig> = {
+  sp_0258: {
+    canonicalScientificName: 'Betta splendens',
+    relationshipType: 'trade_strain',
+    expectedVariantKey: 'Koi',
+    // Koi/candy is a reviewed mosaic phenotype of domesticated B. splendens.
+    // Environmental physiology, body size, space floor and trophic ecology can
+    // use reviewed species-level authority. Social mode remains blocked because
+    // reviewed aggression work shows meaningful individual/strain variation;
+    // territoriality already has direct catalog-object authority.
+    inheritedFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation'],
+  },
+};
 
 const nonFishCompatibilityCategories = new Set([
   '虾螺蟹', '虾类', '螺类', '龟类', '两栖/爬宠', 'Amphibians/Reptiles', 'Turtles',
@@ -193,6 +229,48 @@ const buildTaxonCanonicalIdentity = (
   };
 };
 
+const buildReviewedVariantFieldPolicyIdentity = (
+  catalogSpeciesId: string,
+  config: ReviewedVariantFieldPolicyConfig,
+): CatalogCanonicalIdentity => {
+  const catalog = fishData.find(item => item.id === catalogSpeciesId);
+  if (!catalog) throw new Error('Reviewed variant field-policy catalog object missing: ' + catalogSpeciesId);
+  if (!isFishCompatibilityCatalogObject(catalog)) {
+    throw new Error('Reviewed variant field policy is restricted to fish Compatibility: ' + catalogSpeciesId);
+  }
+  if (getCatalogIdentityBoundary(catalogSpeciesId)) {
+    throw new Error('Reviewed variant field policy cannot bypass an active identity boundary: ' + catalogSpeciesId);
+  }
+
+  const identityReview = latestReviewedIdentity(catalogSpeciesId);
+  if (!identityReview || typeof identityReview.proposedValue !== 'object' || identityReview.proposedValue === null) {
+    throw new Error('Reviewed variant field policy requires a reviewed identity field: ' + catalogSpeciesId);
+  }
+  const value = identityReview.proposedValue as { baseSpeciesKey?: unknown; variantKey?: unknown };
+  if (typeof value.baseSpeciesKey !== 'string' || value.baseSpeciesKey.trim() !== config.canonicalScientificName) {
+    throw new Error('Reviewed variant field-policy base taxon mismatch: ' + catalogSpeciesId);
+  }
+  if (
+    typeof value.variantKey !== 'string'
+    || normalizeVariantKey(value.variantKey) !== normalizeVariantKey(config.expectedVariantKey)
+  ) {
+    throw new Error('Reviewed variant field-policy variant key mismatch: ' + catalogSpeciesId);
+  }
+
+  return {
+    catalogSpeciesId,
+    canonicalSpeciesId: null,
+    canonicalRootKind: 'reviewed_taxon',
+    canonicalScientificName: config.canonicalScientificName,
+    relationshipType: config.relationshipType,
+    identityStatus: 'reviewed',
+    variantKey: value.variantKey.trim(),
+    identityEvidenceSourceIds: [...identityReview.citationIds],
+    registrySource: 'reviewed_variant_field_policy',
+    inheritancePolicy: buildCompatibilityInheritancePolicy(config.inheritedFacts),
+  };
+};
+
 const explicitCanonicalIdentityEntries = Object.entries(catalogIdentityCorrectionBaseSpeciesIds)
   .map(([catalogSpeciesId, canonicalSpeciesId]) => {
     const relationshipType = relationshipBySpeciesId[catalogSpeciesId];
@@ -270,10 +348,17 @@ const reviewedColorTaxonPolicyEntries = fishData.flatMap(catalog => {
   ] as const];
 });
 
+const reviewedVariantFieldPolicyEntries = Object.entries(reviewedVariantFieldPolicyConfigs)
+  .map(([catalogSpeciesId, config]) => [
+    catalogSpeciesId,
+    buildReviewedVariantFieldPolicyIdentity(catalogSpeciesId, config),
+  ] as const);
+
 export const catalogCanonicalIdentities: Record<string, CatalogCanonicalIdentity> = Object.fromEntries([
   ...explicitCanonicalIdentityEntries,
   ...reviewedColorCatalogPolicyEntries,
   ...reviewedColorTaxonPolicyEntries,
+  ...reviewedVariantFieldPolicyEntries,
 ]);
 
 export const reviewedColorPolicyCanonicalSpeciesIds = new Set([
@@ -283,6 +368,10 @@ export const reviewedColorPolicyCanonicalSpeciesIds = new Set([
 
 export const reviewedColorTaxonPolicyCanonicalSpeciesIds = new Set(
   reviewedColorTaxonPolicyEntries.map(([speciesId]) => speciesId),
+);
+
+export const reviewedVariantFieldPolicySpeciesIds = new Set(
+  reviewedVariantFieldPolicyEntries.map(([speciesId]) => speciesId),
 );
 
 export const getCatalogCanonicalIdentity = (speciesId: string) => catalogCanonicalIdentities[speciesId];
@@ -309,14 +398,7 @@ export const hasFullGenericCompatibilityInheritance = (speciesId: string) => (
 
 export const createCompatibilityInheritancePolicy = (
   inheritedFacts: readonly CompatibilityRequiredFact[],
-): CompatibilityInheritancePolicy => {
-  const inherited = new Set(inheritedFacts);
-  return {
-    mode: 'allowlist',
-    inheritedFacts: allGenericFacts.filter(field => inherited.has(field)),
-    blockedFacts: allGenericFacts.filter(field => !inherited.has(field)),
-  };
-};
+): CompatibilityInheritancePolicy => buildCompatibilityInheritancePolicy(inheritedFacts);
 
 export type CatalogIdentityReadiness =
   | 'reviewed_canonical_variant'

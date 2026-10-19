@@ -9,7 +9,11 @@ import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilin
 import { getCompatibilityVariantResearchCeiling } from '../../data/compatibilityVariantResearchCeilings';
 import { getCompatibilityFieldResearchCeiling } from '../../data/compatibilityFieldResearchCeilings';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
-import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../../modules/knowledge/speciesKnowledge';
+import {
+  getReviewedSpeciesKnowledge,
+  getReviewedSpeciesKnowledgeByBaseScientificName,
+  getReviewedSpeciesKnowledgeForFish,
+} from '../../modules/knowledge/speciesKnowledge';
 import { resolveKnowledgeSources } from '../../modules/knowledge/knowledgeSources';
 import { getLifeType } from '../../modules/species/species.service';
 import { getBaseSpeciesScientificName } from '../../modules/species/speciesTaxonomy';
@@ -151,13 +155,17 @@ const supportedValueStatus = (review: CatalogFieldReview): CompatibilityFieldCov
   return 'reviewed_supported';
 };
 
-const knowledgeCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell | null => {
+const knowledgeCell = (
+  fish: Fish,
+  field: CompatibilityCoreField,
+  knowledgeOverride?: ReturnType<typeof getReviewedSpeciesKnowledgeByBaseScientificName>,
+): CompatibilityFieldCoverageCell | null => {
   const canonicalIdentity = getCatalogCanonicalIdentity(fish.id);
-  const knowledge = canonicalIdentity
+  const knowledge = knowledgeOverride ?? (canonicalIdentity
     ? canInheritCompatibilityFact(fish.id, field)
       ? getReviewedSpeciesKnowledgeForFish(fish)
       : getReviewedSpeciesKnowledge(fish.id)
-    : getReviewedSpeciesKnowledge(fish.id) ?? getReviewedSpeciesKnowledgeForFish(fish);
+    : getReviewedSpeciesKnowledge(fish.id) ?? getReviewedSpeciesKnowledgeForFish(fish));
   if (!knowledge) return null;
   if (field === 'water' || field === 'temperature' || field === 'ph') {
     const section = knowledge.environment;
@@ -221,8 +229,22 @@ const profileCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFi
 };
 
 const canonicalInheritedCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell | null => {
-  if (!getCatalogCanonicalIdentity(fish.id) || !canInheritCompatibilityFact(fish.id, field)) return null;
-  const inherited = knowledgeCell(fish, field) ?? profileCell(fish, field);
+  const identity = getCatalogCanonicalIdentity(fish.id);
+  if (!identity || !canInheritCompatibilityFact(fish.id, field)) return null;
+
+  const canonicalBaseKnowledge = identity.canonicalRootKind === 'reviewed_taxon'
+    ? getReviewedSpeciesKnowledgeByBaseScientificName(identity.canonicalScientificName)
+    : identity.canonicalSpeciesId
+      ? (() => {
+          const canonicalFish = fishData.find(item => item.id === identity.canonicalSpeciesId);
+          return canonicalFish
+            ? getReviewedSpeciesKnowledgeForFish(canonicalFish)
+            : getReviewedSpeciesKnowledge(identity.canonicalSpeciesId);
+        })()
+      : undefined;
+  const inherited = (canonicalBaseKnowledge
+    ? knowledgeCell(fish, field, canonicalBaseKnowledge)
+    : null) ?? profileCell(fish, field);
   if (!inherited) return null;
   if (inherited.disposition !== 'ready') return null;
   if (inherited.status !== 'reviewed_supported' && inherited.status !== 'reviewed_neutral_or_negative') return null;
@@ -263,10 +285,10 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
     }
   }
 
-  // A reviewed same-species color identity changes the authority question:
-  // the variant source does not need to restate every base-species husbandry
-  // fact. Exact positive variant evidence still wins above; otherwise an
-  // allowlisted canonical fact may inherit reviewed base authority before an
+  // A reviewed same-species canonical identity changes the authority question:
+  // the variant source does not need to restate every allowlisted base-species
+  // fact. Exact positive variant evidence still wins above; otherwise a
+  // field-scoped canonical fact may inherit reviewed base authority before an
   // old variant-specific reviewed_unknown/evidence ceiling is considered.
   const inherited = canonicalInheritedCell(fish, field);
   if (inherited) return inherited;

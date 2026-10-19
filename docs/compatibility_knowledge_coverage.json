@@ -15,10 +15,10 @@
   "launch_cohort_species": 30,
   "launch_pair_count": 435,
   "launch_pair_status_counts": {
-    "compatible": 9,
-    "caution": 236,
-    "not_recommended": 115,
-    "insufficient_data": 75
+    "compatible": 15,
+    "caution": 252,
+    "not_recommended": 90,
+    "insufficient_data": 78
   },
   "compatibility_critical_fields": [
     "environment",
@@ -63,18 +63,18 @@
   "research_actionable_species_count": 0,
   "terminal_species_hold_count": 5,
   "evidence_ceiling_species_gap_count": 1,
-  "priority_pair_gap_count": 76,
+  "priority_pair_gap_count": 79,
   "research_actionable_pair_count": 0,
   "terminal_pair_hold_count": 3,
   "next_wave_species_count": 0,
   "evidence_research_pair_gap_count": 0,
   "evidence_ceiling_pair_gap_count": 3,
-  "boundary_blocked_pair_gap_count": 73,
+  "boundary_blocked_pair_gap_count": 76,
   "top_pair_gap_root_species": [
     {
       "species_id": "sp_0428",
       "common_name": "斑马螺",
-      "blocked_pair_count": 27,
+      "blocked_pair_count": 28,
       "gap_kinds": [
         "environment",
         "space",
@@ -90,7 +90,7 @@
     {
       "species_id": "sp_0002",
       "common_name": "水晶虾",
-      "blocked_pair_count": 26,
+      "blocked_pair_count": 27,
       "gap_kinds": [
         "environment",
         "space",
@@ -106,7 +106,7 @@
     {
       "species_id": "sp_0021",
       "common_name": "迷你鹦鹉鱼",
-      "blocked_pair_count": 25,
+      "blocked_pair_count": 26,
       "gap_kinds": [
         "environment",
         "social",
@@ -130,6 +130,19 @@
         "variant_husbandry_not_established"
       ],
       "resolution_mode": "variant_authority_review",
+      "score": 21
+    },
+    {
+      "species_id": "sp_0258",
+      "common_name": "糖果KOI斗鱼",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "social"
+      ],
+      "boundary_codes": [
+        "variant_social_not_established"
+      ],
+      "resolution_mode": "evidence_ceiling",
       "score": 21
     }
   ]

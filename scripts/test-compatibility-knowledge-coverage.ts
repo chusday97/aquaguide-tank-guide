@@ -169,12 +169,24 @@ for (const [leftId, rightId, code, decisionImpact, status] of [
   assert.equal(evaluateSpeciesCombination([left, right]).status, status);
 }
 assert.equal(report.evidence_ceiling_pair_gap_count, 3);
-assert.equal(report.boundary_blocked_pair_gap_count, 73);
+assert.equal(report.boundary_blocked_pair_gap_count, 76);
 assert.equal(
   queue.pair_gaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
-  73,
+  76,
   'identity/domain boundary pair gaps must remain visible without leaking into ordinary evidence research',
 );
+const boundaryBlockedPairKeys = new Set(
+  queue.pair_gaps
+    .filter(item => item.resolution_mode === 'boundary_blocked')
+    .map(item => [item.species_a_id, item.species_b_id].sort().join('::')),
+);
+for (const key of ['sp_0002::sp_0258', 'sp_0021::sp_0258', 'sp_0258::sp_0428']) {
+  assert.equal(
+    boundaryBlockedPairKeys.has(key),
+    true,
+    'Candy Koi Betta social evidence ceiling must stay fail-closed when paired with an independent identity boundary: ' + key,
+  );
+}
 assert.equal(report.research_actionable_pair_count, 0);
 assert.equal(report.terminal_pair_hold_count, 3);
 assert.deepEqual(queue.actionable_pair_queue, []);

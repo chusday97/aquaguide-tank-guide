@@ -13,7 +13,7 @@
   ],
   "genericOnboardingReadySpecies": 97,
   "coreFieldCompleteSpecies": 109,
-  "oneFieldGapSpecies": 8,
+  "oneFieldGapSpecies": 9,
   "runtimeReviewedProfileSpecies": 159,
   "domainOrIdentityHeldSpecies": 270,
   "fieldCounts": {
@@ -50,33 +50,33 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 139,
+      "reviewed_supported": 140,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 66,
+      "reviewed_unknown": 65,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 131,
+      "reviewed_supported": 130,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 74,
+      "reviewed_unknown": 75,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 93,
-      "reviewed_neutral_or_negative": 38,
+      "reviewed_supported": 90,
+      "reviewed_neutral_or_negative": 41,
       "reviewed_unknown": 74,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 79,
-      "reviewed_neutral_or_negative": 38,
-      "reviewed_unknown": 88,
+      "reviewed_supported": 82,
+      "reviewed_neutral_or_negative": 36,
+      "reviewed_unknown": 87,
       "needs_research": 0,
       "missing_identity_or_domain": 270,
       "not_applicable": 11
@@ -1440,10 +1440,11 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_supported",
+          "status": "reviewed_neutral_or_negative",
           "disposition": "ready",
           "evidenceIds": [
-            "aquarium-industries-ramirezi-care-sheet"
+            "seriouslyfish-mikrogeophagus-ramirezi",
+            "fishbase-mikrogeophagus-ramirezi"
           ],
           "authoritySource": "canonical_inheritance",
           "reasonCode": "reviewed_canonical_variant_inheritance"
@@ -1452,7 +1453,8 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "aquarium-industries-ramirezi-care-sheet"
+            "seriouslyfish-mikrogeophagus-ramirezi",
+            "fishbase-mikrogeophagus-ramirezi"
           ],
           "authoritySource": "canonical_inheritance",
           "reasonCode": "reviewed_canonical_variant_inheritance"
@@ -12166,10 +12168,9 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_supported",
+          "status": "reviewed_neutral_or_negative",
           "disposition": "ready",
           "evidenceIds": [
-            "batch10-fishbase-mikrogeophagus-ramirezi-platinum",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
@@ -12177,10 +12178,9 @@
           "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "reviewed_neutral_or_negative",
+          "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "batch10-fishbase-mikrogeophagus-ramirezi-platinum",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
@@ -12563,7 +12563,6 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -12574,7 +12573,6 @@
           "status": "reviewed_neutral_or_negative",
           "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -13081,10 +13079,9 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_supported",
+          "status": "reviewed_neutral_or_negative",
           "disposition": "ready",
           "evidenceIds": [
-            "batch10-fishbase-mikrogeophagus-ramirezi-blue",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
@@ -13092,10 +13089,9 @@
           "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "reviewed_neutral_or_negative",
+          "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "batch10-fishbase-mikrogeophagus-ramirezi-blue",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
@@ -14490,7 +14486,6 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -14501,7 +14496,6 @@
           "status": "reviewed_neutral_or_negative",
           "disposition": "ready",
           "evidenceIds": [
-            "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -14512,7 +14506,6 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -17373,7 +17366,6 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -17384,7 +17376,6 @@
           "status": "reviewed_neutral_or_negative",
           "disposition": "ready",
           "evidenceIds": [
-            "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -17395,7 +17386,6 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
@@ -21702,9 +21692,9 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
+      "authoritativeFieldCount": 7,
       "actionableGapCount": 0,
-      "terminalGapCount": 2,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -21743,20 +21733,24 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        "social_behavior": {
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
             "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "compatibility_profile",
-          "reasonCode": null
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
+        },
+        "social_behavior": {
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch03-fishbase-betta-splendens",
+            "sciadv-betta-phenotypic-diversity",
+            "ygcen-betta-behavior-variation-2022"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "variant_social_not_established"
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -21768,15 +21762,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-betta-splendens",
-            "sciadv-betta-phenotypic-diversity",
-            "ygcen-betta-behavior-variation-2022"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },

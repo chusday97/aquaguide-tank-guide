@@ -8,6 +8,7 @@ import {
   isReviewedColorOnlyVariantKey,
   reviewedColorPolicyCanonicalSpeciesIds,
   reviewedColorTaxonPolicyCanonicalSpeciesIds,
+  reviewedVariantFieldPolicySpeciesIds,
 } from '../src/data/catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
@@ -35,7 +36,8 @@ const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224'];
 assert.equal(explicitCanonicalIds.length, 19);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
 assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
-assert.equal(Object.keys(catalogCanonicalIdentities).length, explicitCanonicalIds.length + expectedColorPolicyIds.length);
+assert.deepEqual([...reviewedVariantFieldPolicySpeciesIds], ['sp_0258']);
+assert.equal(Object.keys(catalogCanonicalIdentities).length, explicitCanonicalIds.length + expectedColorPolicyIds.length + 1);
 for (const speciesId of explicitCanonicalIds) assert.ok(catalogCanonicalIdentities[speciesId]);
 
 for (const identity of Object.values(catalogCanonicalIdentities)) {
@@ -44,11 +46,17 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
     'explicit_reviewed_bridge',
     'reviewed_color_morph_policy',
     'reviewed_color_morph_taxon_policy',
+    'reviewed_variant_field_policy',
   ].includes(identity.registrySource));
   assert.ok(identity.identityEvidenceSourceIds.length > 0);
   assert.equal(getCatalogIdentityBoundary(identity.catalogSpeciesId), undefined);
-  assert.deepEqual(identity.inheritancePolicy.inheritedFacts, allFacts);
-  assert.deepEqual(identity.inheritancePolicy.blockedFacts, []);
+  if (identity.registrySource === 'reviewed_variant_field_policy') {
+    assert.deepEqual(identity.inheritancePolicy.inheritedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation']);
+    assert.deepEqual(identity.inheritancePolicy.blockedFacts, ['social_behavior', 'territoriality']);
+  } else {
+    assert.deepEqual(identity.inheritancePolicy.inheritedFacts, allFacts);
+    assert.deepEqual(identity.inheritancePolicy.blockedFacts, []);
+  }
 
   const catalog = fishData.find(item => item.id === identity.catalogSpeciesId);
   assert.ok(catalog);
@@ -82,7 +90,10 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
   } else {
     assert.equal(identity.canonicalRootKind, 'reviewed_taxon');
     assert.equal(identity.canonicalSpeciesId, null);
-    assert.equal(identity.registrySource, 'reviewed_color_morph_taxon_policy');
+    assert.ok(
+      identity.registrySource === 'reviewed_color_morph_taxon_policy'
+      || identity.registrySource === 'reviewed_variant_field_policy',
+    );
     assert.ok(getReviewedCompatibilityProfileForFish(catalog));
   }
 }
@@ -101,7 +112,14 @@ for (const speciesId of expectedColorPolicyIds) {
 }
 
 assert.equal(getCatalogCanonicalIdentity('sp_0070'), undefined, 'longfin must never be auto-promoted by the color-only policy');
-assert.equal(getCatalogCanonicalIdentity('sp_0258'), undefined, 'Koi trade strain must never be auto-promoted by the color-only policy');
+const koiBettaIdentity = getCatalogCanonicalIdentity('sp_0258');
+assert.ok(koiBettaIdentity, 'Koi trade strain may use an explicit reviewed field-scoped policy without class-wide auto-promotion');
+assert.equal(koiBettaIdentity.registrySource, 'reviewed_variant_field_policy');
+assert.equal(koiBettaIdentity.relationshipType, 'trade_strain');
+assert.equal(koiBettaIdentity.canonicalRootKind, 'reviewed_taxon');
+assert.equal(koiBettaIdentity.canonicalScientificName, 'Betta splendens');
+assert.deepEqual(koiBettaIdentity.inheritancePolicy.inheritedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation']);
+assert.deepEqual(koiBettaIdentity.inheritancePolicy.blockedFacts, ['social_behavior', 'territoriality']);
 assert.equal(getCatalogCanonicalIdentity('sp_0069'), undefined, 'generic ornamental variety must remain outside the color-only policy');
 assert.equal(getCatalogCanonicalIdentity('sp_0001'), undefined, 'non-fish color morphs must stay outside the fish Compatibility canonical policy');
 for (const [speciesId, taxon] of [
@@ -250,7 +268,7 @@ assert.equal(coverage.summary.genericOnboardingReadySpecies, 97);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);
-  if (speciesId !== 'sp_0224') {
+  if (!['sp_0224', 'sp_0258'].includes(speciesId)) {
     assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant with complete authority must remain generic-ready: ' + speciesId);
   }
 }
@@ -263,6 +281,15 @@ assert.equal(platinumSnakeheadCoverage.fields.predation.disposition, 'ready');
 for (const field of ['ph', 'tank_size', 'social_behavior', 'territoriality'] as const) {
   assert.equal(platinumSnakeheadCoverage.fields[field].disposition, 'terminal_hold');
 }
+const koiBettaCoverage = coverage.rows.find(item => item.speciesId === 'sp_0258');
+assert.ok(koiBettaCoverage);
+assert.equal(koiBettaCoverage.genericOnboardingReady, false);
+assert.equal(koiBettaCoverage.authoritativeFieldCount, 7);
+assert.equal(koiBettaCoverage.fields.tank_size.authoritySource, 'canonical_inheritance');
+assert.equal(koiBettaCoverage.fields.predation.authoritySource, 'canonical_inheritance');
+assert.equal(koiBettaCoverage.fields.social_behavior.disposition, 'terminal_hold');
+assert.equal(koiBettaCoverage.fields.social_behavior.reasonCode, 'variant_social_not_established');
+assert.equal(koiBettaCoverage.fields.territoriality.authoritySource, 'catalog_field_review');
 assert.equal(getCompatibilityEvidenceAudit().reviewedPairRules.length, 21, 'canonical identity migration must not add Pair Rules');
 
 console.log(JSON.stringify({
@@ -270,6 +297,7 @@ console.log(JSON.stringify({
   explicitCanonicalIdentityRecords: explicitCanonicalIds.length,
   reviewedColorPolicyRecords: policyCanonicalIds.length,
   reviewedColorTaxonRootRecords: reviewedColorTaxonPolicyCanonicalSpeciesIds.size,
+  reviewedVariantFieldPolicyRecords: reviewedVariantFieldPolicySpeciesIds.size,
   genericReadySpecies: coverage.summary.genericOnboardingReadySpecies,
   pairRules: getCompatibilityEvidenceAudit().reviewedPairRules.length,
   unresolvedVariantGate: unresolvedGate.identityReadiness,

@@ -841,9 +841,17 @@ assert.equal(ocellaris?.fields.predation.authoritySource, 'research_evidence_cei
 assert.equal(ocellaris?.fields.water.status, 'reviewed_supported', 'research ceiling must never override supported reviewed authority');
 
 const koiBetta = rowOf('sp_0258');
-assert.equal(koiBetta?.fields.tank_size.disposition, 'terminal_hold');
-assert.equal(koiBetta?.fields.tank_size.authoritySource, 'variant_evidence_ceiling');
-assert.equal(koiBetta?.fields.tank_size.reasonCode, 'variant_field_bridge_research_exhausted');
+assert.equal(koiBetta?.genericOnboardingReady, false);
+assert.equal(koiBetta?.authoritativeFieldCount, 7);
+assert.equal(koiBetta?.fields.tank_size.disposition, 'ready');
+assert.equal(koiBetta?.fields.tank_size.authoritySource, 'canonical_inheritance');
+assert.equal(koiBetta?.fields.tank_size.reasonCode, 'reviewed_canonical_variant_inheritance');
+assert.equal(koiBetta?.fields.predation.disposition, 'ready');
+assert.equal(koiBetta?.fields.predation.authoritySource, 'canonical_inheritance');
+assert.equal(koiBetta?.fields.social_behavior.disposition, 'terminal_hold');
+assert.equal(koiBetta?.fields.social_behavior.authoritySource, 'evidence_ceiling');
+assert.equal(koiBetta?.fields.social_behavior.reasonCode, 'variant_social_not_established');
+assert.equal(koiBetta?.fields.territoriality.authoritySource, 'catalog_field_review');
 const platinumChanna = rowOf('sp_0224');
 assert.equal(platinumChanna?.actionableGapCount, 0);
 assert.equal(platinumChanna?.fields.ph.authoritySource, 'variant_evidence_ceiling');
