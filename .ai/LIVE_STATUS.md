@@ -1,12 +1,13 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 catalog-structure root-cause routing + Sweetheart Lemon trade boundary
+## TOP CURRENT OVERRIDE — 2026-10-19 named-trade research closure + evidence-ceiling routing
 
-- Working authority: local `main` after `ec36ed6c`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- Catalog structure debt now has explicit machine-readable subtypes and subtype-specific manual actions: **3 conflicting-lineage / 1 morphology / 4 generic-improvement / 6 named-trade**.
-- Generic `改良` labels are no longer treated as identity keys; morphology-changing labels require exact lineage plus partial/field-scoped inheritance review; named trade labels require full-object evidence; conflicting candidates require lineage resolution.
-- `sp_0141 甜心柠檬灯` moved from blank-`var.` structure correction to terminal **trade-name taxon ambiguity** because exact trade sources disagree between `Hyphessobrycon sp. “Muzel Red Cherry”`, alternative `Hemigrammus sp.` placement and `Hyphessobrycon cf. pulchripinnis`.
-- No identity was promoted. Coverage remains **308 fish / 100 generic-ready / 112 core-complete / 91 fish identity-held / 258 combined held**.
-- Identity remains **93 boundaries / 16,735 unresolved pairs**. Queue is now **14 catalog structure / 1 manual label / 18 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
-- Field debt remains **150 = 72 completion-eligible + 78 deferred**. Research plan remains **4 guarded jobs / 9 variants / 0 exact objects**. Canonical stays **44 total / 21 explicit / 13 colour policy / 4 taxon roots / 10 field policies**.
+- Working authority: local `main` after `cde2f60c`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- All 6 previously actionable named-trade structure cases are now closed as research workflows: **2 reclassified to trade-name taxon ambiguity + 4 recorded as exact-object evidence ceilings**.
+- `sp_0204 黑金刚红鼻剪刀` now exposes the three reviewed rummy-nose candidate taxa; `sp_0212 蓝眼金灯` now exposes `Hemigrammus rodwayi` vs `Hyphessobrycon saizi`. Neither is promoted.
+- `sp_0211`, `sp_0265`, `sp_0205`, and `sp_0360` route through the existing research-debt registry to `evidence_ceiling_hold`, with searched labels, non-qualifying references and explicit reopen requirements. Automated retry remains disabled.
+- Identity authority remains **93 boundaries / 16,735 unresolved pairs**; no Profile/canonical/inheritance promotion occurred.
+- Queue is now **8 catalog structure / 1 manual label / 20 trade-name / 61 evidence-ceiling / 3 hybrid**; automated identity research = 0. Source audit still records 12 structure paths because four of them are truthful terminal evidence ceilings.
+- Remaining actionable structure queue is **3 conflicting-lineage / 1 morphology / 4 generic-improvement**. The 4 named-trade subtype rows are no longer actionable repeat-research work.
+- Coverage remains **308 fish / 100 generic-ready / 112 core-complete / 91 fish identity-held / 258 combined held**; field debt remains **150 = 72 completion-eligible + 78 deferred**. Research plan remains **4 guarded jobs / 9 variants / 0 exact objects**. Canonical stays **44 / 21 explicit / 13 colour policy / 4 taxon roots / 10 field policies**.
 - Fully informed remains **100 / 4,950 / 0 insufficient_data**. Readability remains **9,591 / 97 exceptional unknowns**.
 - Repository authority remains **126 Profiles / 21 Pair Rules**; release generations remain exact **63 / 85 / 95 / 99 / 100 / 101**.
 - Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.

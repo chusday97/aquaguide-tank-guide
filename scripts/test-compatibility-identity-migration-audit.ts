@@ -89,13 +89,13 @@ assert.equal(report.terminalIdentityHoldCount, report.activeIdentityBoundaries);
 assert.equal(report.identityUnknownPairsWithoutActiveBoundary, 0);
 assert.ok(report.identityOnlyAfterExactEvidenceCount > 0);
 assert.ok(report.partialInheritanceReviewCount > 0);
-assert.equal(report.researchedHighImpactHoldCount, 4);
+assert.equal(report.researchedHighImpactHoldCount, 8);
 assert.equal(report.researchDebtStatusCounts.catalog_label_disambiguation_required, 1);
-assert.equal(report.researchDebtStatusCounts.exact_object_evidence_not_found, 3);
-assert.equal(report.migrationPathCounts.catalog_structure_correction, 14, 'true blank-var structural defects stay in catalog correction; reviewed trade/group labels are routed by their actual identity problem');
+assert.equal(report.researchDebtStatusCounts.exact_object_evidence_not_found, 7);
+assert.equal(report.migrationPathCounts.catalog_structure_correction, 12, 'true blank-var structural defects stay in catalog correction; reviewed trade/group labels are routed by their actual identity problem');
 assert.deepEqual(report.catalogStructureSubtypeCounts, {
   conflicting_candidate_lineages: 3,
-  named_trade_label_requires_lineage: 6,
+  named_trade_label_requires_lineage: 4,
   generic_improvement_modifier_requires_lineage: 4,
   morphology_modifier_requires_lineage: 1,
 });
@@ -190,6 +190,15 @@ for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
   assert.ok((byId.get(id)?.nonQualifyingReferenceCount || 0) > 0);
   assert.ok((byId.get(id)?.researchDebtReopenRequirement || '').length > 0);
 }
+for (const id of ['sp_0211', 'sp_0265', 'sp_0205', 'sp_0360']) {
+  assert.equal(byId.get(id)?.migrationPath, 'catalog_structure_correction');
+  assert.equal(byId.get(id)?.catalogStructureSubtype, 'named_trade_label_requires_lineage');
+  assert.equal(byId.get(id)?.researchDebtStatus, 'exact_object_evidence_not_found');
+  assert.equal(byId.get(id)?.researchDebtReviewedAt, '2026-10-19');
+  assert.ok((byId.get(id)?.nonQualifyingReferenceCount || 0) > 0);
+  assert.ok((byId.get(id)?.researchDebtReopenRequirement || '').length > 0);
+  assert.equal(byId.get(id)?.singleCandidateHint, null);
+}
 assert.equal(byId.get('sp_0241')?.migrationPath, 'partial_inheritance_review');
 assert.equal(byId.get('sp_0241')?.morphologyRisk, true);
 assert.equal(byId.get('sp_0241')?.readyBaseCandidateCount, 1);
@@ -212,10 +221,18 @@ for (const id of ['sp_0296', 'sp_0366', 'sp_0154', 'sp_0358']) {
   assert.equal(byId.get(id)?.catalogStructureSubtype, 'generic_improvement_modifier_requires_lineage');
   assert.match(byId.get(id)?.nextAction || '', /actual breeder\/trade strain/i);
 }
-for (const id of ['sp_0211', 'sp_0265', 'sp_0204', 'sp_0205', 'sp_0212', 'sp_0360']) {
+for (const id of ['sp_0211', 'sp_0265', 'sp_0205', 'sp_0360']) {
   assert.equal(byId.get(id)?.catalogStructureSubtype, 'named_trade_label_requires_lineage');
   assert.match(byId.get(id)?.nextAction || '', /full catalog object\/trade label/i);
 }
+for (const id of ['sp_0204', 'sp_0212']) {
+  assert.equal(byId.get(id)?.migrationBucket, 'trade_name_disambiguation_required');
+  assert.equal(byId.get(id)?.migrationPath, 'trade_name_disambiguation');
+  assert.equal(byId.get(id)?.catalogStructureSubtype, null);
+  assert.equal(byId.get(id)?.singleCandidateHint, null);
+}
+assert.ok((byId.get('sp_0204')?.candidateTaxa || []).some(item => item.includes('Petitella rhodostoma')));
+assert.ok((byId.get('sp_0212')?.candidateTaxa || []).some(item => item.includes('Hyphessobrycon saizi')));
 assert.equal(byId.get('sp_0141')?.migrationBucket, 'trade_name_disambiguation_required');
 assert.equal(byId.get('sp_0141')?.migrationPath, 'trade_name_disambiguation');
 assert.equal(byId.get('sp_0141')?.catalogStructureSubtype, null);

@@ -70,6 +70,26 @@ assert.ok(sweetheartLemonTetra?.sourceIds.includes('phase2-17-daehne-muzel-red-t
 assert.ok(sweetheartLemonTetra?.sourceIds.includes('phase2-17-yangyubang-sweetheart-lemon-tetra'));
 assert.equal(getReviewedCompatibilityProfile('sp_0141'), undefined);
 
+const blackDiamondRummyNose = getCatalogIdentityBoundary('sp_0204');
+assert.equal(blackDiamondRummyNose?.code, 'trade_name_taxon_ambiguous');
+assert.equal(blackDiamondRummyNose?.resolvedGranularity, 'trade_name_only');
+assert.equal(blackDiamondRummyNose?.researchDisposition, 'terminal_unknown_hold');
+assert.ok(blackDiamondRummyNose?.candidateTaxa.some(item => item.includes('Petitella bleheri')));
+assert.ok(blackDiamondRummyNose?.candidateTaxa.some(item => item.includes('Petitella rhodostoma')));
+assert.ok(blackDiamondRummyNose?.candidateTaxa.some(item => item.includes('Petitella georgiae')));
+assert.ok(blackDiamondRummyNose?.sourceIds.includes('phase2-18-seriouslyfish-petitella-bleheri'));
+assert.equal(getReviewedCompatibilityProfile('sp_0204'), undefined);
+
+const blueEyeGoldTetra = getCatalogIdentityBoundary('sp_0212');
+assert.equal(blueEyeGoldTetra?.code, 'trade_name_taxon_ambiguous');
+assert.equal(blueEyeGoldTetra?.resolvedGranularity, 'trade_name_only');
+assert.equal(blueEyeGoldTetra?.researchDisposition, 'terminal_unknown_hold');
+assert.ok(blueEyeGoldTetra?.candidateTaxa.some(item => item.includes('Hemigrammus rodwayi')));
+assert.ok(blueEyeGoldTetra?.candidateTaxa.some(item => item.includes('Hyphessobrycon saizi')));
+assert.ok(blueEyeGoldTetra?.sourceIds.includes('phase2-18-practical-fishkeeping-gold-tetra-trade'));
+assert.ok(blueEyeGoldTetra?.sourceIds.includes('phase2-18-yee-blue-eye-gold-tetra'));
+assert.equal(getReviewedCompatibilityProfile('sp_0212'), undefined);
+
 const topViewMedaka = getCatalogIdentityBoundary('sp_0474');
 assert.equal(topViewMedaka?.code, 'trade_name_taxon_ambiguous');
 assert.equal(topViewMedaka?.resolvedGranularity, 'trade_name_only');

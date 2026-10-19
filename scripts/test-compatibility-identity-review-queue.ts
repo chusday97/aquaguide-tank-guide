@@ -195,8 +195,22 @@ assert.equal(byId.get('sp_0365')?.catalogStructureSubtype, 'morphology_modifier_
 assert.match(byId.get('sp_0365')?.nextAction || '', /partial inheritance review/i);
 assert.equal(byId.get('sp_0296')?.catalogStructureSubtype, 'generic_improvement_modifier_requires_lineage');
 assert.match(byId.get('sp_0296')?.nextAction || '', /actual breeder\/trade strain/i);
-assert.equal(byId.get('sp_0211')?.catalogStructureSubtype, 'named_trade_label_requires_lineage');
-assert.match(byId.get('sp_0211')?.nextAction || '', /full catalog object\/trade label/i);
+for (const id of ['sp_0211', 'sp_0265', 'sp_0205', 'sp_0360']) {
+  assert.equal(byId.get(id)?.catalogStructureSubtype, 'named_trade_label_requires_lineage');
+  assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
+  assert.equal(byId.get(id)?.gate, 'evidence_ceiling');
+  assert.equal(byId.get(id)?.researchDebtStatus, 'exact_object_evidence_not_found');
+  assert.equal(byId.get(id)?.automatedResearchAllowed, false);
+  assert.match(byId.get(id)?.nextAction || '', /do not retry automated identity research/i);
+}
+for (const id of ['sp_0204', 'sp_0212']) {
+  assert.equal(byId.get(id)?.queue, 'trade_name_disambiguation');
+  assert.equal(byId.get(id)?.gate, 'manual_disambiguation');
+  assert.equal(byId.get(id)?.catalogStructureSubtype, null);
+  assert.equal(byId.get(id)?.automatedResearchAllowed, false);
+}
+assert.ok((byId.get('sp_0204')?.candidateTaxa || []).some(item => item.includes('Petitella rhodostoma')));
+assert.ok((byId.get('sp_0212')?.candidateTaxa || []).some(item => item.includes('Hyphessobrycon saizi')));
 for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
   assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
   assert.equal(byId.get(id)?.automatedResearchAllowed, false);
@@ -225,26 +239,26 @@ assert.equal(current.summary.automatedResearchEligible, 0);
 assert.equal(current.summary.manualReviewOnly, 93);
 assert.equal(current.summary.fishIdentityBoundaries, 91);
 assert.equal(current.summary.nonFishIdentityBoundaries, 2);
-assert.equal(current.summary.blankVariantCatalogCorrections, 14);
+assert.equal(current.summary.blankVariantCatalogCorrections, 8);
 assert.deepEqual(current.summary.catalogStructureSubtypeCounts, {
   conflicting_candidate_lineages: 3,
   morphology_modifier_requires_lineage: 1,
   generic_improvement_modifier_requires_lineage: 4,
-  named_trade_label_requires_lineage: 6,
+  named_trade_label_requires_lineage: 4,
 });
 assert.equal(current.summary.readyBaseIdentityBoundaries, 20);
 assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 9);
 assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 11);
-assert.equal(current.summary.evidenceCeilingHolds, 57);
+assert.equal(current.summary.evidenceCeilingHolds, 61);
 assert.equal(current.summary.partialInheritanceReview, 0);
 assert.equal(current.summary.byQueue.exact_object_identity_research, 0);
 assert.equal(current.summary.byQueue.partial_inheritance_review, 0);
 assert.equal(current.summary.byQueue.base_or_parent_resolution, 0);
 assert.equal(current.summary.byQueue.taxonomic_review, 0);
 assert.equal(current.summary.byQueue.manual_label_disambiguation, 1);
-assert.equal(current.summary.byQueue.catalog_structure_correction, 14);
-assert.equal(current.summary.byQueue.trade_name_disambiguation, 18);
-assert.equal(current.summary.byQueue.evidence_ceiling_hold, 57);
+assert.equal(current.summary.byQueue.catalog_structure_correction, 8);
+assert.equal(current.summary.byQueue.trade_name_disambiguation, 20);
+assert.equal(current.summary.byQueue.evidence_ceiling_hold, 61);
 assert.equal(current.summary.byQueue.hybrid_object_hold, 3);
 assert.equal(current.items.every(item => item.researchDisposition === 'terminal_unknown_hold'), true);
 assert.equal(current.items.every(item => item.automatedResearchAllowed === false), true);

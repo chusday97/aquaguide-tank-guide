@@ -12,9 +12,9 @@
 ## Migration buckets
 
 - variant_object_evidence_required: 59
-- catalog_structure_correction_required: 14
+- catalog_structure_correction_required: 12
 - parent_taxon_resolution_required: 11
-- trade_name_disambiguation_required: 4
+- trade_name_disambiguation_required: 6
 - commercial_hybrid_hold: 3
 - accepted_alias_trade_disambiguation_required: 1
 - taxonomic_research_candidate: 1
@@ -22,24 +22,24 @@
 ## Migration paths
 
 - base_authority_or_parent_resolution: 54 objects / 8127 sole-boundary pairs
-- catalog_structure_correction: 14 objects / 2107 sole-boundary pairs
+- catalog_structure_correction: 12 objects / 1829 sole-boundary pairs
 - partial_inheritance_review: 10 objects / 1134 sole-boundary pairs
+- trade_name_disambiguation: 7 objects / 718 sole-boundary pairs
 - identity_only_after_exact_evidence: 5 objects / 625 sole-boundary pairs
-- trade_name_disambiguation: 5 objects / 440 sole-boundary pairs
 - hybrid_object_specific_hold: 3 objects / 485 sole-boundary pairs
 - exact_variant_label_disambiguation: 1 objects / 162 sole-boundary pairs
 - taxonomic_review: 1 objects / 0 sole-boundary pairs
 
 ## Catalog structure subtypes
 
-- named_trade_label_requires_lineage: 6
 - generic_improvement_modifier_requires_lineage: 4
+- named_trade_label_requires_lineage: 4
 - conflicting_candidate_lineages: 3
 - morphology_modifier_requires_lineage: 1
 
 - Identity-only after exact evidence: **5**
 - Partial inheritance review: **10**
-- Reviewed research-debt holds: **4**
+- Reviewed research-debt holds: **8**
 - Source-controlled terminal identity holds: **93**
 
 ## Reviewed evidence-debt holds
@@ -47,9 +47,13 @@
 | Catalog object | Research status | Blocking reason | Reopen requirement |
 | --- | --- | --- | --- |
 | sp_0175 血钻神仙 | catalog_label_disambiguation_required | The catalog scientific variant label "Red" is broader than the Chinese object label 血钻 and does not uniquely identify Red Devil, Super Red, Red Diamond, Blood Diamond, koi-derived red, or another red ornamental lineage. | First establish the exact trade/lineage label represented by 血钻神仙, then provide an object-level professional source that ties that exact line to Pterophyllum scalare. |
+| sp_0211 大点火口 | exact_object_evidence_not_found | No reviewed exact-object source currently ties 大点火口 / Large Spot Firemouth to Thorichthys meeki or another exact Thorichthys lineage. The blank-var parent remains only a legacy catalog hypothesis. | Provide a breeder/importer/catalog or taxonomic source that explicitly names 大点火口 (or a demonstrably equivalent trade label) and identifies its exact taxon/lineage. |
+| sp_0265 血中红慈鲷 | exact_object_evidence_not_found | The base Nimbochromis livingstonii taxon is well supported, but no reviewed exact-object source currently establishes 血中红慈鲷 as a stable N. livingstonii variant rather than a mislabeled or unrelated Malawi trade fish. | Provide a professional Malawi-cichlid breeder/importer/catalog source that explicitly names the Blood Red / 血中红 object and identifies its exact taxon or provenance line. |
 | sp_0271 白子红宝石 | exact_object_evidence_not_found | The reviewed base-species record does not prove that the aquarium-trade Albino / 白子红宝石 object is specifically Hemichromis bimaculatus rather than another Hemichromis trade lineage. | Provide an exact-object professional/breeder/importer page that names the Albino or Albino Red Jewel object and explicitly identifies it as Hemichromis bimaculatus. |
 | sp_0376 黄金斑马异型 (L134改良版) | exact_object_evidence_not_found | Multiple professional retailers corroborate ordinary L134 = Peckoltia compta, but this does not prove that the catalog Super Gold object is the same lineage or that Super Gold is only a color form. | Provide a professional breeder/importer/catalog page that explicitly labels L134 Super Gold / Peckoltia compta Super Gold and ties that exact ornamental line to Peckoltia compta. |
 | sp_0399 白金蓝魔鬼 (海水) | exact_object_evidence_not_found | The base species Chrysiptera cyanea is well supported, but no reviewed exact-object source currently establishes Platinum / 白金蓝魔鬼 as a Chrysiptera cyanea ornamental form. | Provide an exact professional marine-fish supplier/breeder/catalog source that names Platinum Blue Devil (or equivalent exact object) and explicitly identifies Chrysiptera cyanea. |
+| sp_0205 紫艳红莲灯 | exact_object_evidence_not_found | Reviewed sources support the Black Neon base taxon, but no qualifying exact-object source maps 紫艳红莲灯 to Hyphessobrycon herbertaxelrodi or another exact lineage. | Provide a professional breeder/importer/export-list source that uses 紫艳红莲灯 (or a demonstrably equivalent English trade name) and explicitly identifies its taxon/lineage. |
+| sp_0360 白金黑霓虹灯 | exact_object_evidence_not_found | An exact community-level 白金黑莲灯 reference exists, but no qualifying breeder/importer or taxonomic source establishes whether this is a stable Hyphessobrycon herbertaxelrodi strain, a non-heritable platinum phenotype, or another trade object. | Provide a professional breeder/importer or peer-reviewed source that explicitly identifies Platinum/白金 Black Neon and states the exact taxon/provenance; if the platinum appearance is only a phenotype, do not model it as an inheritable strain. |
 
 ## Highest-impact catalog identity debt
 

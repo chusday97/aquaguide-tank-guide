@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-19T13:50:42.652Z",
+  "generatedAt": "2026-10-19T14:12:15.780Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
   "sourceSchemaVersion": 4,
   "promotionAllowed": false,
@@ -16,12 +16,12 @@
     "total": 93,
     "fishIdentityBoundaries": 91,
     "nonFishIdentityBoundaries": 2,
-    "blankVariantCatalogCorrections": 14,
+    "blankVariantCatalogCorrections": 8,
     "catalogStructureSubtypeCounts": {
       "conflicting_candidate_lineages": 3,
       "morphology_modifier_requires_lineage": 1,
       "generic_improvement_modifier_requires_lineage": 4,
-      "named_trade_label_requires_lineage": 6
+      "named_trade_label_requires_lineage": 4
     },
     "readyBaseIdentityBoundaries": 20,
     "readyBaseMorphologySafeBoundaries": 9,
@@ -30,7 +30,7 @@
     "sourceIdentityUnknownPairs": 16735,
     "automatedResearchEligible": 0,
     "manualReviewOnly": 93,
-    "evidenceCeilingHolds": 57,
+    "evidenceCeilingHolds": 61,
     "partialInheritanceReview": 0,
     "byQueue": {
       "exact_object_identity_research": 0,
@@ -38,10 +38,10 @@
       "manual_label_disambiguation": 1,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 18,
-      "evidence_ceiling_hold": 57,
+      "trade_name_disambiguation": 20,
+      "evidence_ceiling_hold": 61,
       "hybrid_object_hold": 3,
-      "catalog_structure_correction": 14
+      "catalog_structure_correction": 8
     },
     "soleBoundaryPairImpactByQueue": {
       "exact_object_identity_research": 0,
@@ -49,10 +49,10 @@
       "manual_label_disambiguation": 162,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 2523,
-      "evidence_ceiling_hold": 7803,
+      "trade_name_disambiguation": 2801,
+      "evidence_ceiling_hold": 8405,
       "hybrid_object_hold": 485,
-      "catalog_structure_correction": 2107
+      "catalog_structure_correction": 1227
     }
   },
   "items": [
@@ -549,8 +549,8 @@
       "candidateTaxa": [
         "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -562,15 +562,17 @@
       "baseCandidateSpeciesIds": [],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
-      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "No reviewed exact-object source currently ties 大点火口 / Large Spot Firemouth to Thorichthys meeki or another exact Thorichthys lineage. The blank-var parent remains only a legacy catalog hypothesis.",
+      "reopenRequirement": "Provide a breeder/importer/catalog or taxonomic source that explicitly names 大点火口 (or a demonstrably equivalent trade label) and identifies its exact taxon/lineage.",
       "researchLabels": [
         "Thorichthys meeki var.",
         "大点火口",
-        "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "Large Spot Firemouth",
+        "Spotted Firemouth Cichlid"
       ],
-      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -903,8 +905,8 @@
       "candidateTaxa": [
         "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -916,15 +918,17 @@
       "baseCandidateSpeciesIds": [],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
-      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "The base Nimbochromis livingstonii taxon is well supported, but no reviewed exact-object source currently establishes 血中红慈鲷 as a stable N. livingstonii variant rather than a mislabeled or unrelated Malawi trade fish.",
+      "reopenRequirement": "Provide a professional Malawi-cichlid breeder/importer/catalog source that explicitly names the Blood Red / 血中红 object and identifies its exact taxon or provenance line.",
       "researchLabels": [
         "Nimbochromis livingstonii var.",
         "血中红慈鲷",
-        "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "Blood Red Livingstonii",
+        "Red Livingstonii Cichlid"
       ],
-      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 247,
       "soleBoundaryIdentityUnknownPairs": 162,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2252,14 +2256,16 @@
       "scientificName": "Hemigrammus bleheri var.",
       "lifeType": "fish",
       "blankVariantSuffix": true,
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "migrationPath": "catalog_structure_correction",
-      "catalogStructureSubtype": "named_trade_label_requires_lineage",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
-        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Petitella bleheri (formerly Hemigrammus bleheri; the species most commonly sold as rummy-nose tetra)",
+        "Petitella rhodostoma (true rummy-nose tetra)",
+        "Petitella georgiae (false rummy-nose tetra)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "trade_name_disambiguation",
+      "gate": "manual_disambiguation",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -2272,14 +2278,16 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
-      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
+      "researchBlockedReason": "Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.",
+      "reopenRequirement": "Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.",
       "researchLabels": [
         "Hemigrammus bleheri var.",
         "黑金刚红鼻剪刀",
-        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Petitella bleheri (formerly Hemigrammus bleheri; the species most commonly sold as rummy-nose tetra)",
+        "Petitella rhodostoma (true rummy-nose tetra)",
+        "Petitella georgiae (false rummy-nose tetra)"
       ],
-      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2296,8 +2304,8 @@
       "candidateTaxa": [
         "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -2311,15 +2319,17 @@
       ],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
-      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "Reviewed sources support the Black Neon base taxon, but no qualifying exact-object source maps 紫艳红莲灯 to Hyphessobrycon herbertaxelrodi or another exact lineage.",
+      "reopenRequirement": "Provide a professional breeder/importer/export-list source that uses 紫艳红莲灯 (or a demonstrably equivalent English trade name) and explicitly identifies its taxon/lineage.",
       "researchLabels": [
         "Hyphessobrycon herbertaxelrodi var.",
         "紫艳红莲灯",
-        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "Purple Black Neon Tetra",
+        "Purple Red Black Neon Tetra"
       ],
-      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -2408,14 +2418,15 @@
       "scientificName": "Hemigrammus rodwayi var.",
       "lifeType": "fish",
       "blankVariantSuffix": true,
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "migrationPath": "catalog_structure_correction",
-      "catalogStructureSubtype": "named_trade_label_requires_lineage",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "migrationPath": "trade_name_disambiguation",
+      "catalogStructureSubtype": null,
       "candidateTaxa": [
-        "Hemigrammus rodwayi (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Hemigrammus rodwayi (traditional Gold Tetra attribution)",
+        "Hyphessobrycon saizi (similar species reported in the aquarium trade under Gold Tetra)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "trade_name_disambiguation",
+      "gate": "manual_disambiguation",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -2432,14 +2443,15 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
-      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
+      "researchBlockedReason": "Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.",
+      "reopenRequirement": "Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.",
       "researchLabels": [
         "Hemigrammus rodwayi var.",
         "蓝眼金灯",
-        "Hemigrammus rodwayi (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Hemigrammus rodwayi (traditional Gold Tetra attribution)",
+        "Hyphessobrycon saizi (similar species reported in the aquarium trade under Gold Tetra)"
       ],
-      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85
@@ -3240,8 +3252,8 @@
       "candidateTaxa": [
         "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "evidence_ceiling_hold",
+      "gate": "evidence_ceiling",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -3255,15 +3267,17 @@
       ],
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
-      "researchDebtStatus": null,
-      "researchBlockedReason": "The catalog has a specific trade/common object label but the scientific variant identity is blank; the legacy parent attribution alone is insufficient.",
-      "reopenRequirement": "Provide an exact-object source linking the full trade/common label to one taxon or lineage, or explicitly correct the catalog object.",
+      "researchDebtStatus": "exact_object_evidence_not_found",
+      "researchBlockedReason": "An exact community-level 白金黑莲灯 reference exists, but no qualifying breeder/importer or taxonomic source establishes whether this is a stable Hyphessobrycon herbertaxelrodi strain, a non-heritable platinum phenotype, or another trade object.",
+      "reopenRequirement": "Provide a professional breeder/importer or peer-reviewed source that explicitly identifies Platinum/白金 Black Neon and states the exact taxon/provenance; if the platinum appearance is only a phenotype, do not model it as an inheritable strain.",
       "researchLabels": [
         "Hyphessobrycon herbertaxelrodi var.",
         "白金黑霓虹灯",
-        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)",
+        "白金黑莲灯",
+        "Platinum Black Neon Tetra"
       ],
-      "nextAction": "Research the full catalog object/trade label for exact lineage evidence; do not search or inherit from the blank var. parent alone.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85

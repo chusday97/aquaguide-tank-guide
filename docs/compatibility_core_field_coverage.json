@@ -16942,73 +16942,97 @@
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "ph": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "predation": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-bleheri"
+            "batch06-fishbase-hemigrammus-bleheri",
+            "phase2-18-seriouslyfish-petitella-bleheri",
+            "phase2-18-seriouslyfish-petitella-rhodostoma",
+            "phase2-18-seriouslyfish-petitella-georgiae"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         }
       }
     },
@@ -17631,73 +17655,89 @@
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "ph": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "predation": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch06-fishbase-hemigrammus-rodwayi"
+            "batch06-fishbase-hemigrammus-rodwayi",
+            "phase2-18-practical-fishkeeping-gold-tetra-trade",
+            "phase2-18-yee-blue-eye-gold-tetra"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         }
       }
     },
