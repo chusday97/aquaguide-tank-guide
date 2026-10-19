@@ -1,13 +1,14 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 Blue Gourami canonical identity closure
+## TOP CURRENT OVERRIDE — 2026-10-19 goldfish identity-only closure + planner guard
 
-- Working authority: local `main` after `c60d5890`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- `sp_0445 蓝曼龙` is resolved as the reviewed Blue colour morph of `Trichopodus trichopterus` using FishBase + Fishes of Australia exact-object/taxon evidence; canonical representation is formal taxon + `variantKey=Blue`, not a fabricated `var. Blue` scientific name.
-- Added reusable reviewed `Trichopodus trichopterus` taxon-level Compatibility authority; direct repository Profiles remain 125 and released target remains 101.
-- Fixed runtime precedence so old reviewed-but-`unknown` SpeciesKnowledge values cannot shadow newer supported Compatibility authority. Concrete reviewed Knowledge still has priority; unknown placeholders do not.
-- Morphology audit now reads reviewed `candidateTaxa`; `sp_0142` Balloon lineage is correctly morphology-risk while remaining fail-closed.
-- Coverage: **308 fish / 99 generic-ready / 111 core-complete / 101 fish identity-held**. Identity ledger: **103 total boundaries = 101 fish + 2 non-fish / 17,926 unresolved-identity pairs**.
-- Queue: **26 catalog_structure_correction / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; automated research eligible 0. 78 predation debt fields remain fully deferred.
-- Canonical: 34 total / 20 explicit bridges / 13 colour policy / 4 taxon roots / 1 field policy; 12 policy-promoted ready.
+- Working authority: local `main` after `eea224c5`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- Reviewed breed identities now close `sp_0066 Red Cap Oranda`, `sp_0067 Pearlscale`, and `sp_0068 Bubble Eye` to formal taxon `Carassius auratus`.
+- All three are identity-only `reviewed_variant_field_policy` records with **zero inherited facts / all 8 facts blocked**. They remain not-ready with 0 authoritative Compatibility fields.
+- Research planner now uses canonical relationship metadata. Formal taxon normalization can no longer make a reviewed morphology/trade variant appear to be an exact base taxon.
+- Active completion plan: one guarded `Carassius auratus` source-discovery job, **3 variants / 0 exact base / variant bridge required**; base facts must never auto-promote.
+- Coverage: **308 fish / 99 generic-ready / 111 core-complete / 98 fish identity-held / 265 combined domain-or-identity held**.
+- Identity ledger: **100 total boundaries = 98 fish + 2 non-fish / 17,461 unresolved-identity pairs**. Queue: **23 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**.
+- Field debt: **102 visible = 24 completion-eligible goldfish variant fields + 78 deferred predation fields**. Identity queue automated research remains 0; the new active research lane is field evidence, not identity inference.
+- Canonical: **37 total / 20 explicit / 13 colour policy / 4 taxon roots / 4 field policies**; 12 policy-promoted ready, 0 field-policy ready.
 - Fully informed: **99 species / 4,851 pairs / 0 insufficient_data**. Readability: **9,453 reviewed-fish pairs / 97 exceptional identity-or-public-evidence unknowns**.
 - Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.
 

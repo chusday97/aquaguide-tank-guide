@@ -506,12 +506,25 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
   }>();
 
   for (const item of bySpecies.values()) {
-    const unresolvedIdentity = /\b(?:sp|spp|cf)\./i.test(item.scientificName);
-    const baseScientificName = unresolvedIdentity ? null : getBaseSpeciesScientificName(item.scientificName);
+    const canonicalIdentity = getCatalogCanonicalIdentity(item.speciesId);
+    const unresolvedIdentity = !canonicalIdentity && /\b(?:sp|spp|cf)\./i.test(item.scientificName);
+    const baseScientificName = canonicalIdentity?.canonicalScientificName
+      ?? (unresolvedIdentity ? null : getBaseSpeciesScientificName(item.scientificName));
     const researchKey = baseScientificName ?? `catalog:${item.speciesId}`;
     const normalizedScientificName = item.scientificName.trim();
-    const isExactBaseTaxon = Boolean(baseScientificName && normalizedScientificName === baseScientificName);
-    const isVariant = Boolean(baseScientificName && normalizedScientificName !== baseScientificName);
+    // A reviewed canonical variant remains a variant even when the identity
+    // overlay correctly normalizes scientificName back to the formal base taxon.
+    // Otherwise morphology/trade variants can be misclassified as exact taxon
+    // research and accidentally invite base-taxon authority promotion.
+    const reviewedCanonicalVariant = Boolean(
+      canonicalIdentity && canonicalIdentity.relationshipType !== 'same_taxon_catalog_alias',
+    );
+    const isVariant = Boolean(
+      baseScientificName && (reviewedCanonicalVariant || normalizedScientificName !== baseScientificName),
+    );
+    const isExactBaseTaxon = Boolean(
+      baseScientificName && !isVariant && normalizedScientificName === baseScientificName,
+    );
     const group = grouped.get(researchKey) ?? {
       researchKey,
       baseScientificName,

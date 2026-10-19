@@ -89,6 +89,24 @@ type ReviewedVariantFieldPolicyConfig = {
 // A reviewed object may opt into a field-scoped policy only after its identity
 // and the biological relevance of each inherited fact have been reviewed.
 const reviewedVariantFieldPolicyConfigs: Record<string, ReviewedVariantFieldPolicyConfig> = {
+  sp_0066: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Red Cap Oranda',
+    inheritedFacts: [],
+  },
+  sp_0067: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Pearlscale',
+    inheritedFacts: [],
+  },
+  sp_0068: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Bubble Eye',
+    inheritedFacts: [],
+  },
   sp_0258: {
     canonicalScientificName: 'Betta splendens',
     relationshipType: 'trade_strain',

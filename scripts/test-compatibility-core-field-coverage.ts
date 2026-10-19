@@ -21,7 +21,7 @@ assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpec
 assert.ok(summary.oneFieldGapSpecies > 0);
 assert.ok(summary.genericOnboardingReadySpecies >= 43, 'High-yield source-first coverage should preserve at least 43 fully sourced generic-ready profiles');
 assert.equal(summary.fishCompatibilityDomainSpecies, 308, 'fish Compatibility scope should contain only fish-domain catalog objects');
-assert.equal(summary.fishIdentityHeldSpecies, 101, 'fish identity holds must be tracked separately from unsupported life-type domains');
+assert.equal(summary.fishIdentityHeldSpecies, 98, 'fish identity holds must be tracked separately from unsupported life-type domains');
 assert.equal(summary.unsupportedDomainSpecies, 167, 'unsupported-domain objects must not inflate fish identity debt');
 assert.deepEqual(summary.unsupportedDomainSpeciesByLifeType, {
   plant: 66,
@@ -35,9 +35,9 @@ assert.equal(
   'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
 );
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
-assert.equal(summary.visibleResearchDebtFields, 78, 'independent predation research debt must remain visible after social-ceiling isolation');
-assert.equal(summary.completionEligibleResearchDebtFields, 0, 'no current research debt can complete an object while companion terminal holds remain');
-assert.equal(summary.deferredResearchDebtFields, 78, 'all currently visible field research debt is deferred behind companion terminal holds');
+assert.equal(summary.visibleResearchDebtFields, 102, 'identity closure must expose the 24 goldfish variant field gaps without hiding the existing 78 deferred predation gaps');
+assert.equal(summary.completionEligibleResearchDebtFields, 24, 'three identity-resolved goldfish morphology variants must expose eight completion-eligible fields each without auto-inheritance');
+assert.equal(summary.deferredResearchDebtFields, 78, 'the pre-existing deferred predation debt must remain unchanged');
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
@@ -62,6 +62,16 @@ for (const speciesId of ['sp_0018','sp_0056','sp_0058','sp_0121','sp_0122','sp_0
 const rowOf = (speciesId: string) => rows.find(row => row.speciesId === speciesId);
 assert.equal(rowOf('sp_0445')?.genericOnboardingReady, true);
 assert.equal(rowOf('sp_0445')?.authoritativeFieldCount, 8);
+for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
+  const row = rowOf(speciesId);
+  assert.ok(row);
+  assert.equal(row.genericOnboardingReady, false);
+  assert.equal(row.authoritativeFieldCount, 0);
+  assert.equal(row.actionableGapCount, 8);
+  assert.equal(row.terminalGapCount, 0);
+  assert.equal(row.reviewedProfile, 'none');
+  assert.ok(fields.every(field => row.fields[field].disposition === 'targeted_source_expansion'));
+}
 assert.equal(rowOf('sp_0014')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0014')?.fields.social_behavior.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0443')?.fields.tank_size.status, 'reviewed_supported');
@@ -852,25 +862,47 @@ for (const row of rows) {
   );
 }
 
-assert.equal(backlog.length, 78, 'predation gaps previously hidden by social ceilings must remain visible as truthful field-level research debt');
+assert.equal(backlog.length, 102, 'field backlog must expose 78 deferred predation gaps plus 24 newly actionable goldfish morphology fields');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
-assert.ok(backlog.every(item => item.field === 'predation'));
-assert.ok(backlog.every(item => item.completionEligible === false && item.companionTerminalGapCount > 0), 'field gaps with companion terminal holds must stay visible but deferred from active completion');
+const completionEligibleBacklog = backlog.filter(item => item.completionEligible);
+const deferredBacklog = backlog.filter(item => !item.completionEligible);
+assert.equal(completionEligibleBacklog.length, 24);
+assert.equal(deferredBacklog.length, 78);
+assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), ['sp_0066', 'sp_0067', 'sp_0068']);
+for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
+  assert.deepEqual(
+    completionEligibleBacklog.filter(item => item.speciesId === speciesId).map(item => item.field).sort(),
+    [...fields].sort(),
+    `${speciesId} must expose all eight fields after identity closure without inheritance`,
+  );
+}
+assert.ok(deferredBacklog.every(item => item.field === 'predation'));
+assert.ok(deferredBacklog.every(item => item.companionTerminalGapCount > 0), 'legacy field gaps with companion terminal holds must stay visible but deferred from active completion');
 assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesId)?.fields[item.field].disposition === 'targeted_source_expansion'));
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 0, 'active taxon research must exclude truthful field gaps that cannot complete an object because companion terminal holds remain');
+assert.equal(taxonResearchPlan.length, 1, 'only the newly identity-resolved goldfish variant research lane should be active');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 0, 'no catalog object should remain in automatic research once all current source strategies are exhausted');
+assert.equal(plannedCatalogObjects.size, 3);
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const completionEligibleBacklogGapKeys = backlog.filter(item => item.completionEligible).map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, completionEligibleBacklogGapKeys, 'active taxon research plan must represent only completion-eligible field gaps; deferred evidence debt remains visible in the backlog');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
-assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 0, 'all currently known variant-only taxon jobs must remain terminalized and excluded from active research');
+assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 1, 'the three identity-resolved goldfish breeds must remain one guarded variant-bearing research job');
+const goldfishTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus');
+assert.ok(goldfishTaxonJob);
+assert.equal(goldfishTaxonJob.researchDisposition, 'base_taxon_candidate_research_with_variant_bridge');
+assert.equal(goldfishTaxonJob.requiresVariantBridgeReview, true);
+assert.equal(goldfishTaxonJob.catalogObjectCount, 3);
+assert.equal(goldfishTaxonJob.exactObjectCount, 0);
+assert.equal(goldfishTaxonJob.variantObjectCount, 3);
+assert.deepEqual(goldfishTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0066', 'sp_0067', 'sp_0068']);
+assert.ok(goldfishTaxonJob.catalogObjects.every(object => object.isVariant && !object.isExactBaseTaxon));
+assert.ok(goldfishTaxonJob.promotionPolicy.includes('must never auto-promote'));
 assert.ok(taxonResearchPlan.filter(item => item.unresolvedObjectCount > 0).every(item => item.researchDisposition === 'identity_resolution_required' && item.baseScientificName === null));
-for (const closedVariantTaxon of ['Carassius auratus', 'Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii', 'Poecilia latipinna', 'Poecilia sphenops', 'Sahyadria denisonii', 'Synchiropus splendidus', 'Synodontis nigriventris', 'Tanichthys albonubes', 'Trichopodus leerii']) {
+for (const closedVariantTaxon of ['Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii', 'Poecilia latipinna', 'Poecilia sphenops', 'Sahyadria denisonii', 'Synchiropus splendidus', 'Synodontis nigriventris', 'Tanichthys albonubes', 'Trichopodus leerii']) {
   assert.equal(taxonResearchPlan.find(item => item.baseScientificName === closedVariantTaxon), undefined, `${closedVariantTaxon} must not enter active completion while remaining field gaps are terminally blocked elsewhere`);
 }
 const opsariichthysTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Opsariichthys bidens');

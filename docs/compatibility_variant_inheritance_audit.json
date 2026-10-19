@@ -31,8 +31,8 @@
     "explicitReviewedCanonicalBridges": 20,
     "reviewedColorPolicyCanonicalRecords": 13,
     "reviewedColorTaxonRootRecords": 4,
-    "reviewedVariantFieldPolicyRecords": 1,
-    "totalCanonicalIdentityRecords": 34,
+    "reviewedVariantFieldPolicyRecords": 4,
+    "totalCanonicalIdentityRecords": 37,
     "policyPromotedReadySpecies": 12,
     "fieldPolicyReadySpecies": 0,
     "directReviewedVariantObjects": 2,
@@ -382,6 +382,87 @@
     }
   ],
   "fieldScopedPolicies": [
+    {
+      "speciesId": "sp_0066",
+      "name": "鹤顶红金鱼",
+      "scientificName": "Carassius auratus var.",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Red Cap Oranda",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-red-cap-oranda"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
+    {
+      "speciesId": "sp_0067",
+      "name": "珠鳞金鱼",
+      "scientificName": "Carassius auratus var.",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Pearlscale",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-pearlscale"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
+    {
+      "speciesId": "sp_0068",
+      "name": "水泡金鱼",
+      "scientificName": "Carassius auratus var.",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Bubble Eye",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-11-fishbase-carassius-auratus-goldfish",
+        "phase2-11-goldfish-council-bubble-eye"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
     {
       "speciesId": "sp_0258",
       "name": "糖果KOI斗鱼",

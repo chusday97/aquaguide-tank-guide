@@ -1,8 +1,84 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "active completion research only: include completionEligible field gaps, defer evidence debt on objects with companion terminal holds; deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging",
-  "catalogObjects": 0,
-  "totalResearchJobs": 0,
-  "variantBridgeJobs": 0,
-  "items": []
+  "catalogObjects": 3,
+  "totalResearchJobs": 1,
+  "variantBridgeJobs": 1,
+  "items": [
+    {
+      "researchKey": "Carassius auratus",
+      "baseScientificName": "Carassius auratus",
+      "priorityScore": 110,
+      "catalogObjectCount": 3,
+      "exactObjectCount": 0,
+      "variantObjectCount": 3,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "requiresVariantBridgeReview": true,
+      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0066",
+          "name": "鹤顶红金鱼",
+          "scientificName": "Carassius auratus",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size",
+            "social_behavior",
+            "territoriality",
+            "predation"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0067",
+          "name": "珠鳞金鱼",
+          "scientificName": "Carassius auratus",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size",
+            "social_behavior",
+            "territoriality",
+            "predation"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0068",
+          "name": "水泡金鱼",
+          "scientificName": "Carassius auratus",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size",
+            "social_behavior",
+            "territoriality",
+            "predation"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        }
+      ]
+    }
+  ]
 }

@@ -1,9 +1,10 @@
-## TOP CURRENT BRANCH — 2026-10-19 main Blue Gourami canonical closure
+## TOP CURRENT BRANCH — 2026-10-19 main goldfish identity-only closure
 
-- Canonical local branch: `main`, continuing from `c60d5890`.
-- Current change resolves `sp_0445 蓝曼龙` through reviewed `Trichopodus trichopterus + Blue` canonical authority, adds reusable taxon-level Compatibility evidence, fixes reviewed-`unknown` precedence, and strengthens morphology-risk routing.
-- Current scope: 308 fish-domain / 99 generic-ready / 111 core-complete / 101 fish identity-held; 103 active identity boundaries / 17,926 pair impacts; blank-`var.` catalog corrections = 26.
-- Canonical authority: 34 identities / 13 colour-policy records / 4 taxon roots; fully-informed matrix = 99 species / 4,851 pairs / 0 insufficient_data.
+- Canonical local branch: `main`, continuing from `eea224c5`.
+- Current change resolves three reviewed goldfish morphology breed identities (Red Cap Oranda / Pearlscale / Bubble Eye) with zero Compatibility inheritance and fixes taxon research planning so canonical variants cannot masquerade as exact base taxa after formal-name normalization.
+- Current scope: 308 fish-domain / 99 generic-ready / 111 core-complete / 98 fish identity-held; **100 active identity boundaries / 17,461 pair impacts / 23 blank-`var.` catalog corrections**.
+- Coverage now exposes **102 research-debt fields = 24 completion-eligible goldfish variant fields + 78 deferred predation fields**. The one active taxon job is guarded: 3 variant objects / 0 exact objects / no automatic base authority promotion.
+- Canonical authority: **37 identities / 13 colour-policy records / 4 taxon roots / 4 field policies**; fully-informed matrix remains 99 species / 4,851 pairs / 0 insufficient_data.
 - Direct repository Profiles remain 125; released Compatibility generations remain exact 63 / 85 / 95 / 99 / 100 / 101. No release ownership or Production boundary changed.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
