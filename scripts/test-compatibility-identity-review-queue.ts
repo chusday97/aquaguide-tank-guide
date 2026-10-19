@@ -9,6 +9,8 @@ const row = (overrides: Partial<CompatibilityIdentityMigrationAudit['rows'][numb
   speciesId: 'sp_test',
   name: 'Test Variant',
   scientificName: 'Testus fishii var. Blue',
+  lifeType: 'fish',
+  blankVariantSuffix: false,
   boundaryCode: 'catalog_variant_identity_unresolved',
   migrationPath: 'identity_only_after_exact_evidence',
   nextAction: 'Find exact-object evidence.',
@@ -128,6 +130,12 @@ const byId = new Map(current.items.map(item => [item.speciesId, item] as const))
 assert.equal(byId.has('sp_0338'), false, 'resolved duplicate catalog alias must leave the active identity review queue');
 assert.equal(byId.get('sp_0175')?.queue, 'manual_label_disambiguation');
 assert.equal(byId.get('sp_0175')?.automatedResearchAllowed, false);
+assert.equal(byId.get('sp_0158')?.queue, 'catalog_structure_correction');
+assert.equal(byId.get('sp_0158')?.gate, 'catalog_correction');
+assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
+assert.match(byId.get('sp_0158')?.researchBlockedReason || '', /structurally incomplete/i);
+assert.match(byId.get('sp_0158')?.reopenRequirement || '', /blank var\./i);
+assert.match(byId.get('sp_0158')?.nextAction || '', /scientificName first/i);
 for (const id of ['sp_0271', 'sp_0376', 'sp_0399']) {
   assert.equal(byId.get(id)?.queue, 'evidence_ceiling_hold');
   assert.equal(byId.get(id)?.automatedResearchAllowed, false);
@@ -154,13 +162,20 @@ for (const id of structuralOpenParentIds) {
 }
 assert.equal(current.summary.automatedResearchEligible, 0);
 assert.equal(current.summary.manualReviewOnly, 104);
+assert.equal(current.summary.fishIdentityBoundaries, 102);
+assert.equal(current.summary.nonFishIdentityBoundaries, 2);
+assert.equal(current.summary.blankVariantCatalogCorrections, 27);
+assert.equal(current.summary.readyBaseIdentityBoundaries, 21);
+assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 10);
+assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 11);
 assert.equal(current.summary.evidenceCeilingHolds, 57);
 assert.equal(current.summary.partialInheritanceReview, 0);
 assert.equal(current.summary.byQueue.exact_object_identity_research, 0);
 assert.equal(current.summary.byQueue.partial_inheritance_review, 0);
 assert.equal(current.summary.byQueue.base_or_parent_resolution, 0);
 assert.equal(current.summary.byQueue.taxonomic_review, 0);
-assert.equal(current.summary.byQueue.manual_label_disambiguation, 28);
+assert.equal(current.summary.byQueue.manual_label_disambiguation, 1);
+assert.equal(current.summary.byQueue.catalog_structure_correction, 27);
 assert.equal(current.summary.byQueue.trade_name_disambiguation, 16);
 assert.equal(current.summary.byQueue.evidence_ceiling_hold, 57);
 assert.equal(current.summary.byQueue.hybrid_object_hold, 3);

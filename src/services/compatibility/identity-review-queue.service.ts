@@ -16,6 +16,8 @@ export type CompatibilityIdentityMigrationAuditRow = {
   speciesId: string;
   name: string;
   scientificName: string;
+  lifeType: string;
+  blankVariantSuffix: boolean;
   boundaryCode: string;
   migrationPath: CompatibilityIdentityMigrationPath;
   nextAction: string;
@@ -67,6 +69,8 @@ export type CompatibilityIdentityReviewQueueItem = {
   speciesId: string;
   name: string;
   scientificName: string;
+  lifeType: string;
+  blankVariantSuffix: boolean;
   boundaryCode: string;
   migrationPath: CompatibilityIdentityMigrationPath;
   queue: CompatibilityIdentityReviewQueueKind;
@@ -108,6 +112,12 @@ export type CompatibilityIdentityReviewQueueManifest = {
   };
   summary: {
     total: number;
+    fishIdentityBoundaries: number;
+    nonFishIdentityBoundaries: number;
+    blankVariantCatalogCorrections: number;
+    readyBaseIdentityBoundaries: number;
+    readyBaseMorphologySafeBoundaries: number;
+    readyBaseMorphologyRiskBoundaries: number;
     sourceActiveIdentityBoundaries: number;
     sourceIdentityUnknownPairs: number;
     automatedResearchEligible: number;
@@ -219,6 +229,7 @@ export const buildCompatibilityIdentityReviewQueue = (
 
     const route = routeFor(row);
     const structuralOpenParentResolution = isStructurallyOpenParentResolution(row);
+    const catalogStructureCorrection = route.queue === 'catalog_structure_correction';
     const terminalUnknownHold = isTerminalUnknownHold(row);
     const searchedObjectLabels = row.identityResearchDebt?.searchedObjectLabels || [];
     const researchLabels = uniqueStrings([
@@ -232,6 +243,8 @@ export const buildCompatibilityIdentityReviewQueue = (
       speciesId: row.speciesId,
       name: row.name,
       scientificName: row.scientificName,
+      lifeType: row.lifeType,
+      blankVariantSuffix: row.blankVariantSuffix,
       boundaryCode: row.boundaryCode,
       migrationPath: row.migrationPath,
       queue: route.queue,
@@ -249,23 +262,29 @@ export const buildCompatibilityIdentityReviewQueue = (
       researchDisposition: row.researchDisposition,
       researchDebtStatus: row.researchDebtStatus,
       researchBlockedReason: row.researchDebtBlockingReason
-        ?? (structuralOpenParentResolution
-          ? 'Catalog scientific label is structurally open (sp./cf./aff.) and does not identify one accepted parent species.'
-          : terminalUnknownHold
-            ? 'Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.'
-            : null),
+        ?? (catalogStructureCorrection
+          ? 'Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.'
+          : structuralOpenParentResolution
+            ? 'Catalog scientific label is structurally open (sp./cf./aff.) and does not identify one accepted parent species.'
+            : terminalUnknownHold
+              ? 'Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.'
+              : null),
       reopenRequirement: row.researchDebtReopenRequirement
-        ?? (structuralOpenParentResolution
-          ? 'Provide lineage/provenance or an authoritative exact-object source that links this catalog object to one accepted parent taxon.'
-          : terminalUnknownHold
-            ? 'Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.'
-            : null),
+        ?? (catalogStructureCorrection
+          ? 'Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.'
+          : structuralOpenParentResolution
+            ? 'Provide lineage/provenance or an authoritative exact-object source that links this catalog object to one accepted parent taxon.'
+            : terminalUnknownHold
+              ? 'Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.'
+              : null),
       researchLabels,
-      nextAction: structuralOpenParentResolution
-        ? 'Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.'
-        : terminalUnknownHold
-          ? 'Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.'
-          : row.nextAction,
+      nextAction: catalogStructureCorrection
+        ? 'Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.'
+        : structuralOpenParentResolution
+          ? 'Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.'
+          : terminalUnknownHold
+            ? 'Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.'
+            : row.nextAction,
       affectedIdentityUnknownPairs: row.affectedIdentityUnknownPairs,
       soleBoundaryIdentityUnknownPairs: row.soleBoundaryIdentityUnknownPairs,
       sharedBoundaryIdentityUnknownPairs: row.sharedBoundaryIdentityUnknownPairs,
@@ -299,6 +318,12 @@ export const buildCompatibilityIdentityReviewQueue = (
     },
     summary: {
       total: items.length,
+      fishIdentityBoundaries: items.filter(item => item.lifeType === 'fish').length,
+      nonFishIdentityBoundaries: items.filter(item => item.lifeType !== 'fish').length,
+      blankVariantCatalogCorrections: items.filter(item => item.queue === 'catalog_structure_correction' && item.blankVariantSuffix).length,
+      readyBaseIdentityBoundaries: items.filter(item => item.lifeType === 'fish' && item.readyBaseCandidateCount === 1).length,
+      readyBaseMorphologySafeBoundaries: items.filter(item => item.lifeType === 'fish' && item.readyBaseCandidateCount === 1 && !item.morphologyRisk).length,
+      readyBaseMorphologyRiskBoundaries: items.filter(item => item.lifeType === 'fish' && item.readyBaseCandidateCount === 1 && item.morphologyRisk).length,
       sourceActiveIdentityBoundaries: audit.activeIdentityBoundaries,
       sourceIdentityUnknownPairs: audit.identityUnknownPairs,
       automatedResearchEligible: items.filter(item => item.automatedResearchAllowed).length,

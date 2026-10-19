@@ -91,6 +91,12 @@ const classifyBucket = (
   code: CatalogIdentityBoundaryCode,
   scientificName: string,
 ): MigrationBucket => {
+  if (
+    (code === 'catalog_scientific_name_unresolved' || code === 'catalog_variant_identity_unresolved')
+    && hasBlankVariantSuffix(scientificName)
+  ) {
+    return 'catalog_structure_correction_required';
+  }
   switch (code) {
     case 'trade_name_taxon_ambiguous':
       return 'trade_name_disambiguation_required';

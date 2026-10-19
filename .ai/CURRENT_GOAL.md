@@ -1,25 +1,18 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 exact duplicate catalog-alias closure via WebCodex
+## TOP CURRENT OVERRIDE — 2026-10-19 identity root-cause routing / catalog correction lane via WebCodex
 
-- Canonical branch is `main`; this pass continues from local checkpoint `e29ca3fc`. Scope remains Compatibility backend/data/tests/authority only: **no UI change, no push, no deploy, no Production DB mutation, no Production alias change**.
-- Closed one provable catalog-structure false unknown: `sp_0338` is now a reviewed `same_taxon_catalog_alias` of `sp_0214`. Both catalog rows have the exact same display name (`白金西非凤凰`), scientific name (`Pelvicachromis pulcher var. Albino`) and category, and `sp_0214` already carries reviewed exact-object authority from the existing Seriously Fish source.
-- This is intentionally narrow: no Platinum/Albino/visual-similarity class rule was added. The alias inherits only the exact reviewed duplicate object's Compatibility authority. A broad equivalence regression compares the alias against 157 reviewed third parties and finds **0 status/readiness/rule-code differences**.
-- Current coverage after closure:
-  - fish Compatibility domain = 308;
-  - generic-ready = 98;
-  - core-field-complete = 110;
-  - runtime reviewed profiles = 160;
-  - fish identity-held = 102;
-  - unsupported-domain objects = 167;
-  - legacy combined domain-or-identity hold = 269.
-- Identity debt now reconciles to **104 active boundaries / 18,079 unresolved-identity fish pairs**, down from 105 / 18,231. Manual-only = 104, evidence-ceiling holds = 57, automated identity research eligible = 0.
-- Remaining field research debt is unchanged at 78 predation fields and remains fully deferred (`completionEligibleResearchDebtFields=0`) behind terminal holds.
-- Canonical identity authority is now 33 records / 20 explicit reviewed bridges; no reviewed variant remains without a defined inheritance policy.
-- Fully informed matrix: **98 ready species / 4,753 pairs / 0 insufficient_data**. V4 readability now audits 9,316 reviewed-fish pairs with 96 exceptional identity/public-evidence unknowns; the extra exception is the duplicate alias reproducing the already-existing `sp_0214 × sp_0051` public temperature-evidence boundary, not a new behavior divergence.
-- Repository reviewed Profile authority grows from 124 to **125**, with `sp_0338` explicitly added as the 24th **source-controlled pending** Profile. Released rollout generations stay frozen at 63 / 85 / 95 / 99 / 100 / 101; no migration or Production generation changed.
-- Admin ownership validation now recognizes two explicit safe owners for post-recovery repository Profiles: additive migration-owned or source-controlled-pending-owned. Pending Profiles remain excluded from released rollout keysets.
-- Full exact duplicate scan leaves only three other duplicate fish groups, but neither side of those groups is generic-ready; there is **no second safe alias candidate**, so structural alias expansion stops here.
-- Compatibility engine, symmetry, regression, whole-tank, user conclusion, badcases, identity audit/queue, rollout/runtime authority, historical wave guards, admin contract, TypeScript and diff checks all PASS.
-- NEXT: do not manufacture more aliases or restart bulk AI research. The remaining 102 fish identity holds require genuinely new exact-object/provenance/catalog-correction evidence.
+- Canonical branch is `main`, continuing from local checkpoint `dbc48952`. This pass changes Compatibility audit/queue semantics only: **no UI, no push, no deploy, no Production DB mutation, no migration, no automatic identity promotion**.
+- The 102 fish identity holds are intentionally **not** reduced by inference. The review ledger is now explicit: 104 active boundaries = **102 fish + 2 non-fish**, with 18,079 unresolved-identity fish-pair impacts and `automatedResearchEligible=0`.
+- Root-cause routing now separates malformed catalog data from biological evidence debt:
+  - **27 fish objects with a blank `var.` suffix** and a variant/scientific-name boundary now route to `catalog_structure_correction`;
+  - genuine `manual_label_disambiguation` drops from 28 to **1**;
+  - `trade_name_disambiguation=16`, `evidence_ceiling_hold=57`, `hybrid_object_hold=3`;
+  - no object is automatically promoted by this reclassification.
+- The 27 catalog-structure corrections account for **3,549 sole-boundary unresolved-identity pair impacts**. Their action contract is now explicit: fix the catalog `scientificName` first; replace the blank `var.` with a reviewed exact variant/lineage label, or correct the object to the exact base taxon when that is the actual catalog object; then rerun identity review. Do **not** continue evidence search against an incomplete label.
+- Ready-base structure is now visible in the queue: **21 fish holds have exactly one ready base**; 10 are morphology-safe candidates and 11 are morphology-risk forms such as Balloon/Longfin/High-fin. A ready base is only a candidate authority source, not identity proof; morphology-risk forms still require field-scoped partial inheritance after identity is established.
+- Audited all 11 `parent_taxon_resolution_required` fish objects. This is not a hidden matcher bug: the lane is dominated by structurally open `Ancistrus sp.`, `Geophagus sp.`, and `Pseudochromis sp.` commercial lineages without one accepted parent species. Genus-level inheritance remains prohibited.
+- Current user-facing Compatibility authority is unchanged: 308 fish in scope, 98 generic-ready, 110 core-field-complete, 160 runtime reviewed profiles, 78 deferred predation debt fields, and no active completion research queue.
+- Decision-audit freshness, core-field coverage, user-path scope, user-conclusion, release badcases, identity migration audit, identity review queue, docs authority, TypeScript and diff checks PASS. User-facing judgment semantics did not change.
+- NEXT: the highest controllable data-quality lane is the 27 catalog structure corrections, but each exact replacement label still requires real catalog/provenance/lineage evidence. Do not infer labels from Chinese trade names, do not inherit at genus level, and do not restart bulk pair precomputation.
 
 ## CURRENT OVERRIDE — 2026-10-15 Bailian onboarding review packet + extraction transport diagnostics via WebCodex (NOT RELEASED)
 

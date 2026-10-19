@@ -1,11 +1,11 @@
-## TOP CURRENT BRANCH — 2026-10-19 main exact duplicate catalog-alias closure
+## TOP CURRENT BRANCH — 2026-10-19 main identity root-cause routing
 
-- Canonical local branch: `main`, continuing from local checkpoint `e29ca3fc`.
-- Current change closes exact duplicate `sp_0338 -> sp_0214` through the existing reviewed canonical-alias architecture; no UI, migration or Production data was changed.
-- Repository authority grows to 125 reviewed Profiles, but `sp_0338` is explicitly source-controlled pending; released Compatibility target remains 101 and historical rollout generations are unchanged.
-- Current scope: 308 fish-domain / 98 generic-ready / 102 fish identity-held / 167 unsupported-domain / 78 deferred field-debt entries.
-- Identity review queue is 104 manual-only boundaries / 18,079 affected unresolved-identity pairs; automated research eligible remains 0.
-- No second safe exact duplicate candidate remains. No remote push, deploy, merge workflow or Production mutation is authorized/executed by this generic “推进” pass.
+- Canonical local branch: `main`, continuing from `dbc48952`.
+- Current change is source-controlled Compatibility audit/queue routing: blank-`var.` identity debt is recognized as catalog-structure correction instead of manual evidence work; no decision semantics, UI, migration or Production data changed.
+- Current identity scope: 104 active boundaries = 102 fish + 2 non-fish; 27 blank-`var.` catalog corrections; 21 fish with one ready base (10 morphology-safe / 11 morphology-risk); automated research eligible remains 0.
+- The new structure-correction lane owns 3,549 sole-boundary pair impacts but does not auto-resolve them. Exact catalog labels still require provenance/lineage evidence and re-review.
+- Open `Ancistrus sp.` / `Geophagus sp.` / `Pseudochromis sp.` parent-taxonomy holds remain fail-closed; genus-level inheritance is explicitly not allowed.
+- No remote push, deploy, merge workflow, UI work, migration, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 

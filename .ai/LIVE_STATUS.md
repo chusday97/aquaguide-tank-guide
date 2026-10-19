@@ -1,14 +1,13 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 exact duplicate alias closure
+## TOP CURRENT OVERRIDE — 2026-10-19 identity root-cause routing
 
-- Working authority: local `main` after `e29ca3fc`; no push/deploy/Production mutation in this pass.
-- Resolved exact duplicate catalog object `sp_0338 -> sp_0214` as `same_taxon_catalog_alias`; exact name + scientificName + category match, backed by existing reviewed Pelvicachromis authority. No broad variant inheritance rule was introduced.
-- Alias equivalence check across 157 reviewed third parties: **0 differences** in status, decision readiness or domain rule codes.
-- Coverage: 308 fish-domain / 98 generic-ready / 110 core-field-complete / 160 runtime reviewed profiles / 102 fish identity-held / 167 unsupported-domain / legacy combined hold 269.
-- Identity queue: 104 active manual-only boundaries / 18,079 unresolved-identity pairs / 57 evidence-ceiling holds / automated research eligible 0.
-- 78 predation research fields remain visible and fully deferred; active completion queue remains empty.
-- Fully informed matrix: 98 species / 4,753 pairs / 0 insufficient_data. Readability: 9,316 reviewed-fish pairs / 96 exceptional identity-or-public-evidence unknown cases.
-- Repository Profile authority = 125; 24 are source-controlled pending beyond the frozen released 101 target. Rollout generations remain exact 63 / 85 / 95 / 99 / 100 / 101.
-- Full duplicate scan found no additional safe ready→held exact duplicate alias candidate. Compatibility, rollout/runtime authority, historical wave guards, admin ownership, TypeScript and diff checks PASS.
+- Working authority: local `main` after `dbc48952`; no push/deploy/Production mutation, migration, or UI change in this pass.
+- Active identity ledger remains **104 total = 102 fish + 2 non-fish**; unresolved-identity pair impact remains 18,079. Nothing was auto-promoted.
+- Queue root causes are now actionable: **27 catalog_structure_correction / 1 manual_label_disambiguation / 16 trade_name_disambiguation / 57 evidence_ceiling_hold / 3 hybrid_object_hold**.
+- The 27 catalog corrections are blank-`var.` fish records and account for **3,549 sole-boundary pair impacts**. Their next action is catalog repair first, not more evidence search.
+- **21 fish holds have one ready base**: 10 morphology-safe and 11 morphology-risk. Ready-base presence does not override identity; Balloon/Longfin/High-fin forms remain field-scoped/fail-closed.
+- The 11 parent-taxonomy cases were audited and are not a matcher defect; open `sp.` lineages must not inherit at genus level.
+- User-facing Compatibility remains unchanged at 308 fish-domain / 98 generic-ready / 110 core-complete / 160 runtime reviewed profiles / 78 fully deferred field-debt entries.
+- Identity audits/queue, decision freshness, coverage, user path, user conclusion, release badcases, docs authority, TypeScript and diff checks PASS.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 
