@@ -20,6 +20,20 @@ assert.ok(summary.runtimeReviewedProfileSpecies >= 101);
 assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpecies);
 assert.ok(summary.oneFieldGapSpecies > 0);
 assert.ok(summary.genericOnboardingReadySpecies >= 43, 'High-yield source-first coverage should preserve at least 43 fully sourced generic-ready profiles');
+assert.equal(summary.fishCompatibilityDomainSpecies, 308, 'fish Compatibility scope should contain only fish-domain catalog objects');
+assert.equal(summary.fishIdentityHeldSpecies, 103, 'fish identity holds must be tracked separately from unsupported life-type domains');
+assert.equal(summary.unsupportedDomainSpecies, 167, 'unsupported-domain objects must not inflate fish identity debt');
+assert.deepEqual(summary.unsupportedDomainSpeciesByLifeType, {
+  plant: 66,
+  invertebrate: 48,
+  coral: 43,
+  reptile: 10,
+});
+assert.equal(
+  summary.domainOrIdentityHeldSpecies,
+  summary.fishIdentityHeldSpecies + summary.unsupportedDomainSpecies,
+  'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
+);
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
 assert.equal(summary.visibleResearchDebtFields, 78, 'independent predation research debt must remain visible after social-ceiling isolation');
 assert.equal(summary.completionEligibleResearchDebtFields, 0, 'no current research debt can complete an object while companion terminal holds remain');

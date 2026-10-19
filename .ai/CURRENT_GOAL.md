@@ -1,3 +1,21 @@
+## TOP CURRENT OVERRIDE — 2026-10-19 Compatibility convergence / hold-metric split via WebCodex
+
+- Canonical working branch is `main`. This pass started from clean, synchronized `main == origin/main == 89e4b172d3b663307f83637fc875dcaad8db93dc`.
+- Scope is Compatibility backend/data/tests/authority only: **no UI change, no Production DB mutation, no deploy, no Production alias change, and no remote push in this pass**.
+- Core coverage is now explicit instead of conflating domain exclusions with fish identity debt:
+  - `fishCompatibilityDomainSpecies=308`;
+  - `fishIdentityHeldSpecies=103`;
+  - `unsupportedDomainSpecies=167` = plant 66 + invertebrate 48 + coral 43 + reptile 10;
+  - legacy aggregate `domainOrIdentityHeldSpecies=270` is retained only for backward-compatible reporting.
+- Catalog identity review remains a separate authority ledger: 105 active identity boundaries / 18,231 affected unresolved-identity fish pairs. These counts are **not** species-count equivalents. All 105 are terminal/manual-review-only; `automatedResearchEligible=0`.
+- Current reviewed coverage: 97 generic-onboarding-ready fish, 109 core-field-complete fish, 159 runtime reviewed profiles.
+- Remaining field research debt is 78 predation fields; `completionEligibleResearchDebtFields=0`, so all 78 are explicitly deferred behind companion terminal holds rather than treated as active completion blockers.
+- Variant policy remains fail-closed and field-scoped: 308 fish-domain rows, 32 reviewed canonical identity records, 11 policy-promoted ready variants, and 0 reviewed variants left without a defined inheritance policy.
+- User-facing validation is strong: the fully informed 97-species matrix evaluates 4,656 pairs with **0 insufficient_data**; readability audit covers 9,180 reviewed-fish pairs and limits “暂时无法判断” to 95 exceptional identity/public-evidence cases.
+- Result contract remains: deterministic judgement + reason + executable adjustment + evidence/source + recheck + stop condition; V4 AI remains read-only/explanatory and cannot override deterministic authority.
+- Validation: all focused Compatibility gates pass. The monolithic backend gate passed every executed gate through API/business bundle and reached the final Project Typecheck before the WebCodex job time limit; the remaining `npm run lint && git diff --check` tail was rerun separately and PASS.
+- NEXT: do **not** restart bulk AI identity research or pair precomputation. Reduce the 103 fish identity holds only when new exact-object/provenance/catalog-correction evidence exists; extend non-fish Compatibility domains only as a separate product-scope decision.
+
 ## CURRENT OVERRIDE — 2026-10-15 Bailian onboarding review packet + extraction transport diagnostics via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. This checkpoint is local/source-controlled only: **no push, deploy, Production alias change, DB migration, catalog promotion, or Production authority write**.

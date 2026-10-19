@@ -1,3 +1,11 @@
+## TOP CURRENT BRANCH — 2026-10-19 main Compatibility convergence
+
+- Canonical local branch: `main`; this pass began at clean `89e4b172d3b663307f83637fc875dcaad8db93dc`, equal to `origin/main`.
+- Current local change is a reporting/authority clarification only: split fish identity holds from unsupported-domain catalog objects, regenerate coverage artifact, add regression assertions, and refresh .ai authority.
+- Compatibility decision semantics, reviewed evidence thresholds, pair authority, UI, migrations and Production state are unchanged.
+- Current scope metrics: 308 fish-domain / 103 fish identity-held / 167 unsupported-domain / 97 generic-ready / 78 deferred research fields.
+- No remote push, deploy, merge workflow or Production mutation is authorized/executed by this generic “推进” pass.
+
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 
 - `codex/compatibility-v4-bailian-deepseek-20261013` was created from exact clean pushed quota-diagnostics HEAD `bc7b724a210b134e7dd98b2dd34e5bf62573f901`.

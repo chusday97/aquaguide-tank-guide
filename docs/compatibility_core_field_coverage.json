@@ -15,6 +15,15 @@
   "coreFieldCompleteSpecies": 109,
   "oneFieldGapSpecies": 9,
   "runtimeReviewedProfileSpecies": 159,
+  "fishCompatibilityDomainSpecies": 308,
+  "fishIdentityHeldSpecies": 103,
+  "unsupportedDomainSpecies": 167,
+  "unsupportedDomainSpeciesByLifeType": {
+    "plant": 66,
+    "invertebrate": 48,
+    "coral": 43,
+    "reptile": 10
+  },
   "domainOrIdentityHeldSpecies": 270,
   "visibleResearchDebtFields": 78,
   "completionEligibleResearchDebtFields": 0,

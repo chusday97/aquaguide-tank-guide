@@ -1,3 +1,13 @@
+## TOP CURRENT OVERRIDE — 2026-10-19 Compatibility convergence / hold-metric split
+
+- Working authority is `main`; start checkpoint `89e4b172d3b663307f83637fc875dcaad8db93dc` matched `origin/main` and was clean.
+- No Production mutation/deploy/push is part of this pass.
+- Coverage now reports fish scope separately: 308 fish-domain objects; 103 fish identity-held objects; 167 unsupported-domain objects (66 plant / 48 invertebrate / 43 coral / 10 reptile). Legacy combined hold count remains 270 only for compatibility.
+- Identity ledger remains separate: 105 terminal/manual-review catalog identity boundaries affecting 18,231 unresolved-identity pair combinations; automated research eligible = 0.
+- 97 fish are generic-ready; the 97-species fully-informed matrix has 4,656/4,656 determinate pairs. Readability audit over 9,180 reviewed-fish pairs leaves 95 exceptional “暂时无法判断” identity/public-evidence cases.
+- 78 predation research fields remain visible but all are deferred (`completionEligible=0`) behind companion terminal holds.
+- User conclusion, badcase, whole-tank, V4 shadow/readability, identity queue, domain-scope and field-coverage regressions PASS. Monolithic backend wrapper hit the WebCodex time limit at the final Project Typecheck; isolated Project Typecheck + diff check PASS.
+
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 
 - Branch: `codex/compatibility-v4-bailian-deepseek-20261013` from exact pushed quota-diagnostics HEAD `bc7b724a210b134e7dd98b2dd34e5bf62573f901`.

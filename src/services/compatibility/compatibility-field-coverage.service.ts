@@ -49,6 +49,15 @@ export type CompatibilityFieldCoverageSummary = {
   coreFieldCompleteSpecies: number;
   oneFieldGapSpecies: number;
   runtimeReviewedProfileSpecies: number;
+  fishCompatibilityDomainSpecies: number;
+  fishIdentityHeldSpecies: number;
+  unsupportedDomainSpecies: number;
+  unsupportedDomainSpeciesByLifeType: {
+    plant: number;
+    invertebrate: number;
+    coral: number;
+    reptile: number;
+  };
   domainOrIdentityHeldSpecies: number;
   visibleResearchDebtFields: number;
   completionEligibleResearchDebtFields: number;
@@ -403,6 +412,19 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     row.terminalGapCount === 0 ? count + row.actionableGapCount : count
   ), 0);
   const deferredResearchDebtFields = visibleResearchDebtFields - completionEligibleResearchDebtFields;
+  const hasIdentityOrDomainHold = (row: CompatibilityFieldCoverageRow) => (
+    coreFields.some(field => row.fields[field].status === 'missing_identity_or_domain')
+  );
+  const fishCompatibilityDomainSpecies = rows.filter(row => row.lifeType === 'fish').length;
+  const fishIdentityHeldSpecies = rows.filter(row => row.lifeType === 'fish' && hasIdentityOrDomainHold(row)).length;
+  const unsupportedDomainSpeciesByLifeType = {
+    plant: rows.filter(row => row.lifeType === 'plant' && hasIdentityOrDomainHold(row)).length,
+    invertebrate: rows.filter(row => row.lifeType === 'invertebrate' && hasIdentityOrDomainHold(row)).length,
+    coral: rows.filter(row => row.lifeType === 'coral' && hasIdentityOrDomainHold(row)).length,
+    reptile: rows.filter(row => row.lifeType === 'reptile' && hasIdentityOrDomainHold(row)).length,
+  };
+  const unsupportedDomainSpecies = Object.values(unsupportedDomainSpeciesByLifeType)
+    .reduce((sum, count) => sum + count, 0);
 
   const summary: CompatibilityFieldCoverageSummary = {
     speciesCount: rows.length,
@@ -411,7 +433,11 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     coreFieldCompleteSpecies: rows.filter(row => row.lifeType === 'fish' && row.authoritativeFieldCount === coreFields.length).length,
     oneFieldGapSpecies: rows.filter(row => row.lifeType === 'fish' && row.authoritativeFieldCount === coreFields.length - 1).length,
     runtimeReviewedProfileSpecies: rows.filter(row => row.reviewedProfile !== 'none').length,
-    domainOrIdentityHeldSpecies: rows.filter(row => coreFields.some(field => row.fields[field].status === 'missing_identity_or_domain')).length,
+    fishCompatibilityDomainSpecies,
+    fishIdentityHeldSpecies,
+    unsupportedDomainSpecies,
+    unsupportedDomainSpeciesByLifeType,
+    domainOrIdentityHeldSpecies: fishIdentityHeldSpecies + unsupportedDomainSpecies,
     visibleResearchDebtFields,
     completionEligibleResearchDebtFields,
     deferredResearchDebtFields,
