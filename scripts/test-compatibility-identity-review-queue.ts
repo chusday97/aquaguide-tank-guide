@@ -149,6 +149,18 @@ for (const id of ['sp_0158', 'sp_0142', 'sp_0210']) {
 assert.ok((byId.get('sp_0158')?.candidateTaxa || []).some(item => item.includes('Xiphophorus maculatus')));
 assert.ok((byId.get('sp_0142')?.candidateTaxa || []).some(item => item.includes('breeding complex')));
 assert.ok((byId.get('sp_0210')?.candidateTaxa || []).some(item => item.includes('Pangio anguillaris')));
+assert.equal(byId.get('sp_0474')?.queue, 'trade_name_disambiguation');
+assert.equal(byId.get('sp_0474')?.gate, 'manual_disambiguation');
+assert.equal(byId.get('sp_0474')?.automatedResearchAllowed, false);
+assert.ok((byId.get('sp_0474')?.candidateTaxa || []).some(item => item.includes('Oryzias latipes species complex')));
+for (const item of current.items) {
+  if (item.queue !== 'catalog_structure_correction' || item.candidateTaxa.length !== 1) continue;
+  assert.match(
+    item.candidateTaxa[0],
+    /legacy catalog attribution; exact catalog object not independently confirmed/i,
+    `${item.speciesId} review queue must expose legacy-only provenance for unresolved blank-var parent hints`,
+  );
+}
 assert.equal(byId.has('sp_0445'), false, 'reviewed Blue Gourami identity must leave the active identity review queue');
 for (const resolvedGoldfishId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   assert.equal(byId.has(resolvedGoldfishId), false, `${resolvedGoldfishId} reviewed goldfish breed identity must leave the active identity review queue`);
@@ -193,7 +205,7 @@ assert.equal(current.summary.automatedResearchEligible, 0);
 assert.equal(current.summary.manualReviewOnly, 93);
 assert.equal(current.summary.fishIdentityBoundaries, 91);
 assert.equal(current.summary.nonFishIdentityBoundaries, 2);
-assert.equal(current.summary.blankVariantCatalogCorrections, 16);
+assert.equal(current.summary.blankVariantCatalogCorrections, 15);
 assert.equal(current.summary.readyBaseIdentityBoundaries, 20);
 assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 9);
 assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 11);
@@ -204,8 +216,8 @@ assert.equal(current.summary.byQueue.partial_inheritance_review, 0);
 assert.equal(current.summary.byQueue.base_or_parent_resolution, 0);
 assert.equal(current.summary.byQueue.taxonomic_review, 0);
 assert.equal(current.summary.byQueue.manual_label_disambiguation, 1);
-assert.equal(current.summary.byQueue.catalog_structure_correction, 16);
-assert.equal(current.summary.byQueue.trade_name_disambiguation, 16);
+assert.equal(current.summary.byQueue.catalog_structure_correction, 15);
+assert.equal(current.summary.byQueue.trade_name_disambiguation, 17);
 assert.equal(current.summary.byQueue.evidence_ceiling_hold, 57);
 assert.equal(current.summary.byQueue.hybrid_object_hold, 3);
 assert.equal(current.items.every(item => item.researchDisposition === 'terminal_unknown_hold'), true);

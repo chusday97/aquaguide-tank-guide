@@ -1,14 +1,13 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 unresolved identity evidence hardening
+## TOP CURRENT OVERRIDE — 2026-10-19 blank-var provenance + ornamental-medaka group hardening
 
-- Working authority: local `main` after `35e7def5`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- Hardened three still-unresolved blank-`var.` boundaries without promoting them: Golden Kuhli now carries conflicting `Pangio kuhlii / P. anguillaris` candidates; Red Apple Swordtail carries pure-`X. hellerii` vs `X. hellerii × X. maculatus` possibilities; Balloon Molly records a domestic Poecilia breeding complex and retains morphology risk.
-- All three remain fail-closed: terminal hold, catalog-structure correction, no automated research, no full inheritance, no Profile and no canonical identity.
-- Identity review queue now preserves the complete `candidateTaxa` set instead of using it only as hidden research labels; a 93-item regression requires queue candidates to equal migration-audit candidates.
-- Coverage stays **308 fish / 100 generic-ready / 112 core-complete / 91 fish identity-held / 258 combined held**.
-- Identity stays **93 boundaries = 91 fish + 2 non-fish / 16,735 unresolved pairs**. Queue remains **16 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
-- Field debt stays **150 = 72 completion-eligible + 78 deferred**. Research plan remains **4 guarded jobs / 9 variants / 0 exact objects**.
-- Canonical stays **44 total / 21 explicit / 13 colour policy / 4 taxon roots / 10 field policies**.
-- Fully informed remains **100 species / 4,950 pairs / 0 insufficient_data**. Readability remains **9,591 reviewed-fish pairs / 97 exceptional unknowns**.
+- Working authority: local `main` after `c502f5d4`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- Blank-`var.` scientific-name holds with one candidate now expose the stripped parent only as **legacy catalog attribution**, never as reviewed ornamental lineage evidence.
+- Structural blank-`var.` rows no longer emit `singleCandidateHint`; full candidates remain visible for human review while automation stays fail-closed.
+- `sp_0474 观背青鳉` is now a trade/group identity boundary rather than a “missing var. name” defect: reviewed genomics supports a broad ornamental-medaka strain group from the `Oryzias latipes species complex`, not one exact variant.
+- No identity was promoted. Coverage remains **308 fish / 100 generic-ready / 112 core-complete / 91 fish identity-held / 258 combined held**.
+- Identity remains **93 boundaries / 16,735 unresolved pairs**. Queue is now **15 catalog structure / 1 manual label / 17 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
+- Field debt remains **150 = 72 completion-eligible + 78 deferred**. Research plan remains **4 guarded jobs / 9 variants / 0 exact objects**. Canonical stays **44 total / 21 explicit / 13 colour policy / 4 taxon roots / 10 field policies**.
+- Fully informed remains **100 / 4,950 / 0 insufficient_data**. Readability remains **9,591 / 97 exceptional unknowns**.
 - Repository authority remains **126 Profiles / 21 Pair Rules**; release generations remain exact **63 / 85 / 95 / 99 / 100 / 101**.
 - Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.
 

@@ -50,6 +50,8 @@ const report = JSON.parse(committedJson) as {
     boundaryCode: string;
     migrationBucket: string;
     migrationPath: string;
+    candidateTaxa: string[];
+    singleCandidateHint: string | null;
     identityEvidenceStatus: string;
     researchDisposition: 'terminal_unknown_hold' | null;
     researchDebtStatus: string | null;
@@ -85,7 +87,7 @@ assert.ok(report.partialInheritanceReviewCount > 0);
 assert.equal(report.researchedHighImpactHoldCount, 4);
 assert.equal(report.researchDebtStatusCounts.catalog_label_disambiguation_required, 1);
 assert.equal(report.researchDebtStatusCounts.exact_object_evidence_not_found, 3);
-assert.equal(report.migrationPathCounts.catalog_structure_correction, 16, 'blank var. catalog labels must be routed to structural correction instead of evidence research');
+assert.equal(report.migrationPathCounts.catalog_structure_correction, 15, 'true blank-var structural defects stay in catalog correction; reviewed group labels are routed by their actual identity problem');
 assert.equal(report.migrationPathCounts.exact_variant_label_disambiguation, 1, 'only the non-blank reviewed trade/lineage label ambiguity should remain in exact label disambiguation');
 for (const resolvedGoldfishId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   assert.equal(report.rows.some(row => row.speciesId === resolvedGoldfishId), false, `${resolvedGoldfishId} reviewed breed identity must leave the active migration audit`);
@@ -188,6 +190,23 @@ assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
 assert.equal(byId.get('sp_0158')?.readyBaseCandidateCount, 1);
 assert.equal(byId.get('sp_0142')?.migrationPath, 'catalog_structure_correction');
 assert.equal(byId.get('sp_0142')?.morphologyRisk, true, 'reviewed Balloon lineage hint must trigger morphology-risk routing even when the legacy catalog name/scientificName misses the English morphology token');
+assert.equal(byId.get('sp_0474')?.migrationBucket, 'trade_name_disambiguation_required');
+assert.equal(byId.get('sp_0474')?.migrationPath, 'trade_name_disambiguation');
+assert.equal(byId.get('sp_0474')?.blankVariantSuffix, true);
+assert.ok((byId.get('sp_0474')?.candidateTaxa || []).some(item => item.includes('Oryzias latipes species complex')));
+for (const row of report.rows) {
+  if (row.migrationPath !== 'catalog_structure_correction' || row.candidateTaxa.length !== 1) continue;
+  assert.equal(
+    row.singleCandidateHint,
+    null,
+    `${row.speciesId} unresolved blank-var structure correction must not expose a single-candidate automation hint`,
+  );
+  assert.match(
+    row.candidateTaxa[0],
+    /legacy catalog attribution; exact catalog object not independently confirmed/i,
+    `${row.speciesId} structure-correction single candidate must retain explicit legacy-only provenance`,
+  );
+}
 assert.equal(byId.get('sp_0021')?.migrationPath, 'hybrid_object_specific_hold');
 assert.equal(byId.get('sp_0021')?.identityEvidenceStatus, 'reviewed_identity_hold_present');
 assert.equal(byId.get('sp_0110')?.researchDisposition, 'terminal_unknown_hold');

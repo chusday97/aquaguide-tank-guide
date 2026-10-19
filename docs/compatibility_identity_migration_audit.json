@@ -20,16 +20,16 @@
   "boundaryCodeCounts": {
     "commercial_hybrid_identity_unresolved": 3,
     "catalog_parent_taxon_unresolved": 11,
-    "trade_name_taxon_ambiguous": 2,
-    "catalog_scientific_name_unresolved": 17,
+    "trade_name_taxon_ambiguous": 3,
+    "catalog_scientific_name_unresolved": 16,
     "catalog_variant_identity_unresolved": 59,
     "accepted_taxon_alias_trade_ambiguous": 1
   },
   "migrationBucketCounts": {
     "commercial_hybrid_hold": 3,
     "parent_taxon_resolution_required": 11,
-    "trade_name_disambiguation_required": 2,
-    "catalog_structure_correction_required": 16,
+    "trade_name_disambiguation_required": 3,
+    "catalog_structure_correction_required": 15,
     "variant_object_evidence_required": 59,
     "taxonomic_research_candidate": 1,
     "accepted_alias_trade_disambiguation_required": 1
@@ -37,8 +37,8 @@
   "migrationPathCounts": {
     "hybrid_object_specific_hold": 3,
     "base_authority_or_parent_resolution": 54,
-    "trade_name_disambiguation": 3,
-    "catalog_structure_correction": 16,
+    "trade_name_disambiguation": 4,
+    "catalog_structure_correction": 15,
     "exact_variant_label_disambiguation": 1,
     "partial_inheritance_review": 10,
     "identity_only_after_exact_evidence": 5,
@@ -47,8 +47,8 @@
   "migrationPathSoleBoundaryImpact": {
     "hybrid_object_specific_hold": 485,
     "base_authority_or_parent_resolution": 8127,
-    "trade_name_disambiguation": 162,
-    "catalog_structure_correction": 2385,
+    "trade_name_disambiguation": 301,
+    "catalog_structure_correction": 2246,
     "exact_variant_label_disambiguation": 162,
     "partial_inheritance_review": 1134,
     "identity_only_after_exact_evidence": 625,
@@ -636,9 +636,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix"
+        "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch12-fishbase-thorichthys-meeki-var"
       ],
@@ -1046,9 +1046,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank"
+        "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch14-fishbase-nimbochromis-livingstonii-var"
       ],
@@ -2017,9 +2017,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix"
+        "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch12-fishbase-thorichthys-meeki-var"
       ],
@@ -2427,9 +2427,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank"
+        "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch14-fishbase-nimbochromis-livingstonii-var"
       ],
@@ -2879,9 +2879,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Lutjanus kasmira ornamental lineage; catalog variant suffix is blank"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Lutjanus kasmira ornamental lineage; catalog variant suffix is blank",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch23-fishbase-lutjanus-kasmira-var"
       ],
@@ -2936,9 +2936,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Lutjanus kasmira ornamental Longfin lineage; catalog scientificName has a blank var. suffix"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Lutjanus kasmira ornamental Longfin lineage; catalog scientificName has a blank var. suffix",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch24-fishbase-lutjanus-kasmira-longfin"
       ],
@@ -2993,9 +2993,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Synchiropus splendidus ornamental improved lineage"
+        "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Synchiropus splendidus ornamental improved lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch36-fishbase-synchiropus-splendidus-variant"
       ],
@@ -3813,9 +3813,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Hyphessobrycon pulchripinnis ornamental Sweet Lemon lineage"
+        "Hyphessobrycon pulchripinnis (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Hyphessobrycon pulchripinnis ornamental Sweet Lemon lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch05-fishbase-hyphessobrycon-pulchripinnis"
       ],
@@ -3954,9 +3954,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Hemigrammus bleheri ornamental Improved lineage"
+        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Hemigrammus bleheri ornamental Improved lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch05-fishbase-hemigrammus-bleheri"
       ],
@@ -4085,9 +4085,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Hemigrammus bleheri ornamental Black Diamond lineage"
+        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Hemigrammus bleheri ornamental Black Diamond lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch06-fishbase-hemigrammus-bleheri"
       ],
@@ -4126,9 +4126,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Hyphessobrycon herbertaxelrodi ornamental Purple Emperor lineage"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Hyphessobrycon herbertaxelrodi ornamental Purple Emperor lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch06-fishbase-hyphessobrycon-herbertaxelrodi"
       ],
@@ -4265,9 +4265,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Hemigrammus rodwayi ornamental Gold/Blue-eye lineage"
+        "Hemigrammus rodwayi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Hemigrammus rodwayi ornamental Gold/Blue-eye lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch06-fishbase-hemigrammus-rodwayi"
       ],
@@ -5156,9 +5156,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Prionobrama filigera improved ornamental lineage"
+        "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Prionobrama filigera improved ornamental lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch07-fishbase-prionobrama-filigera"
       ],
@@ -5238,9 +5238,9 @@
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Hyphessobrycon herbertaxelrodi ornamental Platinum lineage"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
-      "singleCandidateHint": "Hyphessobrycon herbertaxelrodi ornamental Platinum lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
         "batch07-fishbase-hyphessobrycon-herbertaxelrodi"
       ],
@@ -5477,23 +5477,25 @@
       "name": "观背青鳉",
       "scientificName": "Oryzias latipes var.",
       "lifeType": "fish",
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "resolvedGranularity": "scientific_name_unresolved",
-      "migrationBucket": "catalog_structure_correction_required",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "resolvedGranularity": "trade_name_only",
+      "migrationBucket": "trade_name_disambiguation_required",
       "migrationReadiness": "blocked_review_required",
       "autoMigrationAllowed": false,
       "candidateTaxa": [
-        "Oryzias latipes ornamental killifish lineage"
+        "ornamental Japanese medaka strains derived from the Oryzias latipes species complex",
+        "multiple distinct ornamental medaka strains; “top-view/观背青鳉” is not one exact variant identity"
       ],
-      "singleCandidateHint": "Oryzias latipes ornamental killifish lineage",
+      "singleCandidateHint": null,
       "sourceIds": [
-        "batch39-fishbase-oryzias-latipes-killifish-variant"
+        "batch39-fishbase-oryzias-latipes-var",
+        "phase2-16-mbe-ornamental-medaka-diversification"
       ],
-      "reviewedAt": "2026-10-12",
+      "reviewedAt": "2026-10-19",
       "researchDisposition": "terminal_unknown_hold",
-      "blockingRequirement": "Correct the catalog identity/type/category record and re-review the object before Compatibility readiness.",
-      "migrationPath": "catalog_structure_correction",
-      "nextAction": "Correct the catalog identity, type, or category record and re-review the object before Compatibility onboarding.",
+      "blockingRequirement": "Disambiguate the aquarium trade object to an exact taxon; the trade name currently spans multiple taxa or hybrid lineages.",
+      "migrationPath": "trade_name_disambiguation",
+      "nextAction": "Disambiguate the trade or common-name object to one exact taxon or lineage before Compatibility onboarding.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,

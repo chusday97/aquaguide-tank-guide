@@ -1,9 +1,9 @@
-## TOP CURRENT BRANCH — 2026-10-19 main unresolved identity evidence hardening
+## TOP CURRENT BRANCH — 2026-10-19 main blank-var provenance hardening
 
-- Canonical local branch: `main`, continuing from `35e7def5`.
-- Current change does not resolve any new identity. It widens three overconfident single-parent terminal holds (Golden Kuhli, Red Apple Swordtail, Balloon Molly) to evidence-backed multi-candidate boundaries and preserves Balloon morphology risk.
-- Manual identity review queue now exposes complete `candidateTaxa` from the migration audit; a global regression prevents candidate-set loss between audit and human-review tooling.
-- Current scope remains 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts / 16 blank-`var.` catalog corrections**.
+- Canonical local branch: `main`, continuing from `c502f5d4`.
+- Current change resolves no new identity. It normalizes single-candidate blank-`var.` holds to explicit legacy-only parent provenance and suppresses `singleCandidateHint` for structural corrections.
+- `sp_0474 观背青鳉` is reclassified to trade/group ambiguity from peer-reviewed ornamental-medaka evidence; it remains terminal fail-closed with no Profile or canonical promotion.
+- Current scope remains 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts**. Queue is **15 catalog-structure / 17 trade-name / 57 evidence-ceiling / 3 hybrid / 1 manual-label**.
 - Coverage remains **150 debt fields = 72 completion-eligible + 78 deferred**; active research remains 4 guarded taxon jobs / 9 variants / 0 exact objects. Canonical authority remains **44 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 10 field policies**.
 - Fully-informed matrix remains **100 / 4,950 / 0 insufficient_data**; repository authority stays **126 Profiles / 21 Pair Rules** and released generations stay exact **63 / 85 / 95 / 99 / 100 / 101**.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.

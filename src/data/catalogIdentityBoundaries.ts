@@ -6,6 +6,8 @@ import { nextWaveUnified13IdentityOutcomes } from './catalogReviewBatches/next-w
 import { nextWaveUnified14IdentityOutcomes } from './catalogReviewBatches/next-wave-unified-14';
 import { nextWaveUnified15IdentityOutcomes } from './catalogReviewBatches/next-wave-unified-15';
 import { identityBoundaryCorrectionsPhase2_15 } from './catalogReviewBatches/identity-boundary-corrections-phase2-15';
+import { identityBoundaryCorrectionsPhase2_16 } from './catalogReviewBatches/identity-boundary-corrections-phase2-16';
+import { fishData } from './fishData';
 import { resolvedCatalogIdentityCorrectionSpeciesIds } from './catalogIdentityCorrections';
 
 export type CatalogIdentityBoundaryCode =
@@ -30,7 +32,7 @@ export type CatalogIdentityBoundary = {
   researchDisposition?: 'terminal_unknown_hold';
 };
 
-export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> = {
+const rawCatalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> = {
   ...Object.fromEntries(nextWaveUnified07Outcomes.map(outcome => [outcome.speciesId, {
     ...outcome,
     resolvedGranularity: outcome.code === 'catalog_category_mismatch'
@@ -375,6 +377,7 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
     researchDisposition: 'terminal_unknown_hold',
   },
   ...identityBoundaryCorrectionsPhase2_15,
+  ...identityBoundaryCorrectionsPhase2_16,
 };
 
 const resolvedClassificationCorrectionSpeciesIds = new Set([
@@ -382,6 +385,43 @@ const resolvedClassificationCorrectionSpeciesIds = new Set([
   'sp_0089',
   'sp_0334',
 ]);
+
+const catalogScientificNameById = new Map(
+  fishData.map(species => [species.id, species.scientificName || ''] as const),
+);
+
+const withUnresolvedScientificNameCandidateProvenance = (
+  speciesId: string,
+  boundary: CatalogIdentityBoundary,
+): CatalogIdentityBoundary => {
+  if (
+    resolvedCatalogIdentityCorrectionSpeciesIds.has(speciesId)
+    || resolvedClassificationCorrectionSpeciesIds.has(speciesId)
+    || boundary.code !== 'catalog_scientific_name_unresolved'
+    || boundary.candidateTaxa.length !== 1
+  ) return boundary;
+
+  const scientificName = catalogScientificNameById.get(speciesId) || '';
+  if (!/\s+var\.?\s*$/i.test(scientificName.trim())) return boundary;
+
+  const strippedBaseTaxon = scientificName.replace(/\s+var\.?\s*$/i, '').trim();
+  if (!strippedBaseTaxon) return boundary;
+
+  return {
+    ...boundary,
+    candidateTaxa: [
+      strippedBaseTaxon + ' (legacy catalog attribution; exact catalog object not independently confirmed)',
+    ],
+    note: boundary.note + ' The stripped parent taxon is retained only as a legacy catalog hypothesis from the incomplete scientificName, not as reviewed exact-object lineage evidence.',
+  };
+};
+
+export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> = Object.fromEntries(
+  Object.entries(rawCatalogIdentityBoundaries).map(([speciesId, boundary]) => [
+    speciesId,
+    withUnresolvedScientificNameCandidateProvenance(speciesId, boundary),
+  ]),
+);
 
 export const getCatalogIdentityBoundary = (speciesId: string) => (
   resolvedCatalogIdentityCorrectionSpeciesIds.has(speciesId)

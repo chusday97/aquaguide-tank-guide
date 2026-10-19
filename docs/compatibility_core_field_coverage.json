@@ -39207,73 +39207,81 @@
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "temperature": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "ph": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "adult_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "tank_size": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "social_behavior": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "territoriality": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         },
         "predation": {
           "status": "missing_identity_or_domain",
           "disposition": "terminal_hold",
           "evidenceIds": [
-            "batch39-fishbase-oryzias-latipes-killifish-variant"
+            "batch39-fishbase-oryzias-latipes-var",
+            "phase2-16-mbe-ornamental-medaka-diversification"
           ],
           "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "reasonCode": "trade_name_taxon_ambiguous"
         }
       }
     },

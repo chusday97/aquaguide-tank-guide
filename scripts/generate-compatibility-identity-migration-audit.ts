@@ -266,6 +266,13 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
   const morphologyRisk = hasMorphologyRisk(species, boundary.candidateTaxa);
   const identityEvidenceStatus = getExistingIdentityEvidenceStatus(species.id);
   const identityResearchDebt = getCatalogIdentityResearchDebt(species.id);
+  const blankVariantSuffix = hasBlankVariantSuffix(species.scientificName || '');
+  const singleCandidateHint = (
+    boundary.candidateTaxa.length === 1
+    && !(bucket === 'catalog_structure_correction_required' && blankVariantSuffix)
+  )
+    ? boundary.candidateTaxa[0]
+    : null;
   const migrationPath = migrationPathFor({
     speciesId: species.id,
     bucket,
@@ -284,7 +291,7 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     migrationReadiness: 'blocked_review_required' as const,
     autoMigrationAllowed: false as const,
     candidateTaxa: boundary.candidateTaxa,
-    singleCandidateHint: boundary.candidateTaxa.length === 1 ? boundary.candidateTaxa[0] : null,
+    singleCandidateHint,
     sourceIds: boundary.sourceIds,
     reviewedAt: boundary.reviewedAt,
     researchDisposition: boundary.researchDisposition || null,
@@ -298,7 +305,7 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
     researchDebtBlockingReason: identityResearchDebt?.blockingReason || null,
     researchDebtReopenRequirement: identityResearchDebt?.reopenRequirement || null,
     nonQualifyingReferenceCount: identityResearchDebt?.nonQualifyingReferences.length || 0,
-    blankVariantSuffix: hasBlankVariantSuffix(species.scientificName || ''),
+    blankVariantSuffix,
     morphologyRisk,
     strippedBaseScientificName,
     baseCandidates,

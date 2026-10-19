@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-19T08:51:33.663Z",
+  "generatedAt": "2026-10-19T09:11:52.431Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
   "sourceSchemaVersion": 3,
   "promotionAllowed": false,
@@ -16,7 +16,7 @@
     "total": 93,
     "fishIdentityBoundaries": 91,
     "nonFishIdentityBoundaries": 2,
-    "blankVariantCatalogCorrections": 16,
+    "blankVariantCatalogCorrections": 15,
     "readyBaseIdentityBoundaries": 20,
     "readyBaseMorphologySafeBoundaries": 9,
     "readyBaseMorphologyRiskBoundaries": 11,
@@ -32,10 +32,10 @@
       "manual_label_disambiguation": 1,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 16,
+      "trade_name_disambiguation": 17,
       "evidence_ceiling_hold": 57,
       "hybrid_object_hold": 3,
-      "catalog_structure_correction": 16
+      "catalog_structure_correction": 15
     },
     "soleBoundaryPairImpactByQueue": {
       "exact_object_identity_research": 0,
@@ -43,10 +43,10 @@
       "manual_label_disambiguation": 162,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 2245,
+      "trade_name_disambiguation": 2384,
       "evidence_ceiling_hold": 7803,
       "hybrid_object_hold": 485,
-      "catalog_structure_correction": 2385
+      "catalog_structure_correction": 2246
     }
   },
   "items": [
@@ -528,7 +528,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix"
+        "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -549,7 +549,7 @@
       "researchLabels": [
         "Thorichthys meeki var.",
         "大点火口",
-        "Thorichthys meeki ornamental lineage; catalog scientificName has a blank var. suffix"
+        "Thorichthys meeki (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
@@ -873,7 +873,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank"
+        "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -894,7 +894,7 @@
       "researchLabels": [
         "Nimbochromis livingstonii var.",
         "血中红慈鲷",
-        "Nimbochromis livingstonii ornamental lineage; catalog variant suffix is blank"
+        "Nimbochromis livingstonii (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
@@ -1251,7 +1251,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Lutjanus kasmira ornamental lineage; catalog variant suffix is blank"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -1276,7 +1276,7 @@
       "researchLabels": [
         "Lutjanus kasmira var.",
         "红利鱼 (改良)",
-        "Lutjanus kasmira ornamental lineage; catalog variant suffix is blank"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
@@ -1292,7 +1292,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Lutjanus kasmira ornamental Longfin lineage; catalog scientificName has a blank var. suffix"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -1317,7 +1317,7 @@
       "researchLabels": [
         "Lutjanus kasmira var.",
         "红利鱼 (长鳍型)",
-        "Lutjanus kasmira ornamental Longfin lineage; catalog scientificName has a blank var. suffix"
+        "Lutjanus kasmira (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
@@ -1333,7 +1333,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Synchiropus splendidus ornamental improved lineage"
+        "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -1354,7 +1354,7 @@
       "researchLabels": [
         "Synchiropus splendidus var.",
         "五彩青蛙 (改良型)",
-        "Synchiropus splendidus ornamental improved lineage"
+        "Synchiropus splendidus (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 247,
@@ -1960,7 +1960,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Hyphessobrycon pulchripinnis ornamental Sweet Lemon lineage"
+        "Hyphessobrycon pulchripinnis (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -1981,7 +1981,7 @@
       "researchLabels": [
         "Hyphessobrycon pulchripinnis var.",
         "甜心柠檬灯",
-        "Hyphessobrycon pulchripinnis ornamental Sweet Lemon lineage"
+        "Hyphessobrycon pulchripinnis (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
@@ -2077,7 +2077,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Hemigrammus bleheri ornamental Improved lineage"
+        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -2098,7 +2098,7 @@
       "researchLabels": [
         "Hemigrammus bleheri var.",
         "红鼻灯 (改良)",
-        "Hemigrammus bleheri ornamental Improved lineage"
+        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
@@ -2190,7 +2190,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Hemigrammus bleheri ornamental Black Diamond lineage"
+        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -2211,7 +2211,7 @@
       "researchLabels": [
         "Hemigrammus bleheri var.",
         "黑金刚红鼻剪刀",
-        "Hemigrammus bleheri ornamental Black Diamond lineage"
+        "Hemigrammus bleheri (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
@@ -2227,7 +2227,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Hyphessobrycon herbertaxelrodi ornamental Purple Emperor lineage"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -2250,7 +2250,7 @@
       "researchLabels": [
         "Hyphessobrycon herbertaxelrodi var.",
         "紫艳红莲灯",
-        "Hyphessobrycon herbertaxelrodi ornamental Purple Emperor lineage"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
@@ -2342,7 +2342,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Hemigrammus rodwayi ornamental Gold/Blue-eye lineage"
+        "Hemigrammus rodwayi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -2367,7 +2367,7 @@
       "researchLabels": [
         "Hemigrammus rodwayi var.",
         "蓝眼金灯",
-        "Hemigrammus rodwayi ornamental Gold/Blue-eye lineage"
+        "Hemigrammus rodwayi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
@@ -3073,7 +3073,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Prionobrama filigera improved ornamental lineage"
+        "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -3094,7 +3094,7 @@
       "researchLabels": [
         "Prionobrama filigera var.",
         "红尾玻璃灯 (改良)",
-        "Prionobrama filigera improved ornamental lineage"
+        "Prionobrama filigera (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
@@ -3147,7 +3147,7 @@
       "boundaryCode": "catalog_scientific_name_unresolved",
       "migrationPath": "catalog_structure_correction",
       "candidateTaxa": [
-        "Hyphessobrycon herbertaxelrodi ornamental Platinum lineage"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "queue": "catalog_structure_correction",
       "gate": "catalog_correction",
@@ -3170,7 +3170,7 @@
       "researchLabels": [
         "Hyphessobrycon herbertaxelrodi var.",
         "白金黑霓虹灯",
-        "Hyphessobrycon herbertaxelrodi ornamental Platinum lineage"
+        "Hyphessobrycon herbertaxelrodi (legacy catalog attribution; exact catalog object not independently confirmed)"
       ],
       "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
       "affectedIdentityUnknownPairs": 224,
@@ -3339,13 +3339,14 @@
       "scientificName": "Oryzias latipes var.",
       "lifeType": "fish",
       "blankVariantSuffix": true,
-      "boundaryCode": "catalog_scientific_name_unresolved",
-      "migrationPath": "catalog_structure_correction",
+      "boundaryCode": "trade_name_taxon_ambiguous",
+      "migrationPath": "trade_name_disambiguation",
       "candidateTaxa": [
-        "Oryzias latipes ornamental killifish lineage"
+        "ornamental Japanese medaka strains derived from the Oryzias latipes species complex",
+        "multiple distinct ornamental medaka strains; “top-view/观背青鳉” is not one exact variant identity"
       ],
-      "queue": "catalog_structure_correction",
-      "gate": "catalog_correction",
+      "queue": "trade_name_disambiguation",
+      "gate": "manual_disambiguation",
       "automatedResearchAllowed": false,
       "requiresHumanReview": true,
       "fullInheritanceAllowed": false,
@@ -3358,14 +3359,15 @@
       "identityEvidenceStatus": "no_object_identity_review",
       "researchDisposition": "terminal_unknown_hold",
       "researchDebtStatus": null,
-      "researchBlockedReason": "Catalog scientificName is structurally incomplete: the ornamental variant suffix is blank, so this object cannot be mapped to an exact reviewed lineage yet.",
-      "reopenRequirement": "Replace the blank var. suffix with a reviewed exact variant/lineage label, or correct the object back to the exact base taxon when that is what the catalog entry actually represents; then re-run identity review.",
+      "researchBlockedReason": "Source-controlled catalog identity review is a terminal_unknown_hold; prior reviewed evidence did not establish exact catalog-object identity.",
+      "reopenRequirement": "Provide new authoritative exact-object, taxonomy, or lineage evidence, or an explicit catalog identity correction, before reopening automated identity research.",
       "researchLabels": [
         "Oryzias latipes var.",
         "观背青鳉",
-        "Oryzias latipes ornamental killifish lineage"
+        "ornamental Japanese medaka strains derived from the Oryzias latipes species complex",
+        "multiple distinct ornamental medaka strains; “top-view/观背青鳉” is not one exact variant identity"
       ],
-      "nextAction": "Fix the catalog scientificName first; do not run more evidence search against an incomplete blank-var. label.",
+      "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
       "affectedIdentityUnknownPairs": 224,
       "soleBoundaryIdentityUnknownPairs": 139,
       "sharedBoundaryIdentityUnknownPairs": 85

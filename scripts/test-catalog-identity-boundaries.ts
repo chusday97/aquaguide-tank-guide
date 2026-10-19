@@ -58,6 +58,31 @@ assert.ok(balloonMolly?.sourceIds.includes('phase2-15-aquarium-glaser-molly-trad
 assert.match(balloonMolly?.note || '', /prohibit automatic P\. sphenops Compatibility inheritance/i);
 assert.equal(getReviewedCompatibilityProfile('sp_0142'), undefined);
 
+const topViewMedaka = getCatalogIdentityBoundary('sp_0474');
+assert.equal(topViewMedaka?.code, 'trade_name_taxon_ambiguous');
+assert.equal(topViewMedaka?.resolvedGranularity, 'trade_name_only');
+assert.equal(topViewMedaka?.researchDisposition, 'terminal_unknown_hold');
+assert.ok(topViewMedaka?.candidateTaxa.some(item => item.includes('Oryzias latipes species complex')));
+assert.ok(topViewMedaka?.candidateTaxa.some(item => item.includes('not one exact variant identity')));
+assert.ok(topViewMedaka?.sourceIds.includes('phase2-16-mbe-ornamental-medaka-diversification'));
+assert.equal(getReviewedCompatibilityProfile('sp_0474'), undefined);
+
+for (const species of fishData) {
+  if (!/\s+var\.?\s*$/i.test(species.scientificName || '')) continue;
+  const boundary = getCatalogIdentityBoundary(species.id);
+  if (boundary?.code !== 'catalog_scientific_name_unresolved' || boundary.candidateTaxa.length !== 1) continue;
+  assert.match(
+    boundary.candidateTaxa[0],
+    /legacy catalog attribution; exact catalog object not independently confirmed/i,
+    `${species.id} blank-var single candidate must be labeled as legacy catalog attribution rather than exact lineage`,
+  );
+  assert.doesNotMatch(
+    boundary.candidateTaxa[0],
+    /ornamental .*lineage/i,
+    `${species.id} blank-var single candidate must not masquerade as a reviewed ornamental lineage`,
+  );
+}
+
 const historicalElectricEelMismatch = catalogIdentityBoundaries.sp_0120;
 assert.equal(historicalElectricEelMismatch?.code, 'catalog_common_name_identity_mismatch');
 assert.equal(historicalElectricEelMismatch?.resolvedGranularity, 'catalog_name_mismatch');
