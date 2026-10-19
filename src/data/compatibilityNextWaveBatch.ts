@@ -614,7 +614,7 @@ export const compatibilityStackedWave16PendingProfileIds = ['sp_0052'] as const;
  * into any already-defined Production generation until an explicit release
  * migration/promotion is approved.
  */
-export const compatibilitySourceControlledPendingProfileIds = ['sp_0112', 'sp_0115', 'sp_0120', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0221', 'sp_0229', 'sp_0231', 'sp_0234', 'sp_0236', 'sp_0240', 'sp_0242', 'sp_0257', 'sp_0266', 'sp_0272', 'sp_0284', 'sp_0338', 'sp_0362', 'sp_0388', 'sp_0407', 'sp_0408', 'sp_0411', 'sp_0442'] as const;
+export const compatibilitySourceControlledPendingProfileIds = ['sp_0112', 'sp_0115', 'sp_0120', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0216', 'sp_0221', 'sp_0229', 'sp_0231', 'sp_0234', 'sp_0236', 'sp_0240', 'sp_0242', 'sp_0257', 'sp_0266', 'sp_0272', 'sp_0284', 'sp_0338', 'sp_0362', 'sp_0388', 'sp_0407', 'sp_0408', 'sp_0411', 'sp_0442'] as const;
 
 export const compatibilityReleasedSpeciesIds = compatibilityUnifiedNextWave.releasedBatches.flatMap(batch =>
   batch.members.map(member => member.speciesId),

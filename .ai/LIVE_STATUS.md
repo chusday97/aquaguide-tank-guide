@@ -1,16 +1,15 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 Longfin identity-only closure
+## TOP CURRENT OVERRIDE — 2026-10-19 trade identity closure + runtime placeholder guard
 
-- Working authority: local `main` after `0d85088d`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
-- `sp_0155 长鳍红绿灯` is now reviewed as `Paracheirodon innesi + Longfin`; `sp_0361 长鳍白云金丝` is reviewed as `Tanichthys albonubes + Longfin`.
-- FishBase anchors formal taxa; Aquarium Co-Op supplies exact Longfin object mapping. Old base-only citations were not promoted as variant evidence.
-- Both Longfin records are identity-only field policies with **0 inherited facts / all 8 facts blocked**. They remain not-ready with 0 authoritative Compatibility fields.
-- Coverage: **308 fish / 99 generic-ready / 111 core-complete / 96 fish identity-held / 263 combined domain-or-identity held**.
-- Identity ledger: **98 total boundaries = 96 fish + 2 non-fish / 17,327 unresolved-identity pairs**. Queue: **21 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; identity automated research = 0.
-- Field debt: **118 visible = 40 completion-eligible morphology-variant fields + 78 deferred predation fields**.
-- Active field research plan: **3 guarded taxon jobs / 5 variants / 0 exact objects**; every job requires variant bridge review and forbids base-fact auto-promotion.
-- Canonical: **39 total / 20 explicit / 13 colour policy / 4 taxon roots / 6 field policies**; 12 policy-promoted ready, 0 field-policy ready.
-- Fully informed: **99 species / 4,851 pairs / 0 insufficient_data**. Readability: **9,453 reviewed-fish pairs / 97 exceptional identity-or-public-evidence unknowns**.
-- Direct repository authority remains **125 Profiles / 21 Pair Rules**; release generations remain **63 / 85 / 95 / 99 / 100 / 101**.
+- Working authority: local `main` after `2413cbb3`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- Exact identity closures: `sp_0216 黄金雷龙 -> Channa aurantimaculata` as same-taxon Golden Cobra alias (`variantKey=null`), plus `sp_0143 Red Grass` and `sp_0144 Blue Grass` as `Poecilia reticulata` trade strains.
+- Golden Cobra inherits all 8 reviewed fields from the same taxon and becomes ready. Red/Blue Grass are identity-only with **0 inherited facts / all 8 facts blocked**.
+- Runtime reviewed Knowledge now treats every enum-like `unknown` placeholder as non-concrete across water/social/territoriality/fin/predation/swimming fields; no unknown is converted into an optimistic safe value.
+- Coverage: **308 fish / 100 generic-ready / 112 core-complete / 93 fish identity-held / 260 combined held**.
+- Identity: **95 boundaries = 93 fish + 2 non-fish / 17,056 unresolved pairs**. Queue: **18 catalog structure / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; automated identity research = 0.
+- Field debt: **134 visible = 56 completion-eligible strain/morphology fields + 78 deferred predation fields**. Research plan: **4 guarded jobs / 7 variants / 0 exact objects**.
+- Canonical: **42 total / 21 explicit / 13 colour policy / 4 taxon roots / 8 field policies**; 12 policy-promoted ready, 0 field-policy ready.
+- Fully informed: **100 species / 4,950 pairs / 0 insufficient_data**. Readability: **9,591 reviewed-fish pairs / 97 exceptional unknowns**.
+- Repository authority: **126 Profiles / 21 Pair Rules**. Release generations remain exact **63 / 85 / 95 / 99 / 100 / 101** because Golden Cobra is post-target source-controlled authority.
 - Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

@@ -21,7 +21,7 @@ assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpec
 assert.ok(summary.oneFieldGapSpecies > 0);
 assert.ok(summary.genericOnboardingReadySpecies >= 43, 'High-yield source-first coverage should preserve at least 43 fully sourced generic-ready profiles');
 assert.equal(summary.fishCompatibilityDomainSpecies, 308, 'fish Compatibility scope should contain only fish-domain catalog objects');
-assert.equal(summary.fishIdentityHeldSpecies, 96, 'fish identity holds must be tracked separately from unsupported life-type domains');
+assert.equal(summary.fishIdentityHeldSpecies, 93, 'fish identity holds must be tracked separately from unsupported life-type domains');
 assert.equal(summary.unsupportedDomainSpecies, 167, 'unsupported-domain objects must not inflate fish identity debt');
 assert.deepEqual(summary.unsupportedDomainSpeciesByLifeType, {
   plant: 66,
@@ -35,8 +35,8 @@ assert.equal(
   'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
 );
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
-assert.equal(summary.visibleResearchDebtFields, 118, 'identity closure must expose 40 morphology-variant field gaps without hiding the existing 78 deferred predation gaps');
-assert.equal(summary.completionEligibleResearchDebtFields, 40, 'five identity-resolved morphology variants must expose eight completion-eligible fields each without auto-inheritance');
+assert.equal(summary.visibleResearchDebtFields, 134, 'identity closure must expose 56 strain/morphology field gaps without hiding the existing 78 deferred predation gaps');
+assert.equal(summary.completionEligibleResearchDebtFields, 56, 'seven identity-resolved strain/morphology variants must expose eight completion-eligible fields each without auto-inheritance');
 assert.equal(summary.deferredResearchDebtFields, 78, 'the pre-existing deferred predation debt must remain unchanged');
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
@@ -62,7 +62,9 @@ for (const speciesId of ['sp_0018','sp_0056','sp_0058','sp_0121','sp_0122','sp_0
 const rowOf = (speciesId: string) => rows.find(row => row.speciesId === speciesId);
 assert.equal(rowOf('sp_0445')?.genericOnboardingReady, true);
 assert.equal(rowOf('sp_0445')?.authoritativeFieldCount, 8);
-for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0361']) {
+assert.equal(rowOf('sp_0216')?.genericOnboardingReady, true, 'same-taxon Golden Cobra alias should reuse reviewed Channa aurantimaculata authority');
+assert.equal(rowOf('sp_0216')?.authoritativeFieldCount, 8);
+for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']) {
   const row = rowOf(speciesId);
   assert.ok(row);
   assert.equal(row.genericOnboardingReady, false);
@@ -862,14 +864,14 @@ for (const row of rows) {
   );
 }
 
-assert.equal(backlog.length, 118, 'field backlog must expose 78 deferred predation gaps plus 40 actionable identity-resolved morphology fields');
+assert.equal(backlog.length, 134, 'field backlog must expose 78 deferred predation gaps plus 56 actionable identity-resolved strain/morphology fields');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
 const completionEligibleBacklog = backlog.filter(item => item.completionEligible);
 const deferredBacklog = backlog.filter(item => !item.completionEligible);
-assert.equal(completionEligibleBacklog.length, 40);
+assert.equal(completionEligibleBacklog.length, 56);
 assert.equal(deferredBacklog.length, 78);
-assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0361']);
-for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0155', 'sp_0361']) {
+assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']);
+for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']) {
   assert.deepEqual(
     completionEligibleBacklog.filter(item => item.speciesId === speciesId).map(item => item.field).sort(),
     [...fields].sort(),
@@ -882,15 +884,15 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 3, 'only guarded research lanes for the five identity-resolved morphology variants should be active');
+assert.equal(taxonResearchPlan.length, 4, 'only guarded research lanes for the seven identity-resolved strain/morphology variants should be active');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 5);
+assert.equal(plannedCatalogObjects.size, 7);
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const completionEligibleBacklogGapKeys = backlog.filter(item => item.completionEligible).map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, completionEligibleBacklogGapKeys, 'active taxon research plan must represent only completion-eligible field gaps; deferred evidence debt remains visible in the backlog');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
-assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 3, 'the five identity-resolved morphology variants must remain guarded variant-bearing research jobs');
+assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 4, 'the seven identity-resolved strain/morphology variants must remain guarded variant-bearing research jobs');
 const goldfishTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus');
 assert.ok(goldfishTaxonJob);
 assert.equal(goldfishTaxonJob.researchDisposition, 'base_taxon_candidate_research_with_variant_bridge');
@@ -901,6 +903,16 @@ assert.equal(goldfishTaxonJob.variantObjectCount, 3);
 assert.deepEqual(goldfishTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0066', 'sp_0067', 'sp_0068']);
 assert.ok(goldfishTaxonJob.catalogObjects.every(object => object.isVariant && !object.isExactBaseTaxon));
 assert.ok(goldfishTaxonJob.promotionPolicy.includes('must never auto-promote'));
+const guppyTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Poecilia reticulata');
+assert.ok(guppyTaxonJob);
+assert.equal(guppyTaxonJob.researchDisposition, 'base_taxon_candidate_research_with_variant_bridge');
+assert.equal(guppyTaxonJob.requiresVariantBridgeReview, true);
+assert.equal(guppyTaxonJob.catalogObjectCount, 2);
+assert.equal(guppyTaxonJob.exactObjectCount, 0);
+assert.equal(guppyTaxonJob.variantObjectCount, 2);
+assert.deepEqual(guppyTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0143', 'sp_0144']);
+assert.ok(guppyTaxonJob.catalogObjects.every(object => object.isVariant && !object.isExactBaseTaxon));
+assert.ok(guppyTaxonJob.promotionPolicy.includes('must never auto-promote'));
 for (const [taxon, speciesId] of [
   ['Paracheirodon innesi', 'sp_0155'],
   ['Tanichthys albonubes', 'sp_0361'],

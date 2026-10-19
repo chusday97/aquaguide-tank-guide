@@ -11,12 +11,12 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 99,
-  "coreFieldCompleteSpecies": 111,
+  "genericOnboardingReadySpecies": 100,
+  "coreFieldCompleteSpecies": 112,
   "oneFieldGapSpecies": 9,
-  "runtimeReviewedProfileSpecies": 161,
+  "runtimeReviewedProfileSpecies": 162,
   "fishCompatibilityDomainSpecies": 308,
-  "fishIdentityHeldSpecies": 96,
+  "fishIdentityHeldSpecies": 93,
   "unsupportedDomainSpecies": 167,
   "unsupportedDomainSpeciesByLifeType": {
     "plant": 66,
@@ -24,108 +24,108 @@
     "coral": 43,
     "reptile": 10
   },
-  "domainOrIdentityHeldSpecies": 263,
-  "visibleResearchDebtFields": 118,
-  "completionEligibleResearchDebtFields": 40,
+  "domainOrIdentityHeldSpecies": 260,
+  "visibleResearchDebtFields": 134,
+  "completionEligibleResearchDebtFields": 56,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 164,
+      "reviewed_supported": 165,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 48,
+      "reviewed_unknown": 50,
       "needs_research": 0,
-      "missing_identity_or_domain": 263,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 149,
+      "reviewed_supported": 150,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
-      "needs_research": 5,
-      "missing_identity_or_domain": 263,
+      "needs_research": 7,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 143,
+      "reviewed_supported": 144,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
-      "needs_research": 5,
-      "missing_identity_or_domain": 263,
+      "needs_research": 7,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 153,
+      "reviewed_supported": 154,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
-      "needs_research": 5,
-      "missing_identity_or_domain": 263,
+      "needs_research": 7,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 142,
+      "reviewed_supported": 143,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 65,
-      "needs_research": 5,
-      "missing_identity_or_domain": 263,
+      "needs_research": 7,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 132,
+      "reviewed_supported": 133,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 80,
+      "reviewed_unknown": 82,
       "needs_research": 0,
-      "missing_identity_or_domain": 263,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 92,
+      "reviewed_supported": 93,
       "reviewed_neutral_or_negative": 41,
       "reviewed_unknown": 74,
-      "needs_research": 5,
-      "missing_identity_or_domain": 263,
+      "needs_research": 7,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 82,
+      "reviewed_supported": 83,
       "reviewed_neutral_or_negative": 38,
       "reviewed_unknown": 9,
-      "needs_research": 83,
-      "missing_identity_or_domain": 263,
+      "needs_research": 85,
+      "missing_identity_or_domain": 260,
       "not_applicable": 11
     }
   },
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 83
+      "count": 85
     },
     {
       "field": "water",
-      "count": 5
+      "count": 7
     },
     {
       "field": "territoriality",
-      "count": 5
+      "count": 7
     },
     {
       "field": "temperature",
-      "count": 5
+      "count": 7
     },
     {
       "field": "tank_size",
-      "count": 5
+      "count": 7
     },
     {
       "field": "social_behavior",
-      "count": 5
+      "count": 7
     },
     {
       "field": "ph",
-      "count": 5
+      "count": 7
     },
     {
       "field": "adult_size",
-      "count": 5
+      "count": 7
     }
   ],
   "rows": [
@@ -11779,80 +11779,68 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "actionableGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch05-fishbase-poecilia-reticulata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch05-fishbase-poecilia-reticulata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_social_mode_unknown"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         }
       }
     },
@@ -11864,80 +11852,68 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "actionableGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch05-fishbase-poecilia-reticulata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_unknown",
+          "disposition": "targeted_source_expansion",
           "evidenceIds": [
             "batch05-fishbase-poecilia-reticulata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "authoritySource": "species_knowledge",
+          "reasonCode": "reviewed_social_mode_unknown"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
-          "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
-          ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_scientific_name_unresolved"
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "evidenceIds": [],
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority"
         }
       }
     },
@@ -17937,83 +17913,88 @@
       "name": "黄金雷龙",
       "scientificName": "Channa aurantimaculata var.",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "batch19-fishbase-channa-aurantimaculata",
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "batch19-fishbase-channa-aurantimaculata",
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "batch19-fishbase-channa-aurantimaculata",
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "batch19-fishbase-channa-aurantimaculata",
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "batch19-fishbase-channa-aurantimaculata",
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-aurantimaculata"
+            "seriouslyfish-channa-aurantimaculata"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },

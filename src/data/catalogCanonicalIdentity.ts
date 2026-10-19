@@ -107,6 +107,18 @@ const reviewedVariantFieldPolicyConfigs: Record<string, ReviewedVariantFieldPoli
     expectedVariantKey: 'Bubble Eye',
     inheritedFacts: [],
   },
+  sp_0143: {
+    canonicalScientificName: 'Poecilia reticulata',
+    relationshipType: 'trade_strain',
+    expectedVariantKey: 'Red Grass',
+    inheritedFacts: [],
+  },
+  sp_0144: {
+    canonicalScientificName: 'Poecilia reticulata',
+    relationshipType: 'trade_strain',
+    expectedVariantKey: 'Blue Grass',
+    inheritedFacts: [],
+  },
   sp_0155: {
     canonicalScientificName: 'Paracheirodon innesi',
     relationshipType: 'longfin_variant',
@@ -168,6 +180,7 @@ const relationshipBySpeciesId: Record<string, CatalogCanonicalRelationshipType> 
   sp_0234: 'color_morph',
   sp_0231: 'color_morph',
   sp_0411: 'geographic_variant',
+  sp_0216: 'same_taxon_catalog_alias',
   sp_0442: 'same_taxon_catalog_alias',
   sp_0338: 'same_taxon_catalog_alias',
 };
@@ -198,9 +211,15 @@ const buildCanonicalIdentity = (
   if (typeof value.baseSpeciesKey !== 'string' || value.baseSpeciesKey.trim() !== canonical.scientificName.trim()) {
     throw new Error('Canonical identity base taxon mismatch: ' + catalogSpeciesId);
   }
-  if (typeof value.variantKey !== 'string' || !value.variantKey.trim()) {
-    throw new Error('Canonical identity variant key missing: ' + catalogSpeciesId);
-  }
+  const variantKey = relationshipType === 'same_taxon_catalog_alias'
+    ? value.variantKey === null
+      ? null
+      : typeof value.variantKey === 'string' && value.variantKey.trim()
+        ? value.variantKey.trim()
+        : (() => { throw new Error('Same-taxon catalog alias requires variantKey=null or a reviewed legacy alias key: ' + catalogSpeciesId); })()
+    : typeof value.variantKey === 'string' && value.variantKey.trim()
+      ? value.variantKey.trim()
+      : (() => { throw new Error('Canonical identity variant key missing: ' + catalogSpeciesId); })();
 
   return {
     catalogSpeciesId,
@@ -209,7 +228,7 @@ const buildCanonicalIdentity = (
     canonicalScientificName: canonical.scientificName.trim(),
     relationshipType,
     identityStatus: 'reviewed',
-    variantKey: value.variantKey.trim(),
+    variantKey,
     identityEvidenceSourceIds: [...identityReview.citationIds],
     registrySource,
     inheritancePolicy: {

@@ -140,6 +140,9 @@ for (const resolvedGoldfishId of ['sp_0066', 'sp_0067', 'sp_0068']) {
 for (const resolvedLongfinId of ['sp_0155', 'sp_0361']) {
   assert.equal(byId.has(resolvedLongfinId), false, `${resolvedLongfinId} reviewed Longfin identity must leave the active identity review queue`);
 }
+for (const resolvedPhase213Id of ['sp_0143', 'sp_0144', 'sp_0216']) {
+  assert.equal(byId.has(resolvedPhase213Id), false, `${resolvedPhase213Id} reviewed exact identity must leave the active identity review queue`);
+}
 assert.match(byId.get('sp_0158')?.researchBlockedReason || '', /structurally incomplete/i);
 assert.match(byId.get('sp_0158')?.reopenRequirement || '', /blank var\./i);
 assert.match(byId.get('sp_0158')?.nextAction || '', /scientificName first/i);
@@ -168,12 +171,12 @@ for (const id of structuralOpenParentIds) {
   assert.ok((byId.get(id)?.reopenRequirement || '').length > 0);
 }
 assert.equal(current.summary.automatedResearchEligible, 0);
-assert.equal(current.summary.manualReviewOnly, 98);
-assert.equal(current.summary.fishIdentityBoundaries, 96);
+assert.equal(current.summary.manualReviewOnly, 95);
+assert.equal(current.summary.fishIdentityBoundaries, 93);
 assert.equal(current.summary.nonFishIdentityBoundaries, 2);
-assert.equal(current.summary.blankVariantCatalogCorrections, 21);
-assert.equal(current.summary.readyBaseIdentityBoundaries, 21);
-assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 10);
+assert.equal(current.summary.blankVariantCatalogCorrections, 18);
+assert.equal(current.summary.readyBaseIdentityBoundaries, 20);
+assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 9);
 assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 11);
 assert.equal(current.summary.evidenceCeilingHolds, 57);
 assert.equal(current.summary.partialInheritanceReview, 0);
@@ -182,7 +185,7 @@ assert.equal(current.summary.byQueue.partial_inheritance_review, 0);
 assert.equal(current.summary.byQueue.base_or_parent_resolution, 0);
 assert.equal(current.summary.byQueue.taxonomic_review, 0);
 assert.equal(current.summary.byQueue.manual_label_disambiguation, 1);
-assert.equal(current.summary.byQueue.catalog_structure_correction, 21);
+assert.equal(current.summary.byQueue.catalog_structure_correction, 18);
 assert.equal(current.summary.byQueue.trade_name_disambiguation, 16);
 assert.equal(current.summary.byQueue.evidence_ceiling_hold, 57);
 assert.equal(current.summary.byQueue.hybrid_object_hold, 3);

@@ -337,7 +337,17 @@ assert.ok(karbiAnglongCorrection?.citationIds.includes('golden-aquaria-channa-st
 assert.equal(getCatalogIdentityBoundary('sp_0411'), undefined, 'reviewed Karbi Anglong locality identity evidence must supersede the historical variant hold');
 assert.ok(getReviewedCompatibilityProfile('sp_0411'));
 
-for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0227','sp_0228','sp_0235','sp_0247','sp_0248','sp_0256','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0285','sp_0286','sp_0288','sp_0294']) {
+const goldenCobraCorrection = getCatalogFieldReviews('sp_0216').filter(review => review.field === 'identity').at(-1);
+assert.equal(goldenCobraCorrection?.resolution, 'supported');
+assert.deepEqual(goldenCobraCorrection?.proposedValue, {
+  scientificName: 'Channa aurantimaculata',
+  baseSpeciesKey: 'Channa aurantimaculata',
+  variantKey: null,
+});
+assert.equal(getCatalogIdentityBoundary('sp_0216'), undefined, 'reviewed Golden Cobra same-taxon trade-name evidence must supersede the historical blank-var hold');
+assert.ok(getReviewedCompatibilityProfile('sp_0216'));
+
+for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0179','sp_0182','sp_0201','sp_0208','sp_0219','sp_0220','sp_0227','sp_0228','sp_0235','sp_0247','sp_0248','sp_0256','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0273','sp_0282','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');

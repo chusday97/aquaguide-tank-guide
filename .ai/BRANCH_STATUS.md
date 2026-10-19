@@ -1,11 +1,11 @@
-## TOP CURRENT BRANCH — 2026-10-19 main Longfin identity-only closure
+## TOP CURRENT BRANCH — 2026-10-19 main trade identity + runtime placeholder guard
 
-- Canonical local branch: `main`, continuing from `0d85088d`.
-- Current change resolves reviewed Longfin identities for `sp_0155 Paracheirodon innesi` and `sp_0361 Tanichthys albonubes` using formal taxon + `variantKey=Longfin`, with **zero Compatibility inheritance**.
-- Current scope: 308 fish-domain / 99 generic-ready / 111 core-complete / 96 fish identity-held; **98 active identity boundaries / 17,327 pair impacts / 21 blank-`var.` catalog corrections**.
-- Coverage exposes **118 research-debt fields = 40 completion-eligible morphology fields + 78 deferred predation fields**. Active research = 3 guarded taxon jobs / 5 variant objects / 0 exact objects.
-- Canonical authority: **39 identities / 13 colour-policy records / 4 taxon roots / 6 field policies**; fully-informed matrix remains 99 species / 4,851 pairs / 0 insufficient_data.
-- Direct repository Profiles remain 125; Pair Rules remain 21; released Compatibility generations remain exact 63 / 85 / 95 / 99 / 100 / 101. No release ownership or Production boundary changed.
+- Canonical local branch: `main`, continuing from `2413cbb3`.
+- Current change resolves Golden Cobra as a same-taxon `Channa aurantimaculata` alias and Red/Blue Grass as identity-only `Poecilia reticulata` strains; it also generalises the runtime guard so reviewed `unknown` enum placeholders never masquerade as concrete Knowledge authority.
+- Current scope: 308 fish-domain / **100 generic-ready / 112 core-complete / 93 fish identity-held**; **95 active identity boundaries / 17,056 unresolved pair impacts / 18 blank-`var.` catalog corrections**.
+- Coverage exposes **134 research-debt fields = 56 completion-eligible strain/morphology fields + 78 deferred predation fields**. Active research = 4 guarded taxon jobs / 7 variant objects / 0 exact objects.
+- Canonical authority: **42 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 8 field policies**; fully-informed matrix is **100 species / 4,950 pairs / 0 insufficient_data**.
+- Repository authority is **126 Profiles / 21 Pair Rules**; `sp_0216` remains post-target source-controlled authority, so released generations remain exact **63 / 85 / 95 / 99 / 100 / 101**.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

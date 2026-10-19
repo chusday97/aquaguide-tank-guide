@@ -27,12 +27,12 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "genericOnboardingReadySpecies": 99,
-    "explicitReviewedCanonicalBridges": 20,
+    "genericOnboardingReadySpecies": 100,
+    "explicitReviewedCanonicalBridges": 21,
     "reviewedColorPolicyCanonicalRecords": 13,
     "reviewedColorTaxonRootRecords": 4,
-    "reviewedVariantFieldPolicyRecords": 6,
-    "totalCanonicalIdentityRecords": 39,
+    "reviewedVariantFieldPolicyRecords": 8,
+    "totalCanonicalIdentityRecords": 42,
     "policyPromotedReadySpecies": 12,
     "fieldPolicyReadySpecies": 0,
     "directReviewedVariantObjects": 2,
@@ -447,6 +447,60 @@
       "evidenceIds": [
         "phase2-11-fishbase-carassius-auratus-goldfish",
         "phase2-11-goldfish-council-bubble-eye"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
+    {
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Red Grass",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-gfi-red-grass-guppy"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": []
+    },
+    {
+      "speciesId": "sp_0144",
+      "name": "蓝草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "canonicalScientificName": "Poecilia reticulata",
+      "relationshipType": "trade_strain",
+      "variantKey": "Blue Grass",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-13-ufc-guppy-grass-lines",
+        "phase2-13-mas-blue-grass-guppy"
       ],
       "inheritedFacts": [],
       "blockedFacts": [

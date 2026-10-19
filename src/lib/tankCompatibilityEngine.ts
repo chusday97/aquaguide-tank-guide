@@ -800,15 +800,22 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   // the old packet, not stronger domain authority than a later supported
   // Compatibility field/profile review. Only concrete Knowledge values may
   // override the current reviewed Compatibility authority.
-  const reviewedEnvironmentWaterType = reviewedEnvironment?.waterType && reviewedEnvironment.waterType !== 'unknown'
-    ? reviewedEnvironment.waterType
-    : undefined;
+  const concreteReviewedEnum = <T extends string>(value: T | undefined): Exclude<T, 'unknown'> | undefined => (
+    value && value !== 'unknown' ? value as Exclude<T, 'unknown'> : undefined
+  );
+  const reviewedEnvironmentWaterType = concreteReviewedEnum(reviewedEnvironment?.waterType);
   const reviewedEnvironmentWaterTypes = reviewedEnvironment?.waterTypes?.length
     ? reviewedEnvironment.waterTypes
     : undefined;
-  const reviewedSocialMode = reviewedSocial?.mode && reviewedSocial.mode !== 'unknown'
-    ? reviewedSocial.mode
-    : undefined;
+  const reviewedSocialMode = concreteReviewedEnum(reviewedSocial?.mode);
+  const reviewedTerritoriality = concreteReviewedEnum(reviewedSocial?.territoriality);
+  const reviewedFinNippingRisk = concreteReviewedEnum(reviewedSocial?.finNipping);
+  const reviewedFinNipVulnerability = concreteReviewedEnum(reviewedSocial?.finNipVulnerability);
+  const reviewedSwimmingPace = concreteReviewedEnum(reviewedSocial?.swimmingPace);
+  const reviewedPredationRisk = concreteReviewedEnum(reviewedSocial?.predationRisk);
+  const reviewedPredationVulnerability = concreteReviewedEnum(reviewedSocial?.predationVulnerability);
+  const reviewedSwimmingZone = concreteReviewedEnum(reviewedSocial?.swimmingZone)
+    ?? concreteReviewedEnum(reviewedSpace?.swimmingZone);
   const knowledgeEvidenceIds = [
     ...(reviewedEnvironment?.evidence.sourceIds || []),
     ...(reviewedSocial?.evidence.sourceIds || []),
@@ -838,15 +845,15 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
     adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
     socialMode: reviewedSocialMode ?? profile.socialMode,
-    swimmingZone: reviewedSocial?.swimmingZone ?? reviewedSpace?.swimmingZone ?? 'unknown',
+    swimmingZone: reviewedSwimmingZone ?? 'unknown',
     behaviorTraits: reviewed?.behaviorTraits || [],
-    territoriality: reviewedSocial?.territoriality,
-    finNippingRisk: reviewedSocial?.finNipping,
-    finNipVulnerability: reviewedSocial?.finNipVulnerability,
-    swimmingPace: reviewedSocial?.swimmingPace,
-    predationRisk: reviewedSocial?.predationRisk,
+    territoriality: reviewedTerritoriality,
+    finNippingRisk: reviewedFinNippingRisk,
+    finNipVulnerability: reviewedFinNipVulnerability,
+    swimmingPace: reviewedSwimmingPace,
+    predationRisk: reviewedPredationRisk,
     predationTargets: reviewed?.predationTargets || [],
-    predationVulnerability: reviewedSocial?.predationVulnerability,
+    predationVulnerability: reviewedPredationVulnerability,
     lifeType: getLifeType(fish),
     size: fish.size,
   };
