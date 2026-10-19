@@ -27,13 +27,13 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "genericOnboardingReadySpecies": 98,
+    "genericOnboardingReadySpecies": 99,
     "explicitReviewedCanonicalBridges": 20,
-    "reviewedColorPolicyCanonicalRecords": 12,
-    "reviewedColorTaxonRootRecords": 3,
+    "reviewedColorPolicyCanonicalRecords": 13,
+    "reviewedColorTaxonRootRecords": 4,
     "reviewedVariantFieldPolicyRecords": 1,
-    "totalCanonicalIdentityRecords": 33,
-    "policyPromotedReadySpecies": 11,
+    "totalCanonicalIdentityRecords": 34,
+    "policyPromotedReadySpecies": 12,
     "fieldPolicyReadySpecies": 0,
     "directReviewedVariantObjects": 2,
     "remainingReviewedVariantObjects": 0,
@@ -338,6 +338,33 @@
       "registrySource": "reviewed_color_morph_policy",
       "evidenceIds": [
         "wave06-peer-reviewed-scleropages-formosus-super-red"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0445",
+      "name": "蓝曼龙",
+      "scientificName": "Trichopodus trichopterus var.",
+      "canonicalSpeciesId": null,
+      "canonicalRootKind": "reviewed_taxon",
+      "canonicalScientificName": "Trichopodus trichopterus",
+      "variantKey": "Blue",
+      "registrySource": "reviewed_color_morph_taxon_policy",
+      "evidenceIds": [
+        "phase2-10-fishbase-trichopodus-trichopterus-blue-gourami",
+        "phase2-10-fishes-of-australia-trichopodus-trichopterus-blue-morph"
       ],
       "inheritedFacts": [
         "water",

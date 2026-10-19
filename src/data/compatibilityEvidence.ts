@@ -41,6 +41,7 @@ import { behaviorEvidencePhase2_05Sources } from './catalogReviewBatches/behavio
 import { identityCorrectionsPhase2_06Sources } from './catalogReviewBatches/identity-corrections-phase2-06';
 import { identityCorrectionsPhase2_07Sources } from './catalogReviewBatches/identity-corrections-phase2-07';
 import { identityCorrectionsPhase2_08Sources } from './catalogReviewBatches/identity-corrections-phase2-08';
+import { identityCorrectionsPhase2_10Sources } from './catalogReviewBatches/identity-corrections-phase2-10';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from './catalogIdentityBoundaries';
@@ -1744,6 +1745,7 @@ const canonicalIdentitySourceById = new Map(
     ...Object.values(identityCorrectionsPhase2_06Sources),
     ...Object.values(identityCorrectionsPhase2_07Sources),
     ...Object.values(identityCorrectionsPhase2_08Sources),
+    ...Object.values(identityCorrectionsPhase2_10Sources),
   ].map(source => [source.id, source] as const),
 );
 
@@ -1821,6 +1823,16 @@ const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
     requiredFacts: ['predation'],
+  },
+  'Trichopodus trichopterus': {
+    speciesId: 'base:Trichopodus trichopterus',
+    waterType: 'freshwater',
+    behaviorTraits: ['variable_temperament', 'male_territoriality', 'breeding_aggression'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [nextWaveUnified04Sources.trichopodusSeriouslyFish, identityCorrectionsPhase2_10Sources.fishBaseBlueGourami],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation', 'breeding_behavior'],
   },
   'Betta splendens': {
     speciesId: 'base:Betta splendens',

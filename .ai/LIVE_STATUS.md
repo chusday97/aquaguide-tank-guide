@@ -1,13 +1,15 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 identity root-cause routing
+## TOP CURRENT OVERRIDE — 2026-10-19 Blue Gourami canonical identity closure
 
-- Working authority: local `main` after `dbc48952`; no push/deploy/Production mutation, migration, or UI change in this pass.
-- Active identity ledger remains **104 total = 102 fish + 2 non-fish**; unresolved-identity pair impact remains 18,079. Nothing was auto-promoted.
-- Queue root causes are now actionable: **27 catalog_structure_correction / 1 manual_label_disambiguation / 16 trade_name_disambiguation / 57 evidence_ceiling_hold / 3 hybrid_object_hold**.
-- The 27 catalog corrections are blank-`var.` fish records and account for **3,549 sole-boundary pair impacts**. Their next action is catalog repair first, not more evidence search.
-- **21 fish holds have one ready base**: 10 morphology-safe and 11 morphology-risk. Ready-base presence does not override identity; Balloon/Longfin/High-fin forms remain field-scoped/fail-closed.
-- The 11 parent-taxonomy cases were audited and are not a matcher defect; open `sp.` lineages must not inherit at genus level.
-- User-facing Compatibility remains unchanged at 308 fish-domain / 98 generic-ready / 110 core-complete / 160 runtime reviewed profiles / 78 fully deferred field-debt entries.
-- Identity audits/queue, decision freshness, coverage, user path, user conclusion, release badcases, docs authority, TypeScript and diff checks PASS.
+- Working authority: local `main` after `c60d5890`; no push/deploy/Production mutation, migration, rollout or UI change in this pass.
+- `sp_0445 蓝曼龙` is resolved as the reviewed Blue colour morph of `Trichopodus trichopterus` using FishBase + Fishes of Australia exact-object/taxon evidence; canonical representation is formal taxon + `variantKey=Blue`, not a fabricated `var. Blue` scientific name.
+- Added reusable reviewed `Trichopodus trichopterus` taxon-level Compatibility authority; direct repository Profiles remain 125 and released target remains 101.
+- Fixed runtime precedence so old reviewed-but-`unknown` SpeciesKnowledge values cannot shadow newer supported Compatibility authority. Concrete reviewed Knowledge still has priority; unknown placeholders do not.
+- Morphology audit now reads reviewed `candidateTaxa`; `sp_0142` Balloon lineage is correctly morphology-risk while remaining fail-closed.
+- Coverage: **308 fish / 99 generic-ready / 111 core-complete / 101 fish identity-held**. Identity ledger: **103 total boundaries = 101 fish + 2 non-fish / 17,926 unresolved-identity pairs**.
+- Queue: **26 catalog_structure_correction / 1 manual label / 16 trade-name / 57 evidence-ceiling / 3 hybrid**; automated research eligible 0. 78 predation debt fields remain fully deferred.
+- Canonical: 34 total / 20 explicit bridges / 13 colour policy / 4 taxon roots / 1 field policy; 12 policy-promoted ready.
+- Fully informed: **99 species / 4,851 pairs / 0 insufficient_data**. Readability: **9,453 reviewed-fish pairs / 97 exceptional identity-or-public-evidence unknowns**.
+- Compatibility/runtime/release/authority/docs/TypeScript/diff gates PASS.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 

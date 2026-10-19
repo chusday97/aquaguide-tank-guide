@@ -85,7 +85,7 @@ assert.ok(report.partialInheritanceReviewCount > 0);
 assert.equal(report.researchedHighImpactHoldCount, 4);
 assert.equal(report.researchDebtStatusCounts.catalog_label_disambiguation_required, 1);
 assert.equal(report.researchDebtStatusCounts.exact_object_evidence_not_found, 3);
-assert.equal(report.migrationPathCounts.catalog_structure_correction, 27, 'blank var. catalog labels must be routed to structural correction instead of evidence research');
+assert.equal(report.migrationPathCounts.catalog_structure_correction, 26, 'blank var. catalog labels must be routed to structural correction instead of evidence research');
 assert.equal(report.migrationPathCounts.exact_variant_label_disambiguation, 1, 'only the non-blank reviewed trade/lineage label ambiguity should remain in exact label disambiguation');
 assert.equal(Object.values(report.migrationPathCounts).reduce((sum, count) => sum + count, 0), report.activeIdentityBoundaries);
 assert.equal(Object.values(report.identityEvidenceStatusCounts).reduce((sum, count) => sum + count, 0), report.activeIdentityBoundaries);
@@ -175,6 +175,8 @@ assert.equal(byId.get('sp_0158')?.migrationPath, 'catalog_structure_correction')
 assert.equal(byId.get('sp_0158')?.blankVariantSuffix, true);
 assert.equal(byId.get('sp_0158')?.readyBaseCandidateCount, 1);
 assert.equal(byId.get('sp_0065')?.migrationPath, 'catalog_structure_correction');
+assert.equal(byId.get('sp_0142')?.migrationPath, 'catalog_structure_correction');
+assert.equal(byId.get('sp_0142')?.morphologyRisk, true, 'reviewed Balloon lineage hint must trigger morphology-risk routing even when the legacy catalog name/scientificName misses the English morphology token');
 assert.equal(byId.get('sp_0021')?.migrationPath, 'hybrid_object_specific_hold');
 assert.equal(byId.get('sp_0021')?.identityEvidenceStatus, 'reviewed_identity_hold_present');
 assert.equal(byId.get('sp_0110')?.researchDisposition, 'terminal_unknown_hold');

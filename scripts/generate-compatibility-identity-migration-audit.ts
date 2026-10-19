@@ -71,8 +71,8 @@ const hasBlankVariantSuffix = (scientificName: string) => (
   /\s+var\.?\s*$/i.test(scientificName.trim())
 );
 
-const hasMorphologyRisk = (species: Fish) => {
-  const text = (species.name || '') + ' ' + (species.scientificName || '');
+const hasMorphologyRisk = (species: Fish, candidateTaxa: readonly string[] = []) => {
+  const text = `${species.name || ''} ${species.scientificName || ''} ${candidateTaxa.join(' ')}`;
   return /balloon|super\s*balloon|short\s*body|shortbody|longfin|long\s*fin|high\s*fin|veil|double\s*tail|doubletail|球形|短身|长鳍|高鳍|大帆|蝶尾|水泡|珠鳞|狮头|虎头|鹤顶|兰寿|琉金/i.test(text);
 };
 
@@ -263,7 +263,7 @@ const rows = activeBoundaryRows.map(({ species, boundary }) => {
       };
     });
   const readyBaseCandidates = baseCandidates.filter(candidate => candidate.genericOnboardingReady);
-  const morphologyRisk = hasMorphologyRisk(species);
+  const morphologyRisk = hasMorphologyRisk(species, boundary.candidateTaxa);
   const identityEvidenceStatus = getExistingIdentityEvidenceStatus(species.id);
   const identityResearchDebt = getCatalogIdentityResearchDebt(species.id);
   const migrationPath = migrationPathFor({

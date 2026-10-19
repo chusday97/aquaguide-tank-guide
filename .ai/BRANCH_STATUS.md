@@ -1,11 +1,11 @@
-## TOP CURRENT BRANCH — 2026-10-19 main identity root-cause routing
+## TOP CURRENT BRANCH — 2026-10-19 main Blue Gourami canonical closure
 
-- Canonical local branch: `main`, continuing from `dbc48952`.
-- Current change is source-controlled Compatibility audit/queue routing: blank-`var.` identity debt is recognized as catalog-structure correction instead of manual evidence work; no decision semantics, UI, migration or Production data changed.
-- Current identity scope: 104 active boundaries = 102 fish + 2 non-fish; 27 blank-`var.` catalog corrections; 21 fish with one ready base (10 morphology-safe / 11 morphology-risk); automated research eligible remains 0.
-- The new structure-correction lane owns 3,549 sole-boundary pair impacts but does not auto-resolve them. Exact catalog labels still require provenance/lineage evidence and re-review.
-- Open `Ancistrus sp.` / `Geophagus sp.` / `Pseudochromis sp.` parent-taxonomy holds remain fail-closed; genus-level inheritance is explicitly not allowed.
-- No remote push, deploy, merge workflow, UI work, migration, or Production mutation is authorized/executed by this generic “推进” pass.
+- Canonical local branch: `main`, continuing from `c60d5890`.
+- Current change resolves `sp_0445 蓝曼龙` through reviewed `Trichopodus trichopterus + Blue` canonical authority, adds reusable taxon-level Compatibility evidence, fixes reviewed-`unknown` precedence, and strengthens morphology-risk routing.
+- Current scope: 308 fish-domain / 99 generic-ready / 111 core-complete / 101 fish identity-held; 103 active identity boundaries / 17,926 pair impacts; blank-`var.` catalog corrections = 26.
+- Canonical authority: 34 identities / 13 colour-policy records / 4 taxon roots; fully-informed matrix = 99 species / 4,851 pairs / 0 insufficient_data.
+- Direct repository Profiles remain 125; released Compatibility generations remain exact 63 / 85 / 95 / 99 / 100 / 101. No release ownership or Production boundary changed.
+- No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 

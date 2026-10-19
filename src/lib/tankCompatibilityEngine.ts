@@ -795,6 +795,20 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   const reviewedSpace = reviewedKnowledge?.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
     ? reviewedKnowledge.spaceAndGrowth
     : undefined;
+  // Older SpeciesKnowledge packets can be reviewed specifically to record that a
+  // value was still unknown at that time. "Reviewed unknown" is evidence about
+  // the old packet, not stronger domain authority than a later supported
+  // Compatibility field/profile review. Only concrete Knowledge values may
+  // override the current reviewed Compatibility authority.
+  const reviewedEnvironmentWaterType = reviewedEnvironment?.waterType && reviewedEnvironment.waterType !== 'unknown'
+    ? reviewedEnvironment.waterType
+    : undefined;
+  const reviewedEnvironmentWaterTypes = reviewedEnvironment?.waterTypes?.length
+    ? reviewedEnvironment.waterTypes
+    : undefined;
+  const reviewedSocialMode = reviewedSocial?.mode && reviewedSocial.mode !== 'unknown'
+    ? reviewedSocial.mode
+    : undefined;
   const knowledgeEvidenceIds = [
     ...(reviewedEnvironment?.evidence.sourceIds || []),
     ...(reviewedSocial?.evidence.sourceIds || []),
@@ -805,8 +819,8 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   ];
   return {
     id: profile.catalogKey,
-    waterType: reviewedEnvironment?.waterType ?? staticReviewed?.waterType ?? profile.waterType,
-    waterTypes: reviewedEnvironment?.waterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
+    waterType: reviewedEnvironmentWaterType ?? staticReviewed?.waterType ?? profile.waterType,
+    waterTypes: reviewedEnvironmentWaterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
     temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
     temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
     phMin: reviewedEnvironment?.phRange?.min ?? profile.phMin,
@@ -823,7 +837,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...(profile.evidenceSourceIds || []), ...knowledgeEvidenceIds, ...coverageEvidenceIds])),
     adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
     adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
-    socialMode: reviewedSocial?.mode ?? profile.socialMode,
+    socialMode: reviewedSocialMode ?? profile.socialMode,
     swimmingZone: reviewedSocial?.swimmingZone ?? reviewedSpace?.swimmingZone ?? 'unknown',
     behaviorTraits: reviewed?.behaviorTraits || [],
     territoriality: reviewedSocial?.territoriality,

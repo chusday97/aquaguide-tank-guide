@@ -21,7 +21,7 @@ assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpec
 assert.ok(summary.oneFieldGapSpecies > 0);
 assert.ok(summary.genericOnboardingReadySpecies >= 43, 'High-yield source-first coverage should preserve at least 43 fully sourced generic-ready profiles');
 assert.equal(summary.fishCompatibilityDomainSpecies, 308, 'fish Compatibility scope should contain only fish-domain catalog objects');
-assert.equal(summary.fishIdentityHeldSpecies, 102, 'fish identity holds must be tracked separately from unsupported life-type domains');
+assert.equal(summary.fishIdentityHeldSpecies, 101, 'fish identity holds must be tracked separately from unsupported life-type domains');
 assert.equal(summary.unsupportedDomainSpecies, 167, 'unsupported-domain objects must not inflate fish identity debt');
 assert.deepEqual(summary.unsupportedDomainSpeciesByLifeType, {
   plant: 66,
@@ -38,7 +38,7 @@ assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible researc
 assert.equal(summary.visibleResearchDebtFields, 78, 'independent predation research debt must remain visible after social-ceiling isolation');
 assert.equal(summary.completionEligibleResearchDebtFields, 0, 'no current research debt can complete an object while companion terminal holds remain');
 assert.equal(summary.deferredResearchDebtFields, 78, 'all currently visible field research debt is deferred behind companion terminal holds');
-for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
+for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
   const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
@@ -60,6 +60,8 @@ for (const speciesId of ['sp_0018','sp_0056','sp_0058','sp_0121','sp_0122','sp_0
   assert.equal(rows.find(row => row.speciesId === speciesId)?.fields.predation.status, 'reviewed_neutral_or_negative', `${speciesId} should only close predation from reviewed diet + tankmate/community evidence`);
 }
 const rowOf = (speciesId: string) => rows.find(row => row.speciesId === speciesId);
+assert.equal(rowOf('sp_0445')?.genericOnboardingReady, true);
+assert.equal(rowOf('sp_0445')?.authoritativeFieldCount, 8);
 assert.equal(rowOf('sp_0014')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0014')?.fields.social_behavior.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0443')?.fields.tank_size.status, 'reviewed_supported');

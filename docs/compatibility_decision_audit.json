@@ -13,25 +13,25 @@
     "coral": 43
   },
   "fishDomainSpecies": 308,
-  "genericOnboardingReadySpecies": 98,
-  "genericReadyUniquePairs": 4753,
+  "genericOnboardingReadySpecies": 99,
+  "genericReadyUniquePairs": 4851,
   "fishPairs": 47278,
   "statuses": {
-    "compatible": 582,
-    "caution": 4469,
+    "compatible": 666,
+    "caution": 4495,
     "not_recommended": 18837,
-    "insufficient_data": 23390
+    "insufficient_data": 23280
   },
-  "decisionCoveragePct": 50.53,
-  "unknownRatePct": 49.47,
+  "decisionCoveragePct": 50.76,
+  "unknownRatePct": 49.24,
   "systemGapPairs": 0,
   "systemGapPct": 0,
-  "fullyInformedPairs": 9083,
+  "fullyInformedPairs": 9218,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
-    "unresolved_identity": 18079,
-    "public_evidence_insufficient": 5311,
+    "unresolved_identity": 17926,
+    "public_evidence_insufficient": 5354,
     "missing_species_fact": 0,
     "system_gap": 0
   },
@@ -39,14 +39,14 @@
     "scope": "uniform unique-pair exposure across species currently selectable in the fish Compatibility calculator",
     "calculatorSelectableSpecies": 308,
     "uniqueSelectablePairs": 47278,
-    "unknownPairs": 23390,
-    "uniformUnknownRatePct": 49.47,
+    "unknownPairs": 23280,
+    "uniformUnknownRatePct": 49.24,
     "observedTrafficProbability": null,
     "note": "uniformUnknownRatePct is a catalog-pair stress metric, not observed user traffic probability. Unsupported non-fish livestock are excluded from the calculator because the current deterministic domain is explicitly fish-only.",
     "unknownReasons": {
       "missing_user_input": 0,
-      "unresolved_identity": 18079,
-      "public_evidence_insufficient": 5311,
+      "unresolved_identity": 17926,
+      "public_evidence_insufficient": 5354,
       "missing_species_fact": 0,
       "system_gap": 0
     },
@@ -1125,18 +1125,6 @@
         "impactBand": "high"
       },
       {
-        "speciesId": "sp_0445",
-        "name": "蓝曼龙",
-        "scientificName": "Trichopodus trichopterus var.",
-        "unknownPairs": 247,
-        "actionableFields": [],
-        "terminalReasons": [
-          "catalog_variant_identity_unresolved"
-        ],
-        "exposureSharePct": 80.46,
-        "impactBand": "high"
-      },
-      {
         "speciesId": "sp_0021",
         "name": "迷你鹦鹉鱼",
         "scientificName": "Amatitlania nigrofasciata var.",
@@ -1842,143 +1830,143 @@
         "speciesId": "sp_0047",
         "name": "长臀鮠",
         "scientificName": "Pseudobagrus fulvidraco",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [],
         "terminalReasons": [
           "compatibility_field_source_strategy_exhausted",
           "species_social_not_established",
           "species_fish_predation_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0061",
         "name": "飞凤鱼",
         "scientificName": "Semaprochilodus insignis",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0062",
         "name": "红眼灯",
         "scientificName": "Moenkhausia sanctaefilomenae",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [],
         "terminalReasons": [
           "compatibility_field_source_strategy_exhausted"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0106",
         "name": "恐龙鱼 (草绳)",
         "scientificName": "Erpetoichthys calabaricus",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0107",
         "name": "飞凤鱼 (国旗飞凤)",
         "scientificName": "Semaprochilodus taeniurus",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0113",
         "name": "斑节鳉",
         "scientificName": "Epiplatys annulatus",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0125",
         "name": "雪球异型 (L102)",
         "scientificName": "Hypancistrus inspector",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [],
         "terminalReasons": [
           "compatibility_field_source_strategy_exhausted"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0132",
         "name": "玻璃拉拉",
         "scientificName": "Parambassis ranga",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0135",
         "name": "霓虹燕子",
         "scientificName": "Pseudomugil furcatus",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0137",
         "name": "飞凤鱼",
         "scientificName": "Semaprochilodus insignis",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0147",
         "name": "蓝宝鹦鹉鱼",
         "scientificName": "Amatitlania nigrofasciata var. Blue",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
@@ -1986,14 +1974,14 @@
           "variant_identity_research_exhausted",
           "variant_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0148",
         "name": "雪玉鹦鹉鱼",
         "scientificName": "Amatitlania nigrofasciata var. White",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
@@ -2001,14 +1989,14 @@
           "variant_identity_research_exhausted",
           "variant_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0222",
         "name": "蓝宝鹦鹉 (球形)",
         "scientificName": "Amatitlania nigrofasciata var. Jellybean",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
@@ -2016,153 +2004,153 @@
           "variant_identity_research_exhausted",
           "variant_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0258",
         "name": "糖果KOI斗鱼",
         "scientificName": "Betta splendens var. Koi",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [],
         "terminalReasons": [
           "variant_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0433",
         "name": "红鼻剪刀",
         "scientificName": "Hemigrammus rhodostomus",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [],
         "terminalReasons": [
           "compatibility_field_source_strategy_exhausted"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0458",
         "name": "玻璃猫鱼",
         "scientificName": "Kryptopterus vitreolus",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0467",
         "name": "黑尾大勾",
         "scientificName": "Hyphessobrycon megalopterus",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0470",
         "name": "黑莲灯",
         "scientificName": "Hyphessobrycon herbertaxelrodi",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0471",
         "name": "钻石灯",
         "scientificName": "Moenkhausia pittieri",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0472",
         "name": "企鹅灯",
         "scientificName": "Thayeria boehlkei",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0473",
         "name": "红肚铅笔鱼",
         "scientificName": "Nannostomus beckfordi",
-        "unknownPairs": 138,
+        "unknownPairs": 137,
         "actionableFields": [
           "predation"
         ],
         "terminalReasons": [
           "species_social_not_established"
         ],
-        "exposureSharePct": 44.95,
+        "exposureSharePct": 44.63,
         "impactBand": "medium"
       },
       {
         "speciesId": "sp_0038",
         "name": "马口鱼",
         "scientificName": "Opsariichthys bidens",
-        "unknownPairs": 84,
+        "unknownPairs": 83,
         "actionableFields": [],
         "terminalReasons": [
           "species_space_minimum_not_established",
           "species_territoriality_not_established"
         ],
-        "exposureSharePct": 27.36,
+        "exposureSharePct": 27.04,
         "impactBand": "low"
       },
       {
         "speciesId": "sp_0130",
         "name": "马口鱼",
         "scientificName": "Opsariichthys bidens",
-        "unknownPairs": 84,
+        "unknownPairs": 83,
         "actionableFields": [],
         "terminalReasons": [
           "species_space_minimum_not_established",
           "species_territoriality_not_established"
         ],
-        "exposureSharePct": 27.36,
+        "exposureSharePct": 27.04,
         "impactBand": "low"
       },
       {
         "speciesId": "sp_0173",
         "name": "黄金河虎",
         "scientificName": "Salminus brasiliensis var.",
-        "unknownPairs": 84,
+        "unknownPairs": 83,
         "actionableFields": [],
         "terminalReasons": [
           "species_territoriality_not_established"
         ],
-        "exposureSharePct": 27.36,
+        "exposureSharePct": 27.04,
         "impactBand": "low"
       }
     ]
@@ -2183,7 +2171,7 @@
     "terminalReasonCounts": [
       {
         "reason": "catalog_variant_identity_unresolved",
-        "speciesCount": 57
+        "speciesCount": 56
       },
       {
         "reason": "variant_social_not_established",
@@ -2238,15 +2226,15 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 46396
+      "count": 46172
     },
     {
       "code": "missing_ph",
-      "count": 35518
+      "count": 35444
     },
     {
       "code": "missing_hardness",
-      "count": 7780
+      "count": 7746
     }
   ],
   "coreFieldBacklog": {
@@ -2285,6 +2273,6 @@
         "count": 0
       }
     ],
-    "domainOrIdentityHeldSpecies": 269
+    "domainOrIdentityHeldSpecies": 268
   }
 }

@@ -9,12 +9,12 @@ assert.deepEqual(disk, audit, 'variant inheritance audit artifact must be regene
 
 assert.equal(audit.summary.fishDomainSpecies, 308);
 assert.equal(audit.summary.explicitReviewedCanonicalBridges, 20);
-assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 12);
-assert.equal(audit.summary.reviewedColorTaxonRootRecords, 3);
+assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 13);
+assert.equal(audit.summary.reviewedColorTaxonRootRecords, 4);
 assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 1);
-assert.equal(audit.summary.totalCanonicalIdentityRecords, 33);
-assert.equal(audit.summary.genericOnboardingReadySpecies, 98);
-assert.equal(audit.summary.policyPromotedReadySpecies, 11);
+assert.equal(audit.summary.totalCanonicalIdentityRecords, 34);
+assert.equal(audit.summary.genericOnboardingReadySpecies, 99);
+assert.equal(audit.summary.policyPromotedReadySpecies, 12);
 assert.equal(audit.summary.fieldPolicyReadySpecies, 0);
 assert.equal(audit.summary.directReviewedVariantObjects, 2);
 assert.equal(audit.summary.remainingReviewedVariantObjects, 0);
@@ -31,7 +31,7 @@ assert.equal(audit.policy.unresolvedIdentityAutoPromoted, false);
 
 assert.deepEqual(
   audit.promoted.map(item => item.speciesId),
-  ['sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156', 'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283'],
+  ['sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156', 'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445'],
 );
 assert.ok(audit.promoted.every(item => (
   item.registrySource === 'reviewed_color_morph_policy'
@@ -40,12 +40,19 @@ assert.ok(audit.promoted.every(item => (
 assert.ok(audit.promoted.filter(item => item.speciesId !== 'sp_0224').every(item => item.genericOnboardingReady && item.authoritativeFieldCount === 8));
 assert.ok(audit.promoted.every(item => item.blockedFacts.length === 0));
 const taxonRootRows = audit.promoted.filter(item => item.canonicalRootKind === 'reviewed_taxon');
-assert.deepEqual(taxonRootRows.map(item => item.speciesId), ['sp_0156', 'sp_0214', 'sp_0224']);
+assert.deepEqual(taxonRootRows.map(item => item.speciesId), ['sp_0156', 'sp_0214', 'sp_0224', 'sp_0445']);
 assert.ok(taxonRootRows.every(item => item.canonicalSpeciesId === null));
 const platinumSnakehead = audit.promoted.find(item => item.speciesId === 'sp_0224');
 assert.ok(platinumSnakehead);
 assert.equal(platinumSnakehead.genericOnboardingReady, false);
 assert.equal(platinumSnakehead.authoritativeFieldCount, 4);
+const blueGourami = audit.promoted.find(item => item.speciesId === 'sp_0445');
+assert.ok(blueGourami);
+assert.equal(blueGourami.canonicalRootKind, 'reviewed_taxon');
+assert.equal(blueGourami.canonicalScientificName, 'Trichopodus trichopterus');
+assert.equal(blueGourami.variantKey, 'Blue');
+assert.equal(blueGourami.genericOnboardingReady, true);
+assert.equal(blueGourami.authoritativeFieldCount, 8);
 
 assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0258']);
 const koiPolicy = audit.fieldScopedPolicies[0];

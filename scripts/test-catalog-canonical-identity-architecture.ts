@@ -32,9 +32,9 @@ const explicitCanonicalIds = Object.keys(catalogIdentityCorrectionBaseSpeciesIds
 const policyCanonicalIds = [...reviewedColorPolicyCanonicalSpeciesIds].sort();
 const expectedColorPolicyIds = [
   'sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156',
-  'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283',
+  'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445',
 ];
-const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224'];
+const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224', 'sp_0445'];
 assert.equal(explicitCanonicalIds.length, 20);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
 assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
@@ -124,10 +124,18 @@ assert.deepEqual(koiBettaIdentity.inheritancePolicy.inheritedFacts, ['water', 't
 assert.deepEqual(koiBettaIdentity.inheritancePolicy.blockedFacts, ['social_behavior', 'territoriality']);
 assert.equal(getCatalogCanonicalIdentity('sp_0069'), undefined, 'generic ornamental variety must remain outside the color-only policy');
 assert.equal(getCatalogCanonicalIdentity('sp_0001'), undefined, 'non-fish color morphs must stay outside the fish Compatibility canonical policy');
+const blueGouramiIdentity = getCatalogCanonicalIdentity('sp_0445');
+assert.ok(blueGouramiIdentity);
+assert.equal(blueGouramiIdentity.registrySource, 'reviewed_color_morph_taxon_policy');
+assert.equal(blueGouramiIdentity.relationshipType, 'color_morph');
+assert.equal(blueGouramiIdentity.variantKey, 'Blue');
+assert.equal(blueGouramiIdentity.canonicalScientificName, 'Trichopodus trichopterus');
+assert.equal(getCatalogIdentityBoundary('sp_0445'), undefined);
 for (const [speciesId, taxon] of [
   ['sp_0156', 'Trichopodus trichopterus'],
   ['sp_0214', 'Pelvicachromis pulcher'],
   ['sp_0224', 'Channa argus'],
+  ['sp_0445', 'Trichopodus trichopterus'],
 ] as const) {
   const identity = getCatalogCanonicalIdentity(speciesId);
   assert.ok(identity);
@@ -318,7 +326,11 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 98);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 99);
+const blueGouramiCoverage = coverage.rows.find(item => item.speciesId === 'sp_0445');
+assert.ok(blueGouramiCoverage);
+assert.equal(blueGouramiCoverage.genericOnboardingReady, true);
+assert.equal(blueGouramiCoverage.authoritativeFieldCount, 8);
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);
