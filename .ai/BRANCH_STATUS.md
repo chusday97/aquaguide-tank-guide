@@ -1,13 +1,14 @@
-## TOP CURRENT BRANCH — 2026-10-19 main catalog-structure research closure
+## TOP CURRENT BRANCH — 2026-10-19 main variant field-scoped research policy
 
-- Canonical local branch: `main`, continuing from `7b2bc0b5`.
-- Current change resolves no new identity and creates no Compatibility authority. It closes the remaining 8 actionable structure research loops by reclassifying `sp_0154` to trade-name ambiguity and routing the other 7 exhausted searches to the existing evidence-ceiling registry.
-- Current scope remains 308 fish-domain / **100 generic-ready / 112 core-complete / 91 fish identity-held**; **93 active identity boundaries / 16,735 unresolved pair impacts**.
-- Review queue now has **0 catalog-structure** items and is **21 trade-name / 68 evidence-ceiling / 3 hybrid / 1 manual-label**. Source audit retains 11 truthful structure paths, but every one is terminal `exact_object_evidence_not_found` debt.
-- Source subtype distribution is **3 conflicting candidates / 1 morphology modifier / 3 generic 改良 / 4 named trade labels**. Reviewed high-impact debt is **15 total = 1 label-disambiguation + 14 exact-object evidence ceilings**.
-- Coverage remains **150 debt fields = 72 completion-eligible + 78 deferred**; active research remains 4 guarded taxon jobs / 9 variants / 0 exact objects. Canonical authority remains **44 identities / 21 explicit bridges / 13 colour-policy records / 4 taxon roots / 10 field policies**.
-- Fully-informed matrix remains **100 / 4,950 / 0 insufficient_data**; readability stays **9,591 / 97 exceptional unknowns**; repository authority stays **126 Profiles / 21 Pair Rules** and released generations stay exact **63 / 85 / 95 / 99 / 100 / 101**.
-- Next systemic lane is field-scoped evidence for the 9 reviewed identity-known zero-inheritance variants; never whole-profile inherit.
+- Canonical local branch: `main`, continuing from `4d2a1f59`.
+- Current change adds **research eligibility policy only** for the 9 reviewed identity-known zero-inheritance variants; it creates no Profile, Pair Rule, canonical identity, inherited fact, migration or Production authority.
+- The planner now partitions each variant's 8 unresolved fields into **3 base-taxon candidate fields (water / temperature / pH)** and **5 exact-object fields (adult size / tank size / social / territorial / predation)**.
+- Aggregate research boundary: **27 base-taxon candidate fact slots / 45 exact-object evidence slots**. All candidate evidence remains draft-only until explicit field review; `grantsInheritance=false`.
+- Four guarded taxon source-discovery jobs remain visible in `plan`, but `active_completion=0`. Decision audit is **0 completion / 4 variant-object-evidence blocked / 0 terminal**, covering all 9 target objects honestly.
+- Compatibility authority stays **308 fish / 100 ready / 112 core-complete / 150 visible debt / 44 canonical identities / 93 active identity boundaries / 16,735 unresolved pairs**.
+- Runtime/release stays **4,950 mature pairs / 0 insufficient_data / 97 exceptional unknowns / 126 Profiles / 21 Pair Rules / rollout 63/85/95/99/100/101**.
+- All research-workflow, Compatibility, runtime, release, docs and TypeScript gates PASS.
+- NEXT: gather candidate evidence for the 27 safe environmental slots without automatic promotion; exact-object evidence remains mandatory for the other 45 slots.
 - No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider

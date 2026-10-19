@@ -146,12 +146,15 @@ const taxonDecisionImpactQueue = taxonResearchPlan.map(job => {
   const terminalBlockedCatalogObjects = job.catalogObjects.filter(object => (
     (coverageRowsById.get(object.speciesId)?.terminalGapCount || 0) > 0
   )).length;
-  const completionEligible = terminalGapInstances === 0;
+  const completionEligible = terminalGapInstances === 0 && job.canCompleteFromBaseTaxonResearch;
+  const variantObjectEvidenceBlocked = terminalGapInstances === 0 && !job.canCompleteFromBaseTaxonResearch;
   const affectedUnknownPairs = unknownPairImpactByTaxon.get(job.researchKey) || 0;
   return {
     researchKey: job.researchKey,
     baseScientificName: job.baseScientificName,
     completionEligible,
+    variantObjectEvidenceBlocked,
+    canCompleteFromBaseTaxonResearch: job.canCompleteFromBaseTaxonResearch,
     affectedUnknownPairs,
     gapInstances,
     terminalGapInstances,
@@ -160,12 +163,14 @@ const taxonDecisionImpactQueue = taxonResearchPlan.map(job => {
     nearReadyCatalogObjects,
     catalogObjectCount: job.catalogObjectCount,
     combinedGapFields: job.combinedGapFields,
+    exactObjectEvidenceGapFields: job.exactObjectEvidenceGapFields,
     requiresVariantBridgeReview: job.requiresVariantBridgeReview,
     researchDisposition: job.researchDisposition,
     existingCoveragePriorityScore: job.priorityScore,
   };
 }).sort((a, b) => (
   Number(b.completionEligible) - Number(a.completionEligible)
+  || Number(b.variantObjectEvidenceBlocked) - Number(a.variantObjectEvidenceBlocked)
   || b.impactPerGap - a.impactPerGap
   || b.affectedUnknownPairs - a.affectedUnknownPairs
   || b.nearReadyCatalogObjects - a.nearReadyCatalogObjects
@@ -175,7 +180,10 @@ const taxonDecisionImpactQueue = taxonResearchPlan.map(job => {
 ));
 
 const completionEligibleTaxonQueue = taxonDecisionImpactQueue.filter(item => item.completionEligible);
-const terminalBlockedTaxonQueue = taxonDecisionImpactQueue.filter(item => !item.completionEligible);
+const variantObjectEvidenceTaxonQueue = taxonDecisionImpactQueue.filter(item => item.variantObjectEvidenceBlocked);
+const terminalBlockedTaxonQueue = taxonDecisionImpactQueue.filter(item => (
+  !item.completionEligible && !item.variantObjectEvidenceBlocked
+));
 
 const terminalReasonCounts = new Map<string, number>();
 for (const item of speciesImpactRows) {
@@ -245,12 +253,15 @@ const report = {
     highestLeverageEvidenceTargets,
     taxonDecisionImpactQueue,
     completionEligibleTaxonQueue,
+    variantObjectEvidenceTaxonQueue,
     terminalBlockedTaxonQueue,
     taxonQueueSummary: {
       totalResearchJobs: taxonDecisionImpactQueue.length,
       completionEligibleJobs: completionEligibleTaxonQueue.length,
+      variantObjectEvidenceBlockedJobs: variantObjectEvidenceTaxonQueue.length,
       terminalBlockedJobs: terminalBlockedTaxonQueue.length,
       completionEligibleCatalogObjects: completionEligibleTaxonQueue.reduce((sum, item) => sum + item.catalogObjectCount, 0),
+      variantObjectEvidenceBlockedCatalogObjects: variantObjectEvidenceTaxonQueue.reduce((sum, item) => sum + item.catalogObjectCount, 0),
       terminalBlockedCatalogObjects: terminalBlockedTaxonQueue.reduce((sum, item) => sum + item.catalogObjectCount, 0),
     },
     terminalReasonCounts: [...terminalReasonCounts.entries()]

@@ -4,6 +4,7 @@ import { catalogContentVerifiedSourceIds, getCatalogFieldReviews, isCatalogField
 import { getCatalogReviewSourceCandidates } from '../../data/catalogReviewSourceCandidates';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
 import { canInheritCompatibilityFact, getCatalogCanonicalIdentity } from '../../data/catalogCanonicalIdentity';
+import { getCompatibilityVariantFieldResearchPolicy } from '../../data/compatibilityVariantFieldResearchPolicy';
 import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getCompatibilityVariantResearchCeiling } from '../../data/compatibilityVariantResearchCeilings';
@@ -83,6 +84,9 @@ export type CompatibilityTaxonResearchCatalogObject = {
   name: string;
   scientificName: string;
   gaps: CompatibilityCoreField[];
+  baseTaxonCandidateGaps: CompatibilityCoreField[];
+  exactObjectEvidenceGaps: CompatibilityCoreField[];
+  variantResearchPolicyApplied: boolean;
   isVariant: boolean;
   isExactBaseTaxon: boolean;
 };
@@ -96,7 +100,9 @@ export type CompatibilityTaxonResearchPlanItem = {
   variantObjectCount: number;
   unresolvedObjectCount: number;
   combinedGapFields: CompatibilityCoreField[];
+  exactObjectEvidenceGapFields: CompatibilityCoreField[];
   requiresVariantBridgeReview: boolean;
+  canCompleteFromBaseTaxonResearch: boolean;
   researchDisposition: 'exact_taxon_research' | 'base_taxon_candidate_research_with_variant_bridge' | 'identity_resolution_required';
   promotionPolicy: string;
   catalogObjects: CompatibilityTaxonResearchCatalogObject[];
@@ -501,6 +507,7 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
     baseScientificName: string | null;
     objects: CompatibilityTaxonResearchCatalogObject[];
     gapFields: Set<CompatibilityCoreField>;
+    exactObjectEvidenceGapFields: Set<CompatibilityCoreField>;
     priorityScore: number;
     unresolvedObjectCount: number;
   }>();
@@ -525,11 +532,32 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
     const isExactBaseTaxon = Boolean(
       baseScientificName && !isVariant && normalizedScientificName === baseScientificName,
     );
+    const allGaps = coreFields.filter(field => item.gaps.has(field));
+    const variantResearchPolicy = isVariant
+      ? getCompatibilityVariantFieldResearchPolicy(item.speciesId)
+      : null;
+    const baseCandidateSet = new Set<CompatibilityCoreField>(
+      isVariant
+        ? variantResearchPolicy?.baseTaxonCandidateFacts ?? []
+        : baseScientificName
+          ? allGaps
+          : [],
+    );
+    const baseTaxonCandidateGaps = allGaps.filter(field => baseCandidateSet.has(field));
+    const exactObjectEvidenceGaps = isVariant
+      ? allGaps.filter(field => !baseCandidateSet.has(field))
+      : [];
+    // A variant with no approved base-taxon candidate fields must not create an
+    // empty ordinary taxon-research job. Its gaps remain in the field backlog
+    // until exact-object evidence or an explicit research policy is reviewed.
+    if (isVariant && baseTaxonCandidateGaps.length === 0) continue;
+
     const group = grouped.get(researchKey) ?? {
       researchKey,
       baseScientificName,
       objects: [],
       gapFields: new Set<CompatibilityCoreField>(),
+      exactObjectEvidenceGapFields: new Set<CompatibilityCoreField>(),
       priorityScore: 0,
       unresolvedObjectCount: 0,
     };
@@ -537,11 +565,15 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
       speciesId: item.speciesId,
       name: item.name,
       scientificName: item.scientificName,
-      gaps: coreFields.filter(field => item.gaps.has(field)),
+      gaps: allGaps,
+      baseTaxonCandidateGaps,
+      exactObjectEvidenceGaps,
+      variantResearchPolicyApplied: Boolean(variantResearchPolicy),
       isVariant,
       isExactBaseTaxon,
     });
-    for (const field of item.gaps) group.gapFields.add(field);
+    for (const field of baseTaxonCandidateGaps) group.gapFields.add(field);
+    for (const field of exactObjectEvidenceGaps) group.exactObjectEvidenceGapFields.add(field);
     group.priorityScore = Math.max(group.priorityScore, item.priorityScore);
     if (!baseScientificName) group.unresolvedObjectCount += 1;
     grouped.set(researchKey, group);
@@ -552,6 +584,9 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
     const variantObjectCount = catalogObjects.filter(item => item.isVariant).length;
     const exactObjectCount = catalogObjects.filter(item => item.isExactBaseTaxon).length;
     const requiresVariantBridgeReview = variantObjectCount > 0;
+    const exactObjectEvidenceGapFields = coreFields.filter(field => group.exactObjectEvidenceGapFields.has(field));
+    const canCompleteFromBaseTaxonResearch = group.unresolvedObjectCount === 0
+      && exactObjectEvidenceGapFields.length === 0;
     const researchDisposition = group.unresolvedObjectCount > 0
       ? 'identity_resolution_required' as const
       : requiresVariantBridgeReview
@@ -560,7 +595,7 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
     const promotionPolicy = researchDisposition === 'identity_resolution_required'
       ? 'Resolve catalog identity before source research. Do not promote evidence across an unresolved taxon.'
       : requiresVariantBridgeReview
-        ? 'Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.'
+        ? 'Research only explicitly approved base-taxon candidate fields for source discovery. Candidate facts must never auto-promote; exact-object-gated fields require variant-specific evidence, and every candidate field still requires a reviewed field bridge or variant-specific evidence before authority changes.'
         : 'Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.';
     return {
       researchKey: group.researchKey,
@@ -571,7 +606,9 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
       variantObjectCount,
       unresolvedObjectCount: group.unresolvedObjectCount,
       combinedGapFields: coreFields.filter(field => group.gapFields.has(field)),
+      exactObjectEvidenceGapFields,
       requiresVariantBridgeReview,
+      canCompleteFromBaseTaxonResearch,
       researchDisposition,
       promotionPolicy,
       catalogObjects,

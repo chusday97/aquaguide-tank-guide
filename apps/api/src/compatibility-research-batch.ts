@@ -141,11 +141,13 @@ export const selectCompatibilityResearchBatchJobs = (
   excludeResearchKeys: readonly string[] = [],
 ): { sourcePlanJobs: number; jobs: CompatibilityTaxonResearchPlanItem[] } => {
   const plan = buildCompatibilityTaxonResearchPlan();
-  // The research plan is already field-scoped: combinedGapFields contains only
-  // targeted_source_expansion fields. A terminal hold on a different field
-  // (for example variant social behavior) must not suppress research for an
-  // otherwise actionable environment/size field on the same taxon.
-  const queueJobs = plan;
+  // The full plan may contain guarded base-taxon source-discovery work for
+  // variants that still require exact-object evidence on other fields. Those
+  // jobs are useful research inputs but cannot complete the catalog object, so
+  // they must never masquerade as active-completion work.
+  const queueJobs = queueMode === 'active_completion'
+    ? plan.filter(job => job.canCompleteFromBaseTaxonResearch)
+    : plan;
   const requested = new Set(researchKeys.filter(Boolean));
   const excluded = new Set(excludeResearchKeys.filter(Boolean));
   const requestedJobs = requested.size > 0

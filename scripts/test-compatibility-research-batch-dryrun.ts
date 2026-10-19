@@ -9,16 +9,18 @@ const jobs: CompatibilityTaxonResearchPlanItem[] = [
   {
     researchKey: 'Example exactus', baseScientificName: 'Example exactus', priorityScore: 100,
     catalogObjectCount: 1, exactObjectCount: 1, variantObjectCount: 0, unresolvedObjectCount: 0,
-    combinedGapFields: ['water', 'predation'], requiresVariantBridgeReview: false,
+    combinedGapFields: ['water', 'predation'], exactObjectEvidenceGapFields: [], requiresVariantBridgeReview: false,
+    canCompleteFromBaseTaxonResearch: true,
     researchDisposition: 'exact_taxon_research', promotionPolicy: 'review required',
-    catalogObjects: [{ speciesId: 'sp_test_exact', name: 'Exact', scientificName: 'Example exactus', gaps: ['water', 'predation'], isVariant: false, isExactBaseTaxon: true }],
+    catalogObjects: [{ speciesId: 'sp_test_exact', name: 'Exact', scientificName: 'Example exactus', gaps: ['water', 'predation'], baseTaxonCandidateGaps: ['water', 'predation'], exactObjectEvidenceGaps: [], variantResearchPolicyApplied: false, isVariant: false, isExactBaseTaxon: true }],
   },
   {
     researchKey: 'Example variantus', baseScientificName: 'Example variantus', priorityScore: 90,
     catalogObjectCount: 1, exactObjectCount: 0, variantObjectCount: 1, unresolvedObjectCount: 0,
-    combinedGapFields: ['water'], requiresVariantBridgeReview: true,
+    combinedGapFields: ['water'], exactObjectEvidenceGapFields: [], requiresVariantBridgeReview: true,
+    canCompleteFromBaseTaxonResearch: true,
     researchDisposition: 'base_taxon_candidate_research_with_variant_bridge', promotionPolicy: 'must never auto-promote',
-    catalogObjects: [{ speciesId: 'sp_test_variant', name: 'Variant', scientificName: 'Example variantus red', gaps: ['water'], isVariant: true, isExactBaseTaxon: false }],
+    catalogObjects: [{ speciesId: 'sp_test_variant', name: 'Variant', scientificName: 'Example variantus red', gaps: ['water'], baseTaxonCandidateGaps: ['water'], exactObjectEvidenceGaps: [], variantResearchPolicyApplied: true, isVariant: true, isExactBaseTaxon: false }],
   },
 ];
 

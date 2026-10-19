@@ -32,6 +32,9 @@
     "reviewedColorPolicyCanonicalRecords": 13,
     "reviewedColorTaxonRootRecords": 4,
     "reviewedVariantFieldPolicyRecords": 10,
+    "reviewedVariantFieldResearchPolicies": 9,
+    "baseTaxonCandidateFactSlots": 27,
+    "exactObjectEvidenceFactSlots": 45,
     "totalCanonicalIdentityRecords": 44,
     "policyPromotedReadySpecies": 12,
     "fieldPolicyReadySpecies": 0,
@@ -405,6 +408,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -432,6 +449,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -459,6 +490,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -486,6 +531,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -513,6 +572,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -540,6 +613,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -567,6 +654,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -594,6 +695,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []
@@ -621,6 +736,10 @@
         "social_behavior",
         "territoriality"
       ],
+      "researchPolicyPresent": false,
+      "baseTaxonCandidateFacts": [],
+      "exactObjectEvidenceFacts": [],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
       "terminalGapFields": [
@@ -650,6 +769,20 @@
         "territoriality",
         "predation"
       ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
       "terminalGapFields": []

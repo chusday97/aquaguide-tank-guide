@@ -887,9 +887,25 @@ assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 ||
 assert.equal(taxonResearchPlan.length, 4, 'only guarded research lanes for the nine identity-resolved strain/morphology variants should be active');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
 assert.equal(plannedCatalogObjects.size, 9);
-const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
+const plannedAllGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const completionEligibleBacklogGapKeys = backlog.filter(item => item.completionEligible).map(item => `${item.speciesId}:${item.field}`).sort();
-assert.deepEqual(plannedGapKeys, completionEligibleBacklogGapKeys, 'active taxon research plan must represent only completion-eligible field gaps; deferred evidence debt remains visible in the backlog');
+assert.deepEqual(plannedAllGapKeys, completionEligibleBacklogGapKeys, 'the guarded variant plan must retain the full unresolved field ledger even when only a subset is eligible for base-taxon source discovery');
+const plannedBaseCandidateGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.baseTaxonCandidateGaps.map(field => `${object.speciesId}:${field}`))).sort();
+const plannedExactObjectGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.exactObjectEvidenceGaps.map(field => `${object.speciesId}:${field}`))).sort();
+assert.equal(plannedBaseCandidateGapKeys.length, 27, 'nine reviewed variants × three environmental fields may enter base-taxon candidate research');
+assert.equal(plannedExactObjectGapKeys.length, 45, 'nine reviewed variants × five morphology/behavior-sensitive fields must remain exact-object evidence work');
+assert.equal(new Set([...plannedBaseCandidateGapKeys, ...plannedExactObjectGapKeys]).size, 72);
+for (const job of taxonResearchPlan) {
+  assert.deepEqual(job.combinedGapFields, ['water', 'temperature', 'ph']);
+  assert.deepEqual(job.exactObjectEvidenceGapFields, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
+  assert.equal(job.canCompleteFromBaseTaxonResearch, false);
+  for (const object of job.catalogObjects) {
+    assert.equal(object.variantResearchPolicyApplied, true);
+    assert.deepEqual(object.baseTaxonCandidateGaps, ['water', 'temperature', 'ph']);
+    assert.deepEqual(object.exactObjectEvidenceGaps, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
+    assert.deepEqual([...object.baseTaxonCandidateGaps, ...object.exactObjectEvidenceGaps], object.gaps);
+  }
+}
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
 assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 4, 'the nine identity-resolved strain/morphology variants must remain guarded variant-bearing research jobs');

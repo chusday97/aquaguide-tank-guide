@@ -2203,7 +2203,9 @@
       {
         "researchKey": "Carassius auratus",
         "baseScientificName": "Carassius auratus",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 645,
         "gapInstances": 40,
         "terminalGapInstances": 0,
@@ -2214,7 +2216,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2228,7 +2232,9 @@
       {
         "researchKey": "Poecilia reticulata",
         "baseScientificName": "Poecilia reticulata",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 258,
         "gapInstances": 16,
         "terminalGapInstances": 0,
@@ -2239,7 +2245,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2253,7 +2261,9 @@
       {
         "researchKey": "Paracheirodon innesi",
         "baseScientificName": "Paracheirodon innesi",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 129,
         "gapInstances": 8,
         "terminalGapInstances": 0,
@@ -2264,7 +2274,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2278,7 +2290,9 @@
       {
         "researchKey": "Tanichthys albonubes",
         "baseScientificName": "Tanichthys albonubes",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 0,
         "gapInstances": 8,
         "terminalGapInstances": 0,
@@ -2289,7 +2303,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2301,11 +2317,14 @@
         "existingCoveragePriorityScore": 110
       }
     ],
-    "completionEligibleTaxonQueue": [
+    "completionEligibleTaxonQueue": [],
+    "variantObjectEvidenceTaxonQueue": [
       {
         "researchKey": "Carassius auratus",
         "baseScientificName": "Carassius auratus",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 645,
         "gapInstances": 40,
         "terminalGapInstances": 0,
@@ -2316,7 +2335,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2330,7 +2351,9 @@
       {
         "researchKey": "Poecilia reticulata",
         "baseScientificName": "Poecilia reticulata",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 258,
         "gapInstances": 16,
         "terminalGapInstances": 0,
@@ -2341,7 +2364,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2355,7 +2380,9 @@
       {
         "researchKey": "Paracheirodon innesi",
         "baseScientificName": "Paracheirodon innesi",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 129,
         "gapInstances": 8,
         "terminalGapInstances": 0,
@@ -2366,7 +2393,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2380,7 +2409,9 @@
       {
         "researchKey": "Tanichthys albonubes",
         "baseScientificName": "Tanichthys albonubes",
-        "completionEligible": true,
+        "completionEligible": false,
+        "variantObjectEvidenceBlocked": true,
+        "canCompleteFromBaseTaxonResearch": false,
         "affectedUnknownPairs": 0,
         "gapInstances": 8,
         "terminalGapInstances": 0,
@@ -2391,7 +2422,9 @@
         "combinedGapFields": [
           "water",
           "temperature",
-          "ph",
+          "ph"
+        ],
+        "exactObjectEvidenceGapFields": [
           "adult_size",
           "tank_size",
           "social_behavior",
@@ -2406,9 +2439,11 @@
     "terminalBlockedTaxonQueue": [],
     "taxonQueueSummary": {
       "totalResearchJobs": 4,
-      "completionEligibleJobs": 4,
+      "completionEligibleJobs": 0,
+      "variantObjectEvidenceBlockedJobs": 4,
       "terminalBlockedJobs": 0,
-      "completionEligibleCatalogObjects": 9,
+      "completionEligibleCatalogObjects": 0,
+      "variantObjectEvidenceBlockedCatalogObjects": 9,
       "terminalBlockedCatalogObjects": 0
     },
     "terminalReasonCounts": [

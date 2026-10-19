@@ -15,17 +15,36 @@ const rows = new Map(coverage.rows.map(row => [row.speciesId, row]));
 
 const allQueue = leverage.taxonDecisionImpactQueue ?? [];
 const eligible = leverage.completionEligibleTaxonQueue ?? [];
+const variantEvidence = leverage.variantObjectEvidenceTaxonQueue ?? [];
 const blocked = leverage.terminalBlockedTaxonQueue ?? [];
 const summary = leverage.taxonQueueSummary;
 
 assert.equal(summary.totalResearchJobs, plan.length);
-assert.equal(summary.completionEligibleJobs + summary.terminalBlockedJobs, summary.totalResearchJobs);
-assert.equal(summary.completionEligibleCatalogObjects + summary.terminalBlockedCatalogObjects, plan.reduce((sum, job) => sum + job.catalogObjectCount, 0));
+assert.equal(summary.completionEligibleJobs + summary.variantObjectEvidenceBlockedJobs + summary.terminalBlockedJobs, summary.totalResearchJobs);
+assert.equal(
+  summary.completionEligibleCatalogObjects + summary.variantObjectEvidenceBlockedCatalogObjects + summary.terminalBlockedCatalogObjects,
+  plan.reduce((sum, job) => sum + job.catalogObjectCount, 0),
+);
+assert.equal(summary.totalResearchJobs, 4);
+assert.equal(summary.completionEligibleJobs, 0);
+assert.equal(summary.variantObjectEvidenceBlockedJobs, 4);
+assert.equal(summary.terminalBlockedJobs, 0);
+assert.equal(summary.completionEligibleCatalogObjects, 0);
+assert.equal(summary.variantObjectEvidenceBlockedCatalogObjects, 9);
+assert.equal(summary.terminalBlockedCatalogObjects, 0);
 
 
 assert.equal(allQueue.length, summary.totalResearchJobs);
-assert.deepEqual(allQueue.slice(0, eligible.length), eligible, 'all completion-eligible jobs must rank ahead of terminal-blocked work');
-assert.deepEqual(allQueue.slice(eligible.length), blocked, 'terminal-blocked work must remain a separate tail queue');
+assert.deepEqual(allQueue.slice(0, eligible.length), eligible, 'completion-eligible work must lead the queue');
+assert.deepEqual(allQueue.slice(eligible.length, eligible.length + variantEvidence.length), variantEvidence, 'variant object-evidence work must remain a distinct middle lane');
+assert.deepEqual(allQueue.slice(eligible.length + variantEvidence.length), blocked, 'terminal-blocked work must remain a separate tail queue');
+for (const item of variantEvidence) {
+  assert.equal(item.completionEligible, false);
+  assert.equal(item.variantObjectEvidenceBlocked, true);
+  assert.equal(item.canCompleteFromBaseTaxonResearch, false);
+  assert.deepEqual(item.combinedGapFields, ['water', 'temperature', 'ph']);
+  assert.deepEqual(item.exactObjectEvidenceGapFields, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
+}
 
 for (const item of eligible) {
   assert.equal(item.completionEligible, true);
@@ -93,6 +112,7 @@ console.log(
   JSON.stringify({
     total: summary.totalResearchJobs,
     completionEligible: summary.completionEligibleJobs,
+    variantObjectEvidenceBlocked: summary.variantObjectEvidenceBlockedJobs,
     terminalBlocked: summary.terminalBlockedJobs,
     completionEligibleCatalogObjects: summary.completionEligibleCatalogObjects,
     terminalBlockedCatalogObjects: summary.terminalBlockedCatalogObjects,

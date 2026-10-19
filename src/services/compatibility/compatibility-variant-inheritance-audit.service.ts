@@ -9,6 +9,7 @@ import {
 import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
 import { getApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
+import { getCompatibilityVariantFieldResearchPolicy, reviewedVariantFieldResearchPolicySpeciesIds } from '../../data/compatibilityVariantFieldResearchPolicy';
 import { getLifeType } from '../../modules/species/species.service';
 import { buildCompatibilityCoreFieldCoverage } from './compatibility-field-coverage.service';
 
@@ -74,6 +75,7 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
       const species = fishData.find(item => item.id === speciesId);
       const identity = catalogCanonicalIdentities[speciesId];
       const row = coverageById.get(speciesId);
+      const researchPolicy = getCompatibilityVariantFieldResearchPolicy(speciesId);
       if (!species || !identity || !row) {
         throw new Error('Incomplete reviewed variant field-policy audit row: ' + speciesId);
       }
@@ -88,6 +90,10 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
         evidenceIds: [...identity.identityEvidenceSourceIds],
         inheritedFacts: [...identity.inheritancePolicy.inheritedFacts],
         blockedFacts: [...identity.inheritancePolicy.blockedFacts],
+        researchPolicyPresent: Boolean(researchPolicy),
+        baseTaxonCandidateFacts: [...(researchPolicy?.baseTaxonCandidateFacts ?? [])],
+        exactObjectEvidenceFacts: [...(researchPolicy?.exactObjectEvidenceFacts ?? [])],
+        researchPolicyGrantsInheritance: researchPolicy?.grantsInheritance ?? false,
         genericOnboardingReady: row.genericOnboardingReady,
         authoritativeFieldCount: row.authoritativeFieldCount,
         terminalGapFields: Object.entries(row.fields)
@@ -166,6 +172,9 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
       reviewedColorPolicyCanonicalRecords: promoted.length,
       reviewedColorTaxonRootRecords: reviewedColorTaxonPolicyCanonicalSpeciesIds.size,
       reviewedVariantFieldPolicyRecords: fieldScopedPolicies.length,
+      reviewedVariantFieldResearchPolicies: reviewedVariantFieldResearchPolicySpeciesIds.size,
+      baseTaxonCandidateFactSlots: fieldScopedPolicies.reduce((sum, item) => sum + item.baseTaxonCandidateFacts.length, 0),
+      exactObjectEvidenceFactSlots: fieldScopedPolicies.reduce((sum, item) => sum + item.exactObjectEvidenceFacts.length, 0),
       totalCanonicalIdentityRecords: Object.keys(catalogCanonicalIdentities).length,
       policyPromotedReadySpecies: promoted.filter(item => item.genericOnboardingReady).length,
       fieldPolicyReadySpecies: fieldScopedPolicies.filter(item => item.genericOnboardingReady).length,

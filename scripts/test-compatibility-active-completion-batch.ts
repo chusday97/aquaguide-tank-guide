@@ -11,10 +11,12 @@ import { isCompatibilityResearchClaimScopeEligible } from '../src/services/compa
 import { buildCompatibilityResearchSourceStrategy } from '../apps/api/src/compatibility-species-research-provider';
 
 const fullPlan = buildCompatibilityTaxonResearchPlan();
+const planSelection = selectCompatibilityResearchBatchJobs('plan');
 const selected = selectCompatibilityResearchBatchJobs('active_completion');
+assert.equal(planSelection.sourcePlanJobs, fullPlan.length);
+assert.deepEqual(planSelection.jobs.map(job => job.researchKey), fullPlan.map(job => job.researchKey));
 assert.equal(selected.sourcePlanJobs, fullPlan.length);
-assert.deepEqual(selected.jobs.map(job => job.researchKey), fullPlan.map(job => job.researchKey));
-assert.equal(selected.jobs.length, 0, 'active completion queue must stay empty when every visible research gap is blocked from completing its catalog object by companion terminal holds');
+assert.equal(selected.jobs.length, 0, 'active completion queue must exclude guarded variant source-discovery jobs that still require exact-object evidence');
 
 const bettaJob = selected.jobs.find(job => job.researchKey === 'Betta splendens');
 assert.equal(bettaJob, undefined, 'Betta predation evidence debt may remain visible, but must not enter active completion while companion terminal holds still block completion');
@@ -29,6 +31,9 @@ const petitellaIdentity = resolveReviewedCatalogResearchIdentity({
     name: '红鼻剪刀',
     scientificName: 'Petitella rhodostoma',
     gaps: [],
+    baseTaxonCandidateGaps: [],
+    exactObjectEvidenceGaps: [],
+    variantResearchPolicyApplied: false,
     isVariant: false,
     isExactBaseTaxon: true,
   }],
@@ -42,6 +47,11 @@ assert.deepEqual(filtered.jobs, [], 'targeted expansion must not resurrect a ter
 const excluded = selectCompatibilityResearchBatchJobs('active_completion', [], ['Petitella rhodostoma']);
 assert.deepEqual(excluded.jobs, [], 'persisted evidence ceiling keys must remain excluded from future active completion runs');
 assert.ok(selected.jobs.every(job => job.combinedGapFields.length > 0), 'any future active completion job must remain scoped to actionable fields only');
+assert.equal(fullPlan.length, 4);
+assert.ok(fullPlan.every(job => job.requiresVariantBridgeReview));
+assert.ok(fullPlan.every(job => !job.canCompleteFromBaseTaxonResearch));
+assert.ok(fullPlan.every(job => JSON.stringify(job.combinedGapFields) === JSON.stringify(['water', 'temperature', 'ph'])));
+assert.ok(fullPlan.every(job => JSON.stringify(job.exactObjectEvidenceGapFields) === JSON.stringify(['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation'])));
 
 const packet = (gate: CompatibilityOnboardingReviewPacket['gate'], reasonCodes: string[] = []): CompatibilityOnboardingReviewPacket => ({
   kind: 'compatibility_onboarding',

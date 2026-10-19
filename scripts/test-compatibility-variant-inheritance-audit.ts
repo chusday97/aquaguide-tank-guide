@@ -12,6 +12,9 @@ assert.equal(audit.summary.explicitReviewedCanonicalBridges, 21);
 assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 13);
 assert.equal(audit.summary.reviewedColorTaxonRootRecords, 4);
 assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 10);
+assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 9);
+assert.equal(audit.summary.baseTaxonCandidateFactSlots, 27);
+assert.equal(audit.summary.exactObjectEvidenceFactSlots, 45);
 assert.equal(audit.summary.totalCanonicalIdentityRecords, 44);
 assert.equal(audit.summary.genericOnboardingReadySpecies, 100);
 assert.equal(audit.summary.policyPromotedReadySpecies, 12);
@@ -114,8 +117,22 @@ for (const [speciesId, taxon] of [
   assert.equal(policy.genericOnboardingReady, false);
   assert.deepEqual(policy.terminalGapFields, []);
 }
+for (const speciesId of ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361']) {
+  const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
+  assert.ok(policy);
+  assert.equal(policy.researchPolicyPresent, true);
+  assert.deepEqual(policy.baseTaxonCandidateFacts, ['water', 'temperature', 'ph']);
+  assert.deepEqual(policy.exactObjectEvidenceFacts, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
+  assert.equal(policy.researchPolicyGrantsInheritance, false);
+  assert.deepEqual(policy.inheritedFacts, [], 'research eligibility must not silently become runtime inheritance authority');
+}
+
 const koiPolicy = audit.fieldScopedPolicies.find(item => item.speciesId === 'sp_0258');
 assert.ok(koiPolicy);
+assert.equal(koiPolicy.researchPolicyPresent, false);
+assert.deepEqual(koiPolicy.baseTaxonCandidateFacts, []);
+assert.deepEqual(koiPolicy.exactObjectEvidenceFacts, []);
+assert.equal(koiPolicy.researchPolicyGrantsInheritance, false);
 assert.equal(koiPolicy.registrySource, 'reviewed_variant_field_policy');
 assert.equal(koiPolicy.relationshipType, 'trade_strain');
 assert.deepEqual(koiPolicy.inheritedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation']);
