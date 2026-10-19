@@ -11,6 +11,7 @@ import {
   type CompatibilityTaxonResearchPlanItem,
 } from '../src/services/compatibility/compatibility-field-coverage.service';
 import { createGbifSpeciesIdentityResolver } from '../src/services/compatibility/gbif-species-identity.service';
+import { resolveCompatibilityResearchIdentity } from '../src/services/compatibility/research-identity.service';
 
 const arg = (name: string) => {
   const prefix = `--${name}=`;
@@ -86,7 +87,7 @@ const main = async () => {
       }
 
       try {
-        const identity = await identityResolver.resolve(scientificName);
+        const identity = await resolveCompatibilityResearchIdentity(job, identityResolver);
         if (identity.status !== 'verified') {
           results[index] = {
             researchKey: job.researchKey,

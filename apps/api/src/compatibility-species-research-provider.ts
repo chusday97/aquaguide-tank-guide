@@ -779,19 +779,34 @@ const htmlToText = (html: string) => decodeEntities(
     .trim(),
 );
 
-const compatibilityEvidenceExcerpt = (text: string, maxChars: number) => {
+const compatibilityEvidenceExcerpt = (
+  text: string,
+  maxChars: number,
+  scientificName?: string,
+) => {
   if (text.length <= maxChars) return text;
   const anchors = [
     /\bEnvironment\s*:/gi,
+    /\bHabitat Regions\b/gi,
+    /\bHabitat\b[^.!?]{0,120}(?:fresh inland waters|freshwater|brackish|marine)/gi,
     /(?:Température|Temperature)\s+\d/gi,
     /\bpH(?:\s*\([^)]{0,40}\))?\s+\d/gi,
     /\bMax(?:imum)?\s+length\s*:?\s*\d/gi,
     /\bTaille\s+max(?:imale)?\.?\s*:?\s*\d/gi,
     /\bVolume\s+(?:min\.?|minimum|minimal)\s*:?\s*\d/gi,
-    /(?:vit|évolue|evolue|se rencontre)[^.!?]{0,100}eau (?:douce|de mer|saum[aâ]tre)/gi,
+    /(?:vit|vivant(?:e)?|évolue|evolue|se rencontre)[^.!?]{0,120}eau (?:douce|de mer|saum[aâ]tre)/gi,
     /\bCohabitation\b|\bCompatibility\b|\bComportement\b/gi,
   ];
   const ranges: Array<[number, number]> = [];
+  if (scientificName) {
+    const scientificIndex = text.toLowerCase().indexOf(scientificName.trim().toLowerCase());
+    if (scientificIndex >= 0) {
+      ranges.push([
+        Math.max(0, scientificIndex - 320),
+        Math.min(text.length, scientificIndex + scientificName.length + 680),
+      ]);
+    }
+  }
   for (const pattern of anchors) {
     let match: RegExpExecArray | null;
     let count = 0;
@@ -898,7 +913,7 @@ const fetchOneVerifiedDocumentDetailed = async (
     const rawLimit = Math.min(300_000, Math.max(100_000, config.maxSourceChars * 20));
     const raw = rawResponse.slice(0, rawLimit);
     const fullText = contentType.includes('text/plain') ? raw.replace(/\s+/g, ' ').trim() : htmlToText(raw);
-    const text = compatibilityEvidenceExcerpt(fullText, config.maxSourceChars);
+    const text = compatibilityEvidenceExcerpt(fullText, config.maxSourceChars, scientificName);
     if (text.length < 400) {
       return {
         document: null,
@@ -1270,12 +1285,21 @@ const explicitWaterFromDocument = (document: VerifiedDocument) => {
   }
 
   if (document.publisher === 'Fishipedia') {
-    const habitatStatements = text.match(/(?:vit|évolue|evolue|se rencontre)[^.!?]{0,100}(?:eau douce|eau saum[aâ]tre|eau de mer)/gi) || [];
+    const habitatStatements = text.match(/(?:vit|vivant(?:e)?|évolue|evolue|se rencontre)[^.!?]{0,120}(?:eau douce|eau saum[aâ]tre|eau de mer)/gi) || [];
     for (const statement of habitatStatements) {
       if (/eau douce/i.test(statement)) candidates.add('freshwater');
       if (/eau saum[aâ]tre/i.test(statement)) candidates.add('brackish');
       if (/eau de mer/i.test(statement)) candidates.add('saltwater');
     }
+  }
+
+  if (document.publisher === 'Animal Diversity Web, University of Michigan') {
+    const habitat = text.match(/\bHabitat\b[^.!?]{0,320}/i)?.[0] || '';
+    const habitatRegions = text.match(/\bHabitat Regions\b[^.!?]{0,180}/i)?.[0] || '';
+    const explicitHabitat = [habitat, habitatRegions].join(' ');
+    if (/\bfresh inland waters\b|\bfreshwater\b/i.test(explicitHabitat)) candidates.add('freshwater');
+    if (/\bbrackish\b/i.test(explicitHabitat)) candidates.add('brackish');
+    if (/\bmarine\b|\bsaltwater\b/i.test(explicitHabitat)) candidates.add('saltwater');
   }
 
   return candidates.size === 1 ? [...candidates][0] : null;
@@ -1337,32 +1361,57 @@ const deterministicClaimsFromDocuments = (
     deterministicFields.has(field) && (targetSet.size === 0 || targetSet.has(field))
   );
   const claims: ExtractionOutput['claims'] = [];
+  const hasField = (field: CompatibilityOnboardingCoreField) => claims.some(claim => claim.field === field);
+  const push = (
+    document: VerifiedDocument,
+    field: CompatibilityOnboardingCoreField,
+    proposedValue: unknown,
+    note: string,
+    onlyIfMissing = false,
+  ) => {
+    if (!allows(field) || proposedValue === null || (onlyIfMissing && hasField(field))) return;
+    claims.push({
+      field,
+      proposedValue,
+      sourceUrl: document.url,
+      evidenceKind: 'direct',
+      confidence: 'high',
+      note,
+    });
+  };
 
-  for (const document of documents) {
-    if (!['FishBase', 'Fishipedia'].includes(document.publisher)) continue;
-    const push = (field: CompatibilityOnboardingCoreField, proposedValue: unknown, note: string) => {
-      if (!allows(field) || proposedValue === null) return;
-      claims.push({
-        field,
-        proposedValue,
-        sourceUrl: document.url,
-        evidenceKind: 'direct',
-        confidence: 'high',
-        note,
-      });
-    };
-
-    push('water', explicitWaterFromDocument(document), 'Deterministic parser matched an explicit water/environment statement on the verified exact-taxon source.');
-
-    if (document.publisher === 'Fishipedia') {
-      push('temperature', explicitRange(document.text, /(?:Température|Temperature)/i), 'Deterministic parser matched an explicit labelled temperature range on the verified exact-taxon source.');
-      push('ph', explicitRange(document.text, /\bpH(?:\s*\([^)]{0,40}\))?/i), 'Deterministic parser matched an explicit labelled pH range on the verified exact-taxon source.');
+  // Water type is accepted only from explicit environment/habitat language on
+  // trusted exact-taxon pages. Source order is deliberate so a lower-priority
+  // source cannot manufacture a second, conflicting deterministic claim.
+  for (const publisher of ['FishBase', 'Fishipedia', 'Animal Diversity Web, University of Michigan']) {
+    for (const document of documents.filter(item => item.publisher === publisher)) {
+      push(
+        document,
+        'water',
+        explicitWaterFromDocument(document),
+        'Deterministic parser matched an explicit water/environment statement on the verified exact-taxon source.',
+        true,
+      );
     }
+  }
 
-    push('adult_size', explicitAdultSizeFromDocument(document), 'Deterministic parser matched an explicit maximum adult-length label on the verified exact-taxon source.');
-    push('tank_size', explicitTankSizeFromDocument(document), 'Deterministic parser matched an explicit minimum aquarium-volume label on the verified exact-taxon source.');
+  // Fishipedia's explicit husbandry labels are primary for these numeric
+  // ranges. Seriously Fish Quick facts are a fallback only when Fishipedia did
+  // not yield that field, preventing two deterministic ranges from competing.
+  for (const document of documents.filter(item => item.publisher === 'Fishipedia')) {
+    push(document, 'temperature', explicitRange(document.text, /(?:Température|Temperature)/i), 'Deterministic parser matched an explicit labelled temperature range on the verified exact-taxon source.', true);
+    push(document, 'ph', explicitRange(document.text, /\bpH(?:\s*\([^)]{0,40}\))?/i), 'Deterministic parser matched an explicit labelled pH range on the verified exact-taxon source.', true);
+  }
+  for (const document of documents.filter(item => item.publisher === 'Seriously Fish')) {
+    push(document, 'temperature', explicitRange(document.text, /\bTemp(?:erature)?\b/i), 'Deterministic parser matched a Seriously Fish Quick facts temperature range on the verified exact-taxon source.', true);
+    push(document, 'ph', explicitRange(document.text, /\bpH\b/i), 'Deterministic parser matched a Seriously Fish Quick facts pH range on the verified exact-taxon source.', true);
+  }
+
+  for (const document of documents.filter(item => ['FishBase', 'Fishipedia'].includes(item.publisher))) {
+    push(document, 'adult_size', explicitAdultSizeFromDocument(document), 'Deterministic parser matched an explicit maximum adult-length label on the verified exact-taxon source.');
+    push(document, 'tank_size', explicitTankSizeFromDocument(document), 'Deterministic parser matched an explicit minimum aquarium-volume label on the verified exact-taxon source.');
     const territoriality = explicitTerritorialityFromDocument(document);
-    if (territoriality) push('territoriality', territoriality.value, territoriality.note);
+    if (territoriality) push(document, 'territoriality', territoriality.value, territoriality.note);
   }
 
   return { claims };

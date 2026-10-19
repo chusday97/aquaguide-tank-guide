@@ -1,0 +1,242 @@
+{
+  "version": 1,
+  "kind": "compatibility_variant_environment_candidate_review",
+  "policy": {
+    "writesAuthority": false,
+    "promotionAllowed": false,
+    "grantsInheritance": false,
+    "scope": "Reviewed identity-known zero-inheritance variants; base-taxon evidence discovery only for water, temperature, and pH.",
+    "promotionGate": "Every supported candidate still requires an explicit reviewed field bridge or variant-specific evidence before Catalog/Compatibility authority can change.",
+    "exactObjectFieldsExcluded": [
+      "adult_size",
+      "tank_size",
+      "social_behavior",
+      "territoriality",
+      "predation"
+    ]
+  },
+  "summary": {
+    "taxonJobs": 4,
+    "variantObjects": 9,
+    "candidateFieldsPerObject": 3,
+    "requestedCandidateSlots": 27,
+    "supportedCandidateSlots": 25,
+    "unresolvedCandidateSlots": 2,
+    "supportedTaxonFacts": 11,
+    "unresolvedTaxonFacts": 1,
+    "exactObjectSlotsExcluded": 45
+  },
+  "jobs": [
+    {
+      "researchKey": "Carassius auratus",
+      "speciesIds": [
+        "sp_0065",
+        "sp_0066",
+        "sp_0067",
+        "sp_0068",
+        "sp_0162"
+      ],
+      "objectCount": 5,
+      "fields": [
+        {
+          "field": "water",
+          "status": "draft_candidate",
+          "proposedValue": "freshwater",
+          "source": {
+            "id": "research-93564a7e556d72f5e735",
+            "title": "Carassius auratus | INFORMATION | Animal Diversity Web",
+            "publisher": "Animal Diversity Web, University of Michigan",
+            "url": "https://animaldiversity.org/accounts/Carassius_auratus",
+            "sourceType": "university"
+          }
+        },
+        {
+          "field": "temperature",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 10,
+            "max": 25
+          },
+          "source": {
+            "id": "research-ff4044764363ca267ede",
+            "title": "Poisson rouge • Carassius auratus • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/carassius-auratus",
+            "sourceType": "curated_husbandry"
+          }
+        },
+        {
+          "field": "ph",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 6.5,
+            "max": 8
+          },
+          "source": {
+            "id": "research-ff4044764363ca267ede",
+            "title": "Poisson rouge • Carassius auratus • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/carassius-auratus",
+            "sourceType": "curated_husbandry"
+          }
+        }
+      ]
+    },
+    {
+      "researchKey": "Paracheirodon innesi",
+      "speciesIds": [
+        "sp_0155"
+      ],
+      "objectCount": 1,
+      "fields": [
+        {
+          "field": "water",
+          "status": "draft_candidate",
+          "proposedValue": "freshwater",
+          "source": {
+            "id": "research-a8e109294b9b5d2fd459",
+            "title": "Paracheirodon innesi, Neon tetra : fisheries, aquarium",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Paracheirodon-innesi.html",
+            "sourceType": "professional_association"
+          }
+        },
+        {
+          "field": "temperature",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 20,
+            "max": 26
+          },
+          "source": {
+            "id": "research-97e9ab0c5596ea9db651",
+            "title": "Néon bleu • Paracheirodon innesi • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/paracheirodon-innesi",
+            "sourceType": "curated_husbandry"
+          }
+        },
+        {
+          "field": "ph",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 6,
+            "max": 7.2
+          },
+          "source": {
+            "id": "research-97e9ab0c5596ea9db651",
+            "title": "Néon bleu • Paracheirodon innesi • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/paracheirodon-innesi",
+            "sourceType": "curated_husbandry"
+          }
+        }
+      ]
+    },
+    {
+      "researchKey": "Poecilia reticulata",
+      "speciesIds": [
+        "sp_0143",
+        "sp_0144"
+      ],
+      "objectCount": 2,
+      "fields": [
+        {
+          "field": "water",
+          "status": "blocked_by_contract",
+          "proposedValue": null,
+          "reasonCode": "multi_environment_not_representable_by_single_water_value",
+          "evidenceSummary": "Verified FishBase exact-taxon Environment explicitly lists both freshwater and brackish; current Compatibility water candidate contract is single-valued, so no deterministic value is promoted.",
+          "source": {
+            "id": "research-fishbase-poecilia-water-boundary",
+            "title": "Poecilia reticulata, Guppy : aquarium",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Poecilia-reticulata.html",
+            "sourceType": "professional_association"
+          }
+        },
+        {
+          "field": "temperature",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 17,
+            "max": 28
+          },
+          "source": {
+            "id": "research-96ef679173e9882fbdea",
+            "title": "Poecilia reticulata (Guppy) · Seriously Fish",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/poecilia-reticulata",
+            "sourceType": "curated_husbandry"
+          }
+        },
+        {
+          "field": "ph",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 7,
+            "max": 8.5
+          },
+          "source": {
+            "id": "research-96ef679173e9882fbdea",
+            "title": "Poecilia reticulata (Guppy) · Seriously Fish",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/poecilia-reticulata",
+            "sourceType": "curated_husbandry"
+          }
+        }
+      ]
+    },
+    {
+      "researchKey": "Tanichthys albonubes",
+      "speciesIds": [
+        "sp_0361"
+      ],
+      "objectCount": 1,
+      "fields": [
+        {
+          "field": "water",
+          "status": "draft_candidate",
+          "proposedValue": "freshwater",
+          "source": {
+            "id": "research-b32298af7de1ff8412a6",
+            "title": "Tanichthys albonubes, White cloud mountain minnow : fisheries, aquarium",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Tanichthys-albonubes.html",
+            "sourceType": "professional_association"
+          }
+        },
+        {
+          "field": "temperature",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 2,
+            "max": 22
+          },
+          "source": {
+            "id": "research-580d81074fd5681e91f5",
+            "title": "Néon du pauvre • Tanichthys albonubes • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/tanichthys-albonubes",
+            "sourceType": "curated_husbandry"
+          }
+        },
+        {
+          "field": "ph",
+          "status": "draft_candidate",
+          "proposedValue": {
+            "min": 6,
+            "max": 7.5
+          },
+          "source": {
+            "id": "research-580d81074fd5681e91f5",
+            "title": "Néon du pauvre • Tanichthys albonubes • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/tanichthys-albonubes",
+            "sourceType": "curated_husbandry"
+          }
+        }
+      ]
+    }
+  ]
+}

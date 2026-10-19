@@ -17,10 +17,10 @@ const jobs: CompatibilityTaxonResearchPlanItem[] = [
   {
     researchKey: 'Example variantus', baseScientificName: 'Example variantus', priorityScore: 90,
     catalogObjectCount: 1, exactObjectCount: 0, variantObjectCount: 1, unresolvedObjectCount: 0,
-    combinedGapFields: ['water'], exactObjectEvidenceGapFields: [], requiresVariantBridgeReview: true,
-    canCompleteFromBaseTaxonResearch: true,
+    combinedGapFields: ['water'], exactObjectEvidenceGapFields: ['adult_size'], requiresVariantBridgeReview: true,
+    canCompleteFromBaseTaxonResearch: false,
     researchDisposition: 'base_taxon_candidate_research_with_variant_bridge', promotionPolicy: 'must never auto-promote',
-    catalogObjects: [{ speciesId: 'sp_test_variant', name: 'Variant', scientificName: 'Example variantus red', gaps: ['water'], baseTaxonCandidateGaps: ['water'], exactObjectEvidenceGaps: [], variantResearchPolicyApplied: true, isVariant: true, isExactBaseTaxon: false }],
+    catalogObjects: [{ speciesId: 'sp_test_variant', name: 'Variant', scientificName: 'Example variantus red', gaps: ['water', 'adult_size'], baseTaxonCandidateGaps: ['water'], exactObjectEvidenceGaps: ['adult_size'], variantResearchPolicyApplied: true, isVariant: true, isExactBaseTaxon: false }],
   },
 ];
 
@@ -48,6 +48,8 @@ const report = await runCompatibilityResearchBatchDryRun({ jobs, identityResolve
 assert.equal(report.writesAuthority, false);
 assert.equal(report.summary.jobs, 2);
 assert.equal(report.summary.requestedCatalogFieldGaps, 3);
+assert.deepEqual(Object.keys(report.summary.fieldStats).sort(), ['predation', 'water'], 'exact-object-gated variant fields must not be counted as base-taxon research requests');
+assert.equal(report.summary.fieldStats.adult_size, undefined);
 assert.equal(report.summary.potentialCatalogFieldClosures, 1, 'exact taxon hit may be counted as a potential reviewed closure');
 assert.equal(report.summary.variantCandidateFieldHits, 1, 'variant base-taxon hit must remain candidate-only');
 assert.deepEqual(researchTargets, [['predation', 'water'], ['water']], 'batch research must request only unresolved fields for each taxon job');

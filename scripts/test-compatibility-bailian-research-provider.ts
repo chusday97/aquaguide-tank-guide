@@ -276,6 +276,7 @@ const staleSeriouslyFishUrl = 'https://www.seriouslyfish.com/2019/07/pseudomugil
 const fishBaseHtml = [
   '<html><head><title>Pseudomugil luminatus summary page</title></head><body>',
   '<h1>Pseudomugil luminatus Allen, Unmack & Hadiaty, 2016</h1>',
+  '<p>' + 'cookie navigation classification distribution '.repeat(500) + '</p>',
   '<p>Environment: Freshwater; benthopelagic. Tropical.</p>',
   '<p>Max length: 1.9 cm SL male/unsexed.</p>',
   '<p>' + 'classification distribution morphology reference ecology '.repeat(80) + '</p>',
@@ -331,6 +332,15 @@ assert.equal(fallbackPacket.sources.length, 1, 'deterministic trusted candidate 
 assert.equal(fallbackPacket.sources[0].url, fishBaseTemplateUrl);
 assert.equal(fallbackPacket.sources[0].publisher, 'FishBase');
 assert.equal(fallbackPacket.sources[0].contentVerified, true);
+assert.match(
+  fallbackPacket.sources[0].title,
+  /Pseudomugil luminatus/i,
+);
+assert.equal(
+  fallbackPacket.sources[0].url,
+  fishBaseTemplateUrl,
+  'long FishBase pages must retain the exact-taxon window while excerpting distant evidence anchors',
+);
 assert.deepEqual(fallbackPacket.claims.map(claim => claim.field).sort(), ['adult_size', 'water']);
 assert.equal(assessCompatibilitySpeciesResearchPacket(fallbackPacket).status, 'research_pending', 'partial direct evidence must remain fail closed');
 
@@ -461,7 +471,11 @@ const transientPacket = await createBailianCompatibilitySpeciesResearchProvider(
   scientificName,
 });
 assert.equal(transientExtractionAttempts, 2, 'one transient provider TLS failure should retry exactly once');
-assert.deepEqual(transientPacket.claims.map(claim => claim.field), ['water']);
+assert.deepEqual(Object.fromEntries(transientPacket.claims.map(claim => [claim.field, claim.proposedValue])), {
+  temperature: { min: 24, max: 28 },
+  ph: { min: 6.5, max: 7.5 },
+  water: 'freshwater',
+}, 'verified deterministic Quick facts must survive the transient model retry while the successful model result may add its sourced water claim');
 assert.equal(transientPacket.diagnostics?.extractionStatus, 'ok');
 
 let persistentExtractionAttempts = 0;
@@ -500,7 +514,10 @@ const persistentNetworkPacket = await createBailianCompatibilitySpeciesResearchP
 assert.equal(persistentExtractionAttempts, 3, 'persistent transient-class extraction transport failure should stop after three bounded attempts');
 assert.equal(persistentNetworkPacket.sources.length, 1, 'verified source work must survive model transport outage');
 assert.equal(persistentNetworkPacket.sources[0].contentVerified, true);
-assert.deepEqual(persistentNetworkPacket.claims, [], 'transport outage must never synthesize unsupported claims');
+assert.deepEqual(Object.fromEntries(persistentNetworkPacket.claims.map(claim => [claim.field, claim.proposedValue])), {
+  temperature: { min: 24, max: 28 },
+  ph: { min: 6.5, max: 7.5 },
+}, 'persistent model transport outage must preserve only deterministic explicit claims from the verified source and synthesize nothing else');
 assert.equal(persistentNetworkPacket.diagnostics?.extractionStatus, 'transport_unavailable');
 assert.equal(persistentNetworkPacket.diagnostics?.transportErrorCode, 'retryable_network_error');
 assert.equal(persistentNetworkPacket.diagnostics?.verifiedSourceCount, 1);

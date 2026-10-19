@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { compatibilitySpeciesResearchProvider, getCompatibilitySpeciesResearchProviderReadiness } from '../apps/api/src/compatibility-species-research-provider';
 import { buildCompatibilityTaxonResearchPlan, type CompatibilityTaxonResearchPlanItem } from '../src/services/compatibility/compatibility-field-coverage.service';
 import { createGbifSpeciesIdentityResolver } from '../src/services/compatibility/gbif-species-identity.service';
+import { resolveCompatibilityResearchIdentity } from '../src/services/compatibility/research-identity.service';
 import {
   assessCompatibilitySpeciesResearchPacket,
   type CompatibilitySpeciesIdentityResolver,
@@ -76,7 +77,8 @@ export const summarizeCompatibilityResearchDryRun = (
   jobs.forEach((job, index) => {
     const result = results[index];
     for (const object of job.catalogObjects) {
-      for (const field of object.gaps) {
+      const requestedFields = object.isVariant ? object.baseTaxonCandidateGaps : object.gaps;
+      for (const field of requestedFields) {
         requestedCatalogFieldGaps += 1;
         fieldStats[field] ??= { requestedCatalogGaps: 0, potentialClosures: 0, variantCandidateHits: 0 };
         fieldStats[field].requestedCatalogGaps += 1;
@@ -160,7 +162,7 @@ export const runCompatibilityResearchBatchDryRun = async ({
       }
 
       try {
-        const identity = await identityResolver.resolve(scientificName);
+        const identity = await resolveCompatibilityResearchIdentity(job, identityResolver);
         if (identity.status !== 'verified') {
           results[index] = {
             researchKey: job.researchKey,
@@ -210,7 +212,7 @@ export const runCompatibilityResearchBatchDryRun = async ({
           count + (object.isVariant ? 0 : object.gaps.filter(field => gapHits.includes(field)).length)
         ), 0);
         const variantCandidateFieldHits = job.catalogObjects.reduce((count, object) => (
-          count + (object.isVariant ? object.gaps.filter(field => gapHits.includes(field)).length : 0)
+          count + (object.isVariant ? object.baseTaxonCandidateGaps.filter(field => gapHits.includes(field)).length : 0)
         ), 0);
         results[index] = {
           researchKey: job.researchKey,

@@ -20,36 +20,14 @@ import {
   buildCompatibilityOnboardingReviewWorkItem,
   type CompatibilityOnboardingReviewPacket,
 } from '../../../src/services/compatibility/onboarding-review-packet.service';
-import { getApprovedCatalogFieldReviews } from '../../../src/data/catalogFieldReviews';
+import {
+  resolveCompatibilityResearchIdentity,
+  resolveReviewedCatalogResearchIdentity,
+} from '../../../src/services/compatibility/research-identity.service';
+
+export { resolveReviewedCatalogResearchIdentity } from '../../../src/services/compatibility/research-identity.service';
 
 export type CompatibilityResearchQueueMode = 'plan' | 'active_completion';
-
-const normalizeScientificName = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase();
-
-export const resolveReviewedCatalogResearchIdentity = (
-  job: Pick<CompatibilityTaxonResearchPlanItem, 'baseScientificName' | 'catalogObjects'>,
-) => {
-  if (!job.baseScientificName || job.catalogObjects.length === 0) return null;
-  const target = normalizeScientificName(job.baseScientificName);
-  const allReviewed = job.catalogObjects.every(object => {
-    const review = getApprovedCatalogFieldReviews(object.speciesId)
-      .find(item => item.field === 'identity');
-    if (!review || typeof review.proposedValue !== 'object' || review.proposedValue === null) return false;
-    const value = review.proposedValue as { scientificName?: unknown; baseSpeciesKey?: unknown };
-    return [value.scientificName, value.baseSpeciesKey]
-      .some(candidate => typeof candidate === 'string' && normalizeScientificName(candidate) === target);
-  });
-  if (!allReviewed) return null;
-  return {
-    status: 'verified' as const,
-    queriedScientificName: job.baseScientificName,
-    canonicalName: job.baseScientificName,
-    externalId: 'reviewed-catalog:' + job.catalogObjects.map(object => object.speciesId).join(','),
-    sourceUrl: null,
-    confidence: 100,
-    reasonCode: 'reviewed_catalog_identity',
-  };
-};
 
 export type CompatibilityResearchWorkQueue =
   | 'manual_review'
@@ -329,8 +307,7 @@ export const runCompatibilityResearchBatchPreview = async (
       }
 
       try {
-        const identity = resolveReviewedCatalogResearchIdentity(job)
-          ?? await identityResolver.resolve(job.baseScientificName);
+        const identity = await resolveCompatibilityResearchIdentity(job, identityResolver);
         if (identity.status !== 'verified') {
           const reasonCodes = [identity.reasonCode || 'identity_unresolved'];
           results[index] = {

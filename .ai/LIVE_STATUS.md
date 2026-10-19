@@ -1,16 +1,15 @@
-## TOP CURRENT OVERRIDE — 2026-10-19 variant field-scoped research policy
+## TOP CURRENT OVERRIDE — 2026-10-20 variant environment draft evidence closure
 
-- Working authority: local `main` after `4d2a1f59`; no push/deploy/Production mutation, migration, rollout or UI change.
-- Added source-controlled research policies for the 9 reviewed identity-known zero-inheritance variants. **No inheritedFacts or runtime authority were added.**
-- Base-taxon candidate research is limited to **water / temperature / pH = 27 slots**. **adult size / tank size / social / territorial / predation = 45 slots** require exact-object evidence.
-- The 4 guarded taxon jobs remain in the general plan for source discovery, but `active_completion` is now **0** because all four have `canCompleteFromBaseTaxonResearch=false`.
-- Decision-impact routing is now **0 completion / 4 variant-object-evidence blocked / 0 terminal**, covering **0 / 9 / 0 catalog objects**.
-- Variant audit reports **9 research policies / 27 candidate slots / 45 exact-object slots**; all 9 target variants remain 0 authoritative fields and non-ready.
-- Coverage/runtime remain unchanged: **308 fish / 100 ready / 112 core-complete / 150 visible debt / 44 canonical identities / 93 identity boundaries / 16,735 unresolved pairs**.
-- Fully informed remains **100 / 4,950 / 0 insufficient_data**; readability stays **9,591 / 97 exceptional unknowns**.
-- Repository authority remains **126 Profiles / 21 Pair Rules**; release generations remain **63 / 85 / 95 / 99 / 100 / 101**.
-- Research planner/queue/bridge/audit and full Compatibility/runtime/release gates PASS.
-- NEXT: research the 27 environmental candidate slots as draft-only evidence; never auto-promote. Keep the 45 exact-object slots blocked until object-level evidence or explicit reviewed bridges exist.
+- Working authority: local `main` after `da32a368`; no push/deploy/Production mutation, migration, rollout or UI change.
+- The 4 guarded taxon lanes now have source-controlled draft evidence: **25/27 environment candidate slots reviewable / 2/27 blocked by contract**. All candidates remain non-authoritative and all 9 target variants remain zero-inheritance.
+- The two blocked slots are Red/Blue Grass guppy `water`: exact-taxon FishBase says freshwater + brackish, while the current water candidate is single-valued. No forced freshwater mapping is allowed.
+- Added plan-mode source-only + resume research, shared reviewed-identity resolution, and deterministic trusted-source extraction without repeated identity lookup/discovery/fetch.
+- Candidate evidence is now reproducible: **registry → builder → generated JSON**. The test rejects artifact drift from the source-controlled registry or current four-job research plan.
+- Durable artifact: `evaluation/product/compatibility-variant-environment-candidates.v1.json`; no raw text/resume/credentials and `writesAuthority=false / promotionAllowed=false / grantsInheritance=false`.
+- The other **45 exact-object slots remain untouched**.
+- Runtime remains **308 fish / 100 ready / 112 core-complete / 4,950 mature pairs / 0 insufficient_data / 97 exceptional unknowns**; authority remains **126 Profiles / 21 Pair Rules**, rollout **63/85/95/99/100/101**.
+- Research-workflow, generator, Compatibility, runtime and release gates PASS.
+- NEXT: review the 25 draft field bridges one field at a time; do not auto-promote. Guppy water remains blocked unless the schema or variant-specific evidence resolves the freshwater+brackish boundary.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 
