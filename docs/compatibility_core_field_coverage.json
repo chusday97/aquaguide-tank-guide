@@ -16,6 +16,9 @@
   "oneFieldGapSpecies": 9,
   "runtimeReviewedProfileSpecies": 159,
   "domainOrIdentityHeldSpecies": 270,
+  "visibleResearchDebtFields": 78,
+  "completionEligibleResearchDebtFields": 0,
+  "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
       "reviewed_supported": 162,

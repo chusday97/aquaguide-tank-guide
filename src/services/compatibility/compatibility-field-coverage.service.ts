@@ -50,6 +50,9 @@ export type CompatibilityFieldCoverageSummary = {
   oneFieldGapSpecies: number;
   runtimeReviewedProfileSpecies: number;
   domainOrIdentityHeldSpecies: number;
+  visibleResearchDebtFields: number;
+  completionEligibleResearchDebtFields: number;
+  deferredResearchDebtFields: number;
   fieldCounts: Record<CompatibilityCoreField, Record<CompatibilityFieldCoverageStatus, number>>;
   fieldActionableGaps: Array<{ field: CompatibilityCoreField; count: number }>;
 };
@@ -395,6 +398,12 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     return [field, counts];
   })) as CompatibilityFieldCoverageSummary['fieldCounts'];
 
+  const visibleResearchDebtFields = rows.reduce((count, row) => count + row.actionableGapCount, 0);
+  const completionEligibleResearchDebtFields = rows.reduce((count, row) => (
+    row.terminalGapCount === 0 ? count + row.actionableGapCount : count
+  ), 0);
+  const deferredResearchDebtFields = visibleResearchDebtFields - completionEligibleResearchDebtFields;
+
   const summary: CompatibilityFieldCoverageSummary = {
     speciesCount: rows.length,
     coreFields,
@@ -403,6 +412,9 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     oneFieldGapSpecies: rows.filter(row => row.lifeType === 'fish' && row.authoritativeFieldCount === coreFields.length - 1).length,
     runtimeReviewedProfileSpecies: rows.filter(row => row.reviewedProfile !== 'none').length,
     domainOrIdentityHeldSpecies: rows.filter(row => coreFields.some(field => row.fields[field].status === 'missing_identity_or_domain')).length,
+    visibleResearchDebtFields,
+    completionEligibleResearchDebtFields,
+    deferredResearchDebtFields,
     fieldCounts,
     fieldActionableGaps: coreFields.map(field => ({ field, count: rows.filter(row => row.fields[field].disposition === 'targeted_source_expansion').length }))
       .sort((a, b) => b.count - a.count || b.field.localeCompare(a.field)),
