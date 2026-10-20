@@ -25,54 +25,54 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 150,
-  "completionEligibleResearchDebtFields": 72,
+  "visibleResearchDebtFields": 127,
+  "completionEligibleResearchDebtFields": 49,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 165,
+      "reviewed_supported": 169,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 52,
+      "reviewed_unknown": 48,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 150,
+      "reviewed_supported": 154,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
-      "needs_research": 9,
+      "needs_research": 5,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 144,
+      "reviewed_supported": 148,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
-      "needs_research": 9,
+      "needs_research": 5,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 154,
+      "reviewed_supported": 158,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
-      "needs_research": 9,
+      "needs_research": 5,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 143,
+      "reviewed_supported": 147,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 65,
-      "needs_research": 9,
+      "needs_research": 5,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 133,
+      "reviewed_supported": 136,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 84,
+      "reviewed_unknown": 81,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
@@ -100,32 +100,32 @@
       "count": 87
     },
     {
-      "field": "water",
-      "count": 9
-    },
-    {
       "field": "territoriality",
       "count": 9
     },
     {
+      "field": "social_behavior",
+      "count": 6
+    },
+    {
+      "field": "water",
+      "count": 5
+    },
+    {
       "field": "temperature",
-      "count": 9
+      "count": 5
     },
     {
       "field": "tank_size",
-      "count": 9
-    },
-    {
-      "field": "social_behavior",
-      "count": 9
+      "count": 5
     },
     {
       "field": "ph",
-      "count": 9
+      "count": 5
     },
     {
       "field": "adult_size",
-      "count": 9
+      "count": 5
     }
   ],
   "rows": [
@@ -5584,46 +5584,54 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 3,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
+            "app-aquatic-butterfly-tail-goldfish-variant-phase2-17"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "app-aquatic-butterfly-tail-goldfish-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "app-aquatic-butterfly-tail-goldfish-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "app-aquatic-butterfly-tail-goldfish-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "app-aquatic-butterfly-tail-goldfish-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -11798,55 +11806,63 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
+            "aquaticarts-red-grass-guppy-variant-phase2-17"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-red-grass-guppy-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-red-grass-guppy-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-red-grass-guppy-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-red-grass-guppy-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
+            "aquaticarts-red-grass-guppy-variant-phase2-17"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "needs_research",
@@ -12776,55 +12792,66 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
+            "tankbud-longfin-neon-tetra-variant-phase2-17"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-longfin-neon-tetra-variant-phase2-17",
+            "flipaquatics-longfin-neon-tetra-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-longfin-neon-tetra-variant-phase2-17",
+            "flipaquatics-longfin-neon-tetra-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-longfin-neon-tetra-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-longfin-neon-tetra-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-paracheirodon-innesi"
+            "tankbud-longfin-neon-tetra-variant-phase2-17",
+            "flipaquatics-longfin-neon-tetra-variant-phase2-17"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "needs_research",
@@ -29812,55 +29839,63 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
+            "aquaticarts-longfin-white-cloud-variant-phase2-17"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-longfin-white-cloud-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-longfin-white-cloud-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-longfin-white-cloud-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticarts-longfin-white-cloud-variant-phase2-17"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch35-fishbase-tanichthys-albonubes-longfin"
+            "aquaticarts-longfin-white-cloud-variant-phase2-17"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "needs_research",

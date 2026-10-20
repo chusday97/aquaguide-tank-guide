@@ -1,5 +1,6 @@
 import { catalogCanonicalIdentities } from '../../data/catalogCanonicalIdentity';
-import { getCompatibilityVariantFieldResearchPolicy } from '../../data/compatibilityVariantFieldResearchPolicy';
+import { getApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
+import { compatibilityVariantFieldResearchPolicies, getCompatibilityVariantFieldResearchPolicy } from '../../data/compatibilityVariantFieldResearchPolicy';
 import { fishData } from '../../data/fishData';
 import { buildCompatibilityVariantEnvironmentBridgeReview } from './variant-bridge-review.service';
 
@@ -31,7 +32,9 @@ export type CompatibilityVariantExactEvidenceQueueItem = {
 export const buildCompatibilityVariantExactEvidenceQueue = () => {
   const bridge = buildCompatibilityVariantEnvironmentBridgeReview();
   const items: CompatibilityVariantExactEvidenceQueueItem[] = [];
-  const speciesIds = [...new Set(bridge.decisions.map(item => item.speciesId))].sort();
+  // The queue is policy-driven, not bridge-decision-driven. A variant can close its
+  // environmental bridge while still needing exact-object behavioral evidence.
+  const speciesIds = Object.keys(compatibilityVariantFieldResearchPolicies).sort();
 
   for (const speciesId of speciesIds) {
     const identity = catalogCanonicalIdentities[speciesId];
@@ -40,10 +43,14 @@ export const buildCompatibilityVariantExactEvidenceQueue = () => {
     if (!identity || !researchPolicy || !species) {
       throw new Error('compatibility_variant_exact_evidence_queue_authority_missing:' + speciesId);
     }
+    const resolvedFields = new Set(
+      getApprovedCatalogFieldReviews(speciesId).map(review => review.field),
+    );
 
     for (const decision of bridge.decisions.filter(item => (
       item.speciesId === speciesId
       && item.decisionStatus === 'variant_specific_evidence_required'
+      && !resolvedFields.has(item.field)
     ))) {
       items.push({
         speciesId,
@@ -61,6 +68,7 @@ export const buildCompatibilityVariantExactEvidenceQueue = () => {
     }
 
     for (const field of researchPolicy.exactObjectEvidenceFacts) {
+      if (resolvedFields.has(field)) continue;
       items.push({
         speciesId,
         name: species.name,
@@ -107,7 +115,7 @@ export const buildCompatibilityVariantExactEvidenceQueue = () => {
       wholeProfileInheritanceAllowed: false,
     },
     summary: {
-      variantObjects: speciesIds.length,
+      variantObjects: new Set(items.map(item => item.speciesId)).size,
       totalResearchSlots: items.length,
       environmentVariantSpecificSlots: items.filter(item => item.sourceLane === 'environment_bridge_hold').length,
       exactObjectCoreSlots: items.filter(item => item.sourceLane === 'exact_object_policy').length,

@@ -15,27 +15,24 @@
   },
   "summary": {
     "variantObjects": 9,
-    "totalResearchSlots": 55,
+    "totalResearchSlots": 39,
     "draftEvidenceFoundObjects": 0,
     "discoveryRetryRequiredObjects": 5,
     "discoveryEvidenceCeilingObjects": 4,
     "notRunObjects": 0,
     "supportedSlots": 0,
-    "unresolvedSlots": 55
+    "unresolvedSlots": 39
   },
   "objects": [
     {
       "speciesId": "sp_0065",
       "variantKey": "Butterfly Tail",
       "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 6,
+      "totalSlots": 3,
       "supportedFields": [],
       "unresolvedFields": [
-        "adult_size",
         "predation",
         "social_behavior",
-        "tank_size",
-        "temperature",
         "territoriality"
       ],
       "researchRuns": [
@@ -176,15 +173,10 @@
       "speciesId": "sp_0143",
       "variantKey": "Red Grass",
       "canonicalScientificName": "Poecilia reticulata",
-      "totalSlots": 7,
+      "totalSlots": 2,
       "supportedFields": [],
       "unresolvedFields": [
-        "adult_size",
-        "ph",
         "predation",
-        "social_behavior",
-        "tank_size",
-        "temperature",
         "territoriality"
       ],
       "researchRuns": [
@@ -236,14 +228,10 @@
       "speciesId": "sp_0155",
       "variantKey": "Longfin",
       "canonicalScientificName": "Paracheirodon innesi",
-      "totalSlots": 6,
+      "totalSlots": 2,
       "supportedFields": [],
       "unresolvedFields": [
-        "adult_size",
         "predation",
-        "social_behavior",
-        "tank_size",
-        "temperature",
         "territoriality"
       ],
       "researchRuns": [
@@ -293,14 +281,10 @@
       "speciesId": "sp_0361",
       "variantKey": "Longfin",
       "canonicalScientificName": "Tanichthys albonubes",
-      "totalSlots": 6,
+      "totalSlots": 2,
       "supportedFields": [],
       "unresolvedFields": [
-        "adult_size",
         "predation",
-        "social_behavior",
-        "tank_size",
-        "temperature",
         "territoriality"
       ],
       "researchRuns": [

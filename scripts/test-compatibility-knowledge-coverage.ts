@@ -196,6 +196,12 @@ assert.deepEqual(
 );
 
 assert.equal(report.next_wave_species_count, queue.next_wave_species_queue.length);
+for (const speciesId of ['sp_0065', 'sp_0143', 'sp_0155', 'sp_0361']) {
+  const item = queue.next_wave_species_queue.find(candidate => candidate.species_id === speciesId);
+  assert.ok(item, `${speciesId} should remain visible while its exact variant core-field authority is incomplete`);
+  assert.equal(item.boundary_codes.includes('catalog_identity_unresolved'), false, `${speciesId} reviewed identity correction must supersede historical unknown reviews`);
+  assert.equal(item.resolution_mode, 'evidence_research', `${speciesId} should now be routed to exact-variant evidence research rather than identity review`);
+}
 assert.ok(queue.next_wave_species_queue.length <= 25, 'next-wave promotion queue may be empty when all current promotion candidates are terminally classified');
 const nextWaveTaxa = new Set();
 for (const item of queue.next_wave_species_queue) {

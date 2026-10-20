@@ -2436,11 +2436,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "none",
-      "boundary_codes": [
-        "catalog_identity_unresolved"
-      ],
+      "boundary_codes": [],
       "research_disposition": "actionable",
-      "resolution_mode": "identity_review",
+      "resolution_mode": "evidence_research",
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
@@ -2468,11 +2466,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "none",
-      "boundary_codes": [
-        "catalog_identity_unresolved"
-      ],
+      "boundary_codes": [],
       "research_disposition": "actionable",
-      "resolution_mode": "identity_review",
+      "resolution_mode": "evidence_research",
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {

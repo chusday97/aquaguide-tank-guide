@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getCatalogIdentityBoundary, type CatalogIdentityBoundaryCode } from '../src/data/catalogIdentityBoundaries';
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary, type CompatibilityDomainBoundaryCode } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling, type KnowledgeEvidenceCeilingCode } from '../src/data/knowledgeEvidenceCeilings';
 import { getCompatibilityPairEvidenceCeiling } from '../src/data/compatibilityPairEvidenceCeilings';
@@ -109,8 +110,11 @@ const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
   if (identityBoundary) {
     codes.push(identityBoundary.code);
   } else if (
-    identityReview
-    || /(commercial.*form.*not identified|does not identify.*commercial variant|品系身份.*未.*确认|商业命名.*未.*确认|商业.*品系.*对应关系.*确认|商业名.*物种名.*混用)/i.test(variantText)
+    !getCatalogCanonicalIdentity(row.species_id)
+    && (
+      identityReview
+      || /(commercial.*form.*not identified|does not identify.*commercial variant|品系身份.*未.*确认|商业命名.*未.*确认|商业.*品系.*对应关系.*确认|商业名.*物种名.*混用)/i.test(variantText)
+    )
   ) {
     codes.push('catalog_identity_unresolved');
   }

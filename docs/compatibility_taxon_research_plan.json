@@ -1,17 +1,17 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "active completion research only: include completionEligible field gaps, defer evidence debt on objects with companion terminal holds; deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging",
-  "catalogObjects": 9,
-  "totalResearchJobs": 4,
-  "variantBridgeJobs": 4,
+  "catalogObjects": 5,
+  "totalResearchJobs": 2,
+  "variantBridgeJobs": 2,
   "items": [
     {
       "researchKey": "Carassius auratus",
       "baseScientificName": "Carassius auratus",
       "priorityScore": 110,
-      "catalogObjectCount": 5,
+      "catalogObjectCount": 4,
       "exactObjectCount": 0,
-      "variantObjectCount": 5,
+      "variantObjectCount": 4,
       "unresolvedObjectCount": 0,
       "combinedGapFields": [
         "water",
@@ -30,36 +30,6 @@
       "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
       "promotionPolicy": "Research only explicitly approved base-taxon candidate fields for source discovery. Candidate facts must never auto-promote; exact-object-gated fields require variant-specific evidence, and every candidate field still requires a reviewed field bridge or variant-specific evidence before authority changes.",
       "catalogObjects": [
-        {
-          "speciesId": "sp_0065",
-          "name": "蝶尾金鱼",
-          "scientificName": "Carassius auratus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "baseTaxonCandidateGaps": [
-            "water",
-            "temperature",
-            "ph"
-          ],
-          "exactObjectEvidenceGaps": [
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "variantResearchPolicyApplied": true,
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
         {
           "speciesId": "sp_0066",
           "name": "鹤顶红金鱼",
@@ -183,8 +153,8 @@
       ]
     },
     {
-      "researchKey": "Paracheirodon innesi",
-      "baseScientificName": "Paracheirodon innesi",
+      "researchKey": "Poecilia reticulata",
+      "baseScientificName": "Poecilia reticulata",
       "priorityScore": 110,
       "catalogObjectCount": 1,
       "exactObjectCount": 0,
@@ -207,154 +177,10 @@
       "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
       "promotionPolicy": "Research only explicitly approved base-taxon candidate fields for source discovery. Candidate facts must never auto-promote; exact-object-gated fields require variant-specific evidence, and every candidate field still requires a reviewed field bridge or variant-specific evidence before authority changes.",
       "catalogObjects": [
-        {
-          "speciesId": "sp_0155",
-          "name": "长鳍红绿灯",
-          "scientificName": "Paracheirodon innesi",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "baseTaxonCandidateGaps": [
-            "water",
-            "temperature",
-            "ph"
-          ],
-          "exactObjectEvidenceGaps": [
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "variantResearchPolicyApplied": true,
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Poecilia reticulata",
-      "baseScientificName": "Poecilia reticulata",
-      "priorityScore": 110,
-      "catalogObjectCount": 2,
-      "exactObjectCount": 0,
-      "variantObjectCount": 2,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph"
-      ],
-      "exactObjectEvidenceGapFields": [
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "canCompleteFromBaseTaxonResearch": false,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research only explicitly approved base-taxon candidate fields for source discovery. Candidate facts must never auto-promote; exact-object-gated fields require variant-specific evidence, and every candidate field still requires a reviewed field bridge or variant-specific evidence before authority changes.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0143",
-          "name": "红草尾孔雀鱼",
-          "scientificName": "Poecilia reticulata",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "baseTaxonCandidateGaps": [
-            "water",
-            "temperature",
-            "ph"
-          ],
-          "exactObjectEvidenceGaps": [
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "variantResearchPolicyApplied": true,
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
         {
           "speciesId": "sp_0144",
           "name": "蓝草尾孔雀鱼",
           "scientificName": "Poecilia reticulata",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "baseTaxonCandidateGaps": [
-            "water",
-            "temperature",
-            "ph"
-          ],
-          "exactObjectEvidenceGaps": [
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "variantResearchPolicyApplied": true,
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Tanichthys albonubes",
-      "baseScientificName": "Tanichthys albonubes",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 0,
-      "variantObjectCount": 1,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph"
-      ],
-      "exactObjectEvidenceGapFields": [
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "canCompleteFromBaseTaxonResearch": false,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research only explicitly approved base-taxon candidate fields for source discovery. Candidate facts must never auto-promote; exact-object-gated fields require variant-specific evidence, and every candidate field still requires a reviewed field bridge or variant-specific evidence before authority changes.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0361",
-          "name": "长鳍白云金丝 (改良)",
-          "scientificName": "Tanichthys albonubes",
           "gaps": [
             "water",
             "temperature",

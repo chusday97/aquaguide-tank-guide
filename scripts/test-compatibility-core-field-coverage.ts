@@ -8,10 +8,12 @@ import { getKnowledgeEvidenceCeilings } from '../src/data/knowledgeEvidenceCeili
 import { getLifeType } from '../src/modules/species/species.service';
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets, buildCompatibilityTaxonResearchPlan } from '../src/services/compatibility/compatibility-field-coverage.service';
+import { buildCompatibilityVariantExactEvidenceQueue } from '../src/services/compatibility/variant-exact-evidence-queue.service';
 
 const { rows, summary, backlog } = buildCompatibilityCoreFieldCoverage();
 const fastLanePackets = buildCompatibilityFastLaneResearchPackets();
 const taxonResearchPlan = buildCompatibilityTaxonResearchPlan();
+const variantExactEvidenceQueue = buildCompatibilityVariantExactEvidenceQueue();
 const fields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS];
 assert.equal(rows.length, fishData.length);
 assert.equal(rows.length, 486);
@@ -35,8 +37,8 @@ assert.equal(
   'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
 );
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
-assert.equal(summary.visibleResearchDebtFields, 150, 'identity closure must expose 72 strain/morphology field gaps without hiding the existing 78 deferred predation gaps');
-assert.equal(summary.completionEligibleResearchDebtFields, 72, 'nine identity-resolved strain/morphology variants must expose eight completion-eligible fields each without auto-inheritance');
+assert.equal(summary.visibleResearchDebtFields, 127, '23 exact-variant fields should be closed while the existing 78 deferred predation gaps remain visible');
+assert.equal(summary.completionEligibleResearchDebtFields, 49, 'exact-variant evidence should reduce completion-eligible debt from 72 to 49 without auto-inheritance');
 assert.equal(summary.deferredResearchDebtFields, 78, 'the pre-existing deferred predation debt must remain unchanged');
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
@@ -64,7 +66,7 @@ assert.equal(rowOf('sp_0445')?.genericOnboardingReady, true);
 assert.equal(rowOf('sp_0445')?.authoritativeFieldCount, 8);
 assert.equal(rowOf('sp_0216')?.genericOnboardingReady, true, 'same-taxon Golden Cobra alias should reuse reviewed Channa aurantimaculata authority');
 assert.equal(rowOf('sp_0216')?.authoritativeFieldCount, 8);
-for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']) {
+for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0144', 'sp_0162']) {
   const row = rowOf(speciesId);
   assert.ok(row);
   assert.equal(row.genericOnboardingReady, false);
@@ -73,6 +75,23 @@ for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 
   assert.equal(row.terminalGapCount, 0);
   assert.equal(row.reviewedProfile, 'none');
   assert.ok(fields.every(field => row.fields[field].disposition === 'targeted_source_expansion'));
+}
+const partialVariantExpectations = {
+  sp_0065: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size'], unresolved: ['social_behavior', 'territoriality', 'predation'] },
+  sp_0143: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior'], unresolved: ['territoriality', 'predation'] },
+  sp_0155: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior'], unresolved: ['territoriality', 'predation'] },
+  sp_0361: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior'], unresolved: ['territoriality', 'predation'] },
+} as const;
+for (const [speciesId, expected] of Object.entries(partialVariantExpectations)) {
+  const row = rowOf(speciesId);
+  assert.ok(row);
+  assert.equal(row.genericOnboardingReady, false, `${speciesId} must remain fail-closed until all eight fields are reviewed`);
+  assert.equal(row.authoritativeFieldCount, expected.authoritative.length);
+  assert.equal(row.actionableGapCount, expected.unresolved.length);
+  assert.equal(row.terminalGapCount, 0);
+  assert.equal(row.reviewedProfile, 'none');
+  for (const field of expected.authoritative) assert.equal(row.fields[field].disposition, 'ready', `${speciesId}/${field} should be closed by exact-variant evidence`);
+  for (const field of expected.unresolved) assert.equal(row.fields[field].disposition, 'targeted_source_expansion', `${speciesId}/${field} must remain explicit research debt`);
 }
 assert.equal(rowOf('sp_0014')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0014')?.fields.social_behavior.status, 'reviewed_supported');
@@ -864,18 +883,29 @@ for (const row of rows) {
   );
 }
 
-assert.equal(backlog.length, 150, 'field backlog must expose 78 deferred predation gaps plus 72 actionable identity-resolved strain/morphology fields');
+assert.equal(backlog.length, 127, 'field backlog must expose 78 deferred gaps plus 49 still-actionable variant fields after exact-evidence promotion');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
 const completionEligibleBacklog = backlog.filter(item => item.completionEligible);
 const deferredBacklog = backlog.filter(item => !item.completionEligible);
-assert.equal(completionEligibleBacklog.length, 72);
+assert.equal(completionEligibleBacklog.length, 49);
 assert.equal(deferredBacklog.length, 78);
 assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361']);
-for (const speciesId of ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361']) {
+const expectedCompletionFields: Record<string, string[]> = {
+  sp_0065: ['social_behavior', 'territoriality', 'predation'],
+  sp_0066: [...fields],
+  sp_0067: [...fields],
+  sp_0068: [...fields],
+  sp_0143: ['territoriality', 'predation'],
+  sp_0144: [...fields],
+  sp_0155: ['territoriality', 'predation'],
+  sp_0162: [...fields],
+  sp_0361: ['territoriality', 'predation'],
+};
+for (const [speciesId, expectedFields] of Object.entries(expectedCompletionFields)) {
   assert.deepEqual(
     completionEligibleBacklog.filter(item => item.speciesId === speciesId).map(item => item.field).sort(),
-    [...fields].sort(),
-    `${speciesId} must expose all eight fields after identity closure without inheritance`,
+    [...expectedFields].sort(),
+    `${speciesId} completion ledger must contain only still-unresolved fields`,
   );
 }
 assert.ok(deferredBacklog.every(item => item.field === 'predation'));
@@ -884,17 +914,17 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 4, 'only guarded research lanes for the nine identity-resolved strain/morphology variants should be active');
+assert.equal(taxonResearchPlan.length, 2, 'only variants that still have base-taxon candidate gaps should remain in taxon research');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 9);
+assert.deepEqual([...plannedCatalogObjects].sort(), ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0144', 'sp_0162']);
 const plannedAllGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
-const completionEligibleBacklogGapKeys = backlog.filter(item => item.completionEligible).map(item => `${item.speciesId}:${item.field}`).sort();
-assert.deepEqual(plannedAllGapKeys, completionEligibleBacklogGapKeys, 'the guarded variant plan must retain the full unresolved field ledger even when only a subset is eligible for base-taxon source discovery');
+const plannedBacklogGapKeys = completionEligibleBacklog.filter(item => plannedCatalogObjects.has(item.speciesId)).map(item => `${item.speciesId}:${item.field}`).sort();
+assert.deepEqual(plannedAllGapKeys, plannedBacklogGapKeys, 'taxon research must cover the unresolved ledger only for variants that still have base-taxon candidate work');
 const plannedBaseCandidateGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.baseTaxonCandidateGaps.map(field => `${object.speciesId}:${field}`))).sort();
 const plannedExactObjectGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.exactObjectEvidenceGaps.map(field => `${object.speciesId}:${field}`))).sort();
-assert.equal(plannedBaseCandidateGapKeys.length, 27, 'nine reviewed variants × three environmental fields may enter base-taxon candidate research');
-assert.equal(plannedExactObjectGapKeys.length, 45, 'nine reviewed variants × five morphology/behavior-sensitive fields must remain exact-object evidence work');
-assert.equal(new Set([...plannedBaseCandidateGapKeys, ...plannedExactObjectGapKeys]).size, 72);
+assert.equal(plannedBaseCandidateGapKeys.length, 15, 'five untouched variants × three environmental fields may enter base-taxon candidate research');
+assert.equal(plannedExactObjectGapKeys.length, 25, 'five untouched variants × five morphology/behavior-sensitive fields remain exact-object evidence work inside those taxon jobs');
+assert.equal(new Set([...plannedBaseCandidateGapKeys, ...plannedExactObjectGapKeys]).size, 40);
 for (const job of taxonResearchPlan) {
   assert.deepEqual(job.combinedGapFields, ['water', 'temperature', 'ph']);
   assert.deepEqual(job.exactObjectEvidenceGapFields, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
@@ -908,41 +938,36 @@ for (const job of taxonResearchPlan) {
 }
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
 assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
-assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 4, 'the nine identity-resolved strain/morphology variants must remain guarded variant-bearing research jobs');
+assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 2);
+const exactOnlyCompletionKeys = completionEligibleBacklog
+  .filter(item => !plannedCatalogObjects.has(item.speciesId))
+  .map(item => `${item.speciesId}:${item.field}`)
+  .sort();
+assert.equal(exactOnlyCompletionKeys.length, 9, 'partially completed variants should retain nine exact-object-only gaps outside taxon research');
+const queuedExactObjectKeys = new Set(variantExactEvidenceQueue.items.filter(item => item.sourceLane === 'exact_object_policy').map(item => `${item.speciesId}:${item.field}`));
+assert.ok(exactOnlyCompletionKeys.every(key => queuedExactObjectKeys.has(key)), 'every partial-variant remainder must stay in the exact-object research queue');
 const goldfishTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus');
 assert.ok(goldfishTaxonJob);
 assert.equal(goldfishTaxonJob.researchDisposition, 'base_taxon_candidate_research_with_variant_bridge');
 assert.equal(goldfishTaxonJob.requiresVariantBridgeReview, true);
-assert.equal(goldfishTaxonJob.catalogObjectCount, 5);
+assert.equal(goldfishTaxonJob.catalogObjectCount, 4);
 assert.equal(goldfishTaxonJob.exactObjectCount, 0);
-assert.equal(goldfishTaxonJob.variantObjectCount, 5);
-assert.deepEqual(goldfishTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0162']);
+assert.equal(goldfishTaxonJob.variantObjectCount, 4);
+assert.deepEqual(goldfishTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0066', 'sp_0067', 'sp_0068', 'sp_0162']);
 assert.ok(goldfishTaxonJob.catalogObjects.every(object => object.isVariant && !object.isExactBaseTaxon));
 assert.ok(goldfishTaxonJob.promotionPolicy.includes('must never auto-promote'));
 const guppyTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Poecilia reticulata');
 assert.ok(guppyTaxonJob);
 assert.equal(guppyTaxonJob.researchDisposition, 'base_taxon_candidate_research_with_variant_bridge');
 assert.equal(guppyTaxonJob.requiresVariantBridgeReview, true);
-assert.equal(guppyTaxonJob.catalogObjectCount, 2);
+assert.equal(guppyTaxonJob.catalogObjectCount, 1);
 assert.equal(guppyTaxonJob.exactObjectCount, 0);
-assert.equal(guppyTaxonJob.variantObjectCount, 2);
-assert.deepEqual(guppyTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0143', 'sp_0144']);
+assert.equal(guppyTaxonJob.variantObjectCount, 1);
+assert.deepEqual(guppyTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0144']);
 assert.ok(guppyTaxonJob.catalogObjects.every(object => object.isVariant && !object.isExactBaseTaxon));
 assert.ok(guppyTaxonJob.promotionPolicy.includes('must never auto-promote'));
-for (const [taxon, speciesId] of [
-  ['Paracheirodon innesi', 'sp_0155'],
-  ['Tanichthys albonubes', 'sp_0361'],
-] as const) {
-  const job = taxonResearchPlan.find(item => item.baseScientificName === taxon);
-  assert.ok(job);
-  assert.equal(job.researchDisposition, 'base_taxon_candidate_research_with_variant_bridge');
-  assert.equal(job.requiresVariantBridgeReview, true);
-  assert.equal(job.catalogObjectCount, 1);
-  assert.equal(job.exactObjectCount, 0);
-  assert.equal(job.variantObjectCount, 1);
-  assert.deepEqual(job.catalogObjects.map(object => object.speciesId), [speciesId]);
-  assert.ok(job.catalogObjects.every(object => object.isVariant && !object.isExactBaseTaxon));
-  assert.ok(job.promotionPolicy.includes('must never auto-promote'));
+for (const taxon of ['Paracheirodon innesi', 'Tanichthys albonubes']) {
+  assert.equal(taxonResearchPlan.find(item => item.baseScientificName === taxon), undefined, `${taxon} should leave taxon research once only exact-object behavioral gaps remain`);
 }
 assert.ok(taxonResearchPlan.filter(item => item.unresolvedObjectCount > 0).every(item => item.researchDisposition === 'identity_resolution_required' && item.baseScientificName === null));
 for (const closedVariantTaxon of ['Betta splendens', 'Channa argus', 'Channa asiatica', 'Crossocheilus langei', 'Danio rerio', 'Melanotaenia praecox', 'Pangio kuhlii', 'Poecilia latipinna', 'Poecilia sphenops', 'Sahyadria denisonii', 'Synchiropus splendidus', 'Synodontis nigriventris', 'Trichopodus leerii']) {
