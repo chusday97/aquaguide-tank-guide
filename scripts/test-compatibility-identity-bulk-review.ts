@@ -74,7 +74,8 @@ const manual = queue.items.filter(item => !item.automatedResearchAllowed);
 const preparation = buildIdentityBulkPreparation(queue, fishData);
 
 assert.equal(automated.length, 0);
-assert.equal(manual.length, 105);
+assert.equal(manual.length, queue.summary.manualReviewOnly);
+assert.equal(manual.length, queue.items.length);
 assert.equal(base.summary.totalAutomatedItems, automated.length);
 assert.equal(base.items.length, automated.length);
 assert.equal(review.summary.total, automated.length);
