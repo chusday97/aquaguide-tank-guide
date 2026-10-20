@@ -157,6 +157,36 @@ assert.ok(insufficientProduct.details.uncertainties.length > 0);
 assert.ok(insufficientProduct.main.why.some(text => /资料|确认|缺少|审核/.test(text)));
 assert.ok(insufficientProduct.main.howTo.length > 0);
 
+const blockedWithUnknownDecision = evaluateCompatibilityDecision({
+  tank,
+  items: [
+    { species: byId('sp_0001'), quantity: 6, origin: 'existing' },
+    { species: byId('sp_0019'), quantity: 6, origin: 'existing' },
+    { species: byId('sp_0004'), quantity: 1, origin: 'candidate' },
+  ],
+});
+assert.equal(blockedWithUnknownDecision.status, 'not_recommended');
+assert.ok(blockedWithUnknownDecision.blockingRules.length > 0);
+assert.ok(blockedWithUnknownDecision.missingData.length > 0, 'hard-blocked combinations can still contain independent unknown evidence boundaries');
+const blockedWithUnknownShadow: CompatibilityAiShadowResult = {
+  ...cautionShadow,
+  ai: {
+    status: 'skipped',
+    reason: 'mixed-authority regression fixture',
+    reasons: [],
+    adjustments: [],
+    uncertainties: [],
+  },
+};
+const blockedWithUnknownProduct = buildCompatibilityProductAssessment(blockedWithUnknownDecision, blockedWithUnknownShadow);
+assert.equal(blockedWithUnknownProduct.main.judgment, '不建议');
+assert.equal(blockedWithUnknownProduct.details.authority.status, 'not_recommended');
+assert.ok(blockedWithUnknownProduct.details.uncertainties.length > 0, 'a stronger hard-block verdict must not erase independent missing-data boundaries');
+assert.ok(
+  blockedWithUnknownProduct.details.uncertainties.every(item => blockedWithUnknownDecision.missingData.some(rule => item.ruleCodes.includes(rule.code))),
+  'mixed-status uncertainties must remain grounded only in deterministic missing-data rules',
+);
+
 assert.deepEqual(
   parseCompatibilityPlannedItems(['sp_0013:1', 'sp_0469:4', 'sp_0469:2']),
   [

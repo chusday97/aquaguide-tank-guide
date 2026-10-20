@@ -75,6 +75,15 @@ const deterministicReasons = (decision: CompatibilityDecision): CompatibilityPro
   ).slice(0, 3)
 );
 
+const deterministicUncertainties = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => (
+  uniqueItems(
+    prioritizeDistinctCompatibilityRules(decision.missingData).map(rule => ({
+      text: rule.evidence || rule.title,
+      ruleCodes: [rule.code],
+    })),
+  ).slice(0, 3)
+);
+
 const deterministicAdjustments = (
   decision: CompatibilityDecision,
   presentation: ReturnType<typeof getCompatibilityPresentation>,
@@ -205,7 +214,9 @@ export const buildCompatibilityProductAssessment = (
   const presentation = getCompatibilityPresentation(decision, assessmentMode);
   const resolutionTargets = buildCompatibilityResolutionTargets(decision, assessmentMode);
   const deterministicReasonItems = deterministicReasons(decision);
+  const deterministicUncertaintyItems = deterministicUncertainties(decision);
   const primaryRuleCodes = new Set(deterministicReasonItems.flatMap(item => item.ruleCodes));
+  const uncertaintyRuleCodes = new Set(decision.missingData.map(rule => rule.code));
   const aiAuthorityMatches = shadow.ai.status === 'accepted'
     && shadow.ai.suggestedVerdict === finalDecision.status;
   const clampedAiReasons = aiAuthorityMatches
@@ -231,14 +242,12 @@ export const buildCompatibilityProductAssessment = (
   const adjustments = aiNarrativeMatchesAuthority
     ? uniqueItems([...clampedAiAdjustments, ...deterministicAdjustmentItems]).slice(0, 2)
     : deterministicAdjustmentItems;
-  const uncertainties = aiNarrativeMatchesAuthority
-    ? clampAiItems(shadow.ai.uncertainties, primaryRuleCodes, 'reason', resolutionTargets)
-    : decision.status === 'insufficient_data'
-      ? uniqueItems(prioritizeDistinctCompatibilityRules(decision.missingData).map(rule => ({
-        text: rule.evidence || rule.title,
-        ruleCodes: [rule.code],
-      }))).slice(0, 3)
-      : [];
+  const uncertainties = uniqueItems([
+    ...(aiNarrativeMatchesAuthority
+      ? clampAiItems(shadow.ai.uncertainties, uncertaintyRuleCodes, 'reason', resolutionTargets)
+      : []),
+    ...deterministicUncertaintyItems,
+  ]).slice(0, 3);
 
   const deterministicMain = buildCompatibilityReadableConclusion(decision, {}, assessmentMode);
   const main = aiNarrativeMatchesAuthority
