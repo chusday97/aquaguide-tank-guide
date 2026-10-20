@@ -14,6 +14,7 @@ import {
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
 import { getLifeType } from '../src/modules/species/species.service';
 import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKnowledge';
+import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
 
 type CompletionRow = {
   species_id: string;
@@ -33,6 +34,9 @@ const rows: CompletionRow[] = matrix.rows || matrix.items || matrix;
 const rowById = new Map(rows.map(row => [row.species_id, row]));
 const fishById = new Map(fishData.map(fish => [fish.id, fish]));
 const audit = getCompatibilityEvidenceAudit();
+const coreFieldCoverageBySpecies = new Map(
+  buildCompatibilityCoreFieldCoverage().rows.map(row => [row.speciesId, row]),
+);
 
 const allFields = ['feeding', 'environment', 'space', 'social', 'care'] as const;
 const criticalFields = ['environment', 'space', 'social'] as const;
@@ -404,6 +408,13 @@ const nextWaveCandidates = rows
 const seenResearchTaxa = new Set<string>();
 const nextWaveSpeciesQueue = nextWaveCandidates
   .filter(item => item.compatibility_profile === 'none')
+  .filter(item => {
+    const coreRow = coreFieldCoverageBySpecies.get(item.species_id);
+    // The gap report is an evidence ledger, not a mandate to spend research capacity.
+    // Only completion-eligible field debt belongs in the active next-wave queue;
+    // objects with companion terminal holds stay visible elsewhere but are deferred.
+    return Boolean(coreRow && coreRow.actionableGapCount > 0 && coreRow.terminalGapCount === 0);
+  })
   .filter(item => {
     const taxonKey = String(item.scientific_name || '').trim().toLowerCase();
     if (!taxonKey) return true;

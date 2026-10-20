@@ -10,7 +10,8 @@ import './test-next-wave-freshwater-04';
 import { compatibilityReleasedSpeciesIds, compatibilitySourceControlledPendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import { compatibilityAuthorityPatchManifests } from '../src/data/compatibilityAuthorityPatches';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
-import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
@@ -93,6 +94,11 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
           assert.equal(domainBoundary.researchDisposition, 'terminal_unknown_hold');
         } else if (lifeType !== 'fish') {
           assert.equal(profile, undefined, 'correctly classified non-fish release member must remain outside fish Compatibility Profiles: ' + member.speciesId);
+        } else if (getCatalogCanonicalIdentity(member.speciesId)?.identityStatus === 'reviewed') {
+          const historicalBoundary = catalogIdentityBoundaries[member.speciesId];
+          assert.ok(historicalBoundary, 'reviewed canonical identity may supersede a historical next-wave hold only when the raw hold remains auditable: ' + member.speciesId);
+          assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+          assert.equal(identityBoundary, undefined, 'reviewed canonical identity must suppress the historical hold at runtime: ' + member.speciesId);
         } else {
           const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
           assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
@@ -146,6 +152,18 @@ for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpecies
       'later reviewed identity correction may add a Profile without rewriting historical next-wave holds: ' + speciesId,
     );
     assert.equal(boundary, undefined, 'later reviewed object-level identity correction must supersede the historical identity hold: ' + speciesId);
+  } else if (getCatalogCanonicalIdentity(speciesId)?.identityStatus === 'reviewed') {
+    const historicalBoundary = catalogIdentityBoundaries[speciesId];
+    assert.ok(
+      historicalBoundary,
+      'reviewed canonical identity may supersede a historical next-wave identity hold only when the raw hold remains auditable: ' + speciesId,
+    );
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(
+      boundary,
+      undefined,
+      'reviewed canonical identity must supersede the historical next-wave identity hold at runtime: ' + speciesId,
+    );
   } else if (supersededClassificationIdentityHolds.has(speciesId)) {
     assert.equal(
       getReviewedCompatibilityProfile(speciesId),

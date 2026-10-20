@@ -25,7 +25,7 @@
 - Terminal reviewed-unknown species holds: 5
 - Research-actionable pairs: 0
 - Terminal reviewed-unknown pair holds: 3
-- Next-wave research candidates: 4
+- Next-wave research candidates: 0
 
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
@@ -45,10 +45,7 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 
 ## Next-wave species research queue
 
-1. 鹤顶红金鱼 (sp_0066) — environment, space, social, compatibility_profile — score 20
-2. 蓝草尾孔雀鱼 (sp_0144) — environment, space, social, compatibility_profile — score 20
-3. 长鳍红绿灯 (sp_0155) — environment, space, social, compatibility_profile — score 20
-4. 长鳍白云金丝 (改良) (sp_0361) — environment, space, social, compatibility_profile — score 20
+No non-launch eligible species currently requires ordinary research.
 
 ## Terminal reviewed-unknown holds
 
