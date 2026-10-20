@@ -11,13 +11,13 @@ const predationBacklog = coverage.backlog.filter(item => item.field === 'predati
 
 assert.deepEqual(report.policy.hardDecisionFields, [...COMPATIBILITY_HARD_DECISION_FIELDS]);
 assert.equal(report.policy.noCounterfactualAuthority, true);
-assert.equal(predationBacklog.length, 67);
+assert.equal(predationBacklog.length, 60);
 assert.equal(coverage.summary.hardDecisionResearchDebtFields, 0);
-assert.equal(coverage.summary.softRiskDiscoveryResearchDebtFields, 67);
+assert.equal(coverage.summary.softRiskDiscoveryResearchDebtFields, 60);
 assert.equal(report.summary.predationResearchBacklogFields, predationBacklog.length);
 assert.equal(report.summary.hardDecisionResearchDebtFields, 0);
-assert.equal(report.summary.softRiskDiscoveryResearchDebtFields, 67);
-assert.equal(report.summary.riskDiscoveryReadyCatalogObjects, 12);
+assert.equal(report.summary.softRiskDiscoveryResearchDebtFields, 60);
+assert.equal(report.summary.riskDiscoveryReadyCatalogObjects, 5);
 assert.equal(report.summary.blockedByIdentityOrVariantCatalogObjects, 53);
 assert.equal(report.summary.blockedByOtherHardEvidenceCatalogObjects, 2);
 assert.equal(report.summary.currentPredationHardInsufficientDataBlockerFields, 0);
@@ -25,10 +25,10 @@ assert.equal(
   report.summary.riskDiscoveryReadyCatalogObjects
     + report.summary.blockedByIdentityOrVariantCatalogObjects
     + report.summary.blockedByOtherHardEvidenceCatalogObjects,
-  67,
+  60,
 );
 
-assert.equal(report.riskDiscoveryReady.length, 12);
+assert.equal(report.riskDiscoveryReady.length, 5);
 for (const item of report.riskDiscoveryReady) {
   assert.deepEqual(item.hardHolds, [], `${item.speciesId} risk-discovery candidate must have no unresolved hard decision field`);
   assert.equal(item.pairSurface.totalCounterpartPairs, 307);
@@ -58,7 +58,7 @@ for (const item of report.blockedByOtherHardEvidence) {
 }
 
 assert.equal(report.summary.riskDiscoveryReadyUniqueTaxa, report.taxonResearchPriority.length);
-assert.ok(report.summary.riskDiscoveryReadyUniqueTaxa < report.summary.riskDiscoveryReadyCatalogObjects, 'duplicate exact taxa should be research-deduplicated');
+assert.equal(report.summary.riskDiscoveryReadyUniqueTaxa, report.summary.riskDiscoveryReadyCatalogObjects, 'the five remaining low-surface hard-ready objects are all unique taxa after wave36 closes the duplicated high-impact Semaprochilodus research');
 assert.ok(report.taxonResearchPriority.every((item: { catalogObjectCount: number }) => item.catalogObjectCount >= 1));
 
 console.log(`Compatibility predation decision-impact audit PASS: ${report.summary.predationResearchBacklogFields} predation gaps split into ${report.summary.riskDiscoveryReadyCatalogObjects} hard-ready risk-discovery objects / ${report.summary.blockedByIdentityOrVariantCatalogObjects} identity-or-variant held / ${report.summary.blockedByOtherHardEvidenceCatalogObjects} other hard-held, with zero current hard insufficient-data blocker fields.`);

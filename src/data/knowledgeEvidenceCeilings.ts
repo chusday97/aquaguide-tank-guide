@@ -30,6 +30,72 @@ export type KnowledgeEvidenceCeiling = {
   researchDisposition?: 'terminal_unknown_hold';
 };
 
+export const compatibilityPredationEvidenceCeilingsWave36: KnowledgeEvidenceCeiling[] = [
+  {
+    speciesId: 'sp_0061',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch31-fishbase-semaprochilodus-insignis'],
+    note: 'Repeated exact-taxon review for Semaprochilodus insignis describes a non-fish, strongly herbivory/detritivory-leaning diet and does not establish direct predation on fish fry or small fish. Harmless/community wording and absence of fish from reported diet are not negative predation proof, so fish-prey scope remains terminal-unknown until direct prey-scope evidence appears.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0137',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch32-fishbase-semaprochilodus-insignis'],
+    note: 'This duplicate exact Semaprochilodus insignis catalog object shares the same exhausted predation boundary: reviewed exact-taxon material does not directly establish fish-fry or small-fish prey scope. Do not turn herbivorous tendency, peaceful wording, or missing fish diet records into targets: []; keep predation terminal-unknown.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0107',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch31-fishbase-semaprochilodus-taeniurus'],
+    note: 'Repeated exact-taxon review for Semaprochilodus taeniurus supports an omnivorous diet with strong herbivorous tendency but does not directly establish fish-fry or small-fish predation safety or risk. Diet labels and inoffensive/community descriptions are insufficient to infer targets: []; keep fish-prey scope terminal-unknown.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0132',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch32-fishbase-parambassis-ranga'],
+    note: 'Targeted exact-taxon review for Parambassis ranga did not establish a defensible adult fish-fry or small-fish prey scope. Peaceful tankmate guidance does not prove absence of opportunistic predation, and egg-related breeding observations cannot be mapped to the current fish_fry prey vocabulary. Keep predation terminal-unknown until direct prey-scope evidence exists.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0046',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch26-fishbase-aphyocypris-chinensis'],
+    note: 'Exact-taxon FishBase review plus targeted spawning and husbandry research for Aphyocypris chinensis does not directly establish adult predation on fish fry or small fish, nor explicit absence of such predation. Reproductive observations are not prey-scope evidence; keep predation terminal-unknown until a direct fish-prey source is available.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0471',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch38-fishbase-moenkhausia-pittieri'],
+    note: 'Exact-taxon review for Moenkhausia pittieri / Makunaima pittieri establishes egg eating in breeding guidance but does not directly establish fry or ordinary small-fish predation. The current prey vocabulary has no fish_egg target, and egg consumption must not be silently widened to fish_fry; keep fish-prey scope terminal-unknown.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0472',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch38-fishbase-thayeria-boehlkei'],
+    note: 'Exact-taxon Thayeria boehlkei review describes invertebrate micropredation and breeding guidance that adults may eat eggs, but no direct fry or small-fish prey scope is established. Egg eating cannot be promoted to fish_fry and an invertebrate diet does not prove fish safety, so predation remains terminal-unknown.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+];
+
 export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[]> = {
   ...Object.fromEntries(nextWaveUnified08EvidenceCeilings.map(outcome => [outcome.speciesId, [{
     ...outcome,
@@ -293,6 +359,13 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
     },
   ],
 };
+
+for (const ceiling of compatibilityPredationEvidenceCeilingsWave36) {
+  knowledgeEvidenceCeilings[ceiling.speciesId] = [
+    ...(knowledgeEvidenceCeilings[ceiling.speciesId] ?? []),
+    ceiling,
+  ];
+}
 
 export const getKnowledgeEvidenceCeilings = (speciesId: string) => knowledgeEvidenceCeilings[speciesId] ?? [];
 export const getKnowledgeEvidenceCeiling = (speciesId: string, field?: KnowledgeEvidenceField) => {
