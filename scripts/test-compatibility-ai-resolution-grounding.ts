@@ -204,12 +204,18 @@ assert.equal(forgedBehaviorProduct.details.explanation.narrativeAccepted, false)
 assert.doesNotMatch(forgedBehaviorProduct.main.why.join(' '), /风险已解除|安全混养/);
 
 // Information-required decisions stay fail-closed before the provider can narrate a guess.
+// Keep this fixture tied to explicit missing user tank context so future species-coverage
+// improvements cannot silently turn the intended insufficient-data case into a caution verdict.
+const insufficientTank: Aquarium = {
+  ...tankAt('23'),
+  waterType: undefined,
+  equipment: { filter: '桶滤', heater: true, oxygen: true, light: '普通灯' },
+};
 const insufficientDecision = evaluateCompatibilityDecision({
-  tank: tankAt('25'),
+  tank: insufficientTank,
   items: [
-    { species: byId('sp_0114'), quantity: 8, origin: 'existing' },
-    { species: byId('sp_0469'), quantity: 8, origin: 'existing' },
-    { species: byId('sp_0065'), quantity: 1, origin: 'candidate' },
+    { species: byId('sp_0431'), quantity: 8, origin: 'existing' },
+    { species: zebrafish, quantity: 8, origin: 'candidate' },
   ],
 });
 assert.equal(insufficientDecision.status, 'insufficient_data');
@@ -223,11 +229,10 @@ const insufficientProvider = Object.assign(async () => {
 }, { readiness: () => ({ configured: true, host: 'fixture', model: 'fixture', fallbackModels: [], timeoutMs: 1000 }) });
 const insufficientShadow = await createCompatibilityAiCombinationAssessment({
   deterministicResult: insufficientDecision.aggregateResult,
-  tank: tankAt('25'),
+  tank: insufficientTank,
   items: [
-    { species: byId('sp_0114'), quantity: 8, origin: 'existing' },
-    { species: byId('sp_0469'), quantity: 8, origin: 'existing' },
-    { species: byId('sp_0065'), quantity: 1, origin: 'planned' },
+    { species: byId('sp_0431'), quantity: 8, origin: 'existing' },
+    { species: zebrafish, quantity: 8, origin: 'planned' },
   ],
   assessmentMode: 'planned_addition',
   resolutionTargets: insufficientTargets,

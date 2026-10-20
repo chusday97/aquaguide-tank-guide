@@ -52,7 +52,7 @@ const complexItems = [
   { species: byId('sp_0431'), quantity: 10, origin: 'existing' as const },
   { species: byId('sp_0435'), quantity: 8, origin: 'existing' as const },
   { species: byId('sp_0453'), quantity: 1, origin: 'planned' as const },
-  { species: byId('sp_0258'), quantity: 1, origin: 'planned' as const },
+  { species: byId('sp_0050'), quantity: 1, origin: 'planned' as const },
   { species: byId('sp_0448'), quantity: 1, origin: 'planned' as const },
 ];
 const complexDecision = evaluateCompatibilityDecision({

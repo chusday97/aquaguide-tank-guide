@@ -12,8 +12,8 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 409
-- Direct reviewed compatibility profiles: 124
-- Runtime effective compatibility profiles: 158 (34 inherited through reviewed-safe resolution)
+- Direct reviewed compatibility profiles: 126
+- Runtime effective compatibility profiles: 161 (35 inherited through reviewed-safe resolution)
 - Reviewed pair rules: 21
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
@@ -25,7 +25,7 @@
 - Terminal reviewed-unknown species holds: 5
 - Research-actionable pairs: 0
 - Terminal reviewed-unknown pair holds: 3
-- Next-wave research candidates: 0
+- Next-wave research candidates: 4
 
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
@@ -45,7 +45,10 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 
 ## Next-wave species research queue
 
-No non-launch eligible species currently requires ordinary research.
+1. 蝶尾金鱼 (sp_0065) — environment, space, social, compatibility_profile — score 20
+2. 红草尾孔雀鱼 (sp_0143) — environment, space, social, compatibility_profile — score 20
+3. 长鳍红绿灯 (sp_0155) — environment, space, social, compatibility_profile — score 20
+4. 长鳍白云金丝 (改良) (sp_0361) — environment, space, social, compatibility_profile — score 20
 
 ## Terminal reviewed-unknown holds
 
