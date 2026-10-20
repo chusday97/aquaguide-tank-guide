@@ -11,6 +11,7 @@ import {
 import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION, type CompatibilityProductSchemaVersion } from './compatibility-product-contract';
 import {
   buildCompatibilityReadableConclusion,
+  isCompatibilityUserReadableText,
   type CompatibilityReadableConclusion,
 } from './compatibility-readable-copy.service';
 
@@ -72,12 +73,26 @@ const localAssessment = (decision: CompatibilityDecision): CompatibilityAssessme
   },
 });
 
-const isValidMain = (main: RemoteCompatibilityAssessment['main']) => (
-  ['可以养', '有条件可以', '不建议', '暂时无法判断'].includes(main?.judgment)
+const JUDGMENT_BY_STATUS: Record<CompatibilityDecision['status'], CompatibilityReadableConclusion['judgment']> = {
+  compatible: '可以养',
+  caution: '有条件可以',
+  not_recommended: '不建议',
+  insufficient_data: '暂时无法判断',
+};
+
+const isValidMain = (
+  main: RemoteCompatibilityAssessment['main'],
+  status: CompatibilityDecision['status'],
+) => (
+  main?.judgment === JUDGMENT_BY_STATUS[status]
   && Array.isArray(main?.why)
   && main.why.length > 0
+  && main.why.length <= 2
+  && main.why.every(text => isCompatibilityUserReadableText(text, 'reason'))
   && Array.isArray(main?.howTo)
   && main.howTo.length > 0
+  && main.howTo.length <= 2
+  && main.howTo.every(text => isCompatibilityUserReadableText(text, 'action'))
 );
 
 export const adaptRemoteCompatibilityAssessmentForPlan = (
@@ -86,7 +101,7 @@ export const adaptRemoteCompatibilityAssessmentForPlan = (
 ): CompatibilityAssessmentUiModel | null => {
   if (remote?.schemaVersion !== COMPATIBILITY_PRODUCT_SCHEMA_VERSION) return null;
   if (remote?.assessmentMode !== 'planned_addition') return null;
-  if (!isValidMain(remote.main)) return null;
+  if (!isValidMain(remote.main, decision.status)) return null;
   if (remote.details?.authority?.finalSource !== 'deterministic') return null;
   if (remote.details.authority.status !== decision.status) return null;
 

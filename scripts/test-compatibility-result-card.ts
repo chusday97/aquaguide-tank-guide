@@ -100,6 +100,30 @@ assert.equal(
   null,
   'remote deterministic authority must exactly match the local whole-tank decision',
 );
+assert.equal(
+  adaptRemoteCompatibilityAssessmentForPlan({
+    ...remoteFixture,
+    main: { ...remoteFixture.main, judgment: '可以养' },
+  }, review.decision),
+  null,
+  'remote readable judgment must exactly match the local deterministic authority status',
+);
+assert.equal(
+  adaptRemoteCompatibilityAssessmentForPlan({
+    ...remoteFixture,
+    main: { ...remoteFixture.main, why: ['ruleCodes: predation_risk'] },
+  }, review.decision),
+  null,
+  'remote main reasons must remain user-readable and must not leak technical rule identifiers',
+);
+assert.equal(
+  adaptRemoteCompatibilityAssessmentForPlan({
+    ...remoteFixture,
+    main: { ...remoteFixture.main, howTo: ['风险需要关注。'] },
+  }, review.decision),
+  null,
+  'remote main actions must remain concretely actionable before replacing the local deterministic fallback',
+);
 
 const aquariumSource = readFileSync(new URL('../src/pages/Aquarium.tsx', import.meta.url), 'utf8');
 const cardStart = aquariumSource.indexOf(') : addFishCompatibilityReview ? (');
@@ -164,6 +188,9 @@ assert.match(serviceSource, /compatibility-assessment/);
 assert.match(serviceSource, /schemaVersion !== COMPATIBILITY_PRODUCT_SCHEMA_VERSION/);
 assert.match(serviceSource, /assessmentMode !== 'planned_addition'/);
 assert.match(serviceSource, /remote\.details\.authority\.status !== decision\.status/);
+assert.match(serviceSource, /main\?\.judgment === JUDGMENT_BY_STATUS\[status\]/);
+assert.match(serviceSource, /isCompatibilityUserReadableText\(text, 'reason'\)/);
+assert.match(serviceSource, /isCompatibilityUserReadableText\(text, 'action'\)/);
 assert.doesNotMatch(serviceSource, /method:\s*['"](POST|PATCH|PUT|DELETE)['"]/);
 assert.doesNotMatch(serviceSource, /\.insert\(|\.update\(|\.delete\(|\.upsert\(/);
 
