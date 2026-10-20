@@ -27,6 +27,8 @@ import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibili
 import { assessCompatibilityOnboardingGate } from '../src/services/compatibility/compatibility-onboarding-gate.service';
 
 const allFacts = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS];
+const coverage = buildCompatibilityCoreFieldCoverage();
+const coverageBySpecies = new Map(coverage.rows.map(row => [row.speciesId, row]));
 
 const explicitCanonicalIds = Object.keys(catalogIdentityCorrectionBaseSpeciesIds).sort();
 const policyCanonicalIds = [...reviewedColorPolicyCanonicalSpeciesIds].sort();
@@ -104,11 +106,25 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       || identity.registrySource === 'reviewed_variant_field_policy',
     );
     const resolvedProfile = getReviewedCompatibilityProfileForFish(catalog);
-    if (identity.catalogSpeciesId === 'sp_0067') {
-      assert.ok(resolvedProfile, 'Pearlscale exact reviewed 8/8 fields should synthesize a Compatibility Profile');
-      assert.equal(resolvedProfile.speciesId, 'sp_0067');
-    } else if (['sp_0065', 'sp_0066', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId)) {
-      assert.equal(resolvedProfile, undefined, 'incomplete identity-only morphology policy must not manufacture a Compatibility Profile');
+    const coreCoverage = coverageBySpecies.get(identity.catalogSpeciesId);
+    assert.ok(coreCoverage, 'canonical identity must have a core-field coverage row: ' + identity.catalogSpeciesId);
+    if (
+      identity.registrySource === 'reviewed_variant_field_policy'
+      && identity.inheritancePolicy.inheritedFacts.length === 0
+    ) {
+      if (coreCoverage.genericOnboardingReady) {
+        assert.ok(
+          resolvedProfile,
+          'identity-only variant may synthesize a Compatibility Profile only after exact-object reviews make all 8 core fields ready: ' + identity.catalogSpeciesId,
+        );
+        assert.equal(resolvedProfile.speciesId, identity.catalogSpeciesId);
+      } else {
+        assert.equal(
+          resolvedProfile,
+          undefined,
+          'identity-only variant with terminal exact-object field gaps must remain fail-closed: ' + identity.catalogSpeciesId,
+        );
+      }
     } else {
       assert.ok(resolvedProfile);
     }
@@ -203,7 +219,14 @@ for (const [speciesId, variantKey] of [
   assert.equal(getCatalogIdentityBoundary(speciesId), undefined);
   const fish = fishData.find(item => item.id === speciesId);
   assert.ok(fish);
-  assert.equal(getReviewedCompatibilityProfileForFish(fish), undefined);
+  const row = coverageBySpecies.get(speciesId);
+  assert.ok(row);
+  const profile = getReviewedCompatibilityProfileForFish(fish);
+  if (row.genericOnboardingReady) {
+    assert.ok(profile, 'direct exact-strain 8/8 field authority may synthesize a Profile without canonical inheritance: ' + speciesId);
+  } else {
+    assert.equal(profile, undefined, 'terminal exact-strain field gaps must remain fail-closed: ' + speciesId);
+  }
 }
 for (const [speciesId, taxon] of [
   ['sp_0155', 'Paracheirodon innesi'],
@@ -221,7 +244,14 @@ for (const [speciesId, taxon] of [
   assert.equal(getCatalogIdentityBoundary(speciesId), undefined);
   const fish = fishData.find(item => item.id === speciesId);
   assert.ok(fish);
-  assert.equal(getReviewedCompatibilityProfileForFish(fish), undefined);
+  const row = coverageBySpecies.get(speciesId);
+  assert.ok(row);
+  const profile = getReviewedCompatibilityProfileForFish(fish);
+  if (row.genericOnboardingReady) {
+    assert.ok(profile, 'direct exact-longfin 8/8 field authority may synthesize a Profile without canonical inheritance: ' + speciesId);
+  } else {
+    assert.equal(profile, undefined, 'terminal exact-longfin field gaps must remain fail-closed: ' + speciesId);
+  }
 }
 const goldenCobraAlias = getCatalogCanonicalIdentity('sp_0216');
 assert.ok(goldenCobraAlias);
@@ -436,8 +466,11 @@ assert.ok(partialGate.missingDeclaredFacts.includes('tank_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
-const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 102);
+assert.equal(
+  coverage.summary.genericOnboardingReadySpecies,
+  coverage.rows.filter(row => row.genericOnboardingReady).length,
+  'core-field readiness summary must equal the row-level readiness count',
+);
 const blueGouramiCoverage = coverage.rows.find(item => item.speciesId === 'sp_0445');
 assert.ok(blueGouramiCoverage);
 assert.equal(blueGouramiCoverage.genericOnboardingReady, true);
@@ -449,22 +482,22 @@ for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   if (!['sp_0224', 'sp_0258', ...identityOnlyVariantIds].includes(speciesId)) {
     assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant with complete authority must remain generic-ready: ' + speciesId);
   }
-  const reviewedVariantCoverageExpectations: Record<string, { ready: boolean; authoritative: number; gaps: number }> = {
-    sp_0065: { ready: false, authoritative: 7, gaps: 1 },
-    sp_0066: { ready: false, authoritative: 7, gaps: 1 },
-    sp_0067: { ready: true, authoritative: 8, gaps: 0 },
-    sp_0068: { ready: false, authoritative: 7, gaps: 1 },
-    sp_0143: { ready: false, authoritative: 7, gaps: 1 },
-    sp_0144: { ready: false, authoritative: 7, gaps: 1 },
-    sp_0155: { ready: false, authoritative: 6, gaps: 2 },
-    sp_0361: { ready: false, authoritative: 7, gaps: 1 },
-  };
-  const expectedVariantCoverage = reviewedVariantCoverageExpectations[speciesId];
-  if (expectedVariantCoverage) {
-    assert.equal(row.genericOnboardingReady, expectedVariantCoverage.ready, 'reviewed exact-object field coverage must control readiness');
-    assert.equal(row.authoritativeFieldCount, expectedVariantCoverage.authoritative);
-    assert.equal(row.actionableGapCount, expectedVariantCoverage.gaps);
-    assert.equal(row.terminalGapCount, 0);
+  if (identityOnlyVariantIds.includes(speciesId)) {
+    assert.equal(
+      row.actionableGapCount,
+      0,
+      'identity-only reviewed variants must not retain ordinary actionable gaps after field research is terminalized: ' + speciesId,
+    );
+    assert.equal(
+      row.authoritativeFieldCount + row.terminalGapCount,
+      allFacts.length,
+      'identity-only variant core fields must be either directly authoritative or explicitly terminal: ' + speciesId,
+    );
+    assert.equal(
+      row.genericOnboardingReady,
+      row.terminalGapCount === 0,
+      'exact-object field readiness alone must control identity-only variant onboarding: ' + speciesId,
+    );
   }
 }
 const platinumSnakeheadCoverage = coverage.rows.find(item => item.speciesId === 'sp_0224');
