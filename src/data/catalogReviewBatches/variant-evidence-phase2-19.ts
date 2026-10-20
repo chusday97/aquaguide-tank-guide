@@ -25,7 +25,7 @@ export const variantEvidencePhase2_19Sources = {
     title: 'Carassius auratus species account',
     publisher: 'Animal Diversity Web',
     url: 'https://animaldiversity.org/accounts/Carassius_auratus/',
-    sourceType: 'reference',
+    sourceType: 'university',
     reviewStatus: 'reviewed',
   },
   redGrassGuppyMasukoap: {
