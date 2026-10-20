@@ -37,20 +37,20 @@ assert.equal(
   'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
 );
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
-assert.equal(summary.visibleResearchDebtFields, 78, 'two-round exact-object evidence ceilings must leave only the pre-existing deferred research debt in the ordinary backlog');
+assert.equal(summary.visibleResearchDebtFields, 76, 'wave32 must retire two reviewed predation research gaps from the ordinary backlog');
 assert.equal(summary.completionEligibleResearchDebtFields, 0, 'no ordinary completion work should remain after all exact-object candidates reach explicit evidence ceilings');
-assert.equal(summary.deferredResearchDebtFields, 78, 'the pre-existing deferred predation debt must remain unchanged');
+assert.equal(summary.deferredResearchDebtFields, 76, 'wave32 must reduce deferred predation debt by two reviewed exact-taxon fields');
 assert.equal(summary.activeCompletionResearchDebtFields, 0, 'active completion research debt must be zero; deferred source opportunities are not executable completion work');
-assert.equal(summary.deferredResearchOpportunityFields, 78, 'all remaining visible source opportunities are completion-blocked');
-assert.equal(summary.deferredResearchOpportunitySpecies, 78, 'each remaining deferred predation opportunity belongs to a distinct completion-blocked species');
+assert.equal(summary.deferredResearchOpportunityFields, 76, 'all remaining visible source opportunities are completion-blocked');
+assert.equal(summary.deferredResearchOpportunitySpecies, 76, 'each remaining deferred predation opportunity belongs to a distinct completion-blocked species');
 assert.equal(summary.hardDecisionResearchDebtFields, 0, 'no targeted-source-expansion backlog item currently blocks a hard insufficient_data decision');
-assert.equal(summary.softRiskDiscoveryResearchDebtFields, 78, 'all visible ordinary research debt is soft risk-discovery work');
-assert.equal(summary.predationRiskDiscoveryFields, 78, 'all current ordinary research opportunities are predation risk-discovery gaps');
-assert.equal(summary.predationRiskDiscoveryHardReadySpecies, 23, '23 exact catalog objects have water/temperature/adult-size authority ready and can be prioritized for predation risk discovery');
+assert.equal(summary.softRiskDiscoveryResearchDebtFields, 76, 'all visible ordinary research debt is soft risk-discovery work');
+assert.equal(summary.predationRiskDiscoveryFields, 76, 'all current ordinary research opportunities are predation risk-discovery gaps');
+assert.equal(summary.predationRiskDiscoveryHardReadySpecies, 21, '21 exact catalog objects remain hard-ready and can be prioritized for predation risk discovery after wave32');
 assert.equal(summary.predationRiskDiscoveryVariantIdentityHeldSpecies, 53, '53 predation gaps must remain behind variant/identity hard holds');
 assert.equal(summary.predationRiskDiscoveryOtherHardHeldSpecies, 2, 'only two predation gaps remain behind non-variant hard evidence ceilings');
 assert.equal(backlog.filter(item => item.decisionImpact === 'hard_decision_blocker').length, 0);
-assert.equal(backlog.filter(item => item.decisionImpact === 'soft_risk_discovery').length, 78);
+assert.equal(backlog.filter(item => item.decisionImpact === 'soft_risk_discovery').length, 76);
 
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
@@ -906,12 +906,12 @@ for (const row of rows) {
   );
 }
 
-assert.equal(backlog.length, 78, 'ordinary field backlog must exclude the six exact-object fields that reached explicit two-round evidence ceilings');
+assert.equal(backlog.length, 76, 'ordinary field backlog must exclude the two wave32 predation fields in addition to earlier terminalized/reviewed fields');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
 const completionEligibleBacklog = backlog.filter(item => item.completionEligible);
 const deferredBacklog = backlog.filter(item => !item.completionEligible);
 assert.equal(completionEligibleBacklog.length, 0);
-assert.equal(deferredBacklog.length, 78);
+assert.equal(deferredBacklog.length, 76);
 assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), []);
 assert.ok(deferredBacklog.every(item => item.field === 'predation'));
 assert.ok(deferredBacklog.every(item => item.companionTerminalGapCount > 0), 'legacy field gaps with companion terminal holds must stay visible but deferred from active completion');
@@ -1006,7 +1006,7 @@ assert.deepEqual(matrixArtifact.fieldActionableGaps, summary.fieldActionableGaps
 assert.deepEqual(matrixArtifact.rows, rows, 'source-controlled core-field matrix must be regenerated with current authority');
 assert.equal(backlogArtifact.totalItems, backlog.length);
 assert.equal(backlogArtifact.activeCompletionItems, 0);
-assert.equal(backlogArtifact.deferredOpportunityItems, 78);
+assert.equal(backlogArtifact.deferredOpportunityItems, 76);
 const deferredBlockerSummary = backlogArtifact.deferredBlockerSummary as {
   items: number;
   species: number;
@@ -1015,13 +1015,22 @@ const deferredBlockerSummary = backlogArtifact.deferredBlockerSummary as {
   blockingTerminalReasons: Record<string, number>;
   blockingTerminalAuthoritySources: Record<string, number>;
 };
-assert.equal(deferredBlockerSummary.items, 78);
-assert.equal(deferredBlockerSummary.species, 78);
-assert.deepEqual(deferredBlockerSummary.fields, { predation: 78 });
-assert.equal(deferredBlockerSummary.blockingTerminalReasons.variant_identity_research_exhausted, 53);
-assert.equal(deferredBlockerSummary.blockingTerminalReasons.variant_social_not_established, 46);
-assert.equal(deferredBlockerSummary.blockingTerminalReasons.species_social_not_established, 25);
-assert.equal(deferredBlockerSummary.blockingTerminalReasons.compatibility_field_source_strategy_exhausted, 4);
+assert.equal(deferredBlockerSummary.items, 76);
+assert.equal(deferredBlockerSummary.species, 76);
+assert.deepEqual(deferredBlockerSummary.fields, { predation: 76 });
+for (const reason of [
+  'variant_identity_research_exhausted',
+  'variant_social_not_established',
+  'species_social_not_established',
+  'compatibility_field_source_strategy_exhausted',
+] as const) {
+  const expectedCount = backlog.filter(item => item.blockingTerminalReasons.includes(reason)).length;
+  assert.equal(
+    deferredBlockerSummary.blockingTerminalReasons[reason] ?? 0,
+    expectedCount,
+    `deferred blocker summary must derive current ${reason} count from current backlog membership`,
+  );
+}
 assert.deepEqual(backlogArtifact.items, backlog, 'source-controlled field backlog must be regenerated with current authority');
 assert.equal(fastLaneArtifact.totalPackets, fastLanePackets.length);
 assert.deepEqual(fastLaneArtifact.packets, fastLanePackets, 'Fast Lane research packets must be regenerated with current authority');

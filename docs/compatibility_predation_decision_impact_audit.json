@@ -14,40 +14,16 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "predationResearchBacklogFields": 78,
+    "predationResearchBacklogFields": 76,
     "hardDecisionResearchDebtFields": 0,
-    "softRiskDiscoveryResearchDebtFields": 78,
-    "riskDiscoveryReadyCatalogObjects": 23,
-    "riskDiscoveryReadyUniqueTaxa": 21,
+    "softRiskDiscoveryResearchDebtFields": 76,
+    "riskDiscoveryReadyCatalogObjects": 21,
+    "riskDiscoveryReadyUniqueTaxa": 19,
     "blockedByIdentityOrVariantCatalogObjects": 53,
     "blockedByOtherHardEvidenceCatalogObjects": 2,
     "currentPredationHardInsufficientDataBlockerFields": 0
   },
   "taxonResearchPriority": [
-    {
-      "scientificName": "Erpetoichthys calabaricus",
-      "catalogObjectIds": [
-        "sp_0106"
-      ],
-      "names": [
-        "恐龙鱼 (草绳)"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 116,
-      "maxSmallFishReviewSurfacePairs": 45,
-      "catalogObjectCount": 1
-    },
-    {
-      "scientificName": "Kryptopterus vitreolus",
-      "catalogObjectIds": [
-        "sp_0458"
-      ],
-      "names": [
-        "玻璃猫鱼"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 116,
-      "maxSmallFishReviewSurfacePairs": 45,
-      "catalogObjectCount": 1
-    },
     {
       "scientificName": "Parambassis ranga",
       "catalogObjectIds": [
@@ -304,29 +280,6 @@
       }
     },
     {
-      "speciesId": "sp_0106",
-      "name": "恐龙鱼 (草绳)",
-      "scientificName": "Erpetoichthys calabaricus",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 116,
-        "not_recommended": 64,
-        "insufficient_data": 127,
-        "riskManagementReviewSurfacePairs": 116,
-        "smallFishReviewSurfacePairs": 45,
-        "currentPredationRulePairs": 3
-      }
-    },
-    {
       "speciesId": "sp_0107",
       "name": "飞凤鱼 (国旗飞凤)",
       "scientificName": "Semaprochilodus taeniurus",
@@ -376,29 +329,6 @@
       "speciesId": "sp_0137",
       "name": "飞凤鱼",
       "scientificName": "Semaprochilodus insignis",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 116,
-        "not_recommended": 64,
-        "insufficient_data": 127,
-        "riskManagementReviewSurfacePairs": 116,
-        "smallFishReviewSurfacePairs": 45,
-        "currentPredationRulePairs": 3
-      }
-    },
-    {
-      "speciesId": "sp_0458",
-      "name": "玻璃猫鱼",
-      "scientificName": "Kryptopterus vitreolus",
       "classification": "risk_discovery_ready",
       "authoritativeFieldCount": 5,
       "reviewedProfile": "none",

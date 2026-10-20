@@ -25,16 +25,16 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 78,
+  "visibleResearchDebtFields": 76,
   "completionEligibleResearchDebtFields": 0,
-  "deferredResearchDebtFields": 78,
+  "deferredResearchDebtFields": 76,
   "activeCompletionResearchDebtFields": 0,
-  "deferredResearchOpportunityFields": 78,
-  "deferredResearchOpportunitySpecies": 78,
+  "deferredResearchOpportunityFields": 76,
+  "deferredResearchOpportunitySpecies": 76,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 78,
-  "predationRiskDiscoveryFields": 78,
-  "predationRiskDiscoveryHardReadySpecies": 23,
+  "softRiskDiscoveryResearchDebtFields": 76,
+  "predationRiskDiscoveryFields": 76,
+  "predationRiskDiscoveryHardReadySpecies": 21,
   "predationRiskDiscoveryVariantIdentityHeldSpecies": 53,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
@@ -95,10 +95,10 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 91,
+      "reviewed_supported": 93,
       "reviewed_neutral_or_negative": 38,
       "reviewed_unknown": 10,
-      "needs_research": 78,
+      "needs_research": 76,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -106,7 +106,7 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 78
+      "count": 76
     },
     {
       "field": "water",
@@ -8599,8 +8599,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -8667,11 +8667,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "adw-erpetoichthys-calabaricus-predation-wave32"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -38059,8 +38061,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -38127,11 +38129,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-kryptopterus-vitreolus-predation-wave32"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

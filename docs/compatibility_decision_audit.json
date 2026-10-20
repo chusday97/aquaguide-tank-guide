@@ -1774,9 +1774,7 @@
         "name": "恐龙鱼 (草绳)",
         "scientificName": "Erpetoichthys calabaricus",
         "unknownPairs": 127,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "species_social_not_established"
         ],
@@ -1963,9 +1961,7 @@
         "name": "玻璃猫鱼",
         "scientificName": "Kryptopterus vitreolus",
         "unknownPairs": 127,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "species_social_not_established"
         ],
@@ -2168,11 +2164,11 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 78,
+    "actionableGaps": 76,
     "fieldActionableGaps": [
       {
         "field": "predation",
-        "count": 78
+        "count": 76
       },
       {
         "field": "water",

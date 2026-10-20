@@ -257,6 +257,13 @@ import {
   compatibilityTemperatureDirectWave31Sources,
   compatibilityTemperatureDirectWave31VerifiedSourceIds,
 } from './temperature-direct-wave31-20261020';
+import {
+  compatibilityPredationRiskDiscoveryWave32AuthorityPatch,
+  compatibilityPredationRiskDiscoveryWave32FieldReviews,
+  compatibilityPredationRiskDiscoveryWave32ProfilePatches,
+  compatibilityPredationRiskDiscoveryWave32Sources,
+  compatibilityPredationRiskDiscoveryWave32VerifiedSourceIds,
+} from './predation-risk-discovery-wave32-20261020';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -296,6 +303,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityWaterDirectWave29Sources,
   ...compatibilityTemperatureDirectWave30Sources,
   ...compatibilityTemperatureDirectWave31Sources,
+  ...compatibilityPredationRiskDiscoveryWave32Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -336,6 +344,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityWaterDirectWave29FieldReviews,
   ...compatibilityTemperatureDirectWave30FieldReviews,
   ...compatibilityTemperatureDirectWave31FieldReviews,
+  ...compatibilityPredationRiskDiscoveryWave32FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -376,6 +385,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityWaterDirectWave29VerifiedSourceIds,
   ...compatibilityTemperatureDirectWave30VerifiedSourceIds,
   ...compatibilityTemperatureDirectWave31VerifiedSourceIds,
+  ...compatibilityPredationRiskDiscoveryWave32VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -416,6 +426,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityWaterDirectWave29ProfilePatches,
   ...compatibilityTemperatureDirectWave30ProfilePatches,
   ...compatibilityTemperatureDirectWave31ProfilePatches,
+  ...compatibilityPredationRiskDiscoveryWave32ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [

@@ -451,6 +451,7 @@
     "test:compatibility-extraction-retry-runner": "node --import tsx scripts/test-compatibility-extraction-retry-runner.ts",
     "dryrun:compatibility-extraction-retry-ai": "node --import tsx scripts/run-compatibility-extraction-retry.ts --provider-mode=ai",
     "test:compatibility-predation-wave24": "node --import tsx scripts/test-compatibility-predation-wave24.ts",
+    "test:compatibility-predation-risk-discovery-wave32": "node --import tsx scripts/test-compatibility-predation-risk-discovery-wave32.ts",
     "test:compatibility-research-direct-wave25": "node --import tsx scripts/test-compatibility-research-direct-wave25.ts",
     "test:compatibility-predation-negative-wave26": "node --import tsx scripts/test-compatibility-predation-negative-wave26.ts",
     "test:compatibility-water-wave27": "node --import tsx scripts/test-compatibility-water-wave27.ts",
