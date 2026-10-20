@@ -42,6 +42,7 @@ import { identityCorrectionsPhase2_11FieldReviews, identityCorrectionsPhase2_11V
 import { identityCorrectionsPhase2_12FieldReviews, identityCorrectionsPhase2_12VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-phase2-12';
 import { identityCorrectionsPhase2_13FieldReviews, identityCorrectionsPhase2_13VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-phase2-13';
 import { identityCorrectionsPhase2_14FieldReviews, identityCorrectionsPhase2_14VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-phase2-14';
+import { identityCorrectionsPhase2_15FieldReviews, identityCorrectionsPhase2_15VerifiedSourceIds } from './catalogReviewBatches/identity-corrections-phase2-15';
 import { variantEvidencePhase2_17FieldReviews, variantEvidencePhase2_17VerifiedSourceIds } from './catalogReviewBatches/variant-evidence-phase2-17';
 import { variantEvidencePhase2_18FieldReviews, variantEvidencePhase2_18VerifiedSourceIds } from './catalogReviewBatches/variant-evidence-phase2-18';
 import { variantEvidencePhase2_19FieldReviews, variantEvidencePhase2_19VerifiedSourceIds } from './catalogReviewBatches/variant-evidence-phase2-19';
@@ -149,6 +150,7 @@ export const catalogFieldReviews: CatalogFieldReview[] = [
   ...identityCorrectionsPhase2_12FieldReviews,
   ...identityCorrectionsPhase2_13FieldReviews,
   ...identityCorrectionsPhase2_14FieldReviews,
+  ...identityCorrectionsPhase2_15FieldReviews,
   ...variantEvidencePhase2_17FieldReviews,
   ...variantEvidencePhase2_18FieldReviews,
   ...variantEvidencePhase2_19FieldReviews,
@@ -195,6 +197,7 @@ export const catalogContentVerifiedSourceIds = new Set([
   ...identityCorrectionsPhase2_12VerifiedSourceIds,
   ...identityCorrectionsPhase2_13VerifiedSourceIds,
   ...identityCorrectionsPhase2_14VerifiedSourceIds,
+  ...identityCorrectionsPhase2_15VerifiedSourceIds,
   ...variantEvidencePhase2_17VerifiedSourceIds,
   ...variantEvidencePhase2_18VerifiedSourceIds,
   ...variantEvidencePhase2_19VerifiedSourceIds,

@@ -9,15 +9,15 @@ assert.deepEqual(disk, audit, 'variant inheritance audit artifact must be regene
 
 assert.equal(audit.summary.fishDomainSpecies, 308);
 assert.equal(audit.summary.explicitReviewedCanonicalBridges, 21);
-assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 14);
+assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 18);
 assert.equal(audit.summary.reviewedColorTaxonRootRecords, 5);
 assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 9);
 assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 8);
 assert.equal(audit.summary.baseTaxonCandidateFactSlots, 24);
 assert.equal(audit.summary.exactObjectEvidenceFactSlots, 40);
-assert.equal(audit.summary.totalCanonicalIdentityRecords, 44);
-assert.equal(audit.summary.genericOnboardingReadySpecies, 104);
-assert.equal(audit.summary.policyPromotedReadySpecies, 13);
+assert.equal(audit.summary.totalCanonicalIdentityRecords, 48);
+assert.equal(audit.summary.genericOnboardingReadySpecies, 109);
+assert.equal(audit.summary.policyPromotedReadySpecies, 17);
 assert.equal(audit.summary.fieldPolicyReadySpecies, 3);
 assert.equal(audit.summary.directReviewedVariantObjects, 2);
 assert.equal(audit.summary.remainingReviewedVariantObjects, 0);
@@ -34,7 +34,7 @@ assert.equal(audit.policy.unresolvedIdentityAutoPromoted, false);
 
 assert.deepEqual(
   audit.promoted.map(item => item.speciesId),
-  ['sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156', 'sp_0157', 'sp_0162', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445'],
+  ['sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156', 'sp_0157', 'sp_0162', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0289', 'sp_0290', 'sp_0291', 'sp_0363', 'sp_0445'],
 );
 assert.ok(audit.promoted.every(item => (
   item.registrySource === 'reviewed_color_morph_policy'

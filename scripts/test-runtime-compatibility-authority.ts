@@ -85,101 +85,101 @@ assert.equal(staticSignature.status, 'caution');
 assert.equal(staticSignature.ruleVersion, COMPATIBILITY_RULE_VERSION);
 assert.equal(staticSignature.authorityVersion, 'tank-compatibility-v3-reviewed-evidence');
 const invalidPartialProfiles = profilesFor(rolloutKeysets.target).slice(0, -3);
-assert.equal(invalidPartialProfiles.length, 98);
+assert.equal(invalidPartialProfiles.length, 102);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: invalidPartialProfiles,
   counts: { profiles: invalidPartialProfiles.length, pairRules: bootstrap.pairRules.length },
 });
-assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', 'invalid 98-Profile partial DB authority must fail closed');
+assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', 'invalid 102-Profile partial DB authority must fail closed');
 assert.deepEqual(signature(), staticSignature, 'partial DB authority must not change Compatibility decisions');
 
 const currentProductionProfiles = profilesFor(rolloutKeysets.currentProduction);
-assert.equal(currentProductionProfiles.length, 63);
+assert.equal(currentProductionProfiles.length, 67);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: currentProductionProfiles,
   counts: { profiles: currentProductionProfiles.length, pairRules: bootstrap.pairRules.length },
 });
 const currentProductionStatus = getRuntimeCompatibilityStatus();
-assert.equal(currentProductionStatus.source, 'reviewed-db', 'exact 63-Profile Production baseline must stay usable during rollout');
-assert.equal(currentProductionStatus.profiles, 63);
+assert.equal(currentProductionStatus.source, 'reviewed-db', 'exact 67-Profile Production baseline plus reviewed source-controlled color bridges must stay usable during rollout');
+assert.equal(currentProductionStatus.profiles, 67);
 assert.equal(currentProductionStatus.pairRules, bootstrap.pairRules.length);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
 const productionTargetProfiles = profilesFor(rolloutKeysets.productionTarget);
-assert.equal(productionTargetProfiles.length, 85);
+assert.equal(productionTargetProfiles.length, 89);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: productionTargetProfiles,
   counts: { profiles: productionTargetProfiles.length, pairRules: bootstrap.pairRules.length },
 });
 const productionTargetStatus = getRuntimeCompatibilityStatus();
-assert.equal(productionTargetStatus.source, 'reviewed-db', 'exact 85-Profile Production target must stay usable during stacked rollout');
-assert.equal(productionTargetStatus.profiles, 85);
+assert.equal(productionTargetStatus.source, 'reviewed-db', 'exact 89-Profile Production target including reviewed source-controlled color bridges must stay usable during stacked rollout');
+assert.equal(productionTargetStatus.profiles, 89);
 assert.equal(productionTargetStatus.pairRules, bootstrap.pairRules.length);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
 const wave04TargetProfiles = profilesFor(rolloutKeysets.wave04Target);
-assert.equal(wave04TargetProfiles.length, 95);
+assert.equal(wave04TargetProfiles.length, 99);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: wave04TargetProfiles,
   counts: { profiles: wave04TargetProfiles.length, pairRules: bootstrap.pairRules.length },
 });
 const wave04TargetStatus = getRuntimeCompatibilityStatus();
-assert.equal(wave04TargetStatus.source, 'reviewed-db', 'exact 95-Profile wave04 target must stay usable during wave05 rollout');
-assert.equal(wave04TargetStatus.profiles, 95);
+assert.equal(wave04TargetStatus.source, 'reviewed-db', 'exact 99-Profile wave04 target plus reviewed source-controlled color bridges must stay usable during wave05 rollout');
+assert.equal(wave04TargetStatus.profiles, 99);
 assert.equal(wave04TargetStatus.pairRules, bootstrap.pairRules.length);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
 const wave05TargetProfiles = profilesFor(rolloutKeysets.wave05Target);
-assert.equal(wave05TargetProfiles.length, 99);
+assert.equal(wave05TargetProfiles.length, 103);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: wave05TargetProfiles,
   counts: { profiles: wave05TargetProfiles.length, pairRules: bootstrap.pairRules.length },
 });
 const wave05TargetStatus = getRuntimeCompatibilityStatus();
-assert.equal(wave05TargetStatus.source, 'reviewed-db', 'exact 99-Profile wave05 target must remain usable during wave06 rollout');
-assert.equal(wave05TargetStatus.profiles, 99);
+assert.equal(wave05TargetStatus.source, 'reviewed-db', 'exact 103-Profile wave05 target plus reviewed source-controlled color bridges must remain usable during wave06 rollout');
+assert.equal(wave05TargetStatus.profiles, 103);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
 const wave06TargetProfiles = profilesFor(rolloutKeysets.wave06Target);
-assert.equal(wave06TargetProfiles.length, 100);
+assert.equal(wave06TargetProfiles.length, 104);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: wave06TargetProfiles,
   counts: { profiles: wave06TargetProfiles.length, pairRules: bootstrap.pairRules.length },
 });
 const wave06TargetStatus = getRuntimeCompatibilityStatus();
-assert.equal(wave06TargetStatus.source, 'reviewed-db', 'exact 100-Profile wave06 target must remain usable during wave16 rollout');
-assert.equal(wave06TargetStatus.profiles, 100);
+assert.equal(wave06TargetStatus.source, 'reviewed-db', 'exact 104-Profile wave06 target plus reviewed source-controlled color bridges must remain usable during wave16 rollout');
+assert.equal(wave06TargetStatus.profiles, 104);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
 const releasedTargetProfiles = profilesFor(rolloutKeysets.target);
-assert.equal(releasedTargetProfiles.length, 101);
+assert.equal(releasedTargetProfiles.length, 105);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: releasedTargetProfiles,
   counts: { profiles: releasedTargetProfiles.length, pairRules: bootstrap.pairRules.length },
 });
 const releasedTargetStatus = getRuntimeCompatibilityStatus();
-assert.equal(releasedTargetStatus.source, 'reviewed-db', 'exact 101-Profile released repository target must remain usable');
-assert.equal(releasedTargetStatus.profiles, 101);
+assert.equal(releasedTargetStatus.source, 'reviewed-db', 'exact 105-Profile released repository target plus reviewed source-controlled color bridges must remain usable');
+assert.equal(releasedTargetStatus.profiles, 105);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
-assert.equal(bootstrap.profiles.length, 126, 'reviewed source-controlled post-target Profiles may grow repository authority beyond the released 101-Profile target without changing released generations');
+assert.equal(bootstrap.profiles.length, 130, 'reviewed source-controlled post-target Profiles may grow repository authority beyond the released 105-Profile target without changing released generations');
 applyReviewedCompatibilityBootstrap(bootstrap);
 const postTargetStatus = getRuntimeCompatibilityStatus();
 assert.equal(postTargetStatus.source, 'reviewed-db', 'complete released target plus reviewed source-controlled Profiles must be accepted as post-target authority growth');
-assert.equal(postTargetStatus.profiles, 126);
+assert.equal(postTargetStatus.profiles, 130);
 
 resetRuntimeCompatibilityEvidenceForTest();
 

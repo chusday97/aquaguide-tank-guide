@@ -9,6 +9,7 @@ import { nextWaveUnified02Sources } from '../../data/catalogReviewBatches/next-w
 import { compatibilityAuthorityPatchSources } from '../../data/compatibilityAuthorityPatches';
 import { catalogCorrectionPhase2_04Sources } from '../../data/catalogReviewBatches/catalog-correction-phase2-04';
 import { behaviorEvidencePhase2_05Sources } from '../../data/catalogReviewBatches/behavior-evidence-phase2-05';
+import { identityCorrectionsPhase2_15Sources } from '../../data/catalogReviewBatches/identity-corrections-phase2-15';
 
 const nextWaveUnified02KnowledgeSources = Object.fromEntries([
   nextWaveUnified02Sources.macropodusSeriouslyFish,
@@ -34,6 +35,7 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
   ...Object.fromEntries(Object.values(compatibilityAuthorityPatchSources).map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(catalogCorrectionPhase2_04Sources).map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(behaviorEvidencePhase2_05Sources).map(source => [source.id, source])),
+  ...Object.fromEntries(Object.values(identityCorrectionsPhase2_15Sources).map(source => [source.id, source])),
   'fws-tachysurus-fulvidraco-erss': { id: 'fws-tachysurus-fulvidraco-erss', title: 'Ecological Risk Screening Summary: Yellow Catfish (Tachysurus fulvidraco)', publisher: 'U.S. Fish and Wildlife Service', url: 'https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Yellow-Catfish.pdf', sourceType: 'government', reviewStatus: 'reviewed' },
   'seriouslyfish-mastacembelus-armatus': { id: 'seriouslyfish-mastacembelus-armatus', title: 'Mastacembelus armatus (Tyre-Track Eel)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/mastacembelus-armatus', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'seriouslyfish-channa-barca': { id: 'seriouslyfish-channa-barca', title: 'Channa barca', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/channa-barca', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },

@@ -11,7 +11,7 @@ import { compatibilityReleasedSpeciesIds, compatibilitySourceControlledPendingPr
 import { compatibilityAuthorityPatchManifests } from '../src/data/compatibilityAuthorityPatches';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
-import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
+import { getCatalogCanonicalIdentity, hasFullGenericCompatibilityInheritance } from '../src/data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
@@ -82,10 +82,28 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
       }
     } else {
       const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(member.speciesId);
-      if (laterSourceControlledProfile) {
-        assert.ok(profile, 'later reviewed source-controlled identity correction may add a Profile without rewriting the frozen release batch: ' + member.speciesId);
+      const laterCanonicalIdentity = getCatalogCanonicalIdentity(member.speciesId);
+      const laterReviewedFullCanonicalProfile = (
+        laterCanonicalIdentity?.identityStatus === 'reviewed'
+        && laterCanonicalIdentity.canonicalRootKind === 'catalog_species'
+        && hasFullGenericCompatibilityInheritance(member.speciesId)
+      );
+      if (laterSourceControlledProfile || laterReviewedFullCanonicalProfile) {
+        assert.ok(profile, 'later reviewed source-controlled or full canonical identity authority may add a Profile without rewriting the frozen release batch: ' + member.speciesId);
         assert.equal(identityBoundary, undefined);
         assert.equal(domainBoundary, undefined);
+        if (laterReviewedFullCanonicalProfile) {
+          const historicalEvidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
+          if (historicalEvidenceCeilingField) {
+            const historicalEvidenceCeiling = getKnowledgeEvidenceCeiling(member.speciesId, historicalEvidenceCeilingField);
+            assert.ok(historicalEvidenceCeiling, 'full reviewed canonical identity must preserve the historical reviewed evidence ceiling: ' + member.speciesId);
+            assert.equal(historicalEvidenceCeiling.researchDisposition, 'terminal_unknown_hold');
+          } else {
+            const historicalBoundary = catalogIdentityBoundaries[member.speciesId];
+            assert.ok(historicalBoundary, 'full reviewed canonical identity may supersede a historical next-wave hold only when its original boundary remains auditable: ' + member.speciesId);
+            assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+          }
+        }
       } else {
         assert.equal(profile, undefined, 'explicit hold species must remain without direct Compatibility Profile: ' + member.speciesId);
         if (identityBoundary) {

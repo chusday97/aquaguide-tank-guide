@@ -4,8 +4,8 @@
 
 - Active identity boundaries: **93**
 - Fish-domain identity boundaries: **91**
-- Current unresolved-identity fish pairs: **16391**
-- One-boundary pairs: **12736**
+- Current unresolved-identity fish pairs: **16047**
+- One-boundary pairs: **12392**
 - Two-boundary pairs: **3655**
 - Auto-migratable active boundaries: **0**
 
@@ -21,13 +21,13 @@
 
 ## Migration paths
 
-- base_authority_or_parent_resolution: 54 objects / 7911 sole-boundary pairs
-- catalog_structure_correction: 11 objects / 1646 sole-boundary pairs
-- partial_inheritance_review: 10 objects / 1106 sole-boundary pairs
-- trade_name_disambiguation: 8 objects / 833 sole-boundary pairs
-- identity_only_after_exact_evidence: 5 objects / 609 sole-boundary pairs
-- hybrid_object_specific_hold: 3 objects / 473 sole-boundary pairs
-- exact_variant_label_disambiguation: 1 objects / 158 sole-boundary pairs
+- base_authority_or_parent_resolution: 54 objects / 7695 sole-boundary pairs
+- catalog_structure_correction: 11 objects / 1602 sole-boundary pairs
+- partial_inheritance_review: 10 objects / 1078 sole-boundary pairs
+- trade_name_disambiguation: 8 objects / 809 sole-boundary pairs
+- identity_only_after_exact_evidence: 5 objects / 593 sole-boundary pairs
+- hybrid_object_specific_hold: 3 objects / 461 sole-boundary pairs
+- exact_variant_label_disambiguation: 1 objects / 154 sole-boundary pairs
 - taxonomic_review: 1 objects / 0 sole-boundary pairs
 
 ## Catalog structure subtypes
@@ -66,35 +66,35 @@
 
 | Catalog object | Boundary | Migration path | Ready base | Morphology risk | Identity-unknown pairs | Sole-boundary pairs |
 | --- | --- | --- | ---: | --- | ---: | ---: |
-| sp_0055 金刚鹦鹉鱼 | commercial_hybrid_identity_unresolved | hybrid_object_specific_hold | 0 | no | 243 | 158 |
-| sp_0124 蓝眼胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0127 巴基斯坦鼠 | trade_name_taxon_ambiguous | trade_name_disambiguation | 0 | no | 243 | 158 |
-| sp_0158 红苹果剑尾 | catalog_scientific_name_unresolved | catalog_structure_correction | 1 | no | 243 | 158 |
-| sp_0159 黄金胡子 (异型变种) | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0160 大帆白金胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 243 | 158 |
-| sp_0163 鸿运当头锦鲤 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0175 血钻神仙 | catalog_variant_identity_unresolved | exact_variant_label_disambiguation | 1 | no | 243 | 158 |
-| sp_0179 球形曼龙 (蓝/金) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | yes | 243 | 158 |
-| sp_0182 蓝眼异型 (L191) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0201 黑白双星异型 (L240) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0210 黄金眼镜蛇蛇鱼 | catalog_scientific_name_unresolved | catalog_structure_correction | 0 | no | 243 | 158 |
-| sp_0211 大点火口 | catalog_scientific_name_unresolved | catalog_structure_correction | 0 | no | 243 | 158 |
-| sp_0217 白金黑地魔 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0230 大帆黄金胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 243 | 158 |
-| sp_0241 大理石神仙 (球形) | catalog_variant_identity_unresolved | partial_inheritance_review | 1 | yes | 243 | 158 |
-| sp_0243 球形血鹦鹉 | commercial_hybrid_identity_unresolved | hybrid_object_specific_hold | 0 | yes | 243 | 158 |
-| sp_0247 蓝钻神仙 (球形) | catalog_variant_identity_unresolved | partial_inheritance_review | 1 | yes | 243 | 158 |
-| sp_0248 黄金战舰 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0263 雪中红慈鲷 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0264 白金阿里慈鲷 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0265 血中红慈鲷 | catalog_scientific_name_unresolved | catalog_structure_correction | 0 | no | 243 | 158 |
-| sp_0268 球形蓝曼龙 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | yes | 243 | 158 |
-| sp_0269 球形金曼龙 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | yes | 243 | 158 |
-| sp_0270 白子红眼关刀 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0271 白子红宝石 | catalog_variant_identity_unresolved | identity_only_after_exact_evidence | 1 | no | 243 | 158 |
-| sp_0273 血钻短鲷 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
-| sp_0280 黄金胡子 (长鳍) | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 243 | 158 |
-| sp_0281 白金胡子 (大帆) | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 243 | 158 |
-| sp_0282 黄金达摩 (改良) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 243 | 158 |
+| sp_0055 金刚鹦鹉鱼 | commercial_hybrid_identity_unresolved | hybrid_object_specific_hold | 0 | no | 239 | 154 |
+| sp_0124 蓝眼胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0127 巴基斯坦鼠 | trade_name_taxon_ambiguous | trade_name_disambiguation | 0 | no | 239 | 154 |
+| sp_0158 红苹果剑尾 | catalog_scientific_name_unresolved | catalog_structure_correction | 1 | no | 239 | 154 |
+| sp_0159 黄金胡子 (异型变种) | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0160 大帆白金胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 239 | 154 |
+| sp_0163 鸿运当头锦鲤 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0175 血钻神仙 | catalog_variant_identity_unresolved | exact_variant_label_disambiguation | 1 | no | 239 | 154 |
+| sp_0179 球形曼龙 (蓝/金) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | yes | 239 | 154 |
+| sp_0182 蓝眼异型 (L191) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0201 黑白双星异型 (L240) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0210 黄金眼镜蛇蛇鱼 | catalog_scientific_name_unresolved | catalog_structure_correction | 0 | no | 239 | 154 |
+| sp_0211 大点火口 | catalog_scientific_name_unresolved | catalog_structure_correction | 0 | no | 239 | 154 |
+| sp_0217 白金黑地魔 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0230 大帆黄金胡子 | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 239 | 154 |
+| sp_0241 大理石神仙 (球形) | catalog_variant_identity_unresolved | partial_inheritance_review | 1 | yes | 239 | 154 |
+| sp_0243 球形血鹦鹉 | commercial_hybrid_identity_unresolved | hybrid_object_specific_hold | 0 | yes | 239 | 154 |
+| sp_0247 蓝钻神仙 (球形) | catalog_variant_identity_unresolved | partial_inheritance_review | 1 | yes | 239 | 154 |
+| sp_0248 黄金战舰 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0263 雪中红慈鲷 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0264 白金阿里慈鲷 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0265 血中红慈鲷 | catalog_scientific_name_unresolved | catalog_structure_correction | 0 | no | 239 | 154 |
+| sp_0268 球形蓝曼龙 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | yes | 239 | 154 |
+| sp_0269 球形金曼龙 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | yes | 239 | 154 |
+| sp_0270 白子红眼关刀 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0271 白子红宝石 | catalog_variant_identity_unresolved | identity_only_after_exact_evidence | 1 | no | 239 | 154 |
+| sp_0273 血钻短鲷 | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
+| sp_0280 黄金胡子 (长鳍) | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 239 | 154 |
+| sp_0281 白金胡子 (大帆) | catalog_parent_taxon_unresolved | base_authority_or_parent_resolution | 0 | yes | 239 | 154 |
+| sp_0282 黄金达摩 (改良) | catalog_variant_identity_unresolved | base_authority_or_parent_resolution | 0 | no | 239 | 154 |
 
 Pair impact is diagnostic prioritization only. A row remains fail-closed until its identity review graduates through the canonical identity/onboarding gate.

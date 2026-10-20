@@ -34,7 +34,8 @@ const explicitCanonicalIds = Object.keys(catalogIdentityCorrectionBaseSpeciesIds
 const policyCanonicalIds = [...reviewedColorPolicyCanonicalSpeciesIds].sort();
 const expectedColorPolicyIds = [
   'sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156',
-  'sp_0157', 'sp_0162', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445',
+  'sp_0157', 'sp_0162', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283',
+  'sp_0289', 'sp_0290', 'sp_0291', 'sp_0363', 'sp_0445',
 ];
 const expectedTaxonRootIds = ['sp_0156', 'sp_0162', 'sp_0214', 'sp_0224', 'sp_0445'];
 assert.equal(explicitCanonicalIds.length, 21);

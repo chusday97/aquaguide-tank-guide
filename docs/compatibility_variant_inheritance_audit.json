@@ -27,16 +27,16 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "genericOnboardingReadySpecies": 104,
+    "genericOnboardingReadySpecies": 109,
     "explicitReviewedCanonicalBridges": 21,
-    "reviewedColorPolicyCanonicalRecords": 14,
+    "reviewedColorPolicyCanonicalRecords": 18,
     "reviewedColorTaxonRootRecords": 5,
     "reviewedVariantFieldPolicyRecords": 9,
     "reviewedVariantFieldResearchPolicies": 8,
     "baseTaxonCandidateFactSlots": 24,
     "exactObjectEvidenceFactSlots": 40,
-    "totalCanonicalIdentityRecords": 44,
-    "policyPromotedReadySpecies": 13,
+    "totalCanonicalIdentityRecords": 48,
+    "policyPromotedReadySpecies": 17,
     "fieldPolicyReadySpecies": 3,
     "directReviewedVariantObjects": 2,
     "remainingReviewedVariantObjects": 0,
@@ -368,6 +368,114 @@
       "registrySource": "reviewed_color_morph_policy",
       "evidenceIds": [
         "wave06-peer-reviewed-scleropages-formosus-super-red"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0289",
+      "name": "荧光红斑马",
+      "scientificName": "Danio rerio var. Glo Red",
+      "canonicalSpeciesId": "sp_0435",
+      "canonicalRootKind": "catalog_species",
+      "canonicalScientificName": "Danio rerio",
+      "variantKey": "Glo Red",
+      "registrySource": "reviewed_color_morph_policy",
+      "evidenceIds": [
+        "phase2-15-fda-glofish-danio-risk-reviewed-igas",
+        "phase2-15-glofish-zebra-danio-single-color-collection"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0290",
+      "name": "荧光绿斑马",
+      "scientificName": "Danio rerio var. Glo Green",
+      "canonicalSpeciesId": "sp_0435",
+      "canonicalRootKind": "catalog_species",
+      "canonicalScientificName": "Danio rerio",
+      "variantKey": "Glo Green",
+      "registrySource": "reviewed_color_morph_policy",
+      "evidenceIds": [
+        "phase2-15-fda-glofish-danio-risk-reviewed-igas",
+        "phase2-15-glofish-zebra-danio-single-color-collection"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0291",
+      "name": "荧光橙斑马",
+      "scientificName": "Danio rerio var. Glo Orange",
+      "canonicalSpeciesId": "sp_0435",
+      "canonicalRootKind": "catalog_species",
+      "canonicalScientificName": "Danio rerio",
+      "variantKey": "Glo Orange",
+      "registrySource": "reviewed_color_morph_policy",
+      "evidenceIds": [
+        "phase2-15-fda-glofish-danio-risk-reviewed-igas",
+        "phase2-15-glofish-zebra-danio-single-color-collection"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0363",
+      "name": "荧光紫斑马",
+      "scientificName": "Danio rerio var. Glo Purple",
+      "canonicalSpeciesId": "sp_0435",
+      "canonicalRootKind": "catalog_species",
+      "canonicalScientificName": "Danio rerio",
+      "variantKey": "Glo Purple",
+      "registrySource": "reviewed_color_morph_policy",
+      "evidenceIds": [
+        "phase2-15-fda-glofish-danio-risk-reviewed-igas",
+        "phase2-15-glofish-zebra-danio-single-color-collection"
       ],
       "inheritedFacts": [
         "water",

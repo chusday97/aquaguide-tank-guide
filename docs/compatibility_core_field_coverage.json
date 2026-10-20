@@ -11,10 +11,10 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 104,
-  "coreFieldCompleteSpecies": 116,
+  "genericOnboardingReadySpecies": 109,
+  "coreFieldCompleteSpecies": 120,
   "oneFieldGapSpecies": 13,
-  "runtimeReviewedProfileSpecies": 166,
+  "runtimeReviewedProfileSpecies": 170,
   "fishCompatibilityDomainSpecies": 308,
   "fishIdentityHeldSpecies": 91,
   "unsupportedDomainSpecies": 167,
@@ -25,80 +25,80 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 60,
+  "visibleResearchDebtFields": 56,
   "completionEligibleResearchDebtFields": 0,
-  "deferredResearchDebtFields": 60,
+  "deferredResearchDebtFields": 56,
   "activeCompletionResearchDebtFields": 0,
-  "deferredResearchOpportunityFields": 60,
-  "deferredResearchOpportunitySpecies": 60,
+  "deferredResearchOpportunityFields": 56,
+  "deferredResearchOpportunitySpecies": 56,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 60,
-  "predationRiskDiscoveryFields": 60,
+  "softRiskDiscoveryResearchDebtFields": 56,
+  "predationRiskDiscoveryFields": 56,
   "predationRiskDiscoveryHardReadySpecies": 5,
-  "predationRiskDiscoveryVariantIdentityHeldSpecies": 53,
+  "predationRiskDiscoveryVariantIdentityHeldSpecies": 49,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 174,
+      "reviewed_supported": 178,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 43,
+      "reviewed_unknown": 39,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 161,
+      "reviewed_supported": 165,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 56,
+      "reviewed_unknown": 52,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 153,
+      "reviewed_supported": 157,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 64,
+      "reviewed_unknown": 60,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 163,
+      "reviewed_supported": 167,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 54,
+      "reviewed_unknown": 50,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 152,
+      "reviewed_supported": 156,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 65,
+      "reviewed_unknown": 61,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 142,
+      "reviewed_supported": 146,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 75,
+      "reviewed_unknown": 71,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "territoriality": {
       "reviewed_supported": 93,
-      "reviewed_neutral_or_negative": 45,
-      "reviewed_unknown": 79,
+      "reviewed_neutral_or_negative": 49,
+      "reviewed_unknown": 75,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 101,
+      "reviewed_supported": 105,
       "reviewed_neutral_or_negative": 39,
       "reviewed_unknown": 17,
-      "needs_research": 60,
+      "needs_research": 56,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -106,7 +106,7 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 60
+      "count": 56
     },
     {
       "field": "water",
@@ -24432,71 +24432,83 @@
       "name": "荧光红斑马",
       "scientificName": "Danio rerio var. Glo Red",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-red"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-red"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -24505,71 +24517,83 @@
       "name": "荧光绿斑马",
       "scientificName": "Danio rerio var. Glo Green",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-green"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-green"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -24578,71 +24602,83 @@
       "name": "荧光橙斑马",
       "scientificName": "Danio rerio var. Glo Orange",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-orange"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-orange"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -30105,71 +30141,83 @@
       "name": "荧光紫斑马",
       "scientificName": "Danio rerio var. Glo Purple",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-purple"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch15-fishbase-danio-rerio-glo-purple"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-danio-rerio"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -36096,7 +36144,7 @@
       "scientificName": "Danio rerio",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,

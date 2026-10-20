@@ -38,6 +38,7 @@ import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-r
 import { LOCAL_CATALOG_VERSION } from '../data/catalogVersion';
 import { getCompatibilityCoreFieldCoverageRow } from '../services/compatibility/compatibility-field-coverage.service';
 import { getCompatibilityPairEvidenceCeiling } from '../data/compatibilityPairEvidenceCeilings';
+import { getCatalogCanonicalIdentity } from '../data/catalogCanonicalIdentity';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
@@ -795,6 +796,28 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   const reviewedSpace = reviewedKnowledge?.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
     ? reviewedKnowledge.spaceAndGrowth
     : undefined;
+  const canonicalIdentity = getCatalogCanonicalIdentity(fish.id);
+  const canonicalKnowledge = canonicalIdentity?.canonicalRootKind === 'catalog_species'
+    ? getReviewedSpeciesKnowledge(canonicalIdentity.canonicalSpeciesId)
+    : undefined;
+  const canonicalEnvironment = canonicalKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
+    ? canonicalKnowledge.environment
+    : undefined;
+  const canonicalSocial = canonicalKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
+    ? canonicalKnowledge.socialBehavior
+    : undefined;
+  const canonicalSpace = canonicalKnowledge?.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
+    ? canonicalKnowledge.spaceAndGrowth
+    : undefined;
+  const inheritedCanonicalEnvironment = (field: 'water' | 'temperature' | 'ph') => (
+    coverage.fields[field].authoritySource === 'canonical_inheritance' ? canonicalEnvironment : undefined
+  );
+  const inheritedCanonicalSocial = (field: 'social_behavior' | 'territoriality' | 'predation') => (
+    coverage.fields[field].authoritySource === 'canonical_inheritance' ? canonicalSocial : undefined
+  );
+  const inheritedCanonicalSpace = (field: 'tank_size' | 'adult_size') => (
+    coverage.fields[field].authoritySource === 'canonical_inheritance' ? canonicalSpace : undefined
+  );
   // Older SpeciesKnowledge packets can be reviewed specifically to record that a
   // value was still unknown at that time. "Reviewed unknown" is evidence about
   // the old packet, not stronger domain authority than a later supported
@@ -807,6 +830,18 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   const reviewedEnvironmentWaterTypes = reviewedEnvironment?.waterTypes?.length
     ? reviewedEnvironment.waterTypes
     : undefined;
+  const canonicalWaterEnvironment = inheritedCanonicalEnvironment('water');
+  const canonicalTemperatureEnvironment = inheritedCanonicalEnvironment('temperature');
+  const canonicalPhEnvironment = inheritedCanonicalEnvironment('ph');
+  const canonicalSocialBehavior = inheritedCanonicalSocial('social_behavior');
+  const canonicalTerritorialBehavior = inheritedCanonicalSocial('territoriality');
+  const canonicalPredationBehavior = inheritedCanonicalSocial('predation');
+  const canonicalTankSpace = inheritedCanonicalSpace('tank_size');
+  const canonicalAdultSpace = inheritedCanonicalSpace('adult_size');
+  const canonicalEnvironmentWaterType = concreteReviewedEnum(canonicalWaterEnvironment?.waterType);
+  const canonicalEnvironmentWaterTypes = canonicalWaterEnvironment?.waterTypes?.length
+    ? canonicalWaterEnvironment.waterTypes
+    : undefined;
   const reviewedSocialMode = concreteReviewedEnum(reviewedSocial?.mode);
   const reviewedTerritoriality = concreteReviewedEnum(reviewedSocial?.territoriality);
   const reviewedFinNippingRisk = concreteReviewedEnum(reviewedSocial?.finNipping);
@@ -815,7 +850,9 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   const reviewedPredationRisk = concreteReviewedEnum(reviewedSocial?.predationRisk);
   const reviewedPredationVulnerability = concreteReviewedEnum(reviewedSocial?.predationVulnerability);
   const reviewedSwimmingZone = concreteReviewedEnum(reviewedSocial?.swimmingZone)
-    ?? concreteReviewedEnum(reviewedSpace?.swimmingZone);
+    ?? concreteReviewedEnum(reviewedSpace?.swimmingZone)
+    ?? concreteReviewedEnum(canonicalSocialBehavior?.swimmingZone)
+    ?? concreteReviewedEnum(canonicalTankSpace?.swimmingZone);
   const knowledgeEvidenceIds = [
     ...(reviewedEnvironment?.evidence.sourceIds || []),
     ...(reviewedSocial?.evidence.sourceIds || []),
@@ -824,36 +861,48 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
       ? reviewedKnowledge.reproduction.evidence.sourceIds
       : []),
   ];
+  const canonicalKnowledgeEvidenceIds = [
+    ...(canonicalWaterEnvironment?.evidence.sourceIds || []),
+    ...(canonicalTemperatureEnvironment?.evidence.sourceIds || []),
+    ...(canonicalPhEnvironment?.evidence.sourceIds || []),
+    ...(canonicalSocialBehavior?.evidence.sourceIds || []),
+    ...(canonicalTerritorialBehavior?.evidence.sourceIds || []),
+    ...(canonicalPredationBehavior?.evidence.sourceIds || []),
+    ...(canonicalTankSpace?.evidence.sourceIds || []),
+    ...(canonicalAdultSpace?.evidence.sourceIds || []),
+  ];
   return {
     id: profile.catalogKey,
-    waterType: reviewedEnvironmentWaterType ?? staticReviewed?.waterType ?? profile.waterType,
-    waterTypes: reviewedEnvironmentWaterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
-    temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
-    temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
-    phMin: reviewedEnvironment?.phRange?.min ?? profile.phMin,
-    phMax: reviewedEnvironment?.phRange?.max ?? profile.phMax,
-    minTankLiters: reviewedSpace?.minVolumeLiters ?? profile.minTankLiters,
-    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? profile.minTankLengthCm ?? null,
+    waterType: reviewedEnvironmentWaterType ?? canonicalEnvironmentWaterType ?? staticReviewed?.waterType ?? profile.waterType,
+    waterTypes: reviewedEnvironmentWaterTypes ?? canonicalEnvironmentWaterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
+    temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? canonicalTemperatureEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
+    temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? canonicalTemperatureEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
+    phMin: reviewedEnvironment?.phRange?.min ?? canonicalPhEnvironment?.phRange?.min ?? profile.phMin,
+    phMax: reviewedEnvironment?.phRange?.max ?? canonicalPhEnvironment?.phRange?.max ?? profile.phMax,
+    minTankLiters: reviewedSpace?.minVolumeLiters ?? canonicalTankSpace?.minVolumeLiters ?? profile.minTankLiters,
+    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? canonicalTankSpace?.minTankLengthCm ?? profile.minTankLengthCm ?? null,
     reviewed: Boolean(reviewed),
     compatibilityRequiredFacts: reviewed?.requiredFacts,
     compatibilityFactDispositions,
-    minimumGroupSize: reviewedSocial
-      ? (reviewedSocial.minimumGroupSize ?? reviewed?.minimumGroupSize ?? null)
-      : (reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null),
+    minimumGroupSize: reviewedSocial?.minimumGroupSize
+      ?? canonicalSocialBehavior?.minimumGroupSize
+      ?? (reviewedSocial
+        ? (reviewed?.minimumGroupSize ?? null)
+        : (reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null)),
     stockingGuidance: reviewed?.stockingGuidance,
-    evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...(profile.evidenceSourceIds || []), ...knowledgeEvidenceIds, ...coverageEvidenceIds])),
-    adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
-    adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
-    socialMode: reviewedSocialMode ?? profile.socialMode,
+    evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...(profile.evidenceSourceIds || []), ...knowledgeEvidenceIds, ...canonicalKnowledgeEvidenceIds, ...coverageEvidenceIds])),
+    adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? canonicalAdultSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
+    adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? canonicalAdultSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
+    socialMode: reviewedSocialMode ?? concreteReviewedEnum(canonicalSocialBehavior?.mode) ?? profile.socialMode,
     swimmingZone: reviewedSwimmingZone ?? 'unknown',
     behaviorTraits: reviewed?.behaviorTraits || [],
-    territoriality: reviewedTerritoriality,
-    finNippingRisk: reviewedFinNippingRisk,
-    finNipVulnerability: reviewedFinNipVulnerability,
-    swimmingPace: reviewedSwimmingPace,
-    predationRisk: reviewedPredationRisk,
+    territoriality: reviewedTerritoriality ?? concreteReviewedEnum(canonicalTerritorialBehavior?.territoriality),
+    finNippingRisk: reviewedFinNippingRisk ?? concreteReviewedEnum(canonicalSocialBehavior?.finNipping),
+    finNipVulnerability: reviewedFinNipVulnerability ?? concreteReviewedEnum(canonicalSocialBehavior?.finNipVulnerability),
+    swimmingPace: reviewedSwimmingPace ?? concreteReviewedEnum(canonicalSocialBehavior?.swimmingPace),
+    predationRisk: reviewedPredationRisk ?? concreteReviewedEnum(canonicalPredationBehavior?.predationRisk),
     predationTargets: reviewed?.predationTargets || [],
-    predationVulnerability: reviewedPredationVulnerability,
+    predationVulnerability: reviewedPredationVulnerability ?? concreteReviewedEnum(canonicalPredationBehavior?.predationVulnerability),
     lifeType: getLifeType(fish),
     size: fish.size,
   };

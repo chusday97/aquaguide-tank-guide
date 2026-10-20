@@ -1,40 +1,40 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "field-oriented evidence ledger; decisionImpact separates hard decision blockers from soft risk-discovery gaps. Completion-blocked opportunities remain visible with explicit blocker fields/reasons/authority; predation research debt is a safety-risk discovery surface, not a current insufficient_data blocker; no ordinary Pair Rule generation",
-  "totalItems": 60,
+  "totalItems": 56,
   "activeCompletionItems": 0,
-  "deferredOpportunityItems": 60,
+  "deferredOpportunityItems": 56,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 60,
-  "predationRiskDiscoveryFields": 60,
+  "softRiskDiscoveryResearchDebtFields": 56,
+  "predationRiskDiscoveryFields": 56,
   "predationRiskDiscoveryHardReadySpecies": 5,
-  "predationRiskDiscoveryVariantIdentityHeldSpecies": 53,
+  "predationRiskDiscoveryVariantIdentityHeldSpecies": 49,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "deferredBlockerSummary": {
-    "items": 60,
-    "species": 60,
+    "items": 56,
+    "species": 56,
     "fields": {
-      "predation": 60
+      "predation": 56
     },
     "blockingTerminalFields": {
-      "adult_size": 53,
-      "ph": 56,
-      "social_behavior": 53,
-      "tank_size": 56,
-      "temperature": 55,
-      "territoriality": 50,
-      "water": 43
+      "adult_size": 49,
+      "ph": 52,
+      "social_behavior": 49,
+      "tank_size": 52,
+      "temperature": 51,
+      "territoriality": 46,
+      "water": 39
     },
     "blockingTerminalReasons": {
       "compatibility_field_source_strategy_exhausted": 3,
       "species_social_not_established": 7,
-      "variant_identity_research_exhausted": 53,
-      "variant_social_not_established": 46
+      "variant_identity_research_exhausted": 49,
+      "variant_social_not_established": 42
     },
     "blockingTerminalAuthoritySources": {
-      "evidence_ceiling": 53,
+      "evidence_ceiling": 49,
       "research_evidence_ceiling": 3,
-      "variant_evidence_ceiling": 53
+      "variant_evidence_ceiling": 49
     }
   },
   "items": [
@@ -1204,99 +1204,6 @@
     },
     {
       "rank": 41,
-      "speciesId": "sp_0289",
-      "name": "荧光红斑马",
-      "scientificName": "Danio rerio var. Glo Red",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "decisionImpact": "soft_risk_discovery",
-      "completionEligible": false,
-      "companionTerminalGapCount": 7,
-      "deferReason": "companion_terminal_holds",
-      "blockingTerminalFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "blockingTerminalReasons": [
-        "variant_identity_research_exhausted",
-        "variant_social_not_established"
-      ],
-      "blockingTerminalAuthoritySources": [
-        "variant_evidence_ceiling",
-        "evidence_ceiling"
-      ]
-    },
-    {
-      "rank": 42,
-      "speciesId": "sp_0290",
-      "name": "荧光绿斑马",
-      "scientificName": "Danio rerio var. Glo Green",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "decisionImpact": "soft_risk_discovery",
-      "completionEligible": false,
-      "companionTerminalGapCount": 7,
-      "deferReason": "companion_terminal_holds",
-      "blockingTerminalFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "blockingTerminalReasons": [
-        "variant_identity_research_exhausted",
-        "variant_social_not_established"
-      ],
-      "blockingTerminalAuthoritySources": [
-        "variant_evidence_ceiling",
-        "evidence_ceiling"
-      ]
-    },
-    {
-      "rank": 43,
-      "speciesId": "sp_0291",
-      "name": "荧光橙斑马",
-      "scientificName": "Danio rerio var. Glo Orange",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "decisionImpact": "soft_risk_discovery",
-      "completionEligible": false,
-      "companionTerminalGapCount": 7,
-      "deferReason": "companion_terminal_holds",
-      "blockingTerminalFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "blockingTerminalReasons": [
-        "variant_identity_research_exhausted",
-        "variant_social_not_established"
-      ],
-      "blockingTerminalAuthoritySources": [
-        "variant_evidence_ceiling",
-        "evidence_ceiling"
-      ]
-    },
-    {
-      "rank": 44,
       "speciesId": "sp_0292",
       "name": "球形金玛丽",
       "scientificName": "Poecilia latipinna var. Gold Balloon",
@@ -1327,7 +1234,7 @@
       ]
     },
     {
-      "rank": 45,
+      "rank": 42,
       "speciesId": "sp_0293",
       "name": "球形黑玛丽",
       "scientificName": "Poecilia sphenops var. Black Balloon",
@@ -1358,7 +1265,7 @@
       ]
     },
     {
-      "rank": 46,
+      "rank": 43,
       "speciesId": "sp_0295",
       "name": "长鳍电光美人",
       "scientificName": "Melanotaenia praecox var. Longfin",
@@ -1389,7 +1296,7 @@
       ]
     },
     {
-      "rank": 47,
+      "rank": 44,
       "speciesId": "sp_0348",
       "name": "红白虎头金鱼",
       "scientificName": "Carassius auratus var. Tigerhead",
@@ -1420,7 +1327,7 @@
       ]
     },
     {
-      "rank": 48,
+      "rank": 45,
       "speciesId": "sp_0349",
       "name": "蓝寿 (五花)",
       "scientificName": "Carassius auratus var. Calico Ranchu",
@@ -1451,7 +1358,7 @@
       ]
     },
     {
-      "rank": 49,
+      "rank": 46,
       "speciesId": "sp_0350",
       "name": "黑狮头金鱼",
       "scientificName": "Carassius auratus var. Black Oranda",
@@ -1482,7 +1389,7 @@
       ]
     },
     {
-      "rank": 50,
+      "rank": 47,
       "speciesId": "sp_0351",
       "name": "红白蝶尾",
       "scientificName": "Carassius auratus var. Butterfly Tail",
@@ -1513,38 +1420,7 @@
       ]
     },
     {
-      "rank": 51,
-      "speciesId": "sp_0363",
-      "name": "荧光紫斑马",
-      "scientificName": "Danio rerio var. Glo Purple",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "decisionImpact": "soft_risk_discovery",
-      "completionEligible": false,
-      "companionTerminalGapCount": 7,
-      "deferReason": "companion_terminal_holds",
-      "blockingTerminalFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "blockingTerminalReasons": [
-        "variant_identity_research_exhausted",
-        "variant_social_not_established"
-      ],
-      "blockingTerminalAuthoritySources": [
-        "variant_evidence_ceiling",
-        "evidence_ceiling"
-      ]
-    },
-    {
-      "rank": 52,
+      "rank": 48,
       "speciesId": "sp_0364",
       "name": "荧光粉斑马",
       "scientificName": "Danio rerio var. Glo Pink",
@@ -1575,7 +1451,7 @@
       ]
     },
     {
-      "rank": 53,
+      "rank": 49,
       "speciesId": "sp_0385",
       "name": "雪白金金鱼 (改良)",
       "scientificName": "Carassius auratus var. White Gold",
@@ -1606,7 +1482,7 @@
       ]
     },
     {
-      "rank": 54,
+      "rank": 50,
       "speciesId": "sp_0386",
       "name": "黑金刚龙睛",
       "scientificName": "Carassius auratus var. Black Moor",
@@ -1637,7 +1513,7 @@
       ]
     },
     {
-      "rank": 55,
+      "rank": 51,
       "speciesId": "sp_0387",
       "name": "熊猫蝶尾 (极品)",
       "scientificName": "Carassius auratus var. Panda Butterfly",
@@ -1668,7 +1544,7 @@
       ]
     },
     {
-      "rank": 56,
+      "rank": 52,
       "speciesId": "sp_0395",
       "name": "黄金大帆飞狐",
       "scientificName": "Crossocheilus langei var. Gold Longfin",
@@ -1699,7 +1575,7 @@
       ]
     },
     {
-      "rank": 57,
+      "rank": 53,
       "speciesId": "sp_0406",
       "name": "五彩青蛙 (大规格改良)",
       "scientificName": "Synchiropus splendidus var. XL",
@@ -1730,7 +1606,7 @@
       ]
     },
     {
-      "rank": 58,
+      "rank": 54,
       "speciesId": "sp_0413",
       "name": "黄金眼镜蛇蛇鱼 (长鳍)",
       "scientificName": "Pangio kuhlii var. Longfin",
@@ -1761,7 +1637,7 @@
       ]
     },
     {
-      "rank": 59,
+      "rank": 55,
       "speciesId": "sp_0419",
       "name": "荧光橙斑马 (长鳍)",
       "scientificName": "Danio rerio var. Glo Orange Longfin",
@@ -1792,7 +1668,7 @@
       ]
     },
     {
-      "rank": 60,
+      "rank": 56,
       "speciesId": "sp_0426",
       "name": "极地白云金丝",
       "scientificName": "Tanichthys albonubes var. Polar",

@@ -50,18 +50,18 @@ assert.equal(audit.policy.writesAuthority, false);
 assert.equal(audit.policy.promotionAllowed, false);
 assert.equal(audit.policy.grantsInheritance, false);
 assert.deepEqual(audit.policy.exactObjectFieldsExcluded, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-assert.equal(audit.summary.taxonJobs, 4);
-assert.equal(audit.summary.variantObjects, 9);
+assert.equal(audit.summary.taxonJobs, 0);
+assert.equal(audit.summary.variantObjects, 0);
 assert.equal(audit.summary.candidateFieldsPerObject, 3);
-assert.equal(audit.summary.requestedCandidateSlots, 27);
-assert.equal(audit.summary.supportedCandidateSlots, 25);
-assert.equal(audit.summary.unresolvedCandidateSlots, 2);
-assert.equal(audit.summary.supportedTaxonFacts, 11);
-assert.equal(audit.summary.unresolvedTaxonFacts, 1);
-assert.equal(audit.summary.exactObjectSlotsExcluded, 45);
+assert.equal(audit.summary.requestedCandidateSlots, 0);
+assert.equal(audit.summary.supportedCandidateSlots, 0);
+assert.equal(audit.summary.unresolvedCandidateSlots, 0);
+assert.equal(audit.summary.supportedTaxonFacts, 0);
+assert.equal(audit.summary.unresolvedTaxonFacts, 0);
+assert.equal(audit.summary.exactObjectSlotsExcluded, 0);
 
 const plan = buildCompatibilityTaxonResearchPlan();
-assert.equal(plan.length, 4);
+assert.equal(plan.length, 0, 'no completion-eligible variant taxon research jobs should remain while all visible gaps are deferred behind terminal holds');
 assert.deepEqual(audit.jobs.map(job => job.researchKey).sort(), plan.map(job => job.researchKey).sort());
 
 let supportedSlots = 0;
@@ -108,15 +108,8 @@ assert.equal(supportedTaxonFacts, audit.summary.supportedTaxonFacts);
 assert.equal(unresolvedTaxonFacts, audit.summary.unresolvedTaxonFacts);
 assert.equal(supportedSlots + unresolvedSlots, audit.summary.requestedCandidateSlots);
 
-const guppy = audit.jobs.find(job => job.researchKey === 'Poecilia reticulata');
-assert.ok(guppy);
-const guppyWater = guppy.fields.find(field => field.field === 'water');
-assert.ok(guppyWater);
-assert.equal(guppyWater.status, 'blocked_by_contract');
-assert.equal(guppyWater.reasonCode, 'multi_environment_not_representable_by_single_water_value');
-assert.match(guppyWater.evidenceSummary || '', /freshwater/i);
-assert.match(guppyWater.evidenceSummary || '', /brackish/i);
+assert.deepEqual(audit.jobs, [], 'deferred variant evidence must not be emitted as active completion research');
 
 assert.doesNotMatch(raw, /"resumeBundle"|"text"\s*:|"apiKey"|"contentSha256"/, 'draft candidate artifact must not retain raw fetched text, resume bundles, credentials, or content hashes');
 
-console.log('Compatibility variant environment candidates PASS: 25/27 draft candidate slots are reviewable; 2/27 guppy water slots remain fail-closed because the exact-taxon source is multi-environment while the current water contract is single-valued.');
+console.log('Compatibility variant environment candidates PASS: no completion-eligible variant environment jobs remain; deferred/terminal variant evidence stays outside active research and writes no authority.');

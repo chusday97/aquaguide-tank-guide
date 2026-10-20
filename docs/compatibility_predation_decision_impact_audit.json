@@ -14,12 +14,12 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "predationResearchBacklogFields": 60,
+    "predationResearchBacklogFields": 56,
     "hardDecisionResearchDebtFields": 0,
-    "softRiskDiscoveryResearchDebtFields": 60,
+    "softRiskDiscoveryResearchDebtFields": 56,
     "riskDiscoveryReadyCatalogObjects": 5,
     "riskDiscoveryReadyUniqueTaxa": 5,
-    "blockedByIdentityOrVariantCatalogObjects": 53,
+    "blockedByIdentityOrVariantCatalogObjects": 49,
     "blockedByOtherHardEvidenceCatalogObjects": 2,
     "currentPredationHardInsufficientDataBlockerFields": 0
   },
@@ -1340,117 +1340,6 @@
       ]
     },
     {
-      "speciesId": "sp_0289",
-      "name": "荧光红斑马",
-      "scientificName": "Danio rerio var. Glo Red",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0290",
-      "name": "荧光绿斑马",
-      "scientificName": "Danio rerio var. Glo Green",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0291",
-      "name": "荧光橙斑马",
-      "scientificName": "Danio rerio var. Glo Orange",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
       "speciesId": "sp_0292",
       "name": "球形金玛丽",
       "scientificName": "Poecilia latipinna var. Gold Balloon",
@@ -1676,43 +1565,6 @@
       "speciesId": "sp_0351",
       "name": "红白蝶尾",
       "scientificName": "Carassius auratus var. Butterfly Tail",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0363",
-      "name": "荧光紫斑马",
-      "scientificName": "Danio rerio var. Glo Purple",
       "classification": "blocked_by_identity_or_variant",
       "authoritativeFieldCount": 0,
       "reviewedProfile": "none",
