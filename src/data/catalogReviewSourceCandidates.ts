@@ -1,4 +1,6 @@
 import type { CatalogEvidenceSource } from '../../packages/contracts/src';
+import { variantEvidencePhase2_17ProfileIds, variantEvidencePhase2_17Sources } from './catalogReviewBatches/variant-evidence-phase2-17';
+import { variantEvidencePhase2_18ProfileIds, variantEvidencePhase2_18Sources } from './catalogReviewBatches/variant-evidence-phase2-18';
 
 /**
  * Curated starting points for the first review batch.
@@ -91,9 +93,23 @@ const firstBatchFishBaseSources: Record<string, CatalogEvidenceSource> = {
   },
 };
 
+const reviewedVariantSourcesBySpecies = new Map<string, CatalogEvidenceSource[]>();
+for (const speciesId of variantEvidencePhase2_17ProfileIds) {
+  reviewedVariantSourcesBySpecies.set(speciesId, Object.values(variantEvidencePhase2_17Sources));
+}
+for (const speciesId of variantEvidencePhase2_18ProfileIds) {
+  reviewedVariantSourcesBySpecies.set(speciesId, [
+    ...(reviewedVariantSourcesBySpecies.get(speciesId) ?? []),
+    ...Object.values(variantEvidencePhase2_18Sources),
+  ]);
+}
+
 export const getCatalogReviewSourceCandidates = (speciesId: string): CatalogEvidenceSource[] => {
   const source = firstBatchFishBaseSources[speciesId];
-  return source ? [source] : [];
+  return [
+    ...(source ? [source] : []),
+    ...(reviewedVariantSourcesBySpecies.get(speciesId) ?? []),
+  ];
 };
 
 export const catalogReviewSourceCandidateIds = Object.values(firstBatchFishBaseSources)

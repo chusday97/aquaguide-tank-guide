@@ -11,10 +11,10 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 100,
-  "coreFieldCompleteSpecies": 112,
-  "oneFieldGapSpecies": 9,
-  "runtimeReviewedProfileSpecies": 162,
+  "genericOnboardingReadySpecies": 101,
+  "coreFieldCompleteSpecies": 113,
+  "oneFieldGapSpecies": 13,
+  "runtimeReviewedProfileSpecies": 163,
   "fishCompatibilityDomainSpecies": 308,
   "fishIdentityHeldSpecies": 91,
   "unsupportedDomainSpecies": 167,
@@ -25,71 +25,71 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 127,
-  "completionEligibleResearchDebtFields": 49,
+  "visibleResearchDebtFields": 96,
+  "completionEligibleResearchDebtFields": 18,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 169,
+      "reviewed_supported": 173,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 48,
+      "reviewed_unknown": 44,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 154,
+      "reviewed_supported": 158,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 58,
-      "needs_research": 5,
+      "needs_research": 1,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 148,
+      "reviewed_supported": 152,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
-      "needs_research": 5,
+      "needs_research": 1,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 158,
+      "reviewed_supported": 162,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 54,
-      "needs_research": 5,
+      "needs_research": 1,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 147,
+      "reviewed_supported": 151,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 65,
-      "needs_research": 5,
+      "needs_research": 1,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 136,
+      "reviewed_supported": 141,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 81,
+      "reviewed_unknown": 76,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "territoriality": {
       "reviewed_supported": 93,
-      "reviewed_neutral_or_negative": 41,
+      "reviewed_neutral_or_negative": 42,
       "reviewed_unknown": 74,
-      "needs_research": 9,
+      "needs_research": 8,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 83,
+      "reviewed_supported": 88,
       "reviewed_neutral_or_negative": 38,
       "reviewed_unknown": 9,
-      "needs_research": 87,
+      "needs_research": 82,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -97,35 +97,35 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 87
+      "count": 82
     },
     {
       "field": "territoriality",
-      "count": 9
-    },
-    {
-      "field": "social_behavior",
-      "count": 6
+      "count": 8
     },
     {
       "field": "water",
-      "count": 5
+      "count": 1
     },
     {
       "field": "temperature",
-      "count": 5
+      "count": 1
     },
     {
       "field": "tank_size",
-      "count": 5
+      "count": 1
+    },
+    {
+      "field": "social_behavior",
+      "count": 1
     },
     {
       "field": "ph",
-      "count": 5
+      "count": 1
     },
     {
       "field": "adult_size",
-      "count": 5
+      "count": 1
     }
   ],
   "rows": [
@@ -5584,8 +5584,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 3,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -5634,13 +5634,13 @@
           "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-butterfly-tail"
+            "goldfishtank-butterfly-tail-variant-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "needs_research",
@@ -5650,11 +5650,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "goldfishtank-butterfly-tail-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -5665,55 +5667,63 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-red-cap"
+            "fishkeeping-redcap-oranda-variant-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishkeeping-redcap-oranda-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishkeeping-redcap-oranda-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishkeeping-redcap-oranda-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishkeeping-redcap-oranda-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-carassius-auratus-red-cap"
+            "fishkeeping-redcap-oranda-variant-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "needs_research",
@@ -5723,11 +5733,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquario-redcap-oranda-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -5736,71 +5748,84 @@
       "name": "珠鳞金鱼",
       "scientificName": "Carassius auratus var.",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "reviewedProfile": "field_review_derived",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch27-fishbase-carassius-auratus-pearlscale"
+            "tankbud-pearlscale-goldfish-variant-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-pearlscale-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-pearlscale-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-pearlscale-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-pearlscale-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch27-fishbase-carassius-auratus-pearlscale"
+            "tankbud-pearlscale-goldfish-variant-phase2-18",
+            "fishkeepingworld-pearlscale-goldfish-variant-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishkeepingworld-pearlscale-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishkeepingworld-pearlscale-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -5811,55 +5836,63 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch27-fishbase-carassius-auratus-bubble-eye"
+            "tankbud-bubble-eye-goldfish-variant-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-bubble-eye-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-bubble-eye-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-bubble-eye-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-bubble-eye-goldfish-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch27-fishbase-carassius-auratus-bubble-eye"
+            "tankbud-bubble-eye-goldfish-variant-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "needs_research",
@@ -5869,11 +5902,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "goldfishtank-bubble-eye-variant-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -11887,55 +11922,63 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
+            "tankbud-grass-guppy-blue-grass-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-grass-guppy-blue-grass-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-grass-guppy-blue-grass-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-grass-guppy-blue-grass-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "tankbud-grass-guppy-blue-grass-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch05-fishbase-poecilia-reticulata"
+            "tankbud-grass-guppy-blue-grass-phase2-18"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_social_mode_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "needs_research",
@@ -11945,11 +11988,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "shoalstem-blue-grass-guppy-phase2-18"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -36869,7 +36914,7 @@
       "name": "蓝曼龙",
       "scientificName": "Trichopodus trichopterus var.",
       "lifeType": "fish",
-      "reviewedProfile": "inherited",
+      "reviewedProfile": "field_review_derived",
       "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,

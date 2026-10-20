@@ -9,7 +9,7 @@ import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBo
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getCompatibilityVariantResearchCeiling } from '../../data/compatibilityVariantResearchCeilings';
 import { getCompatibilityFieldResearchCeiling } from '../../data/compatibilityFieldResearchCeilings';
-import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
+import { buildReviewedCompatibilityProfileFromCatalogFields, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
 import {
   getReviewedSpeciesKnowledge,
   getReviewedSpeciesKnowledgeByBaseScientificName,
@@ -36,7 +36,7 @@ export type CompatibilityFieldCoverageRow = {
   name: string;
   scientificName: string;
   lifeType: ReturnType<typeof getLifeType>;
-  reviewedProfile: 'direct' | 'inherited' | 'none';
+  reviewedProfile: 'direct' | 'field_review_derived' | 'inherited' | 'none';
   genericOnboardingReady: boolean;
   authoritativeFieldCount: number;
   actionableGapCount: number;
@@ -386,7 +386,8 @@ const defaultFastLaneConstraint = (field: CompatibilityCoreField) => {
 
 export const getCompatibilityCoreFieldCoverageRow = (fish: Fish): CompatibilityFieldCoverageRow => {
   const directProfile = getReviewedCompatibilityProfile(fish.id);
-  const resolvedProfile = getReviewedCompatibilityProfileForFish(fish);
+  const fieldReviewDerivedProfile = directProfile ? undefined : buildReviewedCompatibilityProfileFromCatalogFields(fish.id);
+  const resolvedProfile = directProfile ?? fieldReviewDerivedProfile ?? getReviewedCompatibilityProfileForFish(fish);
   const fields = Object.fromEntries(coreFields.map(field => [field, fieldCell(fish, field)])) as Record<CompatibilityCoreField, CompatibilityFieldCoverageCell>;
   const authoritativeFieldCount = coreFields.filter(field => isAuthoritative(fields[field].status)).length;
   const actionableGapCount = coreFields.filter(field => fields[field].disposition === 'targeted_source_expansion').length;
@@ -401,7 +402,7 @@ export const getCompatibilityCoreFieldCoverageRow = (fish: Fish): CompatibilityF
     catalogPersisted: true,
   });
   const genericOnboardingReady = onboarding.ready;
-  return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
+  return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : fieldReviewDerivedProfile ? 'field_review_derived' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
 };
 
 export const buildCompatibilityCoreFieldCoverage = () => {
@@ -626,7 +627,14 @@ export const buildCompatibilityFastLaneResearchPackets = (): CompatibilityFastLa
     if (cell.disposition !== 'targeted_source_expansion' || (cell.status !== 'reviewed_unknown' && cell.status !== 'needs_research')) return [];
     const fish = fishData.find(item => item.id === row.speciesId);
     const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
-    const evidenceIds = cell.evidenceIds.length > 0 ? cell.evidenceIds : (profile?.citations.map(source => source.id) ?? []);
+    const reviewedFieldEvidenceIds = coreFields.flatMap(field => (
+      row.fields[field].disposition === 'ready' ? row.fields[field].evidenceIds : []
+    ));
+    const evidenceIds = Array.from(new Set([
+      ...cell.evidenceIds,
+      ...(profile?.citations.map(source => source.id) ?? []),
+      ...reviewedFieldEvidenceIds,
+    ]));
     const evidenceSet = new Set(evidenceIds);
     const profileSources = (profile?.citations ?? []).filter(source => evidenceSet.has(source.id));
     const registrySources = resolveKnowledgeSources(evidenceIds);

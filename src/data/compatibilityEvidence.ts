@@ -50,8 +50,11 @@ import { identityBoundaryCorrectionsPhase2_15Sources } from './catalogReviewBatc
 import { identityBoundaryCorrectionsPhase2_16Sources } from './catalogReviewBatches/identity-boundary-corrections-phase2-16';
 import { identityBoundaryCorrectionsPhase2_17Sources } from './catalogReviewBatches/identity-boundary-corrections-phase2-17';
 import { identityBoundaryCorrectionsPhase2_18Sources } from './catalogReviewBatches/identity-boundary-corrections-phase2-18';
+import { variantEvidencePhase2_17Sources } from './catalogReviewBatches/variant-evidence-phase2-17';
+import { variantEvidencePhase2_18Sources } from './catalogReviewBatches/variant-evidence-phase2-18';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
+import { getApprovedCatalogFieldReviews, type CatalogFieldReview } from './catalogFieldReviews';
 import { getCatalogIdentityBoundary } from './catalogIdentityBoundaries';
 import { getKnowledgeSource } from '../modules/knowledge/knowledgeSources';
 
@@ -1762,6 +1765,9 @@ const canonicalIdentitySourceById = new Map(
     ...Object.values(identityBoundaryCorrectionsPhase2_16Sources),
     ...Object.values(identityBoundaryCorrectionsPhase2_17Sources),
     ...Object.values(identityBoundaryCorrectionsPhase2_18Sources),
+    ...Object.values(variantEvidencePhase2_17Sources),
+    ...Object.values(variantEvidencePhase2_18Sources),
+    ...Object.values(compatibilityAuthorityPatchSources),
   ].map(source => [source.id, source] as const),
 );
 
@@ -2013,12 +2019,124 @@ const pairRules: ReviewedPairRule[] = [
 
 export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
 
+const requiredCatalogRuntimeFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS];
+
+const latestApprovedReviewByField = (speciesId: string) => {
+  const byField = new Map<string, CatalogFieldReview>();
+  for (const review of getApprovedCatalogFieldReviews(speciesId)) byField.set(review.field, review);
+  return byField;
+};
+
+const catalogReviewHasDecisionValue = (review: CatalogFieldReview) => {
+  const value = review.proposedValue;
+  if (review.field === 'water') return ['freshwater', 'saltwater', 'brackish'].includes(String(value));
+  if (['temperature', 'ph', 'adult_size'].includes(review.field)) {
+    if (typeof value !== 'object' || value === null) return false;
+    const range = value as { min?: unknown; max?: unknown };
+    return [range.min, range.max].some(item => typeof item === 'number' && Number.isFinite(item));
+  }
+  if (review.field === 'tank_size') {
+    if (typeof value !== 'object' || value === null) return false;
+    const tank = value as { liters?: unknown; lengthCm?: unknown };
+    return [tank.liters, tank.lengthCm].some(item => typeof item === 'number' && Number.isFinite(item) && item > 0);
+  }
+  if (review.field === 'social_behavior') {
+    if (typeof value !== 'object' || value === null) return false;
+    const social = value as { mode?: unknown; minimumGroupSize?: unknown };
+    return social.mode !== 'unknown'
+      || (typeof social.minimumGroupSize === 'number' && Number.isFinite(social.minimumGroupSize) && social.minimumGroupSize > 0);
+  }
+  if (review.field === 'territoriality') {
+    return typeof value === 'object' && value !== null && Array.isArray((value as { traits?: unknown }).traits);
+  }
+  if (review.field === 'predation') {
+    return typeof value === 'object' && value !== null && Array.isArray((value as { targets?: unknown }).targets);
+  }
+  return false;
+};
+
+const weakestCatalogReviewConfidence = (reviews: CatalogFieldReview[]): ReviewedCompatibilityProfile['confidence'] => {
+  const rank: Record<ReviewedCompatibilityProfile['confidence'], number> = {
+    unknown: 0,
+    low: 1,
+    medium: 2,
+    high: 3,
+  };
+  return reviews.reduce<ReviewedCompatibilityProfile['confidence']>(
+    (weakest, review) => rank[review.confidence] < rank[weakest] ? review.confidence : weakest,
+    'high',
+  );
+};
+
+/**
+ * Exact-object Catalog facts are sufficient runtime authority once all generic
+ * Compatibility facts are reviewed-supported. This removes the old requirement
+ * to manually duplicate the same object into the static Compatibility Profile
+ * registry. Partial reviews, unresolved identity and unresolvable citations
+ * remain fail-closed.
+ */
+export const buildReviewedCompatibilityProfileFromCatalogFields = (
+  speciesId: string,
+): ReviewedCompatibilityProfile | undefined => {
+  if (getCatalogIdentityBoundary(speciesId)) return undefined;
+  const reviewsByField = latestApprovedReviewByField(speciesId);
+  const requiredReviews = requiredCatalogRuntimeFields.map(field => reviewsByField.get(field));
+  if (requiredReviews.some(review => !review || !catalogReviewHasDecisionValue(review))) return undefined;
+  const reviews = requiredReviews as CatalogFieldReview[];
+
+  const sourceIds = Array.from(new Set(reviews.flatMap(review => review.citationIds)));
+  const citations = sourceIds.map(sourceId => (
+    canonicalIdentitySourceById.get(sourceId)
+    ?? authorityPatchSourceById.get(sourceId)
+    ?? getKnowledgeSource(sourceId)
+  ));
+  if (citations.some(source => !source)) return undefined;
+
+  const water = reviewsByField.get('water')!.proposedValue as ReviewedCompatibilityProfile['waterType'];
+  const social = reviewsByField.get('social_behavior')!.proposedValue as {
+    mode: 'solitary' | 'pair' | 'group' | 'colony' | 'variable' | 'unknown';
+    minimumGroupSize: number | null;
+  };
+  const territoriality = reviewsByField.get('territoriality')!.proposedValue as { traits: string[] };
+  const predation = reviewsByField.get('predation')!.proposedValue as { targets: string[] };
+
+  const socialTrait = social.mode === 'group'
+    ? 'group_living'
+    : social.mode === 'colony'
+      ? 'colony_living'
+      : social.mode === 'pair'
+        ? 'pair_living'
+        : social.mode === 'solitary'
+          ? 'solitary'
+          : social.mode === 'variable'
+            ? 'social_variable'
+            : null;
+
+  return {
+    speciesId,
+    waterType: water,
+    behaviorTraits: Array.from(new Set([
+      ...(socialTrait ? [socialTrait] : []),
+      ...territoriality.traits,
+    ])),
+    ...(social.minimumGroupSize ? { minimumGroupSize: social.minimumGroupSize } : {}),
+    predationTargets: [...predation.targets],
+    confidence: weakestCatalogReviewConfidence(reviews),
+    reviewStatus: 'reviewed',
+    citations: citations as EvidenceSourceDto[],
+    requiredFacts: [...requiredCatalogRuntimeFields],
+  };
+};
+
 export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
   // Identity is the outer runtime gate. A direct reviewed Profile cannot make
   // an unresolved commercial/hybrid object biologically identified.
   if (getCatalogIdentityBoundary(fish.id)) return undefined;
   const direct = profiles[fish.id];
   if (direct) return direct;
+
+  const exactCatalogProfile = buildReviewedCompatibilityProfileFromCatalogFields(fish.id);
+  if (exactCatalogProfile) return exactCatalogProfile;
 
   const canonicalIdentity = catalogCanonicalIdentities[fish.id];
   if (canonicalIdentity?.canonicalRootKind === 'reviewed_taxon') {

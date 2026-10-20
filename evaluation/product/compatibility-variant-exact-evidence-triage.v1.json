@@ -14,25 +14,23 @@
     "discoveryEvidenceCeilingMeaning": "Current trusted-source discovery route produced no eligible URLs in two independent rounds; do not repeat the same route without changing source strategy."
   },
   "summary": {
-    "variantObjects": 9,
-    "totalResearchSlots": 39,
+    "variantObjects": 8,
+    "totalResearchSlots": 15,
     "draftEvidenceFoundObjects": 0,
     "discoveryRetryRequiredObjects": 5,
-    "discoveryEvidenceCeilingObjects": 4,
+    "discoveryEvidenceCeilingObjects": 3,
     "notRunObjects": 0,
     "supportedSlots": 0,
-    "unresolvedSlots": 39
+    "unresolvedSlots": 15
   },
   "objects": [
     {
       "speciesId": "sp_0065",
       "variantKey": "Butterfly Tail",
       "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 3,
+      "totalSlots": 1,
       "supportedFields": [],
       "unresolvedFields": [
-        "predation",
-        "social_behavior",
         "territoriality"
       ],
       "researchRuns": [
@@ -62,51 +60,9 @@
       "speciesId": "sp_0066",
       "variantKey": "Red Cap Oranda",
       "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 6,
+      "totalSlots": 1,
       "supportedFields": [],
       "unresolvedFields": [
-        "adult_size",
-        "predation",
-        "social_behavior",
-        "tank_size",
-        "temperature",
-        "territoriality"
-      ],
-      "researchRuns": [
-        {
-          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research.v1.json",
-          "round": 1,
-          "attemptedUrls": 0,
-          "verifiedDocuments": 0,
-          "candidateFields": [],
-          "discoveryStatus": "discovery_empty"
-        },
-        {
-          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research-round2-goldfish.v1.json",
-          "round": 2,
-          "attemptedUrls": 0,
-          "verifiedDocuments": 0,
-          "candidateFields": [],
-          "discoveryStatus": "discovery_empty"
-        }
-      ],
-      "status": "discovery_evidence_ceiling",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0067",
-      "variantKey": "Pearlscale",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 6,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "adult_size",
-        "predation",
-        "social_behavior",
-        "tank_size",
-        "temperature",
         "territoriality"
       ],
       "researchRuns": [
@@ -136,14 +92,9 @@
       "speciesId": "sp_0068",
       "variantKey": "Bubble Eye",
       "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 6,
+      "totalSlots": 1,
       "supportedFields": [],
       "unresolvedFields": [
-        "adult_size",
-        "predation",
-        "social_behavior",
-        "tank_size",
-        "temperature",
         "territoriality"
       ],
       "researchRuns": [
@@ -198,15 +149,9 @@
       "speciesId": "sp_0144",
       "variantKey": "Blue Grass",
       "canonicalScientificName": "Poecilia reticulata",
-      "totalSlots": 7,
+      "totalSlots": 1,
       "supportedFields": [],
       "unresolvedFields": [
-        "adult_size",
-        "ph",
-        "predation",
-        "social_behavior",
-        "tank_size",
-        "temperature",
         "territoriality"
       ],
       "researchRuns": [

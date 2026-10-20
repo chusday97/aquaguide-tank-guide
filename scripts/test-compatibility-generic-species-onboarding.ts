@@ -9,7 +9,7 @@ import {
   type DomainSpeciesFact,
 } from '../packages/domain-rules/src/compatibility';
 import { fishData } from '../src/data/fishData';
-import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../src/data/compatibilityEvidence';
+import { buildReviewedCompatibilityProfileFromCatalogFields, getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../src/data/compatibilityEvidence';
 import {
   applyReviewedCompatibilityBootstrap,
   resetRuntimeCompatibilityEvidenceForTest,
@@ -17,6 +17,7 @@ import {
 import { getCompatibilityProfileAuthorityGeneration } from '../src/data/compatibilityAuthorityRollout';
 import { reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import { buildBeginnerCompatibilityAction } from '../src/services/compatibility/compatibility-action.service';
+import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
 import type { Aquarium } from '../src/types';
 
 const audit = getCompatibilityEvidenceAudit();
@@ -196,6 +197,43 @@ assert.equal(genericMissingFact.status, 'insufficient_data');
 assert.equal(genericMissingFact.decisionReadiness, 'partial');
 assert.ok(genericMissingFact.ruleCodes.includes('required_fact_temperature_missing'));
 
+// Exact-object 8/8 Catalog authority must auto-promote without a duplicate
+// static Compatibility Profile. Partial exact-object authority remains fail-closed.
+assert.equal(getReviewedCompatibilityProfile('sp_0067'), undefined, 'Pearlscale fixture must not depend on a static duplicate Profile');
+const pearlscaleDerivedProfile = buildReviewedCompatibilityProfileFromCatalogFields('sp_0067');
+assert.ok(pearlscaleDerivedProfile, '8/8 exact reviewed fields must synthesize a runtime Compatibility Profile');
+assert.deepEqual(pearlscaleDerivedProfile.requiredFacts, [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS]);
+assert.equal(pearlscaleDerivedProfile.waterType, 'freshwater');
+assert.ok(pearlscaleDerivedProfile.behaviorTraits.includes('group_living'));
+assert.equal(pearlscaleDerivedProfile.behaviorTraits.some(trait => /territor/i.test(trait)), false, 'explicit non-territorial authority must not invent a territorial trait');
+assert.deepEqual(pearlscaleDerivedProfile.predationTargets, ['small_fish']);
+assert.deepEqual(pearlscaleDerivedProfile.citations.map(source => source.id).sort(), [
+  'fishkeepingworld-pearlscale-goldfish-variant-phase2-18',
+  'tankbud-pearlscale-goldfish-variant-phase2-18',
+]);
+assert.equal(buildReviewedCompatibilityProfileFromCatalogFields('sp_0066'), undefined, '7/8 Red Cap authority must remain fail-closed');
+assert.equal(buildReviewedCompatibilityProfileFromCatalogFields('sp_0162'), undefined, 'incomplete Red Grass Goldfish authority must remain fail-closed');
+const pearlscaleCoverage = buildCompatibilityCoreFieldCoverage().rows.find(row => row.speciesId === 'sp_0067');
+assert.ok(pearlscaleCoverage);
+assert.equal(pearlscaleCoverage.genericOnboardingReady, true);
+assert.equal(pearlscaleCoverage.reviewedProfile, 'field_review_derived');
+const pearlscaleAquarium: Aquarium = {
+  id: 'field-review-auto-promotion',
+  name: 'Field review auto promotion',
+  fishes: [],
+  dimensions: { length: '120', width: '50', height: '50' },
+  waterType: 'Freshwater',
+  targetTemperature: '22',
+};
+const pearlscaleReview = reviewSpeciesAdditions({
+  aquarium: pearlscaleAquarium,
+  items: [{ fishId: 'sp_0067', quantity: 1 }],
+  speciesCatalog: fishData,
+});
+assert.ok(pearlscaleReview);
+assert.equal(pearlscaleReview.decision.metadata.decisionReadiness, 'reviewed');
+assert.notEqual(pearlscaleReview.decision.status, 'insufficient_data');
+
 const quantityFor = (id: string) => Math.max(1, getReviewedCompatibilityProfile(id)?.minimumGroupSize || 1);
 const existingId = 'sp_0010';
 const candidateId = 'sp_0012';
@@ -234,5 +272,5 @@ assert.doesNotMatch(
 );
 
 console.log(
-  'generic species onboarding PASS: future reviewed Profile joins authority without a Pair Rule; missing core traits fail closed; generic rules produce reviewed verdicts and sourced executable actions.',
+  'generic species onboarding PASS: future reviewed Profile and exact 8/8 Catalog field authority join runtime without Pair Rules; partial facts fail closed; generic rules produce reviewed verdicts and sourced executable actions.',
 );

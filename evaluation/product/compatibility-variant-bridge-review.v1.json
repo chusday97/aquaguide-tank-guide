@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_variant_bridge_review",
-  "generatedAt": "2026-10-20T06:39:12.752Z",
+  "generatedAt": "2026-10-20T07:19:24.883Z",
   "generatedFrom": "evaluation/product/compatibility-research-review-queue.v1.json",
   "promotionAllowed": false,
   "writesAuthority": false,
