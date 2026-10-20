@@ -1,15 +1,15 @@
-## TOP CURRENT BRANCH — 2026-10-20 main variant field-bridge review
+## TOP CURRENT BRANCH — 2026-10-20 main exact-variant evidence acquisition
 
-- Canonical local branch: `main`, continuing from `387e7705`.
-- Current change is **review/queue workflow only**. It creates no Profile, Pair Rule, Catalog authority, canonical identity, inherited fact, migration or Production authority.
-- The 27 environment slots are classified **15 bridge-supported / 10 variant-specific-evidence-required / 2 candidate-contract-blocked** with whole-profile inheritance explicitly forbidden.
-- All 9 target variants remain zero-inheritance. `bridge_supported` is only eligibility for a later explicit source-controlled field-policy change.
-- Remaining exact evidence is consolidated into **55 research slots**: 10 environment tolerance + 45 adult-size/tank-size/social/territorial/predation. Guppy water's 2 contract blocks stay outside the queue.
-- Compatibility authority remains **308 fish / 100 ready / 112 core-complete / 150 visible debt / 44 canonical identities / 93 boundaries / 16,735 unresolved pairs**.
-- Runtime/release remains **4,950 mature pairs / 0 insufficient_data / 97 exceptional unknowns / 126 Profiles / 21 Pair Rules / rollout 63/85/95/99/100/101**.
-- Variant bridge + exact-evidence queue + full Compatibility/runtime/release/docs/TypeScript gates PASS.
-- NEXT: grouped exact-variant evidence acquisition across the 55-slot queue; explicit inheritance changes remain a separate reviewed checkpoint.
-- No remote push, deploy, merge workflow, UI work, migration, env change, or Production mutation is authorized/executed by this generic “推进” pass.
+- Canonical local branch: `main`, current base `4c8b8e02`.
+- Current Compatibility changes are provider/research-runner/triage only. They create **no Profile, Pair Rule, Catalog authority, canonical identity, inherited fact, migration, rollout or Production authority**.
+- Exact-variant provider enforces trusted-source + exact variant/taxon + quote-backed field evidence. Practical Fishkeeping and Aquarium Glaser are the only newly trusted curated-husbandry domains.
+- Real round-1 run: **9 objects / 55 slots / 0 supported / 55 unresolved / 0 failed jobs**. All were discovery-empty.
+- Real round-2 fancy-goldfish run: **4 objects / 24 slots / 0 supported / 24 unresolved / 0 failed jobs**.
+- Triage artifact: **4 discovery ceilings / 5 retry-required / 0 evidence-found**. Same-route repeat is now explicitly discouraged for ceiling objects.
+- All target variants remain zero-inheritance; prior field bridge remains **15 supported-for-review / 10 exact-variant-required / 2 contract-blocked**.
+- Compatibility authority/runtime remain **308 fish / 100 ready / 112 core-complete / 150 visible debt / 4,950 pairs / 0 insufficient_data / 97 exceptional unknowns / 126 Profiles / 21 Pair Rules / rollout 63/85/95/99/100/101**.
+- NEXT: materially different source strategy for the 5 retry objects; no repeated identical discovery loop for the 4 ceilings.
+- No deploy, migration, UI, env, rollout or Production mutation is authorized/executed by this generic “推进” pass.
 
 ## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 

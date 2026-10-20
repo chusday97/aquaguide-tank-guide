@@ -1,14 +1,14 @@
-## TOP CURRENT OVERRIDE — 2026-10-20 variant field-bridge review + exact-evidence queue
+## TOP CURRENT OVERRIDE — 2026-10-20 exact-variant evidence acquisition
 
-- Working authority: local `main` after `387e7705`; no push/deploy/Production mutation, migration, rollout or UI change.
-- 27 environment slots are now deterministically classified: **15 bridge-supported / 10 exact-variant evidence required / 2 contract-blocked**.
-- Bridge support does **not** grant inheritance; all 9 target variants remain `inheritedFacts=[]` and `promotionAllowed=false / writesAuthority=false / grantsInheritance=false`.
-- The bridge policy is field-scoped and relationship-aware: color morphs can advance all three environment fields; longfin/selectively bred morphology forms only water+pH; trade strains only single-valued water class. All tolerance-sensitive fields otherwise stay exact-variant gated.
-- Red/Blue Grass guppy water remains blocked by the freshwater+brackish single-value contract mismatch.
-- The remaining evidence work is now one generated **55-slot exact-variant queue**: 10 environment tolerance slots + 45 exact-object core slots. The 2 contract blocks are not queued for pointless re-search.
-- Runtime remains **308 fish / 100 ready / 112 core-complete / 4,950 mature pairs / 0 insufficient_data / 97 exceptional unknowns**; authority remains **126 Profiles / 21 Pair Rules**, rollout **63/85/95/99/100/101**.
-- Variant bridge, exact-evidence queue, full Compatibility/runtime/release/docs/TypeScript gates PASS.
-- NEXT: execute grouped exact-variant evidence acquisition for the 55 slots, then separately review explicit field-policy promotion candidates.
+- Working authority: local `main` at `4c8b8e02`; this Compatibility pass has no deploy/Production/migration/rollout/UI change.
+- Exact-variant provider is now strict: trusted source + base taxon + exact variant label + quote-backed direct field evidence; generic base-species facts are rejected.
+- Real grouped run completed: **9 jobs / 55 slots / 0 supported / 55 unresolved / 0 failures**. Preferred Bailian flash quota is exhausted; fallback `qwen3.8-27b` is healthy.
+- All 9 first-round jobs were `discovery_empty`, not extraction failures. Practical Fishkeeping and Aquarium Glaser were added narrowly as curated husbandry sources after independent verification.
+- Second round on the 4 fancy-goldfish morphology variants remained empty, so they are now **discovery_evidence_ceiling**. Remaining 5 objects are **discovery_retry_required**.
+- Triage is deterministic: **4 ceiling / 5 retry / 0 evidence-found / 55 unresolved**. Ceiling means the current search route is exhausted, not that public biology is unknowable.
+- All 9 variants remain `inheritedFacts=[]`; no authority/promotion/inheritance writes.
+- Runtime remains **308 fish / 100 ready / 112 core-complete / 4,950 pairs / 0 insufficient_data / 97 exceptional unknowns / 126 Profiles / 21 Pair Rules / rollout 63/85/95/99/100/101**.
+- NEXT: change source strategy for the 5 retry objects; do not repeat the same route for the 4 ceilings.
 
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 
