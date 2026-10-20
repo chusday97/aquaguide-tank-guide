@@ -37,12 +37,16 @@ import {
   START as CHRYSIPTERA_RECONCILIATION_START,
   TARGET as CHRYSIPTERA_RECONCILIATION_TARGET,
 } from './compatibility-chrysiptera-production-reconciliation-guard.mjs';
+import {
+  START as REVIEWED_AUTHORITY_RECONCILIATION_START,
+  TARGET as REVIEWED_AUTHORITY_RECONCILIATION_TARGET,
+} from './compatibility-reviewed-authority-production-reconciliation-guard.mjs';
 
 const root = resolve(import.meta.dirname, '..');
-export const CURRENT_PRODUCTION_LATEST_VERSION = CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion;
-export const CURRENT_PRODUCTION_MIGRATION_COUNT = CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount;
-export const TARGET_PRODUCTION_LATEST_VERSION = CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion;
-export const TARGET_PRODUCTION_MIGRATION_COUNT = CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount;
+export const CURRENT_PRODUCTION_LATEST_VERSION = REVIEWED_AUTHORITY_RECONCILIATION_START.latestVersion;
+export const CURRENT_PRODUCTION_MIGRATION_COUNT = REVIEWED_AUTHORITY_RECONCILIATION_START.migrationCount;
+export const TARGET_PRODUCTION_LATEST_VERSION = REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion;
+export const TARGET_PRODUCTION_MIGRATION_COUNT = REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount;
 
 const run = (cmd, args) => {
   const result = spawnSync(cmd, args, { cwd: root, encoding: 'utf8' });
@@ -123,21 +127,30 @@ export const classifyState = state => {
     && schemaReady;
   if (post) return 'READY_FOR_CHRYSIPTERA_RECONCILIATION';
 
-  const current = state.migration_count === CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount
-    && state.latest_version === CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion
-    && state.profiles === CHRYSIPTERA_RECONCILIATION_TARGET.profiles
-    && state.pair_rules === CHRYSIPTERA_RECONCILIATION_TARGET.pairRules
-    && state.evidence === CHRYSIPTERA_RECONCILIATION_TARGET.evidence
-    && state.stage_risks === CHRYSIPTERA_RECONCILIATION_TARGET.stageRisks
+  const reviewedAuthorityStart = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_START.migrationCount
+    && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_START.latestVersion
+    && state.profiles === REVIEWED_AUTHORITY_RECONCILIATION_START.profiles
+    && state.pair_rules === REVIEWED_AUTHORITY_RECONCILIATION_START.pairRules
+    && state.evidence === REVIEWED_AUTHORITY_RECONCILIATION_START.evidence
+    && state.stage_risks === REVIEWED_AUTHORITY_RECONCILIATION_START.stageRisks
     && schemaReady;
-  return current ? 'VERIFY_CURRENT_PRODUCTION' : 'BLOCKED_STATE_DRIFT';
+  if (reviewedAuthorityStart) return 'READY_FOR_REVIEWED_AUTHORITY_RECONCILIATION';
+
+  const target = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
+    && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
+    && state.profiles === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.profiles
+    && state.pair_rules === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.pairRules
+    && state.evidence === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence
+    && state.stage_risks === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.stageRisks
+    && schemaReady;
+  return target ? 'VERIFY_CURRENT_PRODUCTION' : 'BLOCKED_STATE_DRIFT';
 };
 
 export const validateDetailedState = (state, detail) => {
   const expected = getAuthorityKeys();
-  const expectedEvidence = state.migration_count === CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount
-    && state.latest_version === CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion
-    ? CHRYSIPTERA_RECONCILIATION_TARGET.evidence
+  const expectedEvidence = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
+    && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
+    ? REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence
     : FULL_CHAIN_TARGET_REVIEWED_EVIDENCE;
   const blockers = [];
   if (state.species !== 486) blockers.push(`species:${state.species}/486`);

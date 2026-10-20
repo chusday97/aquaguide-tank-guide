@@ -5,7 +5,7 @@ import {
 } from './compatibility-production-migration-guard.mjs';
 import {
   TARGET as CURRENT_PRODUCTION_TARGET,
-} from './compatibility-chrysiptera-production-reconciliation-guard.mjs';
+} from './compatibility-reviewed-authority-production-reconciliation-guard.mjs';
 import {
   readState,
   readDetailedState,

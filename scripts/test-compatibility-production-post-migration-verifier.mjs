@@ -31,6 +31,10 @@ import {
   START as CHRYSIPTERA_RECONCILIATION_START,
   TARGET as CHRYSIPTERA_RECONCILIATION_TARGET,
 } from './compatibility-chrysiptera-production-reconciliation-guard.mjs';
+import {
+  START as REVIEWED_AUTHORITY_RECONCILIATION_START,
+  TARGET as REVIEWED_AUTHORITY_RECONCILIATION_TARGET,
+} from './compatibility-reviewed-authority-production-reconciliation-guard.mjs';
 
 const stateFor = point => ({
   migration_count: point.migrationCount,
@@ -51,10 +55,10 @@ const stateFor = point => ({
   stage_risks_exists: true,
 });
 
-assert.equal(CURRENT_PRODUCTION_MIGRATION_COUNT, CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount);
-assert.equal(CURRENT_PRODUCTION_LATEST_VERSION, CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion);
-assert.equal(TARGET_PRODUCTION_MIGRATION_COUNT, CHRYSIPTERA_RECONCILIATION_TARGET.migrationCount);
-assert.equal(TARGET_PRODUCTION_LATEST_VERSION, CHRYSIPTERA_RECONCILIATION_TARGET.latestVersion);
+assert.equal(CURRENT_PRODUCTION_MIGRATION_COUNT, REVIEWED_AUTHORITY_RECONCILIATION_START.migrationCount);
+assert.equal(CURRENT_PRODUCTION_LATEST_VERSION, REVIEWED_AUTHORITY_RECONCILIATION_START.latestVersion);
+assert.equal(TARGET_PRODUCTION_MIGRATION_COUNT, REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount);
+assert.equal(TARGET_PRODUCTION_LATEST_VERSION, REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion);
 assert.deepEqual(FAST_LANE_WAVE2_TARGET, FAST_LANE_WAVE3_START, 'wave2 target must exactly equal wave3 start');
 assert.deepEqual(FAST_LANE_WAVE3_TARGET, FAST_LANE_WAVE4_START, 'wave3 target must exactly equal wave4 start');
 
@@ -76,18 +80,20 @@ const post = stateFor({ migrationCount: TARGET_MIGRATION_COUNT, latestVersion: T
 assert.equal(classifyState(post), 'READY_FOR_CHRYSIPTERA_RECONCILIATION');
 const chrysipteraStart = stateFor(CHRYSIPTERA_RECONCILIATION_START);
 assert.equal(classifyState(chrysipteraStart), 'READY_FOR_CHRYSIPTERA_RECONCILIATION');
-const currentProduction = stateFor(CHRYSIPTERA_RECONCILIATION_TARGET);
+const reviewedAuthorityStart = stateFor(REVIEWED_AUTHORITY_RECONCILIATION_START);
+assert.equal(classifyState(reviewedAuthorityStart), 'READY_FOR_REVIEWED_AUTHORITY_RECONCILIATION');
+const currentProduction = stateFor(REVIEWED_AUTHORITY_RECONCILIATION_TARGET);
 assert.equal(classifyState(currentProduction), 'VERIFY_CURRENT_PRODUCTION');
 assert.equal(classifyState({ ...current, migration_count: current.migration_count - 1 }), 'BLOCKED_STATE_DRIFT');
 assert.equal(classifyState({ ...current, profiles: 100 }), 'BLOCKED_STATE_DRIFT');
-assert.equal(classifyState({ ...currentProduction, evidence: CHRYSIPTERA_RECONCILIATION_TARGET.evidence - 1 }), 'BLOCKED_STATE_DRIFT');
+assert.equal(classifyState({ ...currentProduction, evidence: REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence - 1 }), 'BLOCKED_STATE_DRIFT');
 
 const keys = getAuthorityKeys();
 const detail = {
   profile_keys: keys.profiles,
   pair_keys: keys.pairRules,
   stage_risk_keys: keys.stageRisks,
-  reviewed_evidence: CHRYSIPTERA_RECONCILIATION_TARGET.evidence,
+  reviewed_evidence: REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence,
   authority_singleton: 1,
   tiger_guppy: {
     verdict: 'not_recommended',
@@ -111,11 +117,11 @@ const detail = {
 assert.equal(validateDetailedState(currentProduction, detail).ready, true);
 const bad = validateDetailedState(currentProduction, {
   ...detail,
-  reviewed_evidence: CHRYSIPTERA_RECONCILIATION_TARGET.evidence - 1,
+  reviewed_evidence: REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence - 1,
   tiger_guppy: { ...detail.tiger_guppy, verdict: 'caution' },
 });
 assert.equal(bad.ready, false);
-assert.ok(bad.blockers.includes('reviewed_evidence:201/202'));
+assert.ok(bad.blockers.includes('reviewed_evidence:266/267'));
 assert.ok(bad.blockers.includes('tiger_guppy_verdict:caution'));
 
-console.log('Compatibility Production post-migration verifier contract PASS: historical migration states remain recognized, 70/109/200 requires Chrysiptera reconciliation, and 71/109/202 is current Production verification.');
+console.log('Compatibility Production post-migration verifier contract PASS: historical migration states remain recognized, 72/109/202 requires reviewed-authority reconciliation, and 73/126/267 is the current Production verification target.');
