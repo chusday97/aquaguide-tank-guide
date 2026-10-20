@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "kind": "compatibility_field_research_ceiling_terminal_snapshot",
+  "capturedFrom": {
+    "artifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "commit": "bf3ca4fca8867c8ad6b120859c99910d944848eb",
+    "generatedAt": "2026-10-16T15:28:39.707Z"
+  },
+  "promotionAllowed": false,
+  "writesAuthority": false,
+  "lifecycle": "terminal fields are excluded from the active completion queue after exhaustion; this snapshot preserves the reviewed stop-research provenance without asserting positive husbandry facts",
+  "summary": {
+    "speciesCount": 13,
+    "fieldCount": 23
+  },
+  "rows": [
+    {
+      "speciesId": "sp_0023",
+      "scientificName": "Zebrasoma flavescens",
+      "fields": [
+        "predation"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 13,
+      "attemptedRouteIds": [
+        "predation_government_ecology",
+        "predation_peer_reviewed_diet",
+        "predation_university_ecology"
+      ]
+    },
+    {
+      "speciesId": "sp_0024",
+      "scientificName": "Paracanthurus hepatus",
+      "fields": [
+        "ph",
+        "predation"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 14,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "predation_government_ecology",
+        "predation_peer_reviewed_diet",
+        "predation_university_ecology"
+      ]
+    },
+    {
+      "speciesId": "sp_0039",
+      "scientificName": "Pseudogastromyzon fangi",
+      "fields": [
+        "ph",
+        "tank_size",
+        "temperature"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 11,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "tank_size_institutional_husbandry",
+        "temperature_institutional_husbandry",
+        "temperature_peer_reviewed_husbandry"
+      ]
+    },
+    {
+      "speciesId": "sp_0040",
+      "scientificName": "Cobitis sinensis",
+      "fields": [
+        "ph",
+        "tank_size",
+        "temperature"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 11,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "tank_size_institutional_husbandry",
+        "temperature_institutional_husbandry",
+        "temperature_peer_reviewed_husbandry"
+      ]
+    },
+    {
+      "speciesId": "sp_0046",
+      "scientificName": "Aphyocypris chinensis",
+      "fields": [
+        "ph",
+        "tank_size"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 12,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "tank_size_institutional_husbandry",
+        "temperature_institutional_husbandry",
+        "temperature_peer_reviewed_husbandry"
+      ]
+    },
+    {
+      "speciesId": "sp_0047",
+      "scientificName": "Tachysurus fulvidraco",
+      "fields": [
+        "ph",
+        "tank_size"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 9,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "tank_size_institutional_husbandry"
+      ]
+    },
+    {
+      "speciesId": "sp_0062",
+      "scientificName": "Moenkhausia sanctaefilomenae",
+      "fields": [
+        "predation"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 10,
+      "attemptedRouteIds": [
+        "predation_government_ecology",
+        "predation_peer_reviewed_diet",
+        "predation_university_ecology"
+      ]
+    },
+    {
+      "speciesId": "sp_0125",
+      "scientificName": "Hypancistrus inspector",
+      "fields": [
+        "predation"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 9,
+      "attemptedRouteIds": [
+        "predation_government_ecology",
+        "predation_peer_reviewed_diet",
+        "predation_university_ecology"
+      ]
+    },
+    {
+      "speciesId": "sp_0129",
+      "scientificName": "Zacco platypus",
+      "fields": [
+        "ph",
+        "tank_size"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 9,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "tank_size_institutional_husbandry"
+      ]
+    },
+    {
+      "speciesId": "sp_0186",
+      "scientificName": "Chaetodon auriga",
+      "fields": [
+        "ph",
+        "tank_size"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 10,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "tank_size_institutional_husbandry"
+      ]
+    },
+    {
+      "speciesId": "sp_0433",
+      "scientificName": "Petitella rhodostoma",
+      "fields": [
+        "predation"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 13,
+      "attemptedRouteIds": [
+        "predation_government_ecology",
+        "predation_peer_reviewed_diet",
+        "predation_university_ecology"
+      ]
+    },
+    {
+      "speciesId": "sp_0452",
+      "scientificName": "Amphiprion ocellaris",
+      "fields": [
+        "ph",
+        "predation"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 18,
+      "attemptedRouteIds": [
+        "ph_institutional_husbandry",
+        "ph_peer_reviewed_husbandry",
+        "predation_government_ecology",
+        "predation_peer_reviewed_diet",
+        "predation_university_ecology"
+      ]
+    },
+    {
+      "speciesId": "sp_0475",
+      "scientificName": "Rhodeus ocellatus",
+      "fields": [
+        "predation"
+      ],
+      "reasonCode": "compatibility_field_source_strategy_exhausted",
+      "researchRounds": 3,
+      "attemptedUrlCount": 12,
+      "attemptedRouteIds": [
+        "predation_government_ecology",
+        "predation_peer_reviewed_diet",
+        "predation_university_ecology"
+      ]
+    }
+  ]
+}

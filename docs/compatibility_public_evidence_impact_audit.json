@@ -1,0 +1,774 @@
+{
+  "auditPolicy": {
+    "scope": "all unique fish-domain pairs classified as public_evidence_insufficient by the canonical decision evaluator under the same complete synthetic tank fixture as compatibility_decision_audit.json",
+    "hardFacts": [
+      "water",
+      "temperature",
+      "adult_size"
+    ],
+    "note": "Legacy missingData entries are presentation diagnostics and are not treated as causal blockers. Attribution follows the runtime coverage-to-domain disposition mapping for every participating species, including reviewed Profiles that retain a terminal hard-fact ceiling outside requiredFacts."
+  },
+  "summary": {
+    "fishDomainSpecies": 308,
+    "decisionAuditPublicEvidencePairs": 5318,
+    "attributedPublicEvidencePairs": 5318,
+    "exactDecisionAuditParity": true,
+    "unattributedPairs": 0,
+    "nonTerminalAttributionPairs": 0,
+    "singleFactUnlockablePairs": 114,
+    "multiFactBlockedPairs": 5204,
+    "singleSpeciesBlockedPairs": 4375,
+    "multiSpeciesBlockedPairs": 943,
+    "terminalByCurrentEvidenceStrategyPairs": 5318,
+    "pairIdDigest": "193e652a1d154416b325cf2d5f6144d7a072e4e936f624415cca831e7020e374"
+  },
+  "byField": [
+    {
+      "field": "water",
+      "pairCount": 5201,
+      "blockerInstances": 5981,
+      "speciesCount": 40,
+      "singleFactUnlockablePairs": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "field": "temperature",
+      "pairCount": 5318,
+      "blockerInstances": 6138,
+      "speciesCount": 41,
+      "singleFactUnlockablePairs": 114,
+      "reasonCodes": [
+        "compatibility_field_source_strategy_exhausted",
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "field": "adult_size",
+      "pairCount": 5204,
+      "blockerInstances": 6104,
+      "speciesCount": 43,
+      "singleFactUnlockablePairs": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    }
+  ],
+  "bySpecies": [
+    {
+      "speciesId": "sp_0040",
+      "name": "中华花鳅",
+      "scientificName": "Cobitis sinensis",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 114,
+      "hardFields": [
+        "temperature"
+      ],
+      "reasonCodes": [
+        "compatibility_field_source_strategy_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0063",
+      "name": "兰寿金鱼",
+      "scientificName": "Carassius auratus var. Ranchu",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0064",
+      "name": "泰狮金鱼",
+      "scientificName": "Carassius auratus var. Oranda",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0149",
+      "name": "熊猫金鱼",
+      "scientificName": "Carassius auratus var. Panda",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0150",
+      "name": "短尾狮头金鱼",
+      "scientificName": "Carassius auratus var. Oranda",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0153",
+      "name": "球形珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Balloon",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0168",
+      "name": "金玛丽",
+      "scientificName": "Poecilia latipinna var. Gold",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0169",
+      "name": "银玛丽",
+      "scientificName": "Poecilia latipinna var. Silver",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0180",
+      "name": "龙睛金鱼",
+      "scientificName": "Carassius auratus var. Telescopes",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0196",
+      "name": "一眉道人 (黄金型)",
+      "scientificName": "Sahyadria denisonii var. Gold",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0209",
+      "name": "血玛丽鱼",
+      "scientificName": "Poecilia latipinna var. Blood",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0213",
+      "name": "黑线飞狐 (金型)",
+      "scientificName": "Crossocheilus langei var. Gold",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0215",
+      "name": "长鳍一眉道人",
+      "scientificName": "Sahyadria denisonii var. Longfin",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0237",
+      "name": "高鳍红玛丽",
+      "scientificName": "Poecilia latipinna var. High Fin Red",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0252",
+      "name": "白金反游猫",
+      "scientificName": "Synodontis nigriventris var. White",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0253",
+      "name": "红纹一眉道人",
+      "scientificName": "Sahyadria denisonii var. Red Line",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0254",
+      "name": "白金黑线飞狐",
+      "scientificName": "Crossocheilus langei var. Platinum",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0267",
+      "name": "红头珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Red Head",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0348",
+      "name": "红白虎头金鱼",
+      "scientificName": "Carassius auratus var. Tigerhead",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0349",
+      "name": "蓝寿 (五花)",
+      "scientificName": "Carassius auratus var. Calico Ranchu",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0350",
+      "name": "黑狮头金鱼",
+      "scientificName": "Carassius auratus var. Black Oranda",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0351",
+      "name": "红白蝶尾",
+      "scientificName": "Carassius auratus var. Butterfly Tail",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0385",
+      "name": "雪白金金鱼 (改良)",
+      "scientificName": "Carassius auratus var. White Gold",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0386",
+      "name": "黑金刚龙睛",
+      "scientificName": "Carassius auratus var. Black Moor",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0387",
+      "name": "熊猫蝶尾 (极品)",
+      "scientificName": "Carassius auratus var. Panda Butterfly",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0395",
+      "name": "黄金大帆飞狐",
+      "scientificName": "Crossocheilus langei var. Gold Longfin",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0406",
+      "name": "五彩青蛙 (大规格改良)",
+      "scientificName": "Synchiropus splendidus var. XL",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0413",
+      "name": "黄金眼镜蛇蛇鱼 (长鳍)",
+      "scientificName": "Pangio kuhlii var. Longfin",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0152",
+      "name": "荧光斑马鱼",
+      "scientificName": "Danio rerio var. GloFish",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0161",
+      "name": "巧克力皮球",
+      "scientificName": "Poecilia sphenops var. Chocolate",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0203",
+      "name": "绿赏皮球",
+      "scientificName": "Poecilia sphenops var. Green",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0233",
+      "name": "球形珍珠马甲 (红眼)",
+      "scientificName": "Trichopodus leerii var. Albino Balloon",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0289",
+      "name": "荧光红斑马",
+      "scientificName": "Danio rerio var. Glo Red",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0290",
+      "name": "荧光绿斑马",
+      "scientificName": "Danio rerio var. Glo Green",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0291",
+      "name": "荧光橙斑马",
+      "scientificName": "Danio rerio var. Glo Orange",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0292",
+      "name": "球形金玛丽",
+      "scientificName": "Poecilia latipinna var. Gold Balloon",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0293",
+      "name": "球形黑玛丽",
+      "scientificName": "Poecilia sphenops var. Black Balloon",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0295",
+      "name": "长鳍电光美人",
+      "scientificName": "Melanotaenia praecox var. Longfin",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0363",
+      "name": "荧光紫斑马",
+      "scientificName": "Danio rerio var. Glo Purple",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0364",
+      "name": "荧光粉斑马",
+      "scientificName": "Danio rerio var. Glo Pink",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0419",
+      "name": "荧光橙斑马 (长鳍)",
+      "scientificName": "Danio rerio var. Glo Orange Longfin",
+      "affectedPairs": 134,
+      "soleSpeciesBlockingPairs": 91,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size",
+        "temperature",
+        "water"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0147",
+      "name": "蓝宝鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var. Blue",
+      "affectedPairs": 41,
+      "soleSpeciesBlockingPairs": 0,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0148",
+      "name": "雪玉鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var. White",
+      "affectedPairs": 41,
+      "soleSpeciesBlockingPairs": 0,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    },
+    {
+      "speciesId": "sp_0222",
+      "name": "蓝宝鹦鹉 (球形)",
+      "scientificName": "Amatitlania nigrofasciata var. Jellybean",
+      "affectedPairs": 41,
+      "soleSpeciesBlockingPairs": 0,
+      "singleFactUnlockablePairs": 0,
+      "hardFields": [
+        "adult_size"
+      ],
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ]
+    }
+  ],
+  "topSingleFactUnlockTargets": [
+    {
+      "speciesId": "sp_0040",
+      "name": "中华花鳅",
+      "scientificName": "Cobitis sinensis",
+      "affectedPairs": 157,
+      "soleSpeciesBlockingPairs": 114,
+      "singleFactUnlockablePairs": 114,
+      "hardFields": [
+        "temperature"
+      ],
+      "reasonCodes": [
+        "compatibility_field_source_strategy_exhausted"
+      ]
+    }
+  ],
+  "unattributedPairIds": [],
+  "nonTerminalAttributionPairIds": []
+}

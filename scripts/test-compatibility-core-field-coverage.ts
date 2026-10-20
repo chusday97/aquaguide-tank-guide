@@ -800,19 +800,23 @@ assert.deepEqual(
 );
 assert.equal(fishData.find(fish => fish.id === 'sp_0051')?.scientificName, 'Acrossocheilus fasciatus');
 assert.deepEqual(approvedValue('sp_0051', 'ph'), { min: 7.2, max: 7.8 });
-for (const field of ['temperature', 'tank_size', 'territoriality', 'predation'] as const) {
+assert.deepEqual(approvedValue('sp_0051', 'temperature'), { min: 12, max: 28 });
+for (const field of ['tank_size', 'territoriality', 'predation'] as const) {
   assert.equal(approvedValue('sp_0051', field), undefined, 'sp_0051 must not force-promote terminally unresolved field ' + field);
 }
 const acrossocheilusRow = rowOf('sp_0051');
-assert.equal(acrossocheilusRow?.authoritativeFieldCount, 4);
+assert.equal(acrossocheilusRow?.authoritativeFieldCount, 5);
 assert.equal(acrossocheilusRow?.actionableGapCount, 0);
-assert.equal(acrossocheilusRow?.terminalGapCount, 4);
+assert.equal(acrossocheilusRow?.terminalGapCount, 3);
 assert.equal(acrossocheilusRow?.genericOnboardingReady, false);
-assert.equal(acrossocheilusRow?.fields.temperature.reasonCode, 'species_temperature_husbandry_not_established');
+assert.equal(acrossocheilusRow?.fields.temperature.status, 'reviewed_supported');
+assert.equal(acrossocheilusRow?.fields.temperature.disposition, 'ready');
+assert.equal(acrossocheilusRow?.fields.temperature.authoritySource, 'catalog_field_review');
+assert.equal(acrossocheilusRow?.fields.temperature.reasonCode, null);
 assert.equal(acrossocheilusRow?.fields.tank_size.reasonCode, 'species_space_minimum_not_established');
 assert.equal(acrossocheilusRow?.fields.territoriality.reasonCode, 'species_territoriality_not_established');
 assert.equal(acrossocheilusRow?.fields.predation.reasonCode, 'species_fish_predation_not_established');
-for (const field of ['temperature', 'tank_size', 'territoriality', 'predation'] as const) {
+for (const field of ['tank_size', 'territoriality', 'predation'] as const) {
   assert.equal(acrossocheilusRow?.fields[field].disposition, 'terminal_hold');
   assert.equal(acrossocheilusRow?.fields[field].authoritySource, 'evidence_ceiling');
 }

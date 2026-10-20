@@ -15,7 +15,7 @@
       "ph": 57,
       "social_behavior": 71,
       "tank_size": 57,
-      "temperature": 56,
+      "temperature": 55,
       "territoriality": 68,
       "water": 43
     },
@@ -776,6 +776,33 @@
     },
     {
       "rank": 32,
+      "speciesId": "sp_0046",
+      "name": "中华细鲫",
+      "scientificName": "Aphyocypris chinensis",
+      "field": "predation",
+      "status": "needs_research",
+      "priorityScore": 124,
+      "reason": "missing_reviewed_authority",
+      "completionEligible": false,
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "ph",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "compatibility_field_source_strategy_exhausted",
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "research_evidence_ceiling",
+        "evidence_ceiling"
+      ]
+    },
+    {
+      "rank": 33,
       "speciesId": "sp_0186",
       "name": "人字蝶",
       "scientificName": "Chaetodon auriga",
@@ -802,7 +829,7 @@
       ]
     },
     {
-      "rank": 33,
+      "rank": 34,
       "speciesId": "sp_0039",
       "name": "方氏拟腹吸鳅",
       "scientificName": "Pseudogastromyzon fangi",
@@ -830,38 +857,10 @@
       ]
     },
     {
-      "rank": 34,
+      "rank": 35,
       "speciesId": "sp_0040",
       "name": "中华花鳅",
       "scientificName": "Cobitis sinensis",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 116,
-      "reason": "missing_reviewed_authority",
-      "completionEligible": false,
-      "companionTerminalGapCount": 5,
-      "deferReason": "companion_terminal_holds",
-      "blockingTerminalFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "blockingTerminalReasons": [
-        "compatibility_field_source_strategy_exhausted",
-        "species_social_not_established"
-      ],
-      "blockingTerminalAuthoritySources": [
-        "research_evidence_ceiling",
-        "evidence_ceiling"
-      ]
-    },
-    {
-      "rank": 35,
-      "speciesId": "sp_0046",
-      "name": "中华细鲫",
-      "scientificName": "Aphyocypris chinensis",
       "field": "predation",
       "status": "needs_research",
       "priorityScore": 116,

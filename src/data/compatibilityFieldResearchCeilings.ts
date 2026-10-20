@@ -22,7 +22,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "predation"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 13,
     "attemptedRouteIds": [
@@ -39,7 +39,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "predation"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 14,
     "attemptedRouteIds": [
@@ -59,7 +59,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "temperature"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 11,
     "attemptedRouteIds": [
@@ -79,7 +79,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "temperature"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 11,
     "attemptedRouteIds": [
@@ -95,11 +95,10 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
     "scientificName": "Aphyocypris chinensis",
     "fields": [
       "ph",
-      "tank_size",
-      "temperature"
+      "tank_size"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 12,
     "attemptedRouteIds": [
@@ -118,7 +117,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "tank_size"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 9,
     "attemptedRouteIds": [
@@ -134,7 +133,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "predation"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 10,
     "attemptedRouteIds": [
@@ -150,7 +149,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "predation"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 9,
     "attemptedRouteIds": [
@@ -167,7 +166,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "tank_size"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 9,
     "attemptedRouteIds": [
@@ -184,7 +183,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "tank_size"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 10,
     "attemptedRouteIds": [
@@ -200,7 +199,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "predation"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 13,
     "attemptedRouteIds": [
@@ -217,7 +216,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "predation"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 18,
     "attemptedRouteIds": [
@@ -235,7 +234,7 @@ export const compatibilityFieldResearchCeilings: CompatibilityFieldResearchCeili
       "predation"
     ],
     "reasonCode": "compatibility_field_source_strategy_exhausted",
-    "sourceArtifact": "evaluation/product/compatibility-research-review-queue.v1.json",
+    "sourceArtifact": "evaluation/product/compatibility-field-research-ceilings-terminal.v1.json",
     "researchRounds": 3,
     "attemptedUrlCount": 12,
     "attemptedRouteIds": [

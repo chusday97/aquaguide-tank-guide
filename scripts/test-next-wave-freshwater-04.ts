@@ -48,11 +48,12 @@ const acrossPair = evaluateTankCompatibility({
   candidateSpecies: acrossocheilus,
   existingSpecies: [platy],
 });
-assert.equal(acrossPair.metadata.domainRuleCodes.includes('public_evidence_temperature_insufficient'), true, 'targeted review must distinguish a terminal all-stage temperature evidence ceiling from an ordinary pending search');
-assert.equal(acrossPair.metadata.domainRuleCodes.includes('temperature_range_conflict'), false, 'stage-specific or production temperatures must not create a false hard conflict');
-assert.equal(acrossPair.status, 'insufficient_data');
-assert.equal(acrossPair.metadata.decisionReadiness, 'partial');
-assert.equal(getKnowledgeEvidenceCeiling('sp_0051', 'environment')?.code, 'species_temperature_husbandry_not_established');
+assert.equal(acrossPair.metadata.domainRuleCodes.includes('public_evidence_temperature_insufficient'), false, 'later exact-taxon reviewed 12-28 C authority must supersede the historical runtime temperature hold');
+assert.equal(acrossPair.metadata.domainRuleCodes.includes('temperature_range_conflict'), false, 'the reviewed range must not create a false hard conflict with platy');
+assert.equal(acrossPair.status, 'compatible');
+assert.equal(acrossPair.metadata.decisionReadiness, 'reviewed');
+assert.equal(acrossPair.metadata.domainRuleCodes.includes('compatibility_clear'), true);
+assert.equal(getKnowledgeEvidenceCeiling('sp_0051', 'environment')?.code, 'species_temperature_husbandry_not_established', 'historical evidence-ceiling audit record must remain immutable even after later reviewed runtime authority supersedes it');
 assert.equal(getKnowledgeEvidenceCeiling('sp_0051', 'territoriality')?.code, 'species_territoriality_not_established');
 assert.equal(getKnowledgeEvidenceCeiling('sp_0051', 'predation')?.code, 'species_fish_predation_not_established');
 
@@ -90,4 +91,4 @@ assert.deepEqual(eel?.environment?.waterTypes, ['freshwater', 'brackish']);
 assert.equal(eel?.spaceAndGrowth?.minVolumeLiters, 432);
 assert.equal(eel?.socialBehavior?.predationRisk, 'high');
 
-console.log('next-wave freshwater 04 batch verified: historical reviews stay immutable while later Acrossocheilus pH authority and field-specific terminal evidence ceilings refine runtime decisions without reviving stale catalog values');
+console.log('next-wave freshwater 04 batch verified: historical reviews and evidence ceilings stay immutable while later exact reviewed Acrossocheilus pH/temperature authority may supersede stale runtime holds without mutating the historical batch');

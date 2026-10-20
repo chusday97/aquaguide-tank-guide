@@ -41,9 +41,9 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 159,
+      "reviewed_supported": 161,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 58,
+      "reviewed_unknown": 56,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
@@ -3967,9 +3967,9 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 2,
+      "authoritativeFieldCount": 3,
       "actionableGapCount": 1,
-      "terminalGapCount": 5,
+      "terminalGapCount": 4,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -3981,11 +3981,14 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "research_evidence_ceiling",
-          "reasonCode": "compatibility_field_source_strategy_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "temperature-wave30-aphyocypris-spawning-2001",
+            "temperature-wave30-aphyocypris-managed-rearing-22c"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
           "status": "reviewed_unknown",
@@ -4397,9 +4400,9 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
+      "authoritativeFieldCount": 5,
       "actionableGapCount": 0,
-      "terminalGapCount": 4,
+      "terminalGapCount": 3,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -4411,17 +4414,14 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch08-fishbase-acrossocheilus-fasciatus",
-            "doi-acrossocheilus-fasciatus-behavior-2024",
-            "cnipa-acrossocheilus-fasciatus-growout-wave19",
-            "cnipa-acrossocheilus-fasciatus-breeding-wave19",
-            "jwas-acrossocheilus-fasciatus-temperature-wave19"
+            "temperature-wave31-acrossocheilus-temperature-adaptation-2023",
+            "temperature-wave31-acrossocheilus-fry-rearing-2024"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "species_temperature_husbandry_not_established"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
           "status": "reviewed_supported",

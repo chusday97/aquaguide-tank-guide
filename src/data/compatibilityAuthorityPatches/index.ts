@@ -243,6 +243,20 @@ import {
   compatibilityWaterDirectWave29Sources,
   compatibilityWaterDirectWave29VerifiedSourceIds,
 } from './water-direct-wave29-20261016';
+import {
+  compatibilityTemperatureDirectWave30AuthorityPatch,
+  compatibilityTemperatureDirectWave30FieldReviews,
+  compatibilityTemperatureDirectWave30ProfilePatches,
+  compatibilityTemperatureDirectWave30Sources,
+  compatibilityTemperatureDirectWave30VerifiedSourceIds,
+} from './temperature-direct-wave30-20261020';
+import {
+  compatibilityTemperatureDirectWave31AuthorityPatch,
+  compatibilityTemperatureDirectWave31FieldReviews,
+  compatibilityTemperatureDirectWave31ProfilePatches,
+  compatibilityTemperatureDirectWave31Sources,
+  compatibilityTemperatureDirectWave31VerifiedSourceIds,
+} from './temperature-direct-wave31-20261020';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -280,6 +294,8 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityEnvironmentDirectWave28Sources,
   ...compatibilityReviewClosureSources,
   ...compatibilityWaterDirectWave29Sources,
+  ...compatibilityTemperatureDirectWave30Sources,
+  ...compatibilityTemperatureDirectWave31Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -318,6 +334,8 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityEnvironmentDirectWave28FieldReviews,
   ...compatibilityReviewClosureFieldReviews,
   ...compatibilityWaterDirectWave29FieldReviews,
+  ...compatibilityTemperatureDirectWave30FieldReviews,
+  ...compatibilityTemperatureDirectWave31FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -356,6 +374,8 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityEnvironmentDirectWave28VerifiedSourceIds,
   ...compatibilityReviewClosureVerifiedSourceIds,
   ...compatibilityWaterDirectWave29VerifiedSourceIds,
+  ...compatibilityTemperatureDirectWave30VerifiedSourceIds,
+  ...compatibilityTemperatureDirectWave31VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -394,6 +414,8 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityEnvironmentDirectWave28ProfilePatches,
   ...compatibilityReviewClosureProfilePatches,
   ...compatibilityWaterDirectWave29ProfilePatches,
+  ...compatibilityTemperatureDirectWave30ProfilePatches,
+  ...compatibilityTemperatureDirectWave31ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -432,4 +454,6 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityEnvironmentDirectWave28AuthorityPatch,
   compatibilityReviewClosureAuthorityPatch,
   compatibilityWaterDirectWave29AuthorityPatch,
+  compatibilityTemperatureDirectWave30AuthorityPatch,
+  compatibilityTemperatureDirectWave31AuthorityPatch,
 ] as const;
