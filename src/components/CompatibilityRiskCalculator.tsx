@@ -110,7 +110,7 @@ import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
 import { isCompatibilityCalculatorSelectableSpecies } from '../services/compatibility/compatibility-domain-scope.service';
-import { getCompatibilityUnknownReason } from '../services/compatibility/compatibility-decision-plan.service';
+import { getCompatibilityDataLimitationReason } from '../services/compatibility/compatibility-decision-plan.service';
 import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
 const getDisplayImage = getSpeciesDisplayImage;
@@ -652,9 +652,7 @@ export function CompatibilityRiskCalculator({
       candidateCount: selectedItems.length,
     });
     result.decision?.pairResults.forEach(pair => {
-      const unknownReason = pair.status === 'insufficient_data'
-        ? getCompatibilityUnknownReason(pair.rawResult) || undefined
-        : undefined;
+      const unknownReason = getCompatibilityDataLimitationReason(pair.rawResult) || undefined;
       trackSessionEvent('compatibility_pair_evaluated', {
         action: 'evaluate_pair',
         status: pair.status,

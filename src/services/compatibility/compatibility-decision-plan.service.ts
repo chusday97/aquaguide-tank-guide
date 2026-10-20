@@ -75,56 +75,84 @@ export const isCompatibilityDecisionFullyInformed = (decision: CompatibilityDeci
   && decision.missingData.length === 0
 );
 
-export const getCompatibilityUnknownReason = (decision: CompatibilityUnknownReasonInput): CompatibilityUnknownReason => {
-  if (decision.status !== 'insufficient_data') return null;
-  const codes = decisionCodes(decision);
-  if (
-    codes.has('species_identity_unresolved')
-    || [...codes].some(code => code.startsWith('identity_') && code.endsWith('_unresolved'))
-  ) return 'unresolved_identity';
-  if (
-    codes.has('species_public_evidence_insufficient')
-    || [...codes].some(code => code.startsWith('public_evidence_') && code.endsWith('_insufficient'))
-  ) return 'public_evidence_insufficient';
-  const missingUserInputCodes = new Set([
-    'candidate_missing',
-    'missing_candidate_species',
-    'missing_species_pair',
-    'empty_tank_no_existing_species',
-    'tank_missing',
-    'missing_tank',
-    'tank_water_type_missing',
-    'missing_tank_water_type',
-    'tank_volume_missing',
-    'missing_tank_volume',
-    'tank_temperature_missing',
-    'missing_tank_temperature',
-    'missing_ph',
-    'missing_hardness',
-  ]);
-  if ([...codes].some(code => missingUserInputCodes.has(code))) return 'missing_user_input';
+const MISSING_USER_INPUT_CODES = new Set([
+  'candidate_missing',
+  'missing_candidate_species',
+  'missing_species_pair',
+  'empty_tank_no_existing_species',
+  'tank_missing',
+  'missing_tank',
+  'tank_water_type_missing',
+  'missing_tank_water_type',
+  'tank_volume_missing',
+  'missing_tank_volume',
+  'tank_temperature_missing',
+  'missing_tank_temperature',
+  'missing_ph',
+  'missing_hardness',
+  'missing_filter',
+  'missing_heater',
+]);
 
-  const missingSpeciesFactCodes = new Set([
-    'species_evidence_unreviewed',
-    'candidate_water_type_missing',
-    'water_type_unknown',
-    'temperature_range_missing',
-    'ph_range_missing',
-    'species_temperature_missing',
-    'species_ph_missing',
-    'behavior_evidence_unreviewed',
-  ]);
-  if (
-    [...codes].some(code => missingSpeciesFactCodes.has(code))
-    || [...codes].some(code => code.startsWith('required_fact_') && code.endsWith('_missing'))
-    || [...codes].some(code => code.startsWith('species_') && code.endsWith('_missing'))
-    || [...codes].some(code => code.endsWith('_evidence_unreviewed'))
-  ) return 'missing_species_fact';
+const MISSING_SPECIES_FACT_CODES = new Set([
+  'species_evidence_unreviewed',
+  'species_review_pending',
+  'candidate_water_type_missing',
+  'water_type_unknown',
+  'temperature_range_missing',
+  'ph_range_missing',
+  'species_temperature_missing',
+  'species_ph_missing',
+  'behavior_evidence_unreviewed',
+]);
 
-  // Unknown should never silently blame the user when no known user-input,
-  // identity, public-evidence, or species-fact boundary explains it.
-  return 'system_gap';
+const isIdentityLimitationCode = (code: string) => (
+  code === 'species_identity_unresolved'
+  || code === 'pair_identity_evidence_ceiling'
+  || (code.startsWith('identity_') && code.endsWith('_unresolved'))
+);
+
+const isPublicEvidenceLimitationCode = (code: string) => (
+  code === 'species_public_evidence_insufficient'
+  || code === 'species_evidence_ceiling'
+  || code === 'pair_risk_evidence_ceiling'
+  || (code.startsWith('public_evidence_') && code.endsWith('_insufficient'))
+  || code.startsWith('evidence_ceiling_')
+);
+
+const isMissingSpeciesFactCode = (code: string) => (
+  MISSING_SPECIES_FACT_CODES.has(code)
+  || code.startsWith('review_pending_')
+  || (code.startsWith('required_fact_') && code.endsWith('_missing'))
+  || (code.startsWith('species_') && code.endsWith('_missing'))
+  || code.endsWith('_evidence_unreviewed')
+);
+
+export const getCompatibilityDataLimitationCodes = (decision: CompatibilityUnknownReasonInput): string[] => {
+  const codes = [...decisionCodes(decision)];
+  return codes.filter(code => (
+    isIdentityLimitationCode(code)
+    || isPublicEvidenceLimitationCode(code)
+    || MISSING_USER_INPUT_CODES.has(code)
+    || isMissingSpeciesFactCode(code)
+  ));
 };
+
+export const getCompatibilityDataLimitationReason = (decision: CompatibilityUnknownReasonInput): CompatibilityUnknownReason => {
+  const codes = getCompatibilityDataLimitationCodes(decision);
+  if (codes.some(isIdentityLimitationCode)) return 'unresolved_identity';
+  if (codes.some(isPublicEvidenceLimitationCode)) return 'public_evidence_insufficient';
+  if (codes.some(code => MISSING_USER_INPUT_CODES.has(code))) return 'missing_user_input';
+  if (codes.some(isMissingSpeciesFactCode)) return 'missing_species_fact';
+  if (decision.status === 'insufficient_data' || decision.missingData.length > 0) return 'system_gap';
+  return null;
+};
+
+export const getCompatibilityUnknownReason = (decision: CompatibilityUnknownReasonInput): CompatibilityUnknownReason => (
+  decision.status === 'insufficient_data'
+    ? getCompatibilityDataLimitationReason(decision)
+    : null
+);
 
 const sourceRulesForPlan = (decision: CompatibilityDecision): TankCompatibilityRule[] => {
   if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules).slice(0, 2);

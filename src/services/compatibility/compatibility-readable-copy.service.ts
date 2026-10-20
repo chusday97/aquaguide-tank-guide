@@ -52,7 +52,7 @@ export const isCompatibilityUserReadableText = (
   return true;
 };
 
-const plainRuleText = (
+export const getCompatibilityReadableRuleText = (
   rule: ReadableRule,
   assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
 ): string => {
@@ -130,6 +130,8 @@ const plainRuleText = (
   if (code === 'species_identity_unresolved') return '这个商品名或变体还不能可靠对应到明确物种。';
   if (code === 'species_public_evidence_insufficient') return '公开可靠资料不足以确认这个组合的一项关键风险。';
   if (code === 'species_evidence_ceiling') return '部分风险缺少足够直接的公开证据；这不等于安全，本次按保守条件继续判断。';
+  if (code === 'pair_identity_evidence_ceiling') return '这组商品名或品系的身份资料已达到当前公开证据上限，不能安全套用近似对象。';
+  if (code === 'pair_risk_evidence_ceiling') return '这组配对的一项关键风险缺少足够直接的公开证据；不能把缺证据当作没有风险。';
   if (code.startsWith('review_pending_')) {
     const fact = code.slice('review_pending_'.length);
     return `${factLabels[fact] || '一项资料'}仍在补充，本次按保守结论处理。`;
@@ -150,6 +152,10 @@ const plainRuleText = (
   if (code === 'species_evidence_unreviewed' || code === 'behavior_evidence_unreviewed') {
     return '其中有物种的关键混养资料还没有完成可靠审核。';
   }
+  if (code === 'missing_ph') return '还缺少当前鱼缸的稳定 pH 实测值；这是需要补充的鱼缸信息。';
+  if (code === 'missing_hardness') return '还缺少当前鱼缸的 GH / 硬度实测值；这是需要补充的鱼缸信息。';
+  if (code === 'missing_filter') return '还没有确认当前鱼缸是否有稳定过滤；这是需要补充的鱼缸信息。';
+  if (code === 'missing_heater') return '还没有确认当前鱼缸是否需要并配有加热设备；这是需要补充的鱼缸信息。';
   if (code === 'tank_missing') return '还缺少当前鱼缸的基础信息。';
   if (code === 'tank_water_type_missing' || code === 'water_type_unknown' || code === 'candidate_water_type_missing') {
     return '还不能确认这组生物需要的水体类型是否一致。';
@@ -313,7 +319,7 @@ export const buildCompatibilityReadableConclusion = (
   assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityReadableConclusion => {
   const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
-  const deterministicWhy = primaryRulesFor(decision).map(rule => plainRuleText(rule, assessmentMode));
+  const deterministicWhy = primaryRulesFor(decision).map(rule => getCompatibilityReadableRuleText(rule, assessmentMode));
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
   const why = uniqueReadable(
     decision.status === 'compatible'

@@ -7,12 +7,14 @@ import {
 import { getCompatibilityPresentation } from '../../../src/services/compatibility/compatibility-presentation.service';
 import {
   buildCompatibilityResolutionTargets,
+  getCompatibilityDataLimitationCodes,
   type CompatibilityResolutionTarget,
 } from '../../../src/services/compatibility/compatibility-decision-plan.service';
 import { getCompatibilityDecision } from '../../../src/services/compatibility/compatibility.service';
 import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION, type CompatibilityProductSchemaVersion } from '../../../src/services/compatibility/compatibility-product-contract';
 import {
   buildCompatibilityReadableConclusion,
+  getCompatibilityReadableRuleText,
   isCompatibilityUserReadableText,
   type CompatibilityReadableConclusion,
 } from '../../../src/services/compatibility/compatibility-readable-copy.service';
@@ -75,14 +77,21 @@ const deterministicReasons = (decision: CompatibilityDecision): CompatibilityPro
   ).slice(0, 3)
 );
 
-const deterministicUncertainties = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => (
-  uniqueItems(
-    prioritizeDistinctCompatibilityRules(decision.missingData).map(rule => ({
-      text: rule.evidence || rule.title,
-      ruleCodes: [rule.code],
-    })),
-  ).slice(0, 3)
-);
+const deterministicUncertainties = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => {
+  const limitationCodes = getCompatibilityDataLimitationCodes(decision);
+  const missingByCode = new Map(
+    prioritizeDistinctCompatibilityRules(decision.missingData).map(rule => [rule.code, rule] as const),
+  );
+  return uniqueItems(
+    limitationCodes.map(code => {
+      const rule = missingByCode.get(code) || { code };
+      return {
+        text: getCompatibilityReadableRuleText(rule),
+        ruleCodes: [code],
+      };
+    }),
+  ).filter(item => isCompatibilityUserReadableText(item.text)).slice(0, 3);
+};
 
 const deterministicAdjustments = (
   decision: CompatibilityDecision,
@@ -216,7 +225,7 @@ export const buildCompatibilityProductAssessment = (
   const deterministicReasonItems = deterministicReasons(decision);
   const deterministicUncertaintyItems = deterministicUncertainties(decision);
   const primaryRuleCodes = new Set(deterministicReasonItems.flatMap(item => item.ruleCodes));
-  const uncertaintyRuleCodes = new Set(decision.missingData.map(rule => rule.code));
+  const uncertaintyRuleCodes = new Set(getCompatibilityDataLimitationCodes(decision));
   const aiAuthorityMatches = shadow.ai.status === 'accepted'
     && shadow.ai.suggestedVerdict === finalDecision.status;
   const clampedAiReasons = aiAuthorityMatches

@@ -49,13 +49,25 @@ assert.equal(events[1].unknownReason, 'unresolved_identity');
 
 trackSessionEvent('compatibility_pair_evaluated', {
   action: 'evaluate_pair',
+  status: 'not_recommended',
+  entry: 'compatibility_v2',
+  source: 'rules',
+  pairKey: 'sp_0039__sp_0431',
+  unknownReason: 'public_evidence_insufficient',
+});
+events = getSessionEvents();
+assert.equal(events[2].status, 'not_recommended');
+assert.equal(events[2].unknownReason, 'public_evidence_insufficient', 'a stronger verdict may still carry an independent machine-readable data limitation');
+
+trackSessionEvent('compatibility_pair_evaluated', {
+  action: 'evaluate_pair',
   status: 'caution',
   pairKey: '../../user-text__sp_0431',
   unknownReason: '../../user-text' as any,
 });
 events = getSessionEvents();
-assert.equal(events[2].pairKey, undefined, 'free text/path-like values must not enter pair telemetry');
-assert.equal(events[2].unknownReason, undefined, 'unknown reasons must be restricted to the machine-readable compatibility allowlist');
+assert.equal(events[3].pairKey, undefined, 'free text/path-like values must not enter pair telemetry');
+assert.equal(events[3].unknownReason, undefined, 'unknown reasons must be restricted to the machine-readable compatibility allowlist');
 assert.equal(JSON.stringify(events).includes('../../user-text'), false);
 
 trackSessionEvent('compatibility_pair_evaluated', {
@@ -64,7 +76,7 @@ trackSessionEvent('compatibility_pair_evaluated', {
   pairKey: 'sp_0431__sp_0431',
 });
 events = getSessionEvents();
-assert.equal(events[3].pairKey, undefined, 'self-pairs are not valid compatibility telemetry');
+assert.equal(events[4].pairKey, undefined, 'self-pairs are not valid compatibility telemetry');
 
 resetSessionEvents();
 assert.equal(getSessionEvents().length, 0);

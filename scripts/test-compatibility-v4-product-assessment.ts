@@ -10,6 +10,7 @@ import {
 } from '../apps/api/src/compatibility-ai-reasoner';
 import { buildCompatibilityProductAssessment } from '../apps/api/src/compatibility-ai-product';
 import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION } from '../src/services/compatibility/compatibility-product-contract';
+import { getCompatibilityDataLimitationCodes } from '../src/services/compatibility/compatibility-decision-plan.service';
 import {
   parseCompatibilityPlannedItems,
   readPublishedCatalogCombinationContext,
@@ -182,10 +183,60 @@ const blockedWithUnknownProduct = buildCompatibilityProductAssessment(blockedWit
 assert.equal(blockedWithUnknownProduct.main.judgment, '不建议');
 assert.equal(blockedWithUnknownProduct.details.authority.status, 'not_recommended');
 assert.ok(blockedWithUnknownProduct.details.uncertainties.length > 0, 'a stronger hard-block verdict must not erase independent missing-data boundaries');
+const blockedWithUnknownLimitationCodes = new Set(getCompatibilityDataLimitationCodes(blockedWithUnknownDecision));
 assert.ok(
-  blockedWithUnknownProduct.details.uncertainties.every(item => blockedWithUnknownDecision.missingData.some(rule => item.ruleCodes.includes(rule.code))),
-  'mixed-status uncertainties must remain grounded only in deterministic missing-data rules',
+  blockedWithUnknownProduct.details.uncertainties.every(item => item.ruleCodes.every(code => blockedWithUnknownLimitationCodes.has(code))),
+  'mixed-status uncertainties must remain grounded only in deterministic data-limitation authority',
 );
+
+const mixedBoundaryTank = {
+  ...tank,
+  id: 'compatibility-product-mixed-boundary',
+  dimensions: { length: '300', width: '100', height: '80' },
+  targetTemperature: '22',
+};
+const blockedWithPublicEvidence = evaluateCompatibilityDecision({
+  tank: mixedBoundaryTank,
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0049'), quantity: 1, origin: 'existing' },
+    { species: byId('sp_0039'), quantity: 6, origin: 'candidate' },
+  ],
+});
+assert.equal(blockedWithPublicEvidence.status, 'not_recommended');
+const blockedWithPublicEvidenceProduct = buildCompatibilityProductAssessment(blockedWithPublicEvidence, blockedWithUnknownShadow);
+assert.equal(blockedWithPublicEvidenceProduct.main.judgment, '不建议');
+assert.ok(
+  blockedWithPublicEvidenceProduct.details.uncertainties.some(item => item.ruleCodes.includes('species_public_evidence_insufficient')),
+  'mixed hard blocks must surface the public-evidence ceiling itself, not only secondary unreviewed behavior rows',
+);
+assert.ok(blockedWithPublicEvidenceProduct.details.uncertainties.some(item => /公开.*证据|公开可靠资料/.test(item.text)));
+
+const blockedWithIdentity = evaluateCompatibilityDecision({
+  tank: mixedBoundaryTank,
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0049'), quantity: 1, origin: 'existing' },
+    { species: byId('sp_0474'), quantity: 6, origin: 'candidate' },
+  ],
+});
+assert.equal(blockedWithIdentity.status, 'not_recommended');
+const blockedWithIdentityProduct = buildCompatibilityProductAssessment(blockedWithIdentity, blockedWithUnknownShadow);
+assert.equal(blockedWithIdentityProduct.main.judgment, '不建议');
+assert.ok(blockedWithIdentityProduct.details.uncertainties.some(item => item.ruleCodes.includes('species_identity_unresolved')));
+assert.ok(blockedWithIdentityProduct.details.uncertainties.some(item => /身份|商品名|明确物种/.test(item.text)));
+
+const partialEvidenceDecision = evaluateCompatibilityDecision({
+  tank: mixedBoundaryTank,
+  items: [
+    { species: byId('sp_0010'), quantity: 6, origin: 'existing' },
+    { species: byId('sp_0066'), quantity: 6, origin: 'candidate' },
+  ],
+});
+assert.equal(partialEvidenceDecision.status, 'caution');
+const partialEvidenceProduct = buildCompatibilityProductAssessment(partialEvidenceDecision, blockedWithUnknownShadow);
+assert.ok(partialEvidenceProduct.details.uncertainties.some(item => item.ruleCodes.includes('species_evidence_ceiling')));
+assert.ok(partialEvidenceProduct.details.uncertainties.some(item => /公开证据|缺证据/.test(item.text)));
 
 assert.deepEqual(
   parseCompatibilityPlannedItems(['sp_0013:1', 'sp_0469:4', 'sp_0469:2']),

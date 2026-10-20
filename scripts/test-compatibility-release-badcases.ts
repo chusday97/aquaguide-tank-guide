@@ -5,7 +5,7 @@ import { evaluateTankCompatibility } from '../src/services/compatibility/compati
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision } from '../src/modules/knowledge/knowledge.types';
 import { buildBeginnerCompatibilityAction } from '../src/services/compatibility/compatibility-action.service';
-import { buildCompatibilityDecisionPlan } from '../src/services/compatibility/compatibility-decision-plan.service';
+import { buildCompatibilityDecisionPlan, getCompatibilityDataLimitationReason, getCompatibilityUnknownReason } from '../src/services/compatibility/compatibility-decision-plan.service';
 import type { Aquarium } from '../src/types';
 
 const byId = (id: string) => {
@@ -160,6 +160,7 @@ assert.equal(softEvidenceAction.authorityLevel, 'risk_management');
 assert.ok(softEvidenceAction.sourceRuleCodes.includes('species_evidence_ceiling'));
 assert.match(softEvidenceAction.primaryReason, /证据|公开|保守/);
 assert.match(softEvidenceAction.immediateAction, /保守|不要|证据|安全余量/);
+assert.equal(getCompatibilityDataLimitationReason(softEvidenceCeiling), 'public_evidence_insufficient');
 
 // 6b) A decision-critical public-evidence ceiling must still say the limitation is the evidence, not user configuration.
 const hardEvidenceCeiling = decisionFor([
@@ -176,6 +177,7 @@ assert.equal(hardEvidencePlan.unknownReason, 'public_evidence_insufficient');
 assert.match(evidenceAction.headline, /公开资料|可靠公开/);
 assert.match(evidenceAction.primaryReason, /可靠公开|来源|风险边界/);
 assert.match(evidenceAction.immediateAction, /不是你少填|可靠公开来源不足/);
+assert.equal(getCompatibilityDataLimitationReason(hardEvidenceCeiling), 'public_evidence_insufficient');
 
 // 7) A real unresolved catalog identity must make identity the action authority, not a secondary missing field.
 const unresolvedIdentity = decisionFor([
@@ -191,6 +193,28 @@ assert.equal(unresolvedIdentityPlan.unknownReason, 'unresolved_identity');
 assert.match(identityAction.headline, /具体物种|身份/);
 assert.match(identityAction.primaryReason, /身份|物种|品系/);
 assert.match(identityAction.observeAfterAction || '', /确认|重新/);
+assert.equal(getCompatibilityDataLimitationReason(unresolvedIdentity), 'unresolved_identity');
+
+// 7b) A stronger hard block must not erase the independent data-limitation category.
+const hardBlockWithPublicEvidence = decisionFor([
+  ['sp_0431', 10],
+  ['sp_0049', 1],
+  ['sp_0039', 6],
+], largeCoolTank);
+assert.equal(hardBlockWithPublicEvidence.status, 'not_recommended');
+assert.ok(hardBlockWithPublicEvidence.metadata.domainRuleCodes.includes('species_public_evidence_insufficient'));
+assert.equal(getCompatibilityUnknownReason(hardBlockWithPublicEvidence), null);
+assert.equal(getCompatibilityDataLimitationReason(hardBlockWithPublicEvidence), 'public_evidence_insufficient');
+
+const hardBlockWithIdentity = decisionFor([
+  ['sp_0431', 10],
+  ['sp_0049', 1],
+  ['sp_0474', 6],
+], largeCoolTank);
+assert.equal(hardBlockWithIdentity.status, 'not_recommended');
+assert.ok(hardBlockWithIdentity.metadata.domainRuleCodes.includes('species_identity_unresolved'));
+assert.equal(getCompatibilityUnknownReason(hardBlockWithIdentity), null);
+assert.equal(getCompatibilityDataLimitationReason(hardBlockWithIdentity), 'unresolved_identity');
 
 // 8) Whole-tank aggregation must evaluate all unordered pairs and keep a hard block dominant.
 const multiSpecies = evaluateCompatibilityDecision({
