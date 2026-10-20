@@ -14,11 +14,11 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "predationResearchBacklogFields": 72,
+    "predationResearchBacklogFields": 67,
     "hardDecisionResearchDebtFields": 0,
-    "softRiskDiscoveryResearchDebtFields": 72,
-    "riskDiscoveryReadyCatalogObjects": 17,
-    "riskDiscoveryReadyUniqueTaxa": 15,
+    "softRiskDiscoveryResearchDebtFields": 67,
+    "riskDiscoveryReadyCatalogObjects": 12,
+    "riskDiscoveryReadyUniqueTaxa": 11,
     "blockedByIdentityOrVariantCatalogObjects": 53,
     "blockedByOtherHardEvidenceCatalogObjects": 2,
     "currentPredationHardInsufficientDataBlockerFields": 0
@@ -68,30 +68,6 @@
       ],
       "names": [
         "中华细鲫"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 93,
-      "maxSmallFishReviewSurfacePairs": 44,
-      "catalogObjectCount": 1
-    },
-    {
-      "scientificName": "Hyphessobrycon herbertaxelrodi",
-      "catalogObjectIds": [
-        "sp_0470"
-      ],
-      "names": [
-        "黑莲灯"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 93,
-      "maxSmallFishReviewSurfacePairs": 44,
-      "catalogObjectCount": 1
-    },
-    {
-      "scientificName": "Hyphessobrycon megalopterus",
-      "catalogObjectIds": [
-        "sp_0467"
-      ],
-      "names": [
-        "黑尾大勾"
       ],
       "maxRiskManagementReviewSurfacePairs": 93,
       "maxSmallFishReviewSurfacePairs": 44,
@@ -170,18 +146,6 @@
       "catalogObjectCount": 1
     },
     {
-      "scientificName": "Pterapogon kauderni",
-      "catalogObjectIds": [
-        "sp_0025"
-      ],
-      "names": [
-        "泗水玫瑰"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 0,
-      "maxSmallFishReviewSurfacePairs": 0,
-      "catalogObjectCount": 1
-    },
-    {
       "scientificName": "Sawbwa resplendens",
       "catalogObjectIds": [
         "sp_0111"
@@ -192,19 +156,6 @@
       "maxRiskManagementReviewSurfacePairs": 0,
       "maxSmallFishReviewSurfacePairs": 0,
       "catalogObjectCount": 1
-    },
-    {
-      "scientificName": "Sphaerichthys osphromenoides",
-      "catalogObjectIds": [
-        "sp_0060",
-        "sp_0136"
-      ],
-      "names": [
-        "巧克力曼龙"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 0,
-      "maxSmallFishReviewSurfacePairs": 0,
-      "catalogObjectCount": 2
     }
   ],
   "riskDiscoveryReady": [
@@ -326,52 +277,6 @@
       }
     },
     {
-      "speciesId": "sp_0467",
-      "name": "黑尾大勾",
-      "scientificName": "Hyphessobrycon megalopterus",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 93,
-        "not_recommended": 87,
-        "insufficient_data": 127,
-        "riskManagementReviewSurfacePairs": 93,
-        "smallFishReviewSurfacePairs": 44,
-        "currentPredationRulePairs": 43
-      }
-    },
-    {
-      "speciesId": "sp_0470",
-      "name": "黑莲灯",
-      "scientificName": "Hyphessobrycon herbertaxelrodi",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 93,
-        "not_recommended": 87,
-        "insufficient_data": 127,
-        "riskManagementReviewSurfacePairs": 93,
-        "smallFishReviewSurfacePairs": 44,
-        "currentPredationRulePairs": 43
-      }
-    },
-    {
       "speciesId": "sp_0471",
       "name": "钻石灯",
       "scientificName": "Moenkhausia pittieri",
@@ -415,29 +320,6 @@
         "riskManagementReviewSurfacePairs": 93,
         "smallFishReviewSurfacePairs": 44,
         "currentPredationRulePairs": 43
-      }
-    },
-    {
-      "speciesId": "sp_0025",
-      "name": "泗水玫瑰",
-      "scientificName": "Pterapogon kauderni",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 0,
-        "not_recommended": 307,
-        "insufficient_data": 0,
-        "riskManagementReviewSurfacePairs": 0,
-        "smallFishReviewSurfacePairs": 0,
-        "currentPredationRulePairs": 3
       }
     },
     {
@@ -487,29 +369,6 @@
       }
     },
     {
-      "speciesId": "sp_0060",
-      "name": "巧克力曼龙",
-      "scientificName": "Sphaerichthys osphromenoides",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 0,
-        "not_recommended": 307,
-        "insufficient_data": 0,
-        "riskManagementReviewSurfacePairs": 0,
-        "smallFishReviewSurfacePairs": 0,
-        "currentPredationRulePairs": 43
-      }
-    },
-    {
       "speciesId": "sp_0111",
       "name": "亚洲红鼻",
       "scientificName": "Sawbwa resplendens",
@@ -553,29 +412,6 @@
         "riskManagementReviewSurfacePairs": 0,
         "smallFishReviewSurfacePairs": 0,
         "currentPredationRulePairs": 3
-      }
-    },
-    {
-      "speciesId": "sp_0136",
-      "name": "巧克力曼龙",
-      "scientificName": "Sphaerichthys osphromenoides",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 0,
-        "not_recommended": 307,
-        "insufficient_data": 0,
-        "riskManagementReviewSurfacePairs": 0,
-        "smallFishReviewSurfacePairs": 0,
-        "currentPredationRulePairs": 43
       }
     },
     {

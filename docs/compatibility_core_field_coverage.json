@@ -25,16 +25,16 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 72,
+  "visibleResearchDebtFields": 67,
   "completionEligibleResearchDebtFields": 0,
-  "deferredResearchDebtFields": 72,
+  "deferredResearchDebtFields": 67,
   "activeCompletionResearchDebtFields": 0,
-  "deferredResearchOpportunityFields": 72,
-  "deferredResearchOpportunitySpecies": 72,
+  "deferredResearchOpportunityFields": 67,
+  "deferredResearchOpportunitySpecies": 67,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 72,
-  "predationRiskDiscoveryFields": 72,
-  "predationRiskDiscoveryHardReadySpecies": 17,
+  "softRiskDiscoveryResearchDebtFields": 67,
+  "predationRiskDiscoveryFields": 67,
+  "predationRiskDiscoveryHardReadySpecies": 12,
   "predationRiskDiscoveryVariantIdentityHeldSpecies": 53,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
@@ -95,10 +95,10 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 96,
+      "reviewed_supported": 101,
       "reviewed_neutral_or_negative": 39,
       "reviewed_unknown": 10,
-      "needs_research": 72,
+      "needs_research": 67,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -106,7 +106,7 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 72
+      "count": 67
     },
     {
       "field": "water",
@@ -2198,8 +2198,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -2266,11 +2266,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "noaa-pterapogon-kauderni-guppy-fry-predation-wave35"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -5193,8 +5195,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -5261,11 +5263,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sphaerichthys-osphromenoides-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -11229,8 +11233,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -11297,11 +11301,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sphaerichthys-osphromenoides-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -38816,8 +38822,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -38884,11 +38890,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquaticcommunity-hyphessobrycon-megalopterus-fry-predation-wave35"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -39075,8 +39083,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -39143,11 +39151,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "aquariumindustries-hyphessobrycon-herbertaxelrodi-fry-predation-wave35"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

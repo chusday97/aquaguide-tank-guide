@@ -277,6 +277,13 @@ import {
   compatibilityPredationRiskDiscoveryWave34Sources,
   compatibilityPredationRiskDiscoveryWave34VerifiedSourceIds,
 } from './predation-risk-discovery-wave34-20261020';
+import {
+  compatibilityPredationRiskDiscoveryWave35AuthorityPatch,
+  compatibilityPredationRiskDiscoveryWave35FieldReviews,
+  compatibilityPredationRiskDiscoveryWave35ProfilePatches,
+  compatibilityPredationRiskDiscoveryWave35Sources,
+  compatibilityPredationRiskDiscoveryWave35VerifiedSourceIds,
+} from './predation-risk-discovery-wave35-20261021';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -318,6 +325,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityTemperatureDirectWave31Sources,
   ...compatibilityPredationRiskDiscoveryWave32Sources,
   ...compatibilityPredationRiskDiscoveryWave34Sources,
+  ...compatibilityPredationRiskDiscoveryWave35Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -361,6 +369,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityPredationRiskDiscoveryWave32FieldReviews,
   ...compatibilityPredationRiskDiscoveryWave33FieldReviews,
   ...compatibilityPredationRiskDiscoveryWave34FieldReviews,
+  ...compatibilityPredationRiskDiscoveryWave35FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -404,6 +413,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityPredationRiskDiscoveryWave32VerifiedSourceIds,
   ...compatibilityPredationRiskDiscoveryWave33VerifiedSourceIds,
   ...compatibilityPredationRiskDiscoveryWave34VerifiedSourceIds,
+  ...compatibilityPredationRiskDiscoveryWave35VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -447,6 +457,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityPredationRiskDiscoveryWave32ProfilePatches,
   ...compatibilityPredationRiskDiscoveryWave33ProfilePatches,
   ...compatibilityPredationRiskDiscoveryWave34ProfilePatches,
+  ...compatibilityPredationRiskDiscoveryWave35ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -490,4 +501,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityPredationRiskDiscoveryWave32AuthorityPatch,
   compatibilityPredationRiskDiscoveryWave33AuthorityPatch,
   compatibilityPredationRiskDiscoveryWave34AuthorityPatch,
+  compatibilityPredationRiskDiscoveryWave35AuthorityPatch,
 ] as const;
