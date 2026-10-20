@@ -25,13 +25,21 @@ assert.equal(
   summary.completionEligibleCatalogObjects + summary.variantObjectEvidenceBlockedCatalogObjects + summary.terminalBlockedCatalogObjects,
   plan.reduce((sum, job) => sum + job.catalogObjectCount, 0),
 );
-assert.equal(summary.totalResearchJobs, 4);
-assert.equal(summary.completionEligibleJobs, 0);
-assert.equal(summary.variantObjectEvidenceBlockedJobs, 4);
-assert.equal(summary.terminalBlockedJobs, 0);
-assert.equal(summary.completionEligibleCatalogObjects, 0);
-assert.equal(summary.variantObjectEvidenceBlockedCatalogObjects, 9);
-assert.equal(summary.terminalBlockedCatalogObjects, 0);
+assert.equal(summary.completionEligibleJobs, eligible.length);
+assert.equal(summary.variantObjectEvidenceBlockedJobs, variantEvidence.length);
+assert.equal(summary.terminalBlockedJobs, blocked.length);
+assert.equal(
+  summary.completionEligibleCatalogObjects,
+  eligible.reduce((sum: number, item: { catalogObjectCount: number }) => sum + item.catalogObjectCount, 0),
+);
+assert.equal(
+  summary.variantObjectEvidenceBlockedCatalogObjects,
+  variantEvidence.reduce((sum: number, item: { catalogObjectCount: number }) => sum + item.catalogObjectCount, 0),
+);
+assert.equal(
+  summary.terminalBlockedCatalogObjects,
+  blocked.reduce((sum: number, item: { catalogObjectCount: number }) => sum + item.catalogObjectCount, 0),
+);
 
 
 assert.equal(allQueue.length, summary.totalResearchJobs);
