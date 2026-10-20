@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-19T14:28:31.314Z",
+  "generatedAt": "2026-10-20T11:45:02.191Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
   "sourceSchemaVersion": 4,
   "promotionAllowed": false,
@@ -27,7 +27,7 @@
     "readyBaseMorphologySafeBoundaries": 9,
     "readyBaseMorphologyRiskBoundaries": 11,
     "sourceActiveIdentityBoundaries": 93,
-    "sourceIdentityUnknownPairs": 16735,
+    "sourceIdentityUnknownPairs": 16391,
     "automatedResearchEligible": 0,
     "manualReviewOnly": 93,
     "evidenceCeilingHolds": 68,
@@ -46,12 +46,12 @@
     "soleBoundaryPairImpactByQueue": {
       "exact_object_identity_research": 0,
       "partial_inheritance_review": 0,
-      "manual_label_disambiguation": 162,
+      "manual_label_disambiguation": 158,
       "base_or_parent_resolution": 0,
       "taxonomic_review": 0,
-      "trade_name_disambiguation": 2940,
-      "evidence_ceiling_hold": 9493,
-      "hybrid_object_hold": 485,
+      "trade_name_disambiguation": 2864,
+      "evidence_ceiling_hold": 9241,
+      "hybrid_object_hold": 473,
       "catalog_structure_correction": 0
     }
   },
@@ -92,8 +92,8 @@
         "Cichlasoma spp. trade attribution is not a resolved taxon"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -130,8 +130,8 @@
         "Ancistrus spp. trade lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -176,8 +176,8 @@
         "aquarium-trade hybrids"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -222,8 +222,8 @@
         "Apple Red Swordtail"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -260,8 +260,8 @@
         "Ancistrus spp. ornamental Gold lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -298,8 +298,8 @@
         "Ancistrus spp. ornamental Longfin Platinum lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -336,8 +336,8 @@
         "Cyprinus carpio ornamental Kohaku lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -381,8 +381,8 @@
         "Blood Red Angelfish"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -419,8 +419,8 @@
         "Trichopodus trichopterus ornamental balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -457,8 +457,8 @@
         "Panaque sp. L191 trade identity"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -495,8 +495,8 @@
         "Leporacanthicus cf. galaxias L240 trade identity"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -538,8 +538,8 @@
         "Kuhli Golden"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -578,8 +578,8 @@
         "Spotted Firemouth Cichlid"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -616,8 +616,8 @@
         "Geophagus spp. (32 recognized species; exact parent taxon unresolved)"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -656,8 +656,8 @@
         "Ancistrus spp. ornamental Gold Longfin lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -698,8 +698,8 @@
         "Pterophyllum scalare ornamental Marble Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -738,8 +738,8 @@
         "Cichlasoma var. trade attribution is not a resolved taxon"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -780,8 +780,8 @@
         "Pterophyllum scalare ornamental Blue Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -818,8 +818,8 @@
         "Osphronemus goramy ornamental Gold lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -856,8 +856,8 @@
         "Maylandia estherae ornamental Albino lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -894,8 +894,8 @@
         "Sciaenochromis fryeri ornamental White lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -934,8 +934,8 @@
         "Red Livingstonii Cichlid"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -972,8 +972,8 @@
         "Trichopodus trichopterus ornamental Blue Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1010,8 +1010,8 @@
         "Trichopodus trichopterus ornamental Gold Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1048,8 +1048,8 @@
         "Geophagus surinamensis ornamental Albino lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1092,8 +1092,8 @@
         "Albino Red Jewel Cichlid"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1130,8 +1130,8 @@
         "Apistogramma cacatuoides ornamental Super Red lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1170,8 +1170,8 @@
         "Ancistrus spp. ornamental Gold Longfin lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1208,8 +1208,8 @@
         "Ancistrus spp. ornamental White Longfin lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1246,8 +1246,8 @@
         "Parancistrus aurantiacus ornamental Gold lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1284,8 +1284,8 @@
         "Channa andrao ornamental Super Blue lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1329,8 +1329,8 @@
         "Improved Bluestripe Snapper"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1374,8 +1374,8 @@
         "Longfin Bluestripe Snapper"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1415,8 +1415,8 @@
         "Improved Synchiropus splendidus"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1457,8 +1457,8 @@
         "Andinoacara pulcher ornamental Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1499,8 +1499,8 @@
         "Hemichromis bimaculatus ornamental Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1541,8 +1541,8 @@
         "Astronotus ocellatus ornamental Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1585,8 +1585,8 @@
         "Super Gold L134"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1623,8 +1623,8 @@
         "Ancistrus spp. ornamental Snowflake Gold lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1668,8 +1668,8 @@
         "Platinum Blue Devil Damselfish"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1706,8 +1706,8 @@
         "Potamotrygon leopoldi ornamental Albino lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1744,8 +1744,8 @@
         "Potamotrygon leopoldi ornamental Eclipse lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1782,8 +1782,8 @@
         "Channa andrao ornamental Red lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1820,8 +1820,8 @@
         "Geophagus spp. ornamental Longfin Platinum lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1862,8 +1862,8 @@
         "Xiphophorus hellerii ornamental Red-eye Albino High Fin lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1904,8 +1904,8 @@
         "Andinoacara pulcher ornamental Super Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1942,8 +1942,8 @@
         "Ancistrus spp. ornamental Albino Longfin lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -1980,8 +1980,8 @@
         "Trichopodus trichopterus ornamental Balloon Gold XL lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 247,
-      "soleBoundaryIdentityUnknownPairs": 162,
+      "affectedIdentityUnknownPairs": 243,
+      "soleBoundaryIdentityUnknownPairs": 158,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2020,8 +2020,8 @@
         "commercial parrot/convict hybrid lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 246,
-      "soleBoundaryIdentityUnknownPairs": 161,
+      "affectedIdentityUnknownPairs": 242,
+      "soleBoundaryIdentityUnknownPairs": 157,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2062,8 +2062,8 @@
         "Hyphessobrycon cf. pulchripinnis (Chinese aquarium-trade attribution)"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2107,8 +2107,8 @@
         "Poecilia sphenops Balloon"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2147,8 +2147,8 @@
         "Poecilia reticulata ornamental Dumbo lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2189,8 +2189,8 @@
         "Petitella georgiae (false rummy-nose tetra)"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2227,8 +2227,8 @@
         "Hemigrammus bleheri ornamental Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2267,8 +2267,8 @@
         "Poecilia reticulata ornamental Full Black lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2309,8 +2309,8 @@
         "Petitella georgiae (false rummy-nose tetra)"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2351,8 +2351,8 @@
         "Purple Red Black Neon Tetra"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2391,8 +2391,8 @@
         "Paracheirodon innesi ornamental Diamond lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2429,8 +2429,8 @@
         "Aphyocharax anisitsi ornamental balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2473,8 +2473,8 @@
         "Hyphessobrycon saizi (similar species reported in the aquarium trade under Gold Tetra)"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2511,8 +2511,8 @@
         "Hemigrammus bleheri ornamental Longfin lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2549,8 +2549,8 @@
         "Hemigrammus bleheri ornamental Platinum lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2589,8 +2589,8 @@
         "Gymnocorymbus ternetzi ornamental longfin lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2629,8 +2629,8 @@
         "Gymnocorymbus ternetzi ornamental balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2669,8 +2669,8 @@
         "Corydoras aeneus ornamental Platinum lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2707,8 +2707,8 @@
         "Nematobrycon palmeri ornamental platinum lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2747,8 +2747,8 @@
         "Poecilia reticulata ornamental Yellow Grass lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2787,8 +2787,8 @@
         "Poecilia reticulata ornamental Kohaku lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2827,8 +2827,8 @@
         "Poecilia reticulata ornamental Albino Kohaku lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2865,8 +2865,8 @@
         "Hyphessobrycon sweglesi ornamental Longfin lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2905,8 +2905,8 @@
         "Gymnocorymbus ternetzi ornamental Albino Red Eye lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2943,8 +2943,8 @@
         "Hemigrammus bleheri ornamental Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -2983,8 +2983,8 @@
         "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3023,8 +3023,8 @@
         "Gymnocorymbus ternetzi ornamental Albino Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3061,8 +3061,8 @@
         "Pseudochromis spp. ornamental Gold lineage"
       ],
       "nextAction": "Keep fail-closed until exact lineage/provenance identifies one accepted parent taxon; do not repeat generic automated parent search.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3103,8 +3103,8 @@
         "Hemigrammus rodwayi ornamental Gold lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3141,8 +3141,8 @@
         "Aphyocharax anisitsi ornamental Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3181,8 +3181,8 @@
         "Gymnocorymbus ternetzi ornamental Longfin White lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3222,8 +3222,8 @@
         "Improved Prionobrama filigera"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3260,8 +3260,8 @@
         "Boehlkea fredcochui ornamental Blue lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3302,8 +3302,8 @@
         "Platinum Black Neon Tetra"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3342,8 +3342,8 @@
         "Hyphessobrycon herbertaxelrodi ornamental Balloon lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3382,8 +3382,8 @@
         "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3422,8 +3422,8 @@
         "Gymnocorymbus ternetzi ornamental Glo Orange lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3462,8 +3462,8 @@
         "Gymnocorymbus ternetzi ornamental Platinum Balloon Longfin lineage"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
@@ -3502,8 +3502,8 @@
         "multiple distinct ornamental medaka strains; “top-view/观背青鳉” is not one exact variant identity"
       ],
       "nextAction": "Keep fail-closed and do not retry automated identity research until the reopen requirement is satisfied.",
-      "affectedIdentityUnknownPairs": 224,
-      "soleBoundaryIdentityUnknownPairs": 139,
+      "affectedIdentityUnknownPairs": 220,
+      "soleBoundaryIdentityUnknownPairs": 135,
       "sharedBoundaryIdentityUnknownPairs": 85
     },
     {
