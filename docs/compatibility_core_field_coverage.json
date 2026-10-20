@@ -25,16 +25,16 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 76,
+  "visibleResearchDebtFields": 75,
   "completionEligibleResearchDebtFields": 0,
-  "deferredResearchDebtFields": 76,
+  "deferredResearchDebtFields": 75,
   "activeCompletionResearchDebtFields": 0,
-  "deferredResearchOpportunityFields": 76,
-  "deferredResearchOpportunitySpecies": 76,
+  "deferredResearchOpportunityFields": 75,
+  "deferredResearchOpportunitySpecies": 75,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 76,
-  "predationRiskDiscoveryFields": 76,
-  "predationRiskDiscoveryHardReadySpecies": 21,
+  "softRiskDiscoveryResearchDebtFields": 75,
+  "predationRiskDiscoveryFields": 75,
+  "predationRiskDiscoveryHardReadySpecies": 20,
   "predationRiskDiscoveryVariantIdentityHeldSpecies": 53,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
@@ -95,10 +95,10 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 93,
+      "reviewed_supported": 94,
       "reviewed_neutral_or_negative": 38,
       "reviewed_unknown": 10,
-      "needs_research": 76,
+      "needs_research": 75,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -106,7 +106,7 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 76
+      "count": 75
     },
     {
       "field": "water",
@@ -11140,8 +11140,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -11208,11 +11208,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-pseudomugil-furcatus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

@@ -264,6 +264,12 @@ import {
   compatibilityPredationRiskDiscoveryWave32Sources,
   compatibilityPredationRiskDiscoveryWave32VerifiedSourceIds,
 } from './predation-risk-discovery-wave32-20261020';
+import {
+  compatibilityPredationRiskDiscoveryWave33AuthorityPatch,
+  compatibilityPredationRiskDiscoveryWave33FieldReviews,
+  compatibilityPredationRiskDiscoveryWave33ProfilePatches,
+  compatibilityPredationRiskDiscoveryWave33VerifiedSourceIds,
+} from './predation-risk-discovery-wave33-20261020';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -345,6 +351,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityTemperatureDirectWave30FieldReviews,
   ...compatibilityTemperatureDirectWave31FieldReviews,
   ...compatibilityPredationRiskDiscoveryWave32FieldReviews,
+  ...compatibilityPredationRiskDiscoveryWave33FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -386,6 +393,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityTemperatureDirectWave30VerifiedSourceIds,
   ...compatibilityTemperatureDirectWave31VerifiedSourceIds,
   ...compatibilityPredationRiskDiscoveryWave32VerifiedSourceIds,
+  ...compatibilityPredationRiskDiscoveryWave33VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -427,6 +435,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityTemperatureDirectWave30ProfilePatches,
   ...compatibilityTemperatureDirectWave31ProfilePatches,
   ...compatibilityPredationRiskDiscoveryWave32ProfilePatches,
+  ...compatibilityPredationRiskDiscoveryWave33ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -467,4 +476,6 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityWaterDirectWave29AuthorityPatch,
   compatibilityTemperatureDirectWave30AuthorityPatch,
   compatibilityTemperatureDirectWave31AuthorityPatch,
+  compatibilityPredationRiskDiscoveryWave32AuthorityPatch,
+  compatibilityPredationRiskDiscoveryWave33AuthorityPatch,
 ] as const;

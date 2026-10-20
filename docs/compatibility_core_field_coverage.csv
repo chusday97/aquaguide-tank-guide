@@ -133,7 +133,7 @@ sp_0131,刺鳅,Mastacembelus armatus,fish,direct,yes,8,0,0,reviewed_supported,re
 sp_0132,玻璃拉拉,Parambassis ranga,fish,none,no,5,1,2,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_unknown,needs_research
 sp_0133,红苹果美人,Glossolepis incisus,fish,direct,yes,8,0,0,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_neutral_or_negative,reviewed_supported
 sp_0134,燕子美人,Iriatherina werneri,fish,none,no,5,1,2,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_unknown,needs_research
-sp_0135,霓虹燕子,Pseudomugil furcatus,fish,none,no,5,1,2,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_unknown,needs_research
+sp_0135,霓虹燕子,Pseudomugil furcatus,fish,none,no,6,0,2,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_unknown,reviewed_supported
 sp_0136,巧克力曼龙,Sphaerichthys osphromenoides,fish,none,no,5,1,2,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_unknown,needs_research
 sp_0137,飞凤鱼,Semaprochilodus insignis,fish,none,no,5,1,2,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_unknown,needs_research
 sp_0138,黑带好汉,Leporinus fasciatus,fish,direct,yes,8,0,0,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported

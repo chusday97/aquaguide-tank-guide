@@ -14,11 +14,11 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "predationResearchBacklogFields": 76,
+    "predationResearchBacklogFields": 75,
     "hardDecisionResearchDebtFields": 0,
-    "softRiskDiscoveryResearchDebtFields": 76,
-    "riskDiscoveryReadyCatalogObjects": 21,
-    "riskDiscoveryReadyUniqueTaxa": 19,
+    "softRiskDiscoveryResearchDebtFields": 75,
+    "riskDiscoveryReadyCatalogObjects": 20,
+    "riskDiscoveryReadyUniqueTaxa": 18,
     "blockedByIdentityOrVariantCatalogObjects": 53,
     "blockedByOtherHardEvidenceCatalogObjects": 2,
     "currentPredationHardInsufficientDataBlockerFields": 0
@@ -128,18 +128,6 @@
       ],
       "names": [
         "红肚铅笔鱼"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 93,
-      "maxSmallFishReviewSurfacePairs": 44,
-      "catalogObjectCount": 1
-    },
-    {
-      "scientificName": "Pseudomugil furcatus",
-      "catalogObjectIds": [
-        "sp_0135"
-      ],
-      "names": [
-        "霓虹燕子"
       ],
       "maxRiskManagementReviewSurfacePairs": 93,
       "maxSmallFishReviewSurfacePairs": 44,
@@ -377,29 +365,6 @@
       "speciesId": "sp_0113",
       "name": "斑节鳉",
       "scientificName": "Epiplatys annulatus",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 93,
-        "not_recommended": 87,
-        "insufficient_data": 127,
-        "riskManagementReviewSurfacePairs": 93,
-        "smallFishReviewSurfacePairs": 44,
-        "currentPredationRulePairs": 43
-      }
-    },
-    {
-      "speciesId": "sp_0135",
-      "name": "霓虹燕子",
-      "scientificName": "Pseudomugil furcatus",
       "classification": "risk_discovery_ready",
       "authoritativeFieldCount": 5,
       "reviewedProfile": "none",

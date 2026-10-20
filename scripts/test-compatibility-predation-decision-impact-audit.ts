@@ -11,13 +11,13 @@ const predationBacklog = coverage.backlog.filter(item => item.field === 'predati
 
 assert.deepEqual(report.policy.hardDecisionFields, [...COMPATIBILITY_HARD_DECISION_FIELDS]);
 assert.equal(report.policy.noCounterfactualAuthority, true);
-assert.equal(predationBacklog.length, 76);
+assert.equal(predationBacklog.length, 75);
 assert.equal(coverage.summary.hardDecisionResearchDebtFields, 0);
-assert.equal(coverage.summary.softRiskDiscoveryResearchDebtFields, 76);
+assert.equal(coverage.summary.softRiskDiscoveryResearchDebtFields, 75);
 assert.equal(report.summary.predationResearchBacklogFields, predationBacklog.length);
 assert.equal(report.summary.hardDecisionResearchDebtFields, 0);
-assert.equal(report.summary.softRiskDiscoveryResearchDebtFields, 76);
-assert.equal(report.summary.riskDiscoveryReadyCatalogObjects, 21);
+assert.equal(report.summary.softRiskDiscoveryResearchDebtFields, 75);
+assert.equal(report.summary.riskDiscoveryReadyCatalogObjects, 20);
 assert.equal(report.summary.blockedByIdentityOrVariantCatalogObjects, 53);
 assert.equal(report.summary.blockedByOtherHardEvidenceCatalogObjects, 2);
 assert.equal(report.summary.currentPredationHardInsufficientDataBlockerFields, 0);
@@ -25,10 +25,10 @@ assert.equal(
   report.summary.riskDiscoveryReadyCatalogObjects
     + report.summary.blockedByIdentityOrVariantCatalogObjects
     + report.summary.blockedByOtherHardEvidenceCatalogObjects,
-  76,
+  75,
 );
 
-assert.equal(report.riskDiscoveryReady.length, 21);
+assert.equal(report.riskDiscoveryReady.length, 20);
 for (const item of report.riskDiscoveryReady) {
   assert.deepEqual(item.hardHolds, [], `${item.speciesId} risk-discovery candidate must have no unresolved hard decision field`);
   assert.equal(item.pairSurface.totalCounterpartPairs, 307);
