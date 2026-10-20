@@ -96,7 +96,7 @@ const fixtures: Fixture[] = [
   {
     caseId: 'V4-SHADOW-3SP-INSUFFICIENT',
     description: 'Candidate lacks promotable exact reviewed authority; AI provider must not run and deterministic insufficient-data decision stays final.',
-    ids: ['sp_0114', 'sp_0469', 'sp_0065'],
+    ids: ['sp_0114', 'sp_0469', 'sp_0124'],
     providerMode: 'must_skip',
   },
 ];

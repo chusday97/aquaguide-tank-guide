@@ -188,8 +188,8 @@
           "quantity": 8
         },
         {
-          "id": "sp_0065",
-          "name": "蝶尾金鱼",
+          "id": "sp_0124",
+          "name": "蓝眼胡子",
           "role": "candidate",
           "quantity": 1
         }
@@ -199,11 +199,10 @@
         "decisionReadiness": "unknown",
         "ruleCodes": [
           "species_identity_unresolved",
-          "identity_water_unresolved",
-          "ph_range_edge_overlap"
+          "identity_water_unresolved"
         ],
         "evidenceIds": [
-          "batch26-fishbase-carassius-auratus-butterfly-tail",
+          "batch27-fishbase-ancistrus-sp",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"
         ]
