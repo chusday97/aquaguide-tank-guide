@@ -28,6 +28,9 @@
   "visibleResearchDebtFields": 78,
   "completionEligibleResearchDebtFields": 0,
   "deferredResearchDebtFields": 78,
+  "activeCompletionResearchDebtFields": 0,
+  "deferredResearchOpportunityFields": 78,
+  "deferredResearchOpportunitySpecies": 78,
   "fieldCounts": {
     "water": {
       "reviewed_supported": 174,

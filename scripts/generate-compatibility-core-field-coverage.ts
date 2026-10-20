@@ -7,12 +7,27 @@ mkdirSync(outputDir, { recursive: true });
 const report = buildCompatibilityCoreFieldCoverage();
 const fastLanePackets = buildCompatibilityFastLaneResearchPackets();
 const taxonResearchPlan = buildCompatibilityTaxonResearchPlan();
+const deferredBacklog = report.backlog.filter(item => !item.completionEligible);
+const countValues = (values: string[]) => Object.fromEntries(
+  [...new Set(values)].sort().map(value => [value, values.filter(candidate => candidate === value).length]),
+);
+const deferredBlockerSummary = {
+  items: deferredBacklog.length,
+  species: new Set(deferredBacklog.map(item => item.speciesId)).size,
+  fields: countValues(deferredBacklog.map(item => item.field)),
+  blockingTerminalFields: countValues(deferredBacklog.flatMap(item => item.blockingTerminalFields)),
+  blockingTerminalReasons: countValues(deferredBacklog.flatMap(item => item.blockingTerminalReasons)),
+  blockingTerminalAuthoritySources: countValues(deferredBacklog.flatMap(item => item.blockingTerminalAuthoritySources)),
+};
 
 writeFileSync(`${outputDir}/compatibility_core_field_coverage.json`, JSON.stringify({ generatedFrom: 'source-controlled reviewed authority', ...report.summary, rows: report.rows }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_core_field_backlog.json`, JSON.stringify({
   generatedFrom: 'compatibility_core_field_coverage.json',
-  policy: 'field-oriented evidence debt only; terminal fields are excluded as gaps, but actionable fields on completion-blocked objects stay visible with completionEligible=false and companionTerminalGapCount; no ordinary Pair Rule generation',
+  policy: 'field-oriented evidence ledger; completion-blocked source-expansion opportunities remain visible but are explicitly marked deferReason=companion_terminal_holds with blocker fields/reasons/authority, while active completion debt is tracked separately; no ordinary Pair Rule generation',
   totalItems: report.backlog.length,
+  activeCompletionItems: report.backlog.filter(item => item.completionEligible).length,
+  deferredOpportunityItems: deferredBacklog.length,
+  deferredBlockerSummary,
   items: report.backlog,
 }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_fast_lane_research_packets.json`, JSON.stringify({
@@ -54,6 +69,9 @@ console.log(JSON.stringify({
   visibleResearchDebtFields: report.summary.visibleResearchDebtFields,
   completionEligibleResearchDebtFields: report.summary.completionEligibleResearchDebtFields,
   deferredResearchDebtFields: report.summary.deferredResearchDebtFields,
+  activeCompletionResearchDebtFields: report.summary.activeCompletionResearchDebtFields,
+  deferredResearchOpportunityFields: report.summary.deferredResearchOpportunityFields,
+  deferredResearchOpportunitySpecies: report.summary.deferredResearchOpportunitySpecies,
   taxonResearchJobs: taxonResearchPlan.length,
   taxonResearchCatalogObjects: new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId))).size,
   variantBridgeJobs: taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length,

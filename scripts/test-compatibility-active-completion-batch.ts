@@ -47,11 +47,9 @@ assert.deepEqual(filtered.jobs, [], 'targeted expansion must not resurrect a ter
 const excluded = selectCompatibilityResearchBatchJobs('active_completion', [], ['Petitella rhodostoma']);
 assert.deepEqual(excluded.jobs, [], 'persisted evidence ceiling keys must remain excluded from future active completion runs');
 assert.ok(selected.jobs.every(job => job.combinedGapFields.length > 0), 'any future active completion job must remain scoped to actionable fields only');
-assert.equal(fullPlan.length, 4);
-assert.ok(fullPlan.every(job => job.requiresVariantBridgeReview));
-assert.ok(fullPlan.every(job => !job.canCompleteFromBaseTaxonResearch));
-assert.ok(fullPlan.every(job => JSON.stringify(job.combinedGapFields) === JSON.stringify(['water', 'temperature', 'ph'])));
-assert.ok(fullPlan.every(job => JSON.stringify(job.exactObjectEvidenceGapFields) === JSON.stringify(['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation'])));
+assert.equal(fullPlan.length, 0, 'current active-completion plan must be empty once all ordinary completion gaps are either resolved or terminally/deferred classified');
+assert.deepEqual(planSelection.jobs, []);
+assert.deepEqual(selected.jobs, []);
 
 const packet = (gate: CompatibilityOnboardingReviewPacket['gate'], reasonCodes: string[] = []): CompatibilityOnboardingReviewPacket => ({
   kind: 'compatibility_onboarding',

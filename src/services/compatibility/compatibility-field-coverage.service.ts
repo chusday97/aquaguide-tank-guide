@@ -64,6 +64,9 @@ export type CompatibilityFieldCoverageSummary = {
   visibleResearchDebtFields: number;
   completionEligibleResearchDebtFields: number;
   deferredResearchDebtFields: number;
+  activeCompletionResearchDebtFields: number;
+  deferredResearchOpportunityFields: number;
+  deferredResearchOpportunitySpecies: number;
   fieldCounts: Record<CompatibilityCoreField, Record<CompatibilityFieldCoverageStatus, number>>;
   fieldActionableGaps: Array<{ field: CompatibilityCoreField; count: number }>;
 };
@@ -78,6 +81,10 @@ export type CompatibilityFieldBacklogItem = {
   reason: 'missing_reviewed_authority' | 'reviewed_unknown_targeted_expansion';
   completionEligible: boolean;
   companionTerminalGapCount: number;
+  deferReason: 'none' | 'companion_terminal_holds';
+  blockingTerminalFields: CompatibilityCoreField[];
+  blockingTerminalReasons: string[];
+  blockingTerminalAuthoritySources: CompatibilityFieldCoverageCell['authoritySource'][];
 };
 
 export type CompatibilityTaxonResearchCatalogObject = {
@@ -421,6 +428,9 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     row.terminalGapCount === 0 ? count + row.actionableGapCount : count
   ), 0);
   const deferredResearchDebtFields = visibleResearchDebtFields - completionEligibleResearchDebtFields;
+  const activeCompletionResearchDebtFields = completionEligibleResearchDebtFields;
+  const deferredResearchOpportunityFields = deferredResearchDebtFields;
+  const deferredResearchOpportunitySpecies = rows.filter(row => row.terminalGapCount > 0 && row.actionableGapCount > 0).length;
   const hasIdentityOrDomainHold = (row: CompatibilityFieldCoverageRow) => (
     coreFields.some(field => row.fields[field].status === 'missing_identity_or_domain')
   );
@@ -450,6 +460,9 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     visibleResearchDebtFields,
     completionEligibleResearchDebtFields,
     deferredResearchDebtFields,
+    activeCompletionResearchDebtFields,
+    deferredResearchOpportunityFields,
+    deferredResearchOpportunitySpecies,
     fieldCounts,
     fieldActionableGaps: coreFields.map(field => ({ field, count: rows.filter(row => row.fields[field].disposition === 'targeted_source_expansion').length }))
       .sort((a, b) => b.count - a.count || b.field.localeCompare(a.field)),
@@ -459,6 +472,10 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     const cell = row.fields[field];
     if (cell.disposition !== 'targeted_source_expansion' || (cell.status !== 'reviewed_unknown' && cell.status !== 'needs_research')) return [];
     const priorityScore = fieldWeights[field] + row.authoritativeFieldCount * 8 + (row.reviewedProfile !== 'none' ? 25 : 0) + (cell.status === 'reviewed_unknown' ? 10 : 0);
+    const terminalBlockers = coreFields
+      .filter(blockerField => ['terminal_hold', 'domain_extension_required'].includes(row.fields[blockerField].disposition))
+      .map(blockerField => ({ field: blockerField, cell: row.fields[blockerField] }));
+    const completionEligible = terminalBlockers.length === 0;
     return [{
       speciesId: row.speciesId,
       name: row.name,
@@ -467,8 +484,12 @@ export const buildCompatibilityCoreFieldCoverage = () => {
       status: cell.status,
       priorityScore,
       reason: cell.status === 'reviewed_unknown' ? 'reviewed_unknown_targeted_expansion' as const : 'missing_reviewed_authority' as const,
-      completionEligible: row.terminalGapCount === 0,
-      companionTerminalGapCount: row.terminalGapCount,
+      completionEligible,
+      companionTerminalGapCount: terminalBlockers.length,
+      deferReason: completionEligible ? 'none' as const : 'companion_terminal_holds' as const,
+      blockingTerminalFields: terminalBlockers.map(item => item.field),
+      blockingTerminalReasons: unique(terminalBlockers.map(item => item.cell.reasonCode || 'terminal_hold_without_reason')),
+      blockingTerminalAuthoritySources: unique(terminalBlockers.map(item => item.cell.authoritySource)) as CompatibilityFieldCoverageCell['authoritySource'][],
     }];
   }));
   const backlog: CompatibilityFieldBacklogItem[] = backlogRaw

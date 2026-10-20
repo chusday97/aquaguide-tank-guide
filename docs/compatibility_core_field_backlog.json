@@ -1,7 +1,36 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
-  "policy": "field-oriented evidence debt only; terminal fields are excluded as gaps, but actionable fields on completion-blocked objects stay visible with completionEligible=false and companionTerminalGapCount; no ordinary Pair Rule generation",
+  "policy": "field-oriented evidence ledger; completion-blocked source-expansion opportunities remain visible but are explicitly marked deferReason=companion_terminal_holds with blocker fields/reasons/authority, while active completion debt is tracked separately; no ordinary Pair Rule generation",
   "totalItems": 78,
+  "activeCompletionItems": 0,
+  "deferredOpportunityItems": 78,
+  "deferredBlockerSummary": {
+    "items": 78,
+    "species": 78,
+    "fields": {
+      "predation": 78
+    },
+    "blockingTerminalFields": {
+      "adult_size": 53,
+      "ph": 57,
+      "social_behavior": 71,
+      "tank_size": 57,
+      "temperature": 56,
+      "territoriality": 68,
+      "water": 43
+    },
+    "blockingTerminalReasons": {
+      "compatibility_field_source_strategy_exhausted": 4,
+      "species_social_not_established": 25,
+      "variant_identity_research_exhausted": 53,
+      "variant_social_not_established": 46
+    },
+    "blockingTerminalAuthoritySources": {
+      "evidence_ceiling": 71,
+      "research_evidence_ceiling": 4,
+      "variant_evidence_ceiling": 53
+    }
+  },
   "items": [
     {
       "rank": 1,
@@ -13,7 +42,20 @@
       "priorityScore": 149,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling"
+      ]
     },
     {
       "rank": 2,
@@ -25,7 +67,20 @@
       "priorityScore": 149,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling"
+      ]
     },
     {
       "rank": 3,
@@ -37,7 +92,20 @@
       "priorityScore": 149,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling"
+      ]
     },
     {
       "rank": 4,
@@ -49,7 +117,20 @@
       "priorityScore": 149,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling"
+      ]
     },
     {
       "rank": 5,
@@ -61,7 +142,20 @@
       "priorityScore": 149,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling"
+      ]
     },
     {
       "rank": 6,
@@ -73,7 +167,20 @@
       "priorityScore": 149,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling"
+      ]
     },
     {
       "rank": 7,
@@ -85,7 +192,20 @@
       "priorityScore": 149,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling"
+      ]
     },
     {
       "rank": 8,
@@ -97,7 +217,23 @@
       "priorityScore": 141,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 5
+      "companionTerminalGapCount": 5,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 9,
@@ -109,7 +245,23 @@
       "priorityScore": 141,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 5
+      "companionTerminalGapCount": 5,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 10,
@@ -121,7 +273,23 @@
       "priorityScore": 141,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 5
+      "companionTerminalGapCount": 5,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 11,
@@ -133,7 +301,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 12,
@@ -145,7 +324,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 13,
@@ -157,7 +347,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 14,
@@ -169,7 +370,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 15,
@@ -181,7 +393,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 16,
@@ -193,7 +416,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 17,
@@ -205,7 +439,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 18,
@@ -217,7 +462,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 19,
@@ -229,7 +485,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 20,
@@ -241,7 +508,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 21,
@@ -253,7 +531,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 22,
@@ -265,7 +554,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 23,
@@ -277,7 +577,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 24,
@@ -289,7 +600,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 25,
@@ -301,7 +623,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 26,
@@ -313,7 +646,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 27,
@@ -325,7 +669,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 28,
@@ -337,7 +692,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 29,
@@ -349,7 +715,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 30,
@@ -361,7 +738,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 31,
@@ -373,7 +761,18 @@
       "priorityScore": 140,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 2
+      "companionTerminalGapCount": 2,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 32,
@@ -385,7 +784,22 @@
       "priorityScore": 124,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 4
+      "companionTerminalGapCount": 4,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "ph",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "compatibility_field_source_strategy_exhausted",
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "research_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 33,
@@ -397,7 +811,23 @@
       "priorityScore": 116,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 5
+      "companionTerminalGapCount": 5,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "compatibility_field_source_strategy_exhausted",
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "research_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 34,
@@ -409,7 +839,23 @@
       "priorityScore": 116,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 5
+      "companionTerminalGapCount": 5,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "compatibility_field_source_strategy_exhausted",
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "research_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 35,
@@ -421,7 +867,23 @@
       "priorityScore": 116,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 5
+      "companionTerminalGapCount": 5,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "temperature",
+        "ph",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "compatibility_field_source_strategy_exhausted",
+        "species_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "research_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 36,
@@ -433,7 +895,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 37,
@@ -445,7 +925,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 38,
@@ -457,7 +955,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 39,
@@ -469,7 +985,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 40,
@@ -481,7 +1015,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 41,
@@ -493,7 +1045,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 42,
@@ -505,7 +1075,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 43,
@@ -517,7 +1105,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 44,
@@ -529,7 +1135,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 45,
@@ -541,7 +1165,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 46,
@@ -553,7 +1195,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 47,
@@ -565,7 +1225,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 48,
@@ -577,7 +1255,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 49,
@@ -589,7 +1285,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 50,
@@ -601,7 +1315,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 51,
@@ -613,7 +1345,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 52,
@@ -625,7 +1375,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 53,
@@ -637,7 +1405,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 54,
@@ -649,7 +1435,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 55,
@@ -661,7 +1465,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 56,
@@ -673,7 +1495,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 57,
@@ -685,7 +1525,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 58,
@@ -697,7 +1555,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 59,
@@ -709,7 +1585,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 60,
@@ -721,7 +1615,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 61,
@@ -733,7 +1645,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 62,
@@ -745,7 +1675,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 63,
@@ -757,7 +1705,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 64,
@@ -769,7 +1735,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 65,
@@ -781,7 +1765,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 66,
@@ -793,7 +1795,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 67,
@@ -805,7 +1825,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 68,
@@ -817,7 +1855,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 69,
@@ -829,7 +1885,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 70,
@@ -841,7 +1915,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 71,
@@ -853,7 +1945,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 72,
@@ -865,7 +1975,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 73,
@@ -877,7 +2005,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 74,
@@ -889,7 +2035,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 75,
@@ -901,7 +2065,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 76,
@@ -913,7 +2095,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 77,
@@ -925,7 +2125,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     },
     {
       "rank": 78,
@@ -937,7 +2155,25 @@
       "priorityScore": 100,
       "reason": "missing_reviewed_authority",
       "completionEligible": false,
-      "companionTerminalGapCount": 7
+      "companionTerminalGapCount": 7,
+      "deferReason": "companion_terminal_holds",
+      "blockingTerminalFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
+      "blockingTerminalReasons": [
+        "variant_identity_research_exhausted",
+        "variant_social_not_established"
+      ],
+      "blockingTerminalAuthoritySources": [
+        "variant_evidence_ceiling",
+        "evidence_ceiling"
+      ]
     }
   ]
 }
