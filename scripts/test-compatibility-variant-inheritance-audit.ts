@@ -76,14 +76,14 @@ assert.equal(redGrassGoldfishPolicy.variantKey, 'Red Grass Goldfish');
 assert.deepEqual(redGrassGoldfishPolicy.blockedFacts, []);
 assert.equal(redGrassGoldfishPolicy.authoritativeFieldCount, 8);
 assert.equal(redGrassGoldfishPolicy.genericOnboardingReady, true);
-const fieldScopedCoverageExpectations: Record<string, { authoritative: number; ready: boolean }> = {
-  sp_0066: { authoritative: 7, ready: false },
-  sp_0067: { authoritative: 8, ready: true },
-  sp_0068: { authoritative: 7, ready: false },
-  sp_0143: { authoritative: 8, ready: true },
-  sp_0144: { authoritative: 7, ready: false },
-  sp_0155: { authoritative: 6, ready: false },
-  sp_0361: { authoritative: 7, ready: false },
+const fieldScopedCoverageExpectations: Record<string, { authoritative: number; ready: boolean; terminal: string[] }> = {
+  sp_0066: { authoritative: 7, ready: false, terminal: ['territoriality'] },
+  sp_0067: { authoritative: 8, ready: true, terminal: [] },
+  sp_0068: { authoritative: 7, ready: false, terminal: ['territoriality'] },
+  sp_0143: { authoritative: 8, ready: true, terminal: [] },
+  sp_0144: { authoritative: 7, ready: false, terminal: ['territoriality'] },
+  sp_0155: { authoritative: 6, ready: false, terminal: ['territoriality', 'predation'] },
+  sp_0361: { authoritative: 7, ready: false, terminal: ['territoriality'] },
 };
 for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
@@ -95,7 +95,7 @@ for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
   assert.equal(policy.authoritativeFieldCount, fieldScopedCoverageExpectations[speciesId].authoritative);
   assert.equal(policy.genericOnboardingReady, fieldScopedCoverageExpectations[speciesId].ready);
-  assert.deepEqual(policy.terminalGapFields, []);
+  assert.deepEqual([...policy.terminalGapFields].sort(), [...fieldScopedCoverageExpectations[speciesId].terminal].sort());
 }
 for (const [speciesId, variantKey] of [
   ['sp_0143', 'Red Grass'],
@@ -111,7 +111,7 @@ for (const [speciesId, variantKey] of [
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
   assert.equal(policy.authoritativeFieldCount, fieldScopedCoverageExpectations[speciesId].authoritative);
   assert.equal(policy.genericOnboardingReady, fieldScopedCoverageExpectations[speciesId].ready);
-  assert.deepEqual(policy.terminalGapFields, []);
+  assert.deepEqual([...policy.terminalGapFields].sort(), [...fieldScopedCoverageExpectations[speciesId].terminal].sort());
 }
 for (const [speciesId, taxon] of [
   ['sp_0155', 'Paracheirodon innesi'],
@@ -125,8 +125,8 @@ for (const [speciesId, taxon] of [
   assert.deepEqual(policy.inheritedFacts, []);
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
   assert.equal(policy.authoritativeFieldCount, fieldScopedCoverageExpectations[speciesId].authoritative);
-  assert.equal(policy.genericOnboardingReady, false);
-  assert.deepEqual(policy.terminalGapFields, []);
+  assert.equal(policy.genericOnboardingReady, fieldScopedCoverageExpectations[speciesId].ready);
+  assert.deepEqual([...policy.terminalGapFields].sort(), [...fieldScopedCoverageExpectations[speciesId].terminal].sort());
 }
 for (const speciesId of ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']) {
   const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);

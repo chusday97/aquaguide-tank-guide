@@ -492,7 +492,9 @@
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "terminalGapFields": []
+      "terminalGapFields": [
+        "territoriality"
+      ]
     },
     {
       "speciesId": "sp_0067",
@@ -574,7 +576,9 @@
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "terminalGapFields": []
+      "terminalGapFields": [
+        "territoriality"
+      ]
     },
     {
       "speciesId": "sp_0143",
@@ -656,7 +660,9 @@
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "terminalGapFields": []
+      "terminalGapFields": [
+        "territoriality"
+      ]
     },
     {
       "speciesId": "sp_0155",
@@ -697,7 +703,10 @@
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 6,
-      "terminalGapFields": []
+      "terminalGapFields": [
+        "territoriality",
+        "predation"
+      ]
     },
     {
       "speciesId": "sp_0258",
@@ -771,7 +780,9 @@
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "terminalGapFields": []
+      "terminalGapFields": [
+        "territoriality"
+      ]
     }
   ],
   "directReviewedVariants": [

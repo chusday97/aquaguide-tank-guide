@@ -37,8 +37,8 @@ assert.equal(
   'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
 );
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
-assert.equal(summary.visibleResearchDebtFields, 84, 'phase2-20 closes two additional exact territoriality fields while preserving the existing 78 deferred predation gaps');
-assert.equal(summary.completionEligibleResearchDebtFields, 6, 'phase2-20 should leave only six exact-object behavioral research gaps');
+assert.equal(summary.visibleResearchDebtFields, 78, 'two-round exact-object evidence ceilings must leave only the pre-existing deferred research debt in the ordinary backlog');
+assert.equal(summary.completionEligibleResearchDebtFields, 0, 'no ordinary completion work should remain after all exact-object candidates reach explicit evidence ceilings');
 assert.equal(summary.deferredResearchDebtFields, 78, 'the pre-existing deferred predation debt must remain unchanged');
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
@@ -89,11 +89,16 @@ for (const [speciesId, expected] of Object.entries(variantExpectations)) {
   assert.ok(row);
   assert.equal(row.genericOnboardingReady, expected.genericReady, `${speciesId} generic readiness must track exact reviewed 8/8 authority`);
   assert.equal(row.authoritativeFieldCount, expected.authoritative.length);
-  assert.equal(row.actionableGapCount, expected.unresolved.length);
-  assert.equal(row.terminalGapCount, 0);
+  assert.equal(row.actionableGapCount, 0);
+  assert.equal(row.terminalGapCount, expected.unresolved.length);
   assert.equal(row.reviewedProfile, expected.profile);
   for (const field of expected.authoritative) assert.equal(row.fields[field].disposition, 'ready', `${speciesId}/${field} should be closed by exact-variant evidence`);
-  for (const field of expected.unresolved) assert.equal(row.fields[field].disposition, 'targeted_source_expansion', `${speciesId}/${field} must remain explicit research debt`);
+  for (const field of expected.unresolved) {
+    assert.equal(row.fields[field].status, 'reviewed_unknown', `${speciesId}/${field} must remain unknown rather than guessed`);
+    assert.equal(row.fields[field].disposition, 'terminal_hold', `${speciesId}/${field} must stop repeated ordinary research after two empty discovery rounds`);
+    assert.equal(row.fields[field].authoritySource, 'variant_evidence_ceiling');
+    assert.equal(row.fields[field].reasonCode, 'variant_exact_object_research_exhausted');
+  }
 }
 assert.equal(rowOf('sp_0014')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0014')?.fields.social_behavior.status, 'reviewed_supported');
@@ -885,40 +890,33 @@ for (const row of rows) {
   );
 }
 
-assert.equal(backlog.length, 84, 'field backlog must expose 78 deferred gaps plus 6 still-actionable exact-object behavior fields after phase2-20 promotion');
+assert.equal(backlog.length, 78, 'ordinary field backlog must exclude the six exact-object fields that reached explicit two-round evidence ceilings');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
 const completionEligibleBacklog = backlog.filter(item => item.completionEligible);
 const deferredBacklog = backlog.filter(item => !item.completionEligible);
-assert.equal(completionEligibleBacklog.length, 6);
+assert.equal(completionEligibleBacklog.length, 0);
 assert.equal(deferredBacklog.length, 78);
-assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), ['sp_0066', 'sp_0068', 'sp_0144', 'sp_0155', 'sp_0361']);
-const expectedCompletionFields: Record<string, string[]> = {
-  sp_0066: ['territoriality'],
-  sp_0068: ['territoriality'],
-  sp_0144: ['territoriality'],
-  sp_0155: ['territoriality', 'predation'],
-  sp_0361: ['territoriality'],
-};
-for (const [speciesId, expectedFields] of Object.entries(expectedCompletionFields)) {
-  assert.deepEqual(
-    completionEligibleBacklog.filter(item => item.speciesId === speciesId).map(item => item.field).sort(),
-    [...expectedFields].sort(),
-    `${speciesId} completion ledger must contain only still-unresolved fields`,
-  );
-}
+assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), []);
 assert.ok(deferredBacklog.every(item => item.field === 'predation'));
 assert.ok(deferredBacklog.every(item => item.companionTerminalGapCount > 0), 'legacy field gaps with companion terminal holds must stay visible but deferred from active completion');
 assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesId)?.fields[item.field].disposition === 'targeted_source_expansion'));
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 0, 'all remaining completion-eligible gaps are exact-object-only behavioral evidence work');
+assert.equal(taxonResearchPlan.length, 0, 'no active taxon research should remain after the exact-object lane reaches explicit evidence ceilings');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
 assert.deepEqual([...plannedCatalogObjects], []);
 const exactOnlyCompletionKeys = completionEligibleBacklog.map(item => item.speciesId + ':' + item.field).sort();
-assert.equal(exactOnlyCompletionKeys.length, 6);
+assert.deepEqual(exactOnlyCompletionKeys, []);
 const queuedExactObjectKeys = new Set(variantExactEvidenceQueue.items.filter(item => item.sourceLane === 'exact_object_policy').map(item => item.speciesId + ':' + item.field));
-assert.ok(exactOnlyCompletionKeys.every(key => queuedExactObjectKeys.has(key)), 'every remaining completion gap must stay in the exact-object research queue');
+assert.deepEqual([...queuedExactObjectKeys].sort(), [
+  'sp_0066:territoriality',
+  'sp_0068:territoriality',
+  'sp_0144:territoriality',
+  'sp_0155:predation',
+  'sp_0155:territoriality',
+  'sp_0361:territoriality',
+], 'exact-object queue must remain as the unresolved audit ledger even after ordinary completion research is terminally classified');
 assert.equal(taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus'), undefined, 'Red Grass Goldfish leaves taxon research after reviewed 8/8 field authority');
 
 const guppyTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Poecilia reticulata');
@@ -1006,12 +1004,7 @@ for (const speciesId of ['sp_0105', 'sp_0468', 'sp_0197', 'sp_0447', 'sp_0451', 
 }
 assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
-  [
-    ['sp_0066', 'territoriality'],
-    ['sp_0068', 'territoriality'],
-    ['sp_0144', 'territoriality'],
-    ['sp_0361', 'territoriality'],
-  ],
-  'Fast Lane must contain only the four current 7/8 exact-object candidates whose final territoriality field remains researchable',
+  [],
+  'Fast Lane must be empty once every remaining exact-object behavior gap has reached an explicit evidence ceiling',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${summary.visibleResearchDebtFields} visible research-debt fields (${summary.completionEligibleResearchDebtFields} completion-eligible / ${summary.deferredResearchDebtFields} deferred behind terminal holds).`);

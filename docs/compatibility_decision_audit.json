@@ -1867,6 +1867,18 @@
         "impactBand": "medium"
       },
       {
+        "speciesId": "sp_0144",
+        "name": "蓝草尾孔雀鱼",
+        "scientificName": "Poecilia reticulata var.",
+        "unknownPairs": 129,
+        "actionableFields": [],
+        "terminalReasons": [
+          "variant_exact_object_research_exhausted"
+        ],
+        "exposureSharePct": 42.02,
+        "impactBand": "medium"
+      },
+      {
         "speciesId": "sp_0147",
         "name": "蓝宝鹦鹉鱼",
         "scientificName": "Amatitlania nigrofasciata var. Blue",
@@ -1892,6 +1904,18 @@
         "terminalReasons": [
           "variant_identity_research_exhausted",
           "variant_social_not_established"
+        ],
+        "exposureSharePct": 42.02,
+        "impactBand": "medium"
+      },
+      {
+        "speciesId": "sp_0155",
+        "name": "长鳍红绿灯",
+        "scientificName": "Paracheirodon innesi var.",
+        "unknownPairs": 129,
+        "actionableFields": [],
+        "terminalReasons": [
+          "variant_exact_object_research_exhausted"
         ],
         "exposureSharePct": 42.02,
         "impactBand": "medium"
@@ -2061,29 +2085,7 @@
   },
   "leverageQueues": {
     "policy": "Prioritize reviewed evidence work by actual UNKNOWN-pair impact. affectedUnknownPairs means the taxon participates in that many current UNKNOWN pairs; it is not a guarantee that resolving the taxon alone will unlock every pair because the opposite species or non-core facts can remain blocking.",
-    "highestLeverageEvidenceTargets": [
-      {
-        "speciesId": "sp_0144",
-        "name": "蓝草尾孔雀鱼",
-        "scientificName": "Poecilia reticulata var.",
-        "unknownPairs": 129,
-        "actionableFields": [
-          "territoriality"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0155",
-        "name": "长鳍红绿灯",
-        "scientificName": "Paracheirodon innesi var.",
-        "unknownPairs": 129,
-        "actionableFields": [
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      }
-    ],
+    "highestLeverageEvidenceTargets": [],
     "taxonDecisionImpactQueue": [],
     "completionEligibleTaxonQueue": [],
     "variantObjectEvidenceTaxonQueue": [],
@@ -2147,6 +2149,10 @@
         "speciesCount": 2
       },
       {
+        "reason": "variant_exact_object_research_exhausted",
+        "speciesCount": 2
+      },
+      {
         "reason": "species_temperature_husbandry_not_established",
         "speciesCount": 1
       }
@@ -2167,18 +2173,18 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 84,
+    "actionableGaps": 78,
     "fieldActionableGaps": [
       {
         "field": "predation",
-        "count": 79
-      },
-      {
-        "field": "territoriality",
-        "count": 5
+        "count": 78
       },
       {
         "field": "water",
+        "count": 0
+      },
+      {
+        "field": "territoriality",
         "count": 0
       },
       {

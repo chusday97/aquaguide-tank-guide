@@ -25,8 +25,8 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 84,
-  "completionEligibleResearchDebtFields": 6,
+  "visibleResearchDebtFields": 78,
+  "completionEligibleResearchDebtFields": 0,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
@@ -80,16 +80,16 @@
     "territoriality": {
       "reviewed_supported": 93,
       "reviewed_neutral_or_negative": 45,
-      "reviewed_unknown": 74,
-      "needs_research": 5,
+      "reviewed_unknown": 79,
+      "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 91,
       "reviewed_neutral_or_negative": 38,
-      "reviewed_unknown": 9,
-      "needs_research": 79,
+      "reviewed_unknown": 10,
+      "needs_research": 78,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -97,14 +97,14 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 79
-    },
-    {
-      "field": "territoriality",
-      "count": 5
+      "count": 78
     },
     {
       "field": "water",
+      "count": 0
+    },
+    {
+      "field": "territoriality",
       "count": 0
     },
     {
@@ -5670,8 +5670,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -5728,11 +5728,11 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_exact_object_research_exhausted"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -5839,8 +5839,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -5897,11 +5897,11 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_exact_object_research_exhausted"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -11929,8 +11929,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -11987,11 +11987,11 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_exact_object_research_exhausted"
         },
         "predation": {
           "status": "reviewed_supported",
@@ -12844,8 +12844,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 2,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -12905,18 +12905,18 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_exact_object_research_exhausted"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_exact_object_research_exhausted"
         }
       }
     },
@@ -29906,8 +29906,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -29964,11 +29964,11 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
           "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_exact_object_research_exhausted"
         },
         "predation": {
           "status": "reviewed_supported",

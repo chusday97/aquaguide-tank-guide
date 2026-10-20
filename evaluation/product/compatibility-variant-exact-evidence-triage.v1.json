@@ -3,7 +3,8 @@
   "kind": "compatibility_variant_exact_evidence_triage",
   "generatedFrom": [
     "evaluation/reports/compatibility-variant-exact-evidence-research.v1.json",
-    "evaluation/reports/compatibility-variant-exact-evidence-research-round2-goldfish.v1.json"
+    "evaluation/reports/compatibility-variant-exact-evidence-research-round2-goldfish.v1.json",
+    "evaluation/reports/compatibility-variant-exact-evidence-research-round2-tail.v1.json"
   ],
   "policy": {
     "promotionAllowed": false,
@@ -17,8 +18,8 @@
     "variantObjects": 5,
     "totalResearchSlots": 6,
     "draftEvidenceFoundObjects": 0,
-    "discoveryRetryRequiredObjects": 3,
-    "discoveryEvidenceCeilingObjects": 2,
+    "discoveryRetryRequiredObjects": 0,
+    "discoveryEvidenceCeilingObjects": 5,
     "notRunObjects": 0,
     "supportedSlots": 0,
     "unresolvedSlots": 6
@@ -105,9 +106,17 @@
           "verifiedDocuments": 0,
           "candidateFields": [],
           "discoveryStatus": "discovery_empty"
+        },
+        {
+          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research-round2-tail.v1.json",
+          "round": 2,
+          "attemptedUrls": 0,
+          "verifiedDocuments": 0,
+          "candidateFields": [],
+          "discoveryStatus": "discovery_empty"
         }
       ],
-      "status": "discovery_retry_required",
+      "status": "discovery_evidence_ceiling",
       "promotionAllowed": false,
       "writesAuthority": false,
       "grantsInheritance": false
@@ -130,9 +139,17 @@
           "verifiedDocuments": 0,
           "candidateFields": [],
           "discoveryStatus": "discovery_empty"
+        },
+        {
+          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research-round2-tail.v1.json",
+          "round": 2,
+          "attemptedUrls": 0,
+          "verifiedDocuments": 0,
+          "candidateFields": [],
+          "discoveryStatus": "discovery_empty"
         }
       ],
-      "status": "discovery_retry_required",
+      "status": "discovery_evidence_ceiling",
       "promotionAllowed": false,
       "writesAuthority": false,
       "grantsInheritance": false
@@ -154,9 +171,17 @@
           "verifiedDocuments": 0,
           "candidateFields": [],
           "discoveryStatus": "discovery_empty"
+        },
+        {
+          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research-round2-tail.v1.json",
+          "round": 2,
+          "attemptedUrls": 0,
+          "verifiedDocuments": 0,
+          "candidateFields": [],
+          "discoveryStatus": "discovery_empty"
         }
       ],
-      "status": "discovery_retry_required",
+      "status": "discovery_evidence_ceiling",
       "promotionAllowed": false,
       "writesAuthority": false,
       "grantsInheritance": false

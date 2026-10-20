@@ -11,18 +11,18 @@ assert.equal(triage.policy.discoveryEvidenceCeilingRequiresEmptyRounds, 2);
 assert.equal(triage.summary.variantObjects, 5);
 assert.equal(triage.summary.totalResearchSlots, 6);
 assert.equal(triage.summary.draftEvidenceFoundObjects, 0);
-assert.equal(triage.summary.discoveryEvidenceCeilingObjects, 2);
-assert.equal(triage.summary.discoveryRetryRequiredObjects, 3);
+assert.equal(triage.summary.discoveryEvidenceCeilingObjects, 5);
+assert.equal(triage.summary.discoveryRetryRequiredObjects, 0);
 assert.equal(triage.summary.notRunObjects, 0);
 assert.equal(triage.summary.supportedSlots, 0);
 assert.equal(triage.summary.unresolvedSlots, 6);
 
 const ceilings = triage.objects.filter((item: any) => item.status === 'discovery_evidence_ceiling').map((item: any) => item.speciesId);
-assert.deepEqual(ceilings, ['sp_0066', 'sp_0068']);
+assert.deepEqual(ceilings, ['sp_0066', 'sp_0068', 'sp_0144', 'sp_0155', 'sp_0361']);
 assert.ok(triage.objects.filter((item: any) => item.status === 'discovery_evidence_ceiling').every((item: any) => (
   item.researchRuns.length >= 2
   && item.researchRuns.filter((run: any) => run.discoveryStatus === 'discovery_empty').length >= 2
 )));
 assert.ok(triage.objects.every((item: any) => item.promotionAllowed === false && item.writesAuthority === false && item.grantsInheritance === false));
 
-console.log('Compatibility exact-variant evidence triage PASS: 2 discovery ceilings / 3 retry-required objects / 6 unresolved exact-object slots after phase2-20 promotion.');
+console.log('Compatibility exact-variant evidence triage PASS: all 5 remaining objects reached two-round discovery evidence ceilings; 6 exact-object slots remain fail-closed.');

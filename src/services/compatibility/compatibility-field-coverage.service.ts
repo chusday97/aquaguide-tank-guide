@@ -8,6 +8,7 @@ import { getCompatibilityVariantFieldResearchPolicy } from '../../data/compatibi
 import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getCompatibilityVariantResearchCeiling } from '../../data/compatibilityVariantResearchCeilings';
+import { getCompatibilityVariantExactResearchCeiling } from '../../data/compatibilityVariantExactResearchCeilings';
 import { getCompatibilityFieldResearchCeiling } from '../../data/compatibilityFieldResearchCeilings';
 import { buildReviewedCompatibilityProfileFromCatalogFields, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
 import {
@@ -298,7 +299,8 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   if (lifeType !== 'fish') return { status: 'missing_identity_or_domain', disposition: 'domain_extension_required', evidenceIds: [], authoritySource: 'domain_boundary', reasonCode: `unsupported_compatibility_domain_${lifeType}` };
   const identityBoundary = getCatalogIdentityBoundary(fish.id);
   if (identityBoundary) return { status: 'missing_identity_or_domain', disposition: 'terminal_hold', evidenceIds: identityBoundary.sourceIds, authoritySource: 'identity_boundary', reasonCode: identityBoundary.code };
-  const variantResearchCeiling = getCompatibilityVariantResearchCeiling(fish.id, field);
+  const variantResearchCeiling = getCompatibilityVariantResearchCeiling(fish.id, field)
+    ?? getCompatibilityVariantExactResearchCeiling(fish.id, field);
   const fieldResearchCeiling = getCompatibilityFieldResearchCeiling(fish.id, field);
 
   const exactReviews = reviewedFieldReviews(fish.id, field);

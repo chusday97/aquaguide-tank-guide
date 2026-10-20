@@ -25,6 +25,7 @@ type ResearchReport = {
 const defaultReports = [
   'evaluation/reports/compatibility-variant-exact-evidence-research.v1.json',
   'evaluation/reports/compatibility-variant-exact-evidence-research-round2-goldfish.v1.json',
+  'evaluation/reports/compatibility-variant-exact-evidence-research-round2-tail.v1.json',
 ];
 const reportPaths = (arg('reports') || defaultReports.join(','))
   .split(',')
