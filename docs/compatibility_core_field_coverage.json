@@ -31,6 +31,12 @@
   "activeCompletionResearchDebtFields": 0,
   "deferredResearchOpportunityFields": 78,
   "deferredResearchOpportunitySpecies": 78,
+  "hardDecisionResearchDebtFields": 0,
+  "softRiskDiscoveryResearchDebtFields": 78,
+  "predationRiskDiscoveryFields": 78,
+  "predationRiskDiscoveryHardReadySpecies": 23,
+  "predationRiskDiscoveryVariantIdentityHeldSpecies": 53,
+  "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
     "water": {
       "reviewed_supported": 174,

@@ -334,6 +334,8 @@
     "generate:compatibility-decision-audit": "node --import tsx scripts/generate-compatibility-decision-audit.ts",
     "generate:compatibility-public-evidence-impact-audit": "node --import tsx scripts/generate-compatibility-public-evidence-impact-audit.ts",
     "test:compatibility-public-evidence-impact-audit": "node --import tsx scripts/test-compatibility-public-evidence-impact-audit.ts",
+    "generate:compatibility-predation-decision-impact-audit": "node --import tsx scripts/generate-compatibility-predation-decision-impact-audit.ts",
+    "test:compatibility-predation-decision-impact-audit": "npm run generate:compatibility-predation-decision-impact-audit && node --import tsx scripts/test-compatibility-predation-decision-impact-audit.ts",
     "test:compatibility-temperature-direct-wave30": "node --import tsx scripts/test-compatibility-temperature-direct-wave30.ts",
     "test:compatibility-temperature-direct-wave31": "node --import tsx scripts/test-compatibility-temperature-direct-wave31.ts",
     "generate:compatibility-identity-migration-audit": "node --import tsx scripts/generate-compatibility-identity-migration-audit.ts",

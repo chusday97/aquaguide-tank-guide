@@ -28,6 +28,7 @@ const gates = [
   ['Compatibility Bailian Research Provider', 'npm', ['run', 'test:compatibility-bailian-research-provider']],
   ['Compatibility Research Batch Dry Run', 'npm', ['run', 'test:compatibility-research-batch-dryrun']],
   ['Compatibility Core Field Coverage', 'npm', ['run', 'test:compatibility-core-field-coverage']],
+  ['Compatibility Predation Decision Impact', 'npm', ['run', 'test:compatibility-predation-decision-impact-audit']],
   ['Compatibility Decision Audit Freshness', 'npm', ['run', 'test:compatibility-decision-audit-freshness']],
   ['Compatibility User Path Scope', 'npm', ['run', 'test:compatibility-user-path-scope']],
   ['Session Analytics Privacy + Compatibility Reason', 'npm', ['run', 'test:session-events']],

@@ -1,0 +1,2741 @@
+{
+  "generatedFrom": "source-controlled Compatibility core-field coverage + deterministic pair runtime",
+  "policy": {
+    "purpose": "Separate current hard-decision evidence blockers from predation safety-risk discovery work.",
+    "hardDecisionFields": [
+      "water",
+      "temperature",
+      "adult_size"
+    ],
+    "predationSemantics": "Predation is a soft evidence fact: missing predation authority does not itself create public_evidence_insufficient. Direct reviewed predation evidence may later add caution/not_recommended risk rules.",
+    "reviewSurfaceSemantics": "riskManagementReviewSurfacePairs counts current compatible+caution pairs where predation research could add or refine a risk reason. It is an investigation surface, not a claim that status will change.",
+    "smallFishSemantics": "smallFishReviewSurfacePairs is a catalog-size prioritization heuristic only. It does not infer that the candidate eats small fish.",
+    "noCounterfactualAuthority": true
+  },
+  "summary": {
+    "fishDomainSpecies": 308,
+    "predationResearchBacklogFields": 78,
+    "hardDecisionResearchDebtFields": 0,
+    "softRiskDiscoveryResearchDebtFields": 78,
+    "riskDiscoveryReadyCatalogObjects": 23,
+    "riskDiscoveryReadyUniqueTaxa": 21,
+    "blockedByIdentityOrVariantCatalogObjects": 53,
+    "blockedByOtherHardEvidenceCatalogObjects": 2,
+    "currentPredationHardInsufficientDataBlockerFields": 0
+  },
+  "taxonResearchPriority": [
+    {
+      "scientificName": "Erpetoichthys calabaricus",
+      "catalogObjectIds": [
+        "sp_0106"
+      ],
+      "names": [
+        "恐龙鱼 (草绳)"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 116,
+      "maxSmallFishReviewSurfacePairs": 45,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Kryptopterus vitreolus",
+      "catalogObjectIds": [
+        "sp_0458"
+      ],
+      "names": [
+        "玻璃猫鱼"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 116,
+      "maxSmallFishReviewSurfacePairs": 45,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Parambassis ranga",
+      "catalogObjectIds": [
+        "sp_0132"
+      ],
+      "names": [
+        "玻璃拉拉"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 116,
+      "maxSmallFishReviewSurfacePairs": 45,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Semaprochilodus insignis",
+      "catalogObjectIds": [
+        "sp_0061",
+        "sp_0137"
+      ],
+      "names": [
+        "飞凤鱼"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 116,
+      "maxSmallFishReviewSurfacePairs": 45,
+      "catalogObjectCount": 2
+    },
+    {
+      "scientificName": "Semaprochilodus taeniurus",
+      "catalogObjectIds": [
+        "sp_0107"
+      ],
+      "names": [
+        "飞凤鱼 (国旗飞凤)"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 116,
+      "maxSmallFishReviewSurfacePairs": 45,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Aphyocypris chinensis",
+      "catalogObjectIds": [
+        "sp_0046"
+      ],
+      "names": [
+        "中华细鲫"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Epiplatys annulatus",
+      "catalogObjectIds": [
+        "sp_0113"
+      ],
+      "names": [
+        "斑节鳉"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Hyphessobrycon herbertaxelrodi",
+      "catalogObjectIds": [
+        "sp_0470"
+      ],
+      "names": [
+        "黑莲灯"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Hyphessobrycon megalopterus",
+      "catalogObjectIds": [
+        "sp_0467"
+      ],
+      "names": [
+        "黑尾大勾"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Moenkhausia pittieri",
+      "catalogObjectIds": [
+        "sp_0471"
+      ],
+      "names": [
+        "钻石灯"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Nannostomus beckfordi",
+      "catalogObjectIds": [
+        "sp_0473"
+      ],
+      "names": [
+        "红肚铅笔鱼"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Pseudomugil furcatus",
+      "catalogObjectIds": [
+        "sp_0135"
+      ],
+      "names": [
+        "霓虹燕子"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Thayeria boehlkei",
+      "catalogObjectIds": [
+        "sp_0472"
+      ],
+      "names": [
+        "企鹅灯"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 93,
+      "maxSmallFishReviewSurfacePairs": 44,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Abbottina rivularis",
+      "catalogObjectIds": [
+        "sp_0041"
+      ],
+      "names": [
+        "棒花鱼"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Acheilognathus macropterus",
+      "catalogObjectIds": [
+        "sp_0037"
+      ],
+      "names": [
+        "大鳍鱊"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Beaufortia kweichowensis",
+      "catalogObjectIds": [
+        "sp_0128"
+      ],
+      "names": [
+        "吸鳅 (中国爬岩鳅)"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Chaetodon auriga",
+      "catalogObjectIds": [
+        "sp_0186"
+      ],
+      "names": [
+        "人字蝶"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Iriatherina werneri",
+      "catalogObjectIds": [
+        "sp_0134"
+      ],
+      "names": [
+        "燕子美人"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Pterapogon kauderni",
+      "catalogObjectIds": [
+        "sp_0025"
+      ],
+      "names": [
+        "泗水玫瑰"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Sawbwa resplendens",
+      "catalogObjectIds": [
+        "sp_0111"
+      ],
+      "names": [
+        "亚洲红鼻"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 1
+    },
+    {
+      "scientificName": "Sphaerichthys osphromenoides",
+      "catalogObjectIds": [
+        "sp_0060",
+        "sp_0136"
+      ],
+      "names": [
+        "巧克力曼龙"
+      ],
+      "maxRiskManagementReviewSurfacePairs": 0,
+      "maxSmallFishReviewSurfacePairs": 0,
+      "catalogObjectCount": 2
+    }
+  ],
+  "riskDiscoveryReady": [
+    {
+      "speciesId": "sp_0061",
+      "name": "飞凤鱼",
+      "scientificName": "Semaprochilodus insignis",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 116,
+        "not_recommended": 64,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 116,
+        "smallFishReviewSurfacePairs": 45,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0106",
+      "name": "恐龙鱼 (草绳)",
+      "scientificName": "Erpetoichthys calabaricus",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 116,
+        "not_recommended": 64,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 116,
+        "smallFishReviewSurfacePairs": 45,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0107",
+      "name": "飞凤鱼 (国旗飞凤)",
+      "scientificName": "Semaprochilodus taeniurus",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 116,
+        "not_recommended": 64,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 116,
+        "smallFishReviewSurfacePairs": 45,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0132",
+      "name": "玻璃拉拉",
+      "scientificName": "Parambassis ranga",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 116,
+        "not_recommended": 64,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 116,
+        "smallFishReviewSurfacePairs": 45,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0137",
+      "name": "飞凤鱼",
+      "scientificName": "Semaprochilodus insignis",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 116,
+        "not_recommended": 64,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 116,
+        "smallFishReviewSurfacePairs": 45,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0458",
+      "name": "玻璃猫鱼",
+      "scientificName": "Kryptopterus vitreolus",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 116,
+        "not_recommended": 64,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 116,
+        "smallFishReviewSurfacePairs": 45,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0046",
+      "name": "中华细鲫",
+      "scientificName": "Aphyocypris chinensis",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0113",
+      "name": "斑节鳉",
+      "scientificName": "Epiplatys annulatus",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0135",
+      "name": "霓虹燕子",
+      "scientificName": "Pseudomugil furcatus",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0467",
+      "name": "黑尾大勾",
+      "scientificName": "Hyphessobrycon megalopterus",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0470",
+      "name": "黑莲灯",
+      "scientificName": "Hyphessobrycon herbertaxelrodi",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0471",
+      "name": "钻石灯",
+      "scientificName": "Moenkhausia pittieri",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0472",
+      "name": "企鹅灯",
+      "scientificName": "Thayeria boehlkei",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0473",
+      "name": "红肚铅笔鱼",
+      "scientificName": "Nannostomus beckfordi",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 93,
+        "not_recommended": 87,
+        "insufficient_data": 127,
+        "riskManagementReviewSurfacePairs": 93,
+        "smallFishReviewSurfacePairs": 44,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0025",
+      "name": "泗水玫瑰",
+      "scientificName": "Pterapogon kauderni",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0037",
+      "name": "大鳍鱊",
+      "scientificName": "Acheilognathus macropterus",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0041",
+      "name": "棒花鱼",
+      "scientificName": "Abbottina rivularis",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0060",
+      "name": "巧克力曼龙",
+      "scientificName": "Sphaerichthys osphromenoides",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0111",
+      "name": "亚洲红鼻",
+      "scientificName": "Sawbwa resplendens",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0128",
+      "name": "吸鳅 (中国爬岩鳅)",
+      "scientificName": "Beaufortia kweichowensis",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 3
+      }
+    },
+    {
+      "speciesId": "sp_0134",
+      "name": "燕子美人",
+      "scientificName": "Iriatherina werneri",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0136",
+      "name": "巧克力曼龙",
+      "scientificName": "Sphaerichthys osphromenoides",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 5,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "social_behavior",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 43
+      }
+    },
+    {
+      "speciesId": "sp_0186",
+      "name": "人字蝶",
+      "scientificName": "Chaetodon auriga",
+      "classification": "risk_discovery_ready",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "none",
+      "hardHolds": [],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ],
+      "pairSurface": {
+        "totalCounterpartPairs": 307,
+        "compatible": 0,
+        "caution": 0,
+        "not_recommended": 307,
+        "insufficient_data": 0,
+        "riskManagementReviewSurfacePairs": 0,
+        "smallFishReviewSurfacePairs": 0,
+        "currentPredationRulePairs": 3
+      }
+    }
+  ],
+  "blockedByIdentityOrVariant": [
+    {
+      "speciesId": "sp_0259",
+      "name": "半月斗鱼 (蓝蝴蝶)",
+      "scientificName": "Betta splendens var. Halfmoon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0260",
+      "name": "狮王斗鱼 (红黑)",
+      "scientificName": "Betta splendens var. Crowntail",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0261",
+      "name": "大耳半月斗鱼",
+      "scientificName": "Betta splendens var. Dumbo Halfmoon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0262",
+      "name": "将军斗鱼 (蓝龙)",
+      "scientificName": "Betta splendens var. Dragon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0389",
+      "name": "白金半月斗鱼",
+      "scientificName": "Betta splendens var. Platinum",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0390",
+      "name": "红白狮头斗鱼",
+      "scientificName": "Betta splendens var. Kohaku Crown",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0391",
+      "name": "蓝龙将军斗鱼",
+      "scientificName": "Betta splendens var. Blue Dragon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 3,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0147",
+      "name": "蓝宝鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var. Blue",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 2,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0148",
+      "name": "雪玉鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var. White",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 2,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0222",
+      "name": "蓝宝鹦鹉 (球形)",
+      "scientificName": "Amatitlania nigrofasciata var. Jellybean",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 2,
+      "reviewedProfile": "inherited",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size"
+      ]
+    },
+    {
+      "speciesId": "sp_0063",
+      "name": "兰寿金鱼",
+      "scientificName": "Carassius auratus var. Ranchu",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0064",
+      "name": "泰狮金鱼",
+      "scientificName": "Carassius auratus var. Oranda",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0149",
+      "name": "熊猫金鱼",
+      "scientificName": "Carassius auratus var. Panda",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0150",
+      "name": "短尾狮头金鱼",
+      "scientificName": "Carassius auratus var. Oranda",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0152",
+      "name": "荧光斑马鱼",
+      "scientificName": "Danio rerio var. GloFish",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0153",
+      "name": "球形珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Balloon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0161",
+      "name": "巧克力皮球",
+      "scientificName": "Poecilia sphenops var. Chocolate",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0168",
+      "name": "金玛丽",
+      "scientificName": "Poecilia latipinna var. Gold",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0169",
+      "name": "银玛丽",
+      "scientificName": "Poecilia latipinna var. Silver",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0171",
+      "name": "白玉金丝鱼",
+      "scientificName": "Tanichthys albonubes var. Albino",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0172",
+      "name": "长鳍白云金丝",
+      "scientificName": "Tanichthys albonubes var. Longfin",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0180",
+      "name": "龙睛金鱼",
+      "scientificName": "Carassius auratus var. Telescopes",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0196",
+      "name": "一眉道人 (黄金型)",
+      "scientificName": "Sahyadria denisonii var. Gold",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0203",
+      "name": "绿赏皮球",
+      "scientificName": "Poecilia sphenops var. Green",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0209",
+      "name": "血玛丽鱼",
+      "scientificName": "Poecilia latipinna var. Blood",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0213",
+      "name": "黑线飞狐 (金型)",
+      "scientificName": "Crossocheilus langei var. Gold",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0215",
+      "name": "长鳍一眉道人",
+      "scientificName": "Sahyadria denisonii var. Longfin",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0233",
+      "name": "球形珍珠马甲 (红眼)",
+      "scientificName": "Trichopodus leerii var. Albino Balloon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0237",
+      "name": "高鳍红玛丽",
+      "scientificName": "Poecilia latipinna var. High Fin Red",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0252",
+      "name": "白金反游猫",
+      "scientificName": "Synodontis nigriventris var. White",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0253",
+      "name": "红纹一眉道人",
+      "scientificName": "Sahyadria denisonii var. Red Line",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0254",
+      "name": "白金黑线飞狐",
+      "scientificName": "Crossocheilus langei var. Platinum",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0267",
+      "name": "红头珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Red Head",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0289",
+      "name": "荧光红斑马",
+      "scientificName": "Danio rerio var. Glo Red",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0290",
+      "name": "荧光绿斑马",
+      "scientificName": "Danio rerio var. Glo Green",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0291",
+      "name": "荧光橙斑马",
+      "scientificName": "Danio rerio var. Glo Orange",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0292",
+      "name": "球形金玛丽",
+      "scientificName": "Poecilia latipinna var. Gold Balloon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0293",
+      "name": "球形黑玛丽",
+      "scientificName": "Poecilia sphenops var. Black Balloon",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0295",
+      "name": "长鳍电光美人",
+      "scientificName": "Melanotaenia praecox var. Longfin",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0348",
+      "name": "红白虎头金鱼",
+      "scientificName": "Carassius auratus var. Tigerhead",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0349",
+      "name": "蓝寿 (五花)",
+      "scientificName": "Carassius auratus var. Calico Ranchu",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0350",
+      "name": "黑狮头金鱼",
+      "scientificName": "Carassius auratus var. Black Oranda",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0351",
+      "name": "红白蝶尾",
+      "scientificName": "Carassius auratus var. Butterfly Tail",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0363",
+      "name": "荧光紫斑马",
+      "scientificName": "Danio rerio var. Glo Purple",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0364",
+      "name": "荧光粉斑马",
+      "scientificName": "Danio rerio var. Glo Pink",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0385",
+      "name": "雪白金金鱼 (改良)",
+      "scientificName": "Carassius auratus var. White Gold",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0386",
+      "name": "黑金刚龙睛",
+      "scientificName": "Carassius auratus var. Black Moor",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0387",
+      "name": "熊猫蝶尾 (极品)",
+      "scientificName": "Carassius auratus var. Panda Butterfly",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0395",
+      "name": "黄金大帆飞狐",
+      "scientificName": "Crossocheilus langei var. Gold Longfin",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0406",
+      "name": "五彩青蛙 (大规格改良)",
+      "scientificName": "Synchiropus splendidus var. XL",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0413",
+      "name": "黄金眼镜蛇蛇鱼 (长鳍)",
+      "scientificName": "Pangio kuhlii var. Longfin",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0419",
+      "name": "荧光橙斑马 (长鳍)",
+      "scientificName": "Danio rerio var. Glo Orange Longfin",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0426",
+      "name": "极地白云金丝",
+      "scientificName": "Tanichthys albonubes var. Polar",
+      "classification": "blocked_by_identity_or_variant",
+      "authoritativeFieldCount": 0,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "water",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        },
+        {
+          "field": "adult_size",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_identity_research_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    }
+  ],
+  "blockedByOtherHardEvidence": [
+    {
+      "speciesId": "sp_0039",
+      "name": "方氏拟腹吸鳅",
+      "scientificName": "Pseudogastromyzon fangi",
+      "classification": "blocked_by_other_hard_evidence",
+      "authoritativeFieldCount": 2,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0040",
+      "name": "中华花鳅",
+      "scientificName": "Cobitis sinensis",
+      "classification": "blocked_by_other_hard_evidence",
+      "authoritativeFieldCount": 2,
+      "reviewedProfile": "none",
+      "hardHolds": [
+        {
+          "field": "temperature",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "research_evidence_ceiling",
+          "reasonCode": "compatibility_field_source_strategy_exhausted"
+        }
+      ],
+      "softTerminalFields": [
+        "ph",
+        "social_behavior",
+        "tank_size",
+        "territoriality"
+      ]
+    }
+  ]
+}

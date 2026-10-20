@@ -25,6 +25,7 @@ import { assessCompatibilityOnboardingGate } from './compatibility-onboarding-ga
 export type CompatibilityCoreField = typeof GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS[number];
 export type CompatibilityFieldCoverageStatus = 'reviewed_supported' | 'reviewed_neutral_or_negative' | 'reviewed_unknown' | 'needs_research' | 'missing_identity_or_domain' | 'not_applicable';
 export type CompatibilityResearchDisposition = 'ready' | 'targeted_source_expansion' | 'terminal_hold' | 'domain_extension_required' | 'not_applicable';
+export type CompatibilityResearchDecisionImpact = 'hard_decision_blocker' | 'soft_risk_discovery';
 export type CompatibilityFieldCoverageCell = {
   status: CompatibilityFieldCoverageStatus;
   disposition: CompatibilityResearchDisposition;
@@ -67,6 +68,12 @@ export type CompatibilityFieldCoverageSummary = {
   activeCompletionResearchDebtFields: number;
   deferredResearchOpportunityFields: number;
   deferredResearchOpportunitySpecies: number;
+  hardDecisionResearchDebtFields: number;
+  softRiskDiscoveryResearchDebtFields: number;
+  predationRiskDiscoveryFields: number;
+  predationRiskDiscoveryHardReadySpecies: number;
+  predationRiskDiscoveryVariantIdentityHeldSpecies: number;
+  predationRiskDiscoveryOtherHardHeldSpecies: number;
   fieldCounts: Record<CompatibilityCoreField, Record<CompatibilityFieldCoverageStatus, number>>;
   fieldActionableGaps: Array<{ field: CompatibilityCoreField; count: number }>;
 };
@@ -79,6 +86,7 @@ export type CompatibilityFieldBacklogItem = {
   status: 'reviewed_unknown' | 'needs_research';
   priorityScore: number;
   reason: 'missing_reviewed_authority' | 'reviewed_unknown_targeted_expansion';
+  decisionImpact: CompatibilityResearchDecisionImpact;
   completionEligible: boolean;
   companionTerminalGapCount: number;
   deferReason: 'none' | 'companion_terminal_holds';
@@ -130,6 +138,11 @@ export type CompatibilityFastLaneResearchPacket = {
 };
 
 const coreFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityCoreField[];
+export const COMPATIBILITY_HARD_DECISION_FIELDS = ['water', 'temperature', 'adult_size'] as const satisfies readonly CompatibilityCoreField[];
+const hardDecisionFieldSet = new Set<CompatibilityCoreField>(COMPATIBILITY_HARD_DECISION_FIELDS);
+export const getCompatibilityResearchDecisionImpact = (field: CompatibilityCoreField): CompatibilityResearchDecisionImpact => (
+  hardDecisionFieldSet.has(field) ? 'hard_decision_blocker' : 'soft_risk_discovery'
+);
 
 const reviewedScientificNameForResearch = (speciesId: string, fallback: string) => {
   const identityReview = [...getCatalogFieldReviews(speciesId)].reverse().find(review => (
@@ -445,6 +458,27 @@ export const buildCompatibilityCoreFieldCoverage = () => {
   const unsupportedDomainSpecies = Object.values(unsupportedDomainSpeciesByLifeType)
     .reduce((sum, count) => sum + count, 0);
 
+  const actionableResearchCells = rows.flatMap(row => coreFields.flatMap(field => (
+    row.fields[field].disposition === 'targeted_source_expansion' ? [{ row, field }] : []
+  )));
+  const hardDecisionResearchDebtFields = actionableResearchCells.filter(item => hardDecisionFieldSet.has(item.field)).length;
+  const softRiskDiscoveryResearchDebtFields = actionableResearchCells.length - hardDecisionResearchDebtFields;
+  const predationRiskDiscoveryRows = rows.filter(row => row.fields.predation.disposition === 'targeted_source_expansion');
+  const unresolvedHardFields = (row: CompatibilityFieldCoverageRow) => COMPATIBILITY_HARD_DECISION_FIELDS.filter(field => (
+    !isAuthoritative(row.fields[field].status)
+  ));
+  const predationRiskDiscoveryHardReadySpecies = predationRiskDiscoveryRows.filter(row => unresolvedHardFields(row).length === 0).length;
+  const predationRiskDiscoveryVariantIdentityHeldSpecies = predationRiskDiscoveryRows.filter(row => {
+    const unresolved = unresolvedHardFields(row);
+    return unresolved.length > 0 && unresolved.every(field => (
+      row.fields[field].authoritySource === 'identity_boundary'
+      || row.fields[field].authoritySource === 'variant_evidence_ceiling'
+    ));
+  }).length;
+  const predationRiskDiscoveryOtherHardHeldSpecies = predationRiskDiscoveryRows.length
+    - predationRiskDiscoveryHardReadySpecies
+    - predationRiskDiscoveryVariantIdentityHeldSpecies;
+
   const summary: CompatibilityFieldCoverageSummary = {
     speciesCount: rows.length,
     coreFields,
@@ -463,6 +497,12 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     activeCompletionResearchDebtFields,
     deferredResearchOpportunityFields,
     deferredResearchOpportunitySpecies,
+    hardDecisionResearchDebtFields,
+    softRiskDiscoveryResearchDebtFields,
+    predationRiskDiscoveryFields: predationRiskDiscoveryRows.length,
+    predationRiskDiscoveryHardReadySpecies,
+    predationRiskDiscoveryVariantIdentityHeldSpecies,
+    predationRiskDiscoveryOtherHardHeldSpecies,
     fieldCounts,
     fieldActionableGaps: coreFields.map(field => ({ field, count: rows.filter(row => row.fields[field].disposition === 'targeted_source_expansion').length }))
       .sort((a, b) => b.count - a.count || b.field.localeCompare(a.field)),
@@ -484,6 +524,7 @@ export const buildCompatibilityCoreFieldCoverage = () => {
       status: cell.status,
       priorityScore,
       reason: cell.status === 'reviewed_unknown' ? 'reviewed_unknown_targeted_expansion' as const : 'missing_reviewed_authority' as const,
+      decisionImpact: getCompatibilityResearchDecisionImpact(field),
       completionEligible,
       companionTerminalGapCount: terminalBlockers.length,
       deferReason: completionEligible ? 'none' as const : 'companion_terminal_holds' as const,

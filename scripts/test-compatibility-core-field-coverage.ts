@@ -43,6 +43,15 @@ assert.equal(summary.deferredResearchDebtFields, 78, 'the pre-existing deferred 
 assert.equal(summary.activeCompletionResearchDebtFields, 0, 'active completion research debt must be zero; deferred source opportunities are not executable completion work');
 assert.equal(summary.deferredResearchOpportunityFields, 78, 'all remaining visible source opportunities are completion-blocked');
 assert.equal(summary.deferredResearchOpportunitySpecies, 78, 'each remaining deferred predation opportunity belongs to a distinct completion-blocked species');
+assert.equal(summary.hardDecisionResearchDebtFields, 0, 'no targeted-source-expansion backlog item currently blocks a hard insufficient_data decision');
+assert.equal(summary.softRiskDiscoveryResearchDebtFields, 78, 'all visible ordinary research debt is soft risk-discovery work');
+assert.equal(summary.predationRiskDiscoveryFields, 78, 'all current ordinary research opportunities are predation risk-discovery gaps');
+assert.equal(summary.predationRiskDiscoveryHardReadySpecies, 23, '23 exact catalog objects have water/temperature/adult-size authority ready and can be prioritized for predation risk discovery');
+assert.equal(summary.predationRiskDiscoveryVariantIdentityHeldSpecies, 53, '53 predation gaps must remain behind variant/identity hard holds');
+assert.equal(summary.predationRiskDiscoveryOtherHardHeldSpecies, 2, 'only two predation gaps remain behind non-variant hard evidence ceilings');
+assert.equal(backlog.filter(item => item.decisionImpact === 'hard_decision_blocker').length, 0);
+assert.equal(backlog.filter(item => item.decisionImpact === 'soft_risk_discovery').length, 78);
+
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
