@@ -1,4 +1,5 @@
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence.ts';
+import { getCompatibilityProductionMaterializedAuthority } from './compatibility-production-materialized-authority.ts';
 import {
   PRODUCTION_PROJECT_REF,
   readLinkedProjectRef,
@@ -12,8 +13,9 @@ import {
 } from './compatibility-production-post-migration-verifier.mjs';
 
 const audit = getCompatibilityEvidenceAudit();
+const materialized = getCompatibilityProductionMaterializedAuthority();
 const expected = {
-  profiles: audit.reviewedProfiles.length,
+  profiles: materialized.profiles.length,
   pairRules: audit.reviewedPairRules.length,
   stageRisks: audit.reviewedStageRiskProfiles.length,
   evidenceSources: CURRENT_PRODUCTION_TARGET.evidence,

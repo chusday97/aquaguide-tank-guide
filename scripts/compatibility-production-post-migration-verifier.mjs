@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
+import { getCompatibilityProductionMaterializedAuthority } from './compatibility-production-materialized-authority.ts';
 import {
   PRODUCTION_PROJECT_REF,
   START_LATEST_VERSION as FULL_CHAIN_START_LATEST_VERSION,
@@ -147,7 +148,12 @@ export const classifyState = state => {
 };
 
 export const validateDetailedState = (state, detail) => {
-  const expected = getAuthorityKeys();
+  const baselineKeys = getAuthorityKeys();
+  const materialized = getCompatibilityProductionMaterializedAuthority();
+  const expected = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
+    && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
+    ? { ...baselineKeys, profiles: materialized.profiles.map(item => item.speciesId).sort() }
+    : baselineKeys;
   const expectedEvidence = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
     && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
     ? REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence

@@ -10,7 +10,7 @@ export const MIGRATION = '20261020193000_compatibility_reviewed_authority_reconc
 export const PRODUCTION_PROJECT_REF = 'ydiygvhuqpogmqlcvgob';
 export const CONFIRM_TOKEN = 'EXECUTE_COMPATIBILITY_REVIEWED_AUTHORITY_RECONCILIATION_20261020';
 export const START = { migrationCount: 72, latestVersion: '20261017081435', profiles: 109, pairRules: 21, stageRisks: 1, evidence: 202 };
-export const TARGET = { migrationCount: 73, latestVersion: '20261020193000', profiles: 126, pairRules: 21, stageRisks: 1, evidence: 267 };
+export const TARGET = { migrationCount: 73, latestVersion: '20261020193000', profiles: 131, pairRules: 21, stageRisks: 1, evidence: 279 };
 
 const migrationPath = join(root, 'supabase', 'migrations', MIGRATION);
 const migrationVersion = MIGRATION.split('_')[0];
@@ -27,9 +27,9 @@ export const validateLocalPatch = () => {
   const fingerprint = createHash('sha256').update(sql).digest('hex');
   for (const expected of [
     'expected 109 reviewed Compatibility profiles',
-    'expected 126 reviewed Compatibility profiles',
+    'expected 131 reviewed Compatibility profiles',
     'expected 202 reviewed evidence sources',
-    'expected 267 reviewed evidence sources',
+    'expected 279 reviewed evidence sources',
     '_expected_compat_evidence',
     '_expected_compat_profiles',
     '_expected_compat_profile_sources',

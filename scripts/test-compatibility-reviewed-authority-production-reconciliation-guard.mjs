@@ -12,12 +12,12 @@ import {
 assert.equal(MIGRATION, '20261020193000_compatibility_reviewed_authority_reconciliation.sql');
 assert.equal(CONFIRM_TOKEN, 'EXECUTE_COMPATIBILITY_REVIEWED_AUTHORITY_RECONCILIATION_20261020');
 assert.deepEqual(START, { migrationCount: 72, latestVersion: '20261017081435', profiles: 109, pairRules: 21, stageRisks: 1, evidence: 202 });
-assert.deepEqual(TARGET, { migrationCount: 73, latestVersion: '20261020193000', profiles: 126, pairRules: 21, stageRisks: 1, evidence: 267 });
+assert.deepEqual(TARGET, { migrationCount: 73, latestVersion: '20261020193000', profiles: 131, pairRules: 21, stageRisks: 1, evidence: 279 });
 
 const { sql, fingerprint } = validateLocalPatch();
 assert.match(fingerprint, /^[a-f0-9]{64}$/);
-assert.match(sql, /expected 126 reviewed Compatibility profiles/);
-assert.match(sql, /expected 267 reviewed evidence sources/);
+assert.match(sql, /expected 131 reviewed Compatibility profiles/);
+assert.match(sql, /expected 279 reviewed evidence sources/);
 assert.match(sql, /version=p\.version\+1/);
 assert.match(sql, /version=e\.version\+1/);
 assert.doesNotMatch(sql, /stocking_guidance\s*=/i);
@@ -54,4 +54,4 @@ assert.throws(() => validateLivePreflight({ ...baseline, profiles: 110 }), /pref
 assert.throws(() => validateLivePreflight({ ...baseline, evidence: 203 }), /preflight drift/);
 assert.throws(() => validateLivePreflight({ ...baseline, migration_count: 73 }), /preflight drift/);
 
-console.log('Compatibility reviewed-authority Production reconciliation guard PASS: frozen 72/109/202 baseline -> guarded 73/126/267 target; pair/stage/Product-Care writes denied.');
+console.log('Compatibility reviewed-authority Production reconciliation guard PASS: frozen 72/109/202 baseline -> guarded 73/131/279 target; pair/stage/Product-Care writes denied.');

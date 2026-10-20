@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { getCompatibilityProductionMaterializedAuthority } from './compatibility-production-materialized-authority.ts';
 import {
   CURRENT_PRODUCTION_LATEST_VERSION,
   CURRENT_PRODUCTION_MIGRATION_COUNT,
@@ -88,7 +89,9 @@ assert.equal(classifyState({ ...current, migration_count: current.migration_coun
 assert.equal(classifyState({ ...current, profiles: 100 }), 'BLOCKED_STATE_DRIFT');
 assert.equal(classifyState({ ...currentProduction, evidence: REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence - 1 }), 'BLOCKED_STATE_DRIFT');
 
-const keys = getAuthorityKeys();
+const baselineKeys = getAuthorityKeys();
+const materialized = getCompatibilityProductionMaterializedAuthority();
+const keys = { ...baselineKeys, profiles: materialized.profiles.map(item => item.speciesId).sort() };
 const detail = {
   profile_keys: keys.profiles,
   pair_keys: keys.pairRules,
@@ -121,7 +124,7 @@ const bad = validateDetailedState(currentProduction, {
   tiger_guppy: { ...detail.tiger_guppy, verdict: 'caution' },
 });
 assert.equal(bad.ready, false);
-assert.ok(bad.blockers.includes('reviewed_evidence:266/267'));
+assert.ok(bad.blockers.includes('reviewed_evidence:278/279'));
 assert.ok(bad.blockers.includes('tiger_guppy_verdict:caution'));
 
-console.log('Compatibility Production post-migration verifier contract PASS: historical migration states remain recognized, 72/109/202 requires reviewed-authority reconciliation, and 73/126/267 is the current Production verification target.');
+console.log('Compatibility Production post-migration verifier contract PASS: historical migration states remain recognized, 72/109/202 requires reviewed-authority reconciliation, and 73/131/279 is the current Production verification target.');

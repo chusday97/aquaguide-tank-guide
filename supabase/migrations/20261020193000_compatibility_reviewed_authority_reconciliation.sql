@@ -1,7 +1,8 @@
 -- Reconcile Production reviewed Compatibility profile authority with source-controlled Git authority.
--- Baseline: expected 109 reviewed Compatibility profiles, 21 pair rules, 1 stage risk, 202 reviewed evidence sources.
--- Target: expected 126 reviewed Compatibility profiles, 21 pair rules, 1 stage risk, 267 reviewed evidence sources.
--- The 267 target intentionally preserves 2 Production-only historical reviewed evidence rows while adding all 65 missing Git-authority citations.
+-- Baseline: 109 reviewed profiles, 21 pair rules, 1 stage risk, 202 reviewed evidence sources.
+-- Target: 131 reviewed profiles, 21 pair rules, 1 stage risk, 279 reviewed evidence sources.
+-- Materialized profiles = 126 static reviewed profiles + 5 exact-object 8/8 field-derived profiles.
+-- Evidence target preserves 2 Production-only historical reviewed rows while adding all Git-authority citations.
 -- Pair rules, stage risks, Product/Care content, and stocking_guidance are intentionally not rewritten.
 
 begin;
@@ -13,18 +14,13 @@ do $$ begin
   if (select count(*) from public.evidence_sources where review_status='reviewed' and deleted_at is null) <> 202 then raise exception 'ABORT: expected 202 reviewed evidence sources'; end if;
 end $$;
 
-create temp table _expected_compat_evidence(
-  source_key text primary key,
-  title text not null,
-  publisher text not null,
-  url text not null,
-  source_type text not null
-) on commit drop;
-
+create temp table _expected_compat_evidence(source_key text primary key,title text not null,publisher text not null,url text not null,source_type text not null) on commit drop;
 insert into _expected_compat_evidence(source_key,title,publisher,url,source_type) values
+('adw-carassius-auratus-behavior-phase2-19','Carassius auratus species account','Animal Diversity Web','https://animaldiversity.org/accounts/Carassius_auratus/','university'),
 ('adw-pomacanthus-annularis-predation-wave24','Pomacanthus annularis account','Animal Diversity Web, University of Michigan','https://animaldiversity.org/accounts/Pomacanthus_annularis','curated_husbandry'),
 ('animaldiversity-astronotus-ocellatus-behavior','Astronotus ocellatus behavior and reproduction','Animal Diversity Web, University of Michigan','https://animaldiversity.org/accounts/Astronotus_ocellatus/','university'),
 ('animaldiversity-piaractus-brachypomus','Piaractus brachypomus (Cachama) behavior and natural history','Animal Diversity Web, University of Michigan','https://animaldiversity.org/accounts/Piaractus_brachypomus/','university'),
+('app-aquatic-butterfly-tail-goldfish-variant-phase2-17','Butterfly Tail Goldfish (Carassius auratus) — exact-variety care profile','App-aquatic','https://app-aquatic.com/species/butterfly-tail-goldfish/','curated_husbandry'),
 ('aquaculture-international-salminus-aggression-wave20','Biofloc technology (BFT) improves the productive performance and survival rate of Salminus brasiliensis','Aquaculture International','https://doi.org/10.1007/s10499-024-01644-8','peer_reviewed'),
 ('aquaculture-pterophyllum-scalare-black-veil-wave29','Use of eugenol for the anaesthesia and transportation of freshwater angelfish (Pterophyllum scalare)','Aquaculture','https://www.sciencedirect.com/science/article/pii/S0044848619304995','peer_reviewed'),
 ('aquaculture-research-scleropages-blood-red-identity-wave22','A strain-specific and a sex-associated STS marker for Asian arowana (Scleropages formosus, Osteoglossidae)','Aquaculture Research','https://doi.org/10.1046/j.1365-2109.2003.00949.x','peer_reviewed'),
@@ -46,6 +42,7 @@ insert into _expected_compat_evidence(source_key,title,publisher,url,source_type
 ('aquatic-arts-pterophyllum-scalare-platinum-veiltail-wave29','Platinum Veiltail Angelfish (Pterophyllum scalare) – Tank-Bred','Aquatic Arts','https://aquaticarts.com/collections/angelfish/products/platinum-veiltail-angelfish-pterophyllum-scalare-tank-bred','curated_husbandry'),
 ('aquatic-arts-pterophyllum-scalare-red-devil-wave28','Red Devil Angelfish (Pterophyllum scalare ''Red Devil'') - Tank Bred','Aquatic Arts','https://aquaticarts.com/products/red-devil-angelfish-pterophyllum-scalare-red-devil-tank-bred','curated_husbandry'),
 ('aquaticarts-polypterus-ornatipinnis-conspecific-territoriality','Ornate Bichir (Polypterus ornatipinnis), Tank-Bred','Aquatic Arts','https://aquaticarts.com/products/ornate-bichir','curated_husbandry'),
+('aquaticarts-red-grass-guppy-variant-phase2-17','Red Grass Guppy (Poecilia reticulata "Red Grass") — exact-variant care guide','Aquatic Arts','https://aquaticarts.com/products/red-grass-guppy-poecilia-reticulata-bred-by-aquatic-arts','curated_husbandry'),
 ('atlarium-chrysiptera-cyanea','Chrysiptera cyanea species guide','Atlarium','https://atlarium.bio/en/catalog/fish/chrysiptera-cyanea','curated_husbandry'),
 ('atlarium-scobinancistrus-aureatus','Scobinancistrus aureatus species guide','Atlarium','https://atlarium.bio/en/catalog/fish/scobinancistrus-aureatus','curated_husbandry'),
 ('australian-government-xiphophorus-hellerii-territoriality','Review of the impacts of introduced ornamental fish species that have established wild populations in Australia','Australian Government Department of the Environment, Water, Heritage and the Arts','https://www.agriculture.gov.au/sites/default/files/documents/ornamental-fish.pdf','government'),
@@ -167,9 +164,11 @@ insert into _expected_compat_evidence(source_key,title,publisher,url,source_type
 ('fishipedia-osteoglossum-ferreirai-wave7','Arowana noir • Osteoglossum ferreirai • Fiche poissons','Fishipedia','https://www.fishipedia.fr/fr/poissons/osteoglossum-ferreirai','curated_husbandry'),
 ('fishipedia-pterois-volitans-wave10','Rascasse volante • Pterois volitans • Fiche poissons','Fishipedia','https://www.fishipedia.fr/fr/poissons/pterois-volitans','curated_husbandry'),
 ('fishipedia-pterophyllum-altum-wave9','Scalaire altum • Pterophyllum altum • Fiche poissons','Fishipedia','https://www.fishipedia.fr/fr/poissons/pterophyllum-altum','curated_husbandry'),
+('fishkeepingworld-pearlscale-goldfish-variant-phase2-18','Pearlscale Goldfish — behaviour, territoriality and predation profile','Fishkeeping World','https://fishkeepingworld.com/pearlscale-goldfish/','curated_husbandry'),
 ('france-cichlid-altolamprologus-calvus-gold-phase2-01','Altolamprologus calvus — local Gold variety from Nkamba Bay','Association France Cichlid','https://www.francecichlid.com/altolamprologus/','professional_association'),
 ('garage-aquatics-pterophyllum-scalare-super-red-wave28','Red Devil Super Red Angelfish (Pterophyllum scalare)','Garage Aquatics','https://garageaquatics.com/products/live-freshwater-aquarium-red-devil-super-red-angelfish-for-sale-premium','curated_husbandry'),
 ('golden-aquaria-channa-stewartii-karbi-anglong-phase2-07','Channa Stewartii — Karbi Anglong','Golden Aquaria','https://goldenaquaria.lk/shop/channa-stewartii-arunachal-3-5-4-inch/','curated_husbandry'),
+('goldfishtank-butterfly-tail-variant-phase2-18','Butterfly Tail Goldfish tank mates — exact-variety social and predation profile','The Goldfish Tank','https://thegoldfishtank.com/goldfish-care/tank-mates/best-butterfly-tail-goldfish/','curated_husbandry'),
 ('guppy-cannibalism-refuge-study','Guppy populations differ in cannibalistic degree and adaptation to structural environments','Oecologia','https://pubmed.ncbi.nlm.nih.gov/21516310/','peer_reviewed'),
 ('guppy-fry-yield-cannibalism-study','The effects of illumination and daily number of collections on fry yields in guppy breeding tanks','Aquacultural Engineering','https://www.sciencedirect.com/science/article/abs/pii/S0144860913000848','peer_reviewed'),
 ('guppy-schooling-learning-study','Schooling and learning: early social environment predicts social learning ability in the guppy, Poecilia reticulata','Animal Behaviour','https://www.sciencedirect.com/science/article/abs/pii/S0003347208002364','peer_reviewed'),
@@ -187,14 +186,19 @@ insert into _expected_compat_evidence(source_key,title,publisher,url,source_type
 ('liveaquaria-lutjanus-kasmira-wave14','Bluestripe Snapper • Lutjanus kasmira','LiveAquaria','https://www.liveaquaria.com/products/bluestripe-snapper','curated_husbandry'),
 ('liveaquaria-xanthichthys-mento-wave11','Crosshatch Triggerfish (Xanthichthys mento)','LiveAquaria','https://www.liveaquaria.com/products/crosshatch-triggerfish','curated_husbandry'),
 ('maidenhead-hoplisoma-panda-albino-phase2-06','What''s in store - April 2025 — albino Panda cory (Hoplisoma panda)','Maidenhead Aquatics','https://www.fishkeeper.co.uk/stories/Whats-in-store-April-2025','curated_husbandry'),
+('masukoap-red-butterfly-tail-territoriality-phase2-20','Red Butterfly Tail Goldfish care guide — temperament and tank mates','Aquarium Zukan / masukoap','https://masukoap.com/aquacrypt/%E8%B5%A4%E8%9D%B6%E5%B0%BE%E3%81%AE%E9%A3%BC%E3%81%84%E6%96%B9%E3%81%A8%E5%9B%B3%E9%91%91%E6%83%85%E5%A0%B1/','curated_husbandry'),
+('masukoap-red-grass-guppy-phase2-19','Red Grass Guppy exact-strain care and breeding profile','Aquarium Encyclopedia / Masukoap','https://masukoap.com/aquacrypt/%E3%83%AC%E3%83%83%E3%83%89%E3%82%B0%E3%83%A9%E3%82%B9%E3%82%B0%E3%83%83%E3%83%94%E3%83%BC%E3%81%AE%E9%A3%BC%E3%81%84%E6%96%B9%E3%81%A8%E5%9B%B3%E9%91%91%E6%83%85%E5%A0%B1/','curated_husbandry'),
+('masukoap-red-grass-guppy-territoriality-phase2-20','Red Grass Guppy care guide — temperament and tank mates','Aquarium Zukan / masukoap','https://masukoap.com/aquacrypt/%E3%83%AC%E3%83%83%E3%83%89%E3%82%B0%E3%83%A9%E3%82%B9%E3%82%B0%E3%83%83%E3%83%94%E3%83%BC%E3%81%AE%E9%A3%BC%E3%81%84%E6%96%B9%E3%81%A8%E5%9B%B3%E9%91%91%E6%83%85%E5%A0%B1/','curated_husbandry'),
 ('myfish-scleropages-formosus-territoriality','Scleropages formosus – Asiatischer Arowana','my-fish / WZF','https://my-fish.org/my-fishothek/scleropages-formosus-asiatischer-gabelbart/','curated_husbandry'),
 ('nicks-aquarium-hoplisoma-panda-albino-phase2-06','Albino Panda Corydoras | Hoplisoma panda','Nick''s Aquarium Oceanarium Terrarium','https://nicksaquariumoceanariumterrarium.com.au/products/albino-panda-corydoras-hoplisoma-panda','curated_husbandry'),
 ('northern-snakehead-fws-erss-2024','Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk','U.S. Fish and Wildlife Service','https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk','government'),
 ('northern-snakehead-usgs-diet-2012','Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA','U.S. Geological Survey / Ecology of Freshwater Fish','https://pubs.usgs.gov/publication/70168483','peer_reviewed'),
+('oata-carassius-auratus-goldfish-phase2-19','How to look after goldfish in an aquarium / fish tank','Ornamental Aquatic Trade Association','https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-coldwater-fish/how-to-look-after-goldfish-in-an-aquarium-fishtank/','curated_husbandry'),
 ('oscar-zebrafish-development-predator-study','Modulation of Cortisol Responses to an Acute Stressor in Zebrafish Visually Exposed to Heterospecific Fish During Development','Zebrafish','https://journals.sagepub.com/doi/10.1089/zeb.2017.1509','peer_reviewed'),
 ('oscar-zebrafish-live-predator-study','Live Predators, Robots, and Computer-Animated Images Elicit Differential Avoidance Responses in Zebrafish','Zebrafish','https://journals.sagepub.com/doi/10.1089/zeb.2014.1041','peer_reviewed'),
 ('pcmr-xiphophorus-hellerii-red-albino-wave23','A Recessive oca2 Mutation Underlies Albinism in Xiphophorus Fish','Pigment Cell & Melanoma Research','https://doi.org/10.1111/pcmr.70113','peer_reviewed'),
 ('petmd-koi-husbandry-wave17','Koi Fish Care Sheet','PetMD','https://www.petmd.com/fish/koi-fish-care-sheet','curated_husbandry'),
+('phase2-10-fishbase-trichopodus-trichopterus-blue-gourami','Trichopodus trichopterus common names — Blue gourami','FishBase','https://fishbase.se/ComNames/CommonNamesList.php?GenusName=Trichopodus&ID=4675&SpeciesName=trichopterus&StockCode=4893','professional_association'),
 ('phase2-13-practical-fishkeeping-golden-cobra','Quick guide to snakeheads — Golden cobra snakehead','Practical Fishkeeping','https://www.practicalfishkeeping.co.uk/features/quick-guide-to-snakeheads/','curated_husbandry'),
 ('phase2-13-seriouslyfish-channa-aurantimaculata-golden-cobra','Channa aurantimaculata — Golden cobra snakehead trade name','Seriously Fish','https://www.seriouslyfish.com/species/channa-aurantimaculata','curated_husbandry'),
 ('plos-cyprinus-carpio-small-fish-predation-wave17','Who Is Who: An Anomalous Predator-Prey Role Exchange between Cyprinids and Perch','PLOS ONE','https://doi.org/10.1371/journal.pone.0156430','peer_reviewed'),
@@ -210,6 +214,7 @@ insert into _expected_compat_evidence(source_key,title,publisher,url,source_type
 ('research-wave25-fishipedia-paracanthurus-hepatus','Paracanthurus hepatus exact-taxon species profile','Fishipedia','https://www.fishipedia.fr/fr/poissons/paracanthurus-hepatus','curated_husbandry'),
 ('research-wave25-fishipedia-zacco-platypus','Zacco platypus exact-taxon species profile','Fishipedia','https://www.fishipedia.fr/fr/poissons/zacco-platypus','curated_husbandry'),
 ('research-wave25-fishipedia-zebrasoma-flavescens','Zebrasoma flavescens exact-taxon species profile','Fishipedia','https://www.fishipedia.fr/fr/poissons/zebrasoma-flavescens','curated_husbandry'),
+('rspca-carassius-auratus-goldfish-phase2-19','How should I care for my goldfish?','RSPCA Australia','https://kb.rspca.org.au/categories/companion-animals/fish/how-should-i-care-for-my-goldfish','curated_husbandry'),
 ('saltcorner-xanthichthys-mento-wave11','Xanthichthys mento • Redtail / Crosshatch Triggerfish','Saltcorner Aquarium Library','https://www.saltcorner.com/AquariumLibrary/browsespecies.php?CritterID=1765','curated_husbandry'),
 ('scotcat-otocinclus-vittatus','Otocinclus vittatus Regan, 1904','ScotCat','https://www.scotcat.com/loricariidae/otocinclus_vittatus.htm','curated_husbandry'),
 ('seriouslyfish-andinoacara-pulcher','Andinoacara pulcher (Blue Acara)','Seriously Fish','https://www.seriouslyfish.com/species/andinoacara-pulcher','curated_husbandry'),
@@ -275,6 +280,7 @@ insert into _expected_compat_evidence(source_key,title,publisher,url,source_type
 ('sunbeam-scleropages-formosus-golden-head-phase2-01','Golden Head Arowana — Scleropages formosus','Sunbeam Aquarium Singapore','https://sunbeamaquarium.com/fresh-marine-fish-crustaceans-coral-plants/fresh-water-fish/fresh-water-fish-arawana/','curated_husbandry'),
 ('swelluk-pterophyllum-scalare-blue-diamond-wave26','Blue Diamond Angelfish Pterophyllum Scalare','Swell UK','https://www.swelluk.com/blue-diamond-angelfish','curated_husbandry'),
 ('tamu-pterophyllum-scalare-reproduction','Reproduction of Angelfish (Pterophyllum scalare)','Texas A&M AgriLife Extension','https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf','government'),
+('tankbud-pearlscale-goldfish-variant-phase2-18','Pearlscale (Carassius auratus) — exact-variety care profile','TankBud','https://tankbud.com/species/pearlscale-goldfish','curated_husbandry'),
 ('tetra-gyrinocheilus-aymonieri-albino-wave24','Chinese Algae Eater – un pește fascinant, util în acvariu','Tetra Advanced Fishkeeper Blog','https://blog.tetra.net/ro-ro/chinese-algae-eater-un-peste-fascinant-util-in-acvariu/','curated_husbandry'),
 ('tiger-barb-group-size-study','The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria','Applied Animal Behaviour Science','https://www.sciencedirect.com/science/article/pii/S0168159110001292','peer_reviewed'),
 ('txstate-xgsc-xiphophorus-hellerii-albino-wave23','Xiphophorus hellerii, Albino — Strain Protocol HeAlb','Xiphophorus Genetic Stock Center / Texas State University','https://gato-docs.its.txst.edu/jcr:09189664-929a-4f64-b0fb-220fa2ad7054/HeAlb.pdf','university'),
@@ -287,40 +293,17 @@ insert into _expected_compat_evidence(source_key,title,publisher,url,source_type
 ('wetwebmedia-polypterus-ornatipinnis-territoriality','Bichirs compatibility FAQ: Polypterus ornatipinnis territoriality','WetWebMedia','https://www.wetwebmedia.com/FWSubWebIndex/polypcompfaqs.htm','curated_husbandry'),
 ('white-cloud-shoaling-study','Shoaling in White Cloud Mountain minnows, Tanichthys albonubes: effects of predation risk and prey hunger','Animal Behaviour','https://www.sciencedirect.com/science/article/pii/S0003347284712917','peer_reviewed'),
 ('wiley-pseudorasbora-parva-fry-predation-wave13','Population structure and dietary plasticity of four invasive populations of the topmouth gudgeon Pseudorasbora parva','International Review of Hydrobiology','https://doi.org/10.1002/iroh.202302142','peer_reviewed');
-
-do $$ begin
-  if (select count(*) from _expected_compat_evidence) <> 265 then raise exception 'ABORT: local reviewed evidence authority count drift'; end if;
-end $$;
+do $$ begin if (select count(*) from _expected_compat_evidence) <> 277 then raise exception 'ABORT: local reviewed evidence authority count drift'; end if; end $$;
 
 insert into public.evidence_sources as e(source_key,title,publisher,url,source_type,review_status,reviewed_at)
-select source_key,title,publisher,url,source_type,'reviewed',now()
-from _expected_compat_evidence
-on conflict (source_key) do update set
-  title=excluded.title,
-  publisher=excluded.publisher,
-  url=excluded.url,
-  source_type=excluded.source_type,
-  review_status='reviewed',
-  reviewed_at=case when e.review_status is distinct from 'reviewed' or e.deleted_at is not null then now() else e.reviewed_at end,
-  deleted_at=null,
-  updated_at=now(),
-  version=e.version+1
-where e.title is distinct from excluded.title
-   or e.publisher is distinct from excluded.publisher
-   or e.url is distinct from excluded.url
-   or e.source_type is distinct from excluded.source_type
-   or e.review_status is distinct from 'reviewed'
-   or e.deleted_at is not null;
+select source_key,title,publisher,url,source_type,'reviewed',now() from _expected_compat_evidence
+on conflict (source_key) do update set title=excluded.title,publisher=excluded.publisher,url=excluded.url,source_type=excluded.source_type,
+review_status='reviewed',reviewed_at=case when e.review_status is distinct from 'reviewed' or e.deleted_at is not null then now() else e.reviewed_at end,
+deleted_at=null,updated_at=now(),version=e.version+1
+where e.title is distinct from excluded.title or e.publisher is distinct from excluded.publisher or e.url is distinct from excluded.url
+or e.source_type is distinct from excluded.source_type or e.review_status is distinct from 'reviewed' or e.deleted_at is not null;
 
-create temp table _expected_compat_profiles(
-  catalog_key text primary key,
-  behavior_traits text[] not null,
-  minimum_group_size integer,
-  predation_targets text[] not null,
-  confidence text not null,
-  required_facts text[] not null
-) on commit drop;
-
+create temp table _expected_compat_profiles(catalog_key text primary key,behavior_traits text[] not null,minimum_group_size integer,predation_targets text[] not null,confidence text not null,required_facts text[] not null) on commit drop;
 insert into _expected_compat_profiles(catalog_key,behavior_traits,minimum_group_size,predation_targets,confidence,required_facts) values
 ('sp_0010',ARRAY['shoaling','peaceful','fin_nipping']::text[],12,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','social_behavior']::text[]),
 ('sp_0011',ARRAY['peaceful']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','social_behavior','tank_size','territoriality','predation']::text[]),
@@ -355,6 +338,8 @@ insert into _expected_compat_profiles(catalog_key,behavior_traits,minimum_group_
 ('sp_0058',ARRAY['territorial','group_living']::text[],5,ARRAY[]::text[],'medium',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0059',ARRAY['pair_living','territorial_males','breeding_aggression']::text[],null,ARRAY['small_fish']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0062',ARRAY['shoaling','peaceful']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality']::text[]),
+('sp_0065',ARRAY['group_living']::text[],null,ARRAY['very_small_fish']::text[],'medium',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
+('sp_0067',ARRAY['group_living']::text[],null,ARRAY['small_fish']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0069',ARRAY['group_living','pond_scale','very_large_space_requirement']::text[],5,ARRAY['small_fish']::text[],'high',ARRAY['water','tank_size','social_behavior','temperature','ph','adult_size','territoriality','predation']::text[]),
 ('sp_0070',ARRAY['group_living','pond_scale','very_large_space_requirement']::text[],5,ARRAY['small_fish']::text[],'high',ARRAY['water','tank_size','social_behavior','temperature','ph','adult_size','territoriality','predation']::text[]),
 ('sp_0103',ARRAY['predatory','very_large_space_requirement','jumper','territorial']::text[],null,ARRAY['small_fish']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','predation','territoriality']::text[]),
@@ -382,10 +367,12 @@ insert into _expected_compat_profiles(catalog_key,behavior_traits,minimum_group_
 ('sp_0138',ARRAY['conditional_group_living','conspecific_quarrelsome','predatory']::text[],null,ARRAY['small_fish']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0139',ARRAY['group_living','peaceful','very_large_space_requirement','territorial','age_increasing_territoriality']::text[],null,ARRAY['small_fish']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0140',ARRAY['solitary','species_tank_required','severe_conspecific_aggression','predatory']::text[],null,ARRAY['small_fish']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
+('sp_0143',ARRAY['group_living']::text[],null,ARRAY['fish_fry']::text[],'medium',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0146',ARRAY['peaceful','breeding_defense']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0151',ARRAY['shoaling','peaceful','fin_nipping']::text[],12,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0156',ARRAY['variable_temperament','male_territoriality','breeding_aggression']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]),
 ('sp_0157',ARRAY['peaceful','breeding_defense']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
+('sp_0162',ARRAY['group_living']::text[],2,ARRAY['fish_fry']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0173',ARRAY['predatory','very_large_open_water_predator','home_aquarium_unsuitable']::text[],null,ARRAY['small_fish']::text[],'high',ARRAY['water','adult_size','social_behavior','predation','temperature','ph','tank_size']::text[]),
 ('sp_0174',ARRAY['shoaling','peaceful','fin_nipping']::text[],12,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0176',ARRAY['territorial','small_fish_predation']::text[],null,ARRAY['very_small_fish']::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
@@ -437,6 +424,7 @@ insert into _expected_compat_profiles(catalog_key,behavior_traits,minimum_group_
 ('sp_0442',ARRAY['territorial','age_increasing_aggression','mucus_grazing_risk']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0443',ARRAY['shoaling','bottom_dwelling']::text[],6,ARRAY[]::text[],'high',ARRAY['water','temperature','adult_size','social_behavior','ph','tank_size','territoriality','predation']::text[]),
 ('sp_0444',ARRAY['peaceful','breeding_defense']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','social_behavior','breeding_behavior']::text[]),
+('sp_0445',ARRAY['social_variable','male_territoriality','breeding_aggression']::text[],null,ARRAY[]::text[],'medium',ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation']::text[]),
 ('sp_0446',ARRAY['territorial','small_fish_predation']::text[],null,ARRAY['very_small_fish']::text[],'high',ARRAY['water','temperature','adult_size','social_behavior','territoriality','predation','ph','tank_size']::text[]),
 ('sp_0447',ARRAY['shoaling','breeding_defense','breeding_territoriality']::text[],5,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','social_behavior','breeding_behavior','tank_size','territoriality','predation']::text[]),
 ('sp_0448',ARRAY['peaceful','breeding_defense']::text[],null,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','social_behavior','breeding_behavior','tank_size','territoriality','predation']::text[]),
@@ -448,43 +436,21 @@ insert into _expected_compat_profiles(catalog_key,behavior_traits,minimum_group_
 ('sp_0468',ARRAY['shoaling','peaceful']::text[],8,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','social_behavior','tank_size','territoriality','predation']::text[]),
 ('sp_0469',ARRAY['shoaling','peaceful']::text[],8,ARRAY[]::text[],'high',ARRAY['water','temperature','ph','adult_size','social_behavior','tank_size','territoriality','predation']::text[]),
 ('sp_0475',ARRAY['schooling']::text[],3,ARRAY[]::text[],'medium',ARRAY['water','temperature','adult_size','social_behavior','ph','tank_size','territoriality']::text[]);
-
 do $$ begin
-  if (select count(*) from _expected_compat_profiles) <> 126 then raise exception 'ABORT: local reviewed profile authority count drift'; end if;
-  if (select count(*) from public.species s join _expected_compat_profiles x on x.catalog_key=s.catalog_key where s.deleted_at is null) <> 126 then raise exception 'ABORT: expected Compatibility catalog species missing'; end if;
+ if (select count(*) from _expected_compat_profiles) <> 131 then raise exception 'ABORT: local reviewed profile authority count drift'; end if;
+ if (select count(*) from public.species s join _expected_compat_profiles x on x.catalog_key=s.catalog_key where s.deleted_at is null) <> 131 then raise exception 'ABORT: expected Compatibility catalog species missing'; end if;
 end $$;
 
-insert into public.species_compatibility_profiles as p(
-  species_id,behavior_traits,minimum_group_size,predation_targets,confidence,review_status,reviewed_at,required_facts
-)
+insert into public.species_compatibility_profiles as p(species_id,behavior_traits,minimum_group_size,predation_targets,confidence,review_status,reviewed_at,required_facts)
 select s.id,x.behavior_traits,x.minimum_group_size,x.predation_targets,x.confidence,'reviewed',now(),x.required_facts
-from _expected_compat_profiles x
-join public.species s on s.catalog_key=x.catalog_key and s.deleted_at is null
-on conflict (species_id) do update set
-  behavior_traits=excluded.behavior_traits,
-  minimum_group_size=excluded.minimum_group_size,
-  predation_targets=excluded.predation_targets,
-  confidence=excluded.confidence,
-  review_status='reviewed',
-  reviewed_at=now(),
-  required_facts=excluded.required_facts,
-  deleted_at=null,
-  updated_at=now(),
-  version=p.version+1
-where p.behavior_traits is distinct from excluded.behavior_traits
-   or p.minimum_group_size is distinct from excluded.minimum_group_size
-   or p.predation_targets is distinct from excluded.predation_targets
-   or p.confidence is distinct from excluded.confidence
-   or p.required_facts is distinct from excluded.required_facts
-   or p.review_status is distinct from 'reviewed'
-   or p.deleted_at is not null;
+from _expected_compat_profiles x join public.species s on s.catalog_key=x.catalog_key and s.deleted_at is null
+on conflict (species_id) do update set behavior_traits=excluded.behavior_traits,minimum_group_size=excluded.minimum_group_size,predation_targets=excluded.predation_targets,
+confidence=excluded.confidence,review_status='reviewed',reviewed_at=now(),required_facts=excluded.required_facts,deleted_at=null,updated_at=now(),version=p.version+1
+where p.behavior_traits is distinct from excluded.behavior_traits or p.minimum_group_size is distinct from excluded.minimum_group_size
+or p.predation_targets is distinct from excluded.predation_targets or p.confidence is distinct from excluded.confidence
+or p.required_facts is distinct from excluded.required_facts or p.review_status is distinct from 'reviewed' or p.deleted_at is not null;
 
-create temp table _expected_compat_profile_sources(
-  catalog_key text not null,
-  source_key text not null,
-  primary key(catalog_key,source_key)
-) on commit drop;
-
+create temp table _expected_compat_profile_sources(catalog_key text not null,source_key text not null,primary key(catalog_key,source_key)) on commit drop;
 insert into _expected_compat_profile_sources(catalog_key,source_key) values
 ('sp_0010','fishbase-gymnocorymbus-ternetzi'),
 ('sp_0010','seriouslyfish-gymnocorymbus-ternetzi'),
@@ -563,6 +529,11 @@ insert into _expected_compat_profile_sources(catalog_key,source_key) values
 ('sp_0062','batch09-fishbase-moenkhausia-sanctaefilomenae'),
 ('sp_0062','fishipedia-moenkhausia-sanctaefilomenae-wave15'),
 ('sp_0062','seriouslyfish-moenkhausia-sanctaefilomenae'),
+('sp_0065','app-aquatic-butterfly-tail-goldfish-variant-phase2-17'),
+('sp_0065','goldfishtank-butterfly-tail-variant-phase2-18'),
+('sp_0065','masukoap-red-butterfly-tail-territoriality-phase2-20'),
+('sp_0067','fishkeepingworld-pearlscale-goldfish-variant-phase2-18'),
+('sp_0067','tankbud-pearlscale-goldfish-variant-phase2-18'),
 ('sp_0069','batch09-fishbase-cyprinus-carpio-var'),
 ('sp_0069','fishipedia-cyprinus-carpio-wave17'),
 ('sp_0069','petmd-koi-husbandry-wave17'),
@@ -633,6 +604,9 @@ insert into _expected_compat_profile_sources(catalog_key,source_key) values
 ('sp_0139','seriouslyfish-piaractus-brachypomus'),
 ('sp_0140','batch20-fishbase-serrasalmus-rhombeus'),
 ('sp_0140','seriouslyfish-serrasalmus-rhombeus'),
+('sp_0143','aquaticarts-red-grass-guppy-variant-phase2-17'),
+('sp_0143','masukoap-red-grass-guppy-phase2-19'),
+('sp_0143','masukoap-red-grass-guppy-territoriality-phase2-20'),
 ('sp_0146','batch10-fishbase-mikrogeophagus-ramirezi-platinum'),
 ('sp_0146','fishbase-mikrogeophagus-ramirezi'),
 ('sp_0146','seriouslyfish-mikrogeophagus-ramirezi'),
@@ -644,6 +618,9 @@ insert into _expected_compat_profile_sources(catalog_key,source_key) values
 ('sp_0157','batch10-fishbase-mikrogeophagus-ramirezi-blue'),
 ('sp_0157','fishbase-mikrogeophagus-ramirezi'),
 ('sp_0157','seriouslyfish-mikrogeophagus-ramirezi'),
+('sp_0162','adw-carassius-auratus-behavior-phase2-19'),
+('sp_0162','oata-carassius-auratus-goldfish-phase2-19'),
+('sp_0162','rspca-carassius-auratus-goldfish-phase2-19'),
 ('sp_0173','aquaculture-international-salminus-aggression-wave20'),
 ('sp_0173','wave05-fishbase-salminus-brasiliensis'),
 ('sp_0173','wave05-seriouslyfish-salminus-brasiliensis'),
@@ -806,6 +783,8 @@ insert into _expected_compat_profile_sources(catalog_key,source_key) values
 ('sp_0443','seriouslyfish-corydoras-panda'),
 ('sp_0444','fishbase-trichopodus-leerii'),
 ('sp_0444','seriouslyfish-trichopodus-leerii'),
+('sp_0445','phase2-10-fishbase-trichopodus-trichopterus-blue-gourami'),
+('sp_0445','seriouslyfish-trichopodus-trichopterus'),
 ('sp_0446','batch-02-fishbase-pterophyllum-scalare'),
 ('sp_0446','seriouslyfish-pterophyllum-scalare'),
 ('sp_0446','tamu-pterophyllum-scalare-reproduction'),
@@ -833,54 +812,21 @@ insert into _expected_compat_profile_sources(catalog_key,source_key) values
 ('sp_0475','batch03-fishbase-rhodeus-ocellatus'),
 ('sp_0475','jstage-rhodeus-ocellatus-schooling'),
 ('sp_0475','research-wave21-fishipedia-rhodeus-ocellatus');
-
 insert into public.species_compatibility_profile_sources(profile_id,source_id)
-select p.id,e.id
-from _expected_compat_profile_sources x
+select p.id,e.id from _expected_compat_profile_sources x
 join public.species s on s.catalog_key=x.catalog_key and s.deleted_at is null
 join public.species_compatibility_profiles p on p.species_id=s.id and p.review_status='reviewed' and p.deleted_at is null
 join public.evidence_sources e on e.source_key=x.source_key and e.review_status='reviewed' and e.deleted_at is null
 on conflict do nothing;
 
 do $$ begin
-  if (select count(*) from public.species_compatibility_profiles where review_status='reviewed' and deleted_at is null) <> 126 then raise exception 'POSTCHECK: expected 126 reviewed Compatibility profiles'; end if;
-  if (select count(*) from public.species_pair_compatibility_rules where review_status='reviewed' and deleted_at is null) <> 21 then raise exception 'POSTCHECK: pair rule count changed'; end if;
-  if (select count(*) from public.species_compatibility_profile_stage_risks where review_status='reviewed' and deleted_at is null) <> 1 then raise exception 'POSTCHECK: stage risk count changed'; end if;
-  if (select count(*) from public.evidence_sources where review_status='reviewed' and deleted_at is null) <> 267 then raise exception 'POSTCHECK: expected 267 reviewed evidence sources'; end if;
-  if exists (
-    select 1 from _expected_compat_evidence x
-    left join public.evidence_sources e on e.source_key=x.source_key and e.review_status='reviewed' and e.deleted_at is null
-    where e.id is null or e.title is distinct from x.title or e.publisher is distinct from x.publisher or e.url is distinct from x.url or e.source_type is distinct from x.source_type
-  ) then raise exception 'POSTCHECK: evidence authority drift'; end if;
-  if exists (
-    select 1 from _expected_compat_profiles x
-    join public.species s on s.catalog_key=x.catalog_key and s.deleted_at is null
-    left join public.species_compatibility_profiles p on p.species_id=s.id and p.review_status='reviewed' and p.deleted_at is null
-    where p.id is null
-       or p.behavior_traits is distinct from x.behavior_traits
-       or p.minimum_group_size is distinct from x.minimum_group_size
-       or p.predation_targets is distinct from x.predation_targets
-       or p.confidence is distinct from x.confidence
-       or p.required_facts is distinct from x.required_facts
-  ) then raise exception 'POSTCHECK: reviewed profile authority drift'; end if;
-  if exists (
-    select 1 from _expected_compat_profile_sources x
-    join public.species s on s.catalog_key=x.catalog_key and s.deleted_at is null
-    join public.species_compatibility_profiles p on p.species_id=s.id and p.review_status='reviewed' and p.deleted_at is null
-    join public.evidence_sources e on e.source_key=x.source_key and e.review_status='reviewed' and e.deleted_at is null
-    left join public.species_compatibility_profile_sources l on l.profile_id=p.id and l.source_id=e.id
-    where l.profile_id is null
-  ) then raise exception 'POSTCHECK: expected profile evidence link missing'; end if;
-  if exists (
-    select 1
-    from public.species_compatibility_profile_sources l
-    join public.species_compatibility_profiles p on p.id=l.profile_id and p.review_status='reviewed' and p.deleted_at is null
-    join public.species s on s.id=p.species_id
-    join public.evidence_sources e on e.id=l.source_id
-    join _expected_compat_profiles ep on ep.catalog_key=s.catalog_key
-    left join _expected_compat_profile_sources x on x.catalog_key=s.catalog_key and x.source_key=e.source_key
-    where x.catalog_key is null
-  ) then raise exception 'POSTCHECK: unexpected profile evidence link'; end if;
+ if (select count(*) from public.species_compatibility_profiles where review_status='reviewed' and deleted_at is null) <> 131 then raise exception 'POSTCHECK: expected 131 reviewed Compatibility profiles'; end if;
+ if (select count(*) from public.species_pair_compatibility_rules where review_status='reviewed' and deleted_at is null) <> 21 then raise exception 'POSTCHECK: pair rule count changed'; end if;
+ if (select count(*) from public.species_compatibility_profile_stage_risks where review_status='reviewed' and deleted_at is null) <> 1 then raise exception 'POSTCHECK: stage risk count changed'; end if;
+ if (select count(*) from public.evidence_sources where review_status='reviewed' and deleted_at is null) <> 279 then raise exception 'POSTCHECK: expected 279 reviewed evidence sources'; end if;
+ if exists (select 1 from _expected_compat_evidence x left join public.evidence_sources e on e.source_key=x.source_key and e.review_status='reviewed' and e.deleted_at is null where e.id is null or e.title is distinct from x.title or e.publisher is distinct from x.publisher or e.url is distinct from x.url or e.source_type is distinct from x.source_type) then raise exception 'POSTCHECK: evidence authority drift'; end if;
+ if exists (select 1 from _expected_compat_profiles x join public.species s on s.catalog_key=x.catalog_key and s.deleted_at is null left join public.species_compatibility_profiles p on p.species_id=s.id and p.review_status='reviewed' and p.deleted_at is null where p.id is null or p.behavior_traits is distinct from x.behavior_traits or p.minimum_group_size is distinct from x.minimum_group_size or p.predation_targets is distinct from x.predation_targets or p.confidence is distinct from x.confidence or p.required_facts is distinct from x.required_facts) then raise exception 'POSTCHECK: reviewed profile authority drift'; end if;
+ if exists (select 1 from _expected_compat_profile_sources x join public.species s on s.catalog_key=x.catalog_key and s.deleted_at is null join public.species_compatibility_profiles p on p.species_id=s.id and p.review_status='reviewed' and p.deleted_at is null join public.evidence_sources e on e.source_key=x.source_key and e.review_status='reviewed' and e.deleted_at is null left join public.species_compatibility_profile_sources l on l.profile_id=p.id and l.source_id=e.id where l.profile_id is null) then raise exception 'POSTCHECK: expected profile evidence link missing'; end if;
+ if exists (select 1 from public.species_compatibility_profile_sources l join public.species_compatibility_profiles p on p.id=l.profile_id and p.review_status='reviewed' and p.deleted_at is null join public.species s on s.id=p.species_id join public.evidence_sources e on e.id=l.source_id join _expected_compat_profiles ep on ep.catalog_key=s.catalog_key left join _expected_compat_profile_sources x on x.catalog_key=s.catalog_key and x.source_key=e.source_key where x.catalog_key is null) then raise exception 'POSTCHECK: unexpected profile evidence link'; end if;
 end $$;
-
 commit;
