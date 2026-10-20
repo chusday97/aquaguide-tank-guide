@@ -1,3 +1,4 @@
+- Supabase observability budget: .ai/SUPABASE_OBSERVABILITY_BUDGET.md is authority; routine health checks must prefer DB state, and log queries must be explicitly bounded to 5–15 minutes with no polling.
 ## HANDOFF — 2026-09-28 Multi-species Compatibility checkpoint
 
 - Active worktree: `/Users/chuchu/aquaguide-admin-content-v0`, branch `backend/convergence-20260922`, starting HEAD `af11e033a3ceb4571b27364a42c3364a21183618`.
