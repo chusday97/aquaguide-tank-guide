@@ -1,38 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 6,
+  "totalPackets": 4,
   "packets": [
-    {
-      "speciesId": "sp_0065",
-      "name": "蝶尾金鱼",
-      "scientificName": "Carassius auratus var.",
-      "missingField": "territoriality",
-      "currentStatus": "needs_research",
-      "currentReasonCode": "missing_reviewed_field_authority",
-      "existingEvidenceIds": [
-        "app-aquatic-butterfly-tail-goldfish-variant-phase2-17",
-        "goldfishtank-butterfly-tail-variant-phase2-18"
-      ],
-      "existingSources": [
-        {
-          "id": "app-aquatic-butterfly-tail-goldfish-variant-phase2-17",
-          "title": "Butterfly Tail Goldfish (Carassius auratus) — exact-variety care profile",
-          "publisher": "App-aquatic",
-          "url": "https://app-aquatic.com/species/butterfly-tail-goldfish/",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "goldfishtank-butterfly-tail-variant-phase2-18",
-          "title": "Butterfly Tail Goldfish tank mates — exact-variety social and predation profile",
-          "publisher": "The Goldfish Tank",
-          "url": "https://thegoldfishtank.com/goldfish-care/tank-mates/best-butterfly-tail-goldfish/",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
-      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
-    },
     {
       "speciesId": "sp_0066",
       "name": "鹤顶红金鱼",
@@ -87,36 +57,6 @@
           "title": "Bubble Eye Goldfish tank mates — exact-variety predation boundary",
           "publisher": "The Goldfish Tank",
           "url": "https://thegoldfishtank.com/goldfish-care/tank-mates/best-bubble-eye-goldfish/",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
-      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
-    },
-    {
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "scientificName": "Poecilia reticulata var.",
-      "missingField": "territoriality",
-      "currentStatus": "needs_research",
-      "currentReasonCode": "missing_reviewed_field_authority",
-      "existingEvidenceIds": [
-        "aquaticarts-red-grass-guppy-variant-phase2-17",
-        "masukoap-red-grass-guppy-phase2-19"
-      ],
-      "existingSources": [
-        {
-          "id": "aquaticarts-red-grass-guppy-variant-phase2-17",
-          "title": "Red Grass Guppy (Poecilia reticulata \"Red Grass\") — exact-variant care guide",
-          "publisher": "Aquatic Arts",
-          "url": "https://aquaticarts.com/products/red-grass-guppy-poecilia-reticulata-bred-by-aquatic-arts",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "masukoap-red-grass-guppy-phase2-19",
-          "title": "Red Grass Guppy exact-strain care and breeding profile",
-          "publisher": "Aquarium Encyclopedia / Masukoap",
-          "url": "https://masukoap.com/aquacrypt/%E3%83%AC%E3%83%83%E3%83%89%E3%82%B0%E3%83%A9%E3%82%B9%E3%82%B0%E3%83%83%E3%83%94%E3%83%BC%E3%81%AE%E9%A3%BC%E3%81%84%E6%96%B9%E3%81%A8%E5%9B%B3%E9%91%91%E6%83%85%E5%A0%B1/",
           "reviewStatus": "reviewed"
         }
       ],

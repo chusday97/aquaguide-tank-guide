@@ -16,9 +16,9 @@ assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 8);
 assert.equal(audit.summary.baseTaxonCandidateFactSlots, 24);
 assert.equal(audit.summary.exactObjectEvidenceFactSlots, 40);
 assert.equal(audit.summary.totalCanonicalIdentityRecords, 44);
-assert.equal(audit.summary.genericOnboardingReadySpecies, 102);
+assert.equal(audit.summary.genericOnboardingReadySpecies, 104);
 assert.equal(audit.summary.policyPromotedReadySpecies, 13);
-assert.equal(audit.summary.fieldPolicyReadySpecies, 1);
+assert.equal(audit.summary.fieldPolicyReadySpecies, 3);
 assert.equal(audit.summary.directReviewedVariantObjects, 2);
 assert.equal(audit.summary.remainingReviewedVariantObjects, 0);
 assert.equal(audit.policy.pairRulesRequiredForPromotedColorMorphs, false);
@@ -65,7 +65,8 @@ assert.equal(butterflyTailPolicy.relationshipType, 'selectively_bred_variant');
 assert.equal(butterflyTailPolicy.canonicalScientificName, 'Carassius auratus');
 assert.equal(butterflyTailPolicy.variantKey, 'Butterfly Tail');
 assert.deepEqual(butterflyTailPolicy.inheritedFacts, []);
-assert.equal(butterflyTailPolicy.genericOnboardingReady, false);
+assert.equal(butterflyTailPolicy.genericOnboardingReady, true);
+assert.equal(butterflyTailPolicy.authoritativeFieldCount, 8);
 
 const redGrassGoldfishPolicy = audit.promoted.find(item => item.speciesId === 'sp_0162');
 assert.ok(redGrassGoldfishPolicy);
@@ -79,7 +80,7 @@ const fieldScopedCoverageExpectations: Record<string, { authoritative: number; r
   sp_0066: { authoritative: 7, ready: false },
   sp_0067: { authoritative: 8, ready: true },
   sp_0068: { authoritative: 7, ready: false },
-  sp_0143: { authoritative: 7, ready: false },
+  sp_0143: { authoritative: 8, ready: true },
   sp_0144: { authoritative: 7, ready: false },
   sp_0155: { authoritative: 6, ready: false },
   sp_0361: { authoritative: 7, ready: false },
@@ -109,7 +110,7 @@ for (const [speciesId, variantKey] of [
   assert.deepEqual(policy.inheritedFacts, []);
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
   assert.equal(policy.authoritativeFieldCount, fieldScopedCoverageExpectations[speciesId].authoritative);
-  assert.equal(policy.genericOnboardingReady, false);
+  assert.equal(policy.genericOnboardingReady, fieldScopedCoverageExpectations[speciesId].ready);
   assert.deepEqual(policy.terminalGapFields, []);
 }
 for (const [speciesId, taxon] of [

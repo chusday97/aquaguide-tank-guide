@@ -2382,8 +2382,8 @@
   ],
   "next_wave_species_queue": [
     {
-      "species_id": "sp_0065",
-      "common_name": "蝶尾金鱼",
+      "species_id": "sp_0066",
+      "common_name": "鹤顶红金鱼",
       "scientific_name": "Carassius auratus var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
@@ -2412,8 +2412,8 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0143",
-      "common_name": "红草尾孔雀鱼",
+      "species_id": "sp_0144",
+      "common_name": "蓝草尾孔雀鱼",
       "scientific_name": "Poecilia reticulata var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",

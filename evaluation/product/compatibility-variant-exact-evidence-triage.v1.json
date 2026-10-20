@@ -14,48 +14,16 @@
     "discoveryEvidenceCeilingMeaning": "Current trusted-source discovery route produced no eligible URLs in two independent rounds; do not repeat the same route without changing source strategy."
   },
   "summary": {
-    "variantObjects": 7,
-    "totalResearchSlots": 8,
+    "variantObjects": 5,
+    "totalResearchSlots": 6,
     "draftEvidenceFoundObjects": 0,
-    "discoveryRetryRequiredObjects": 4,
-    "discoveryEvidenceCeilingObjects": 3,
+    "discoveryRetryRequiredObjects": 3,
+    "discoveryEvidenceCeilingObjects": 2,
     "notRunObjects": 0,
     "supportedSlots": 0,
-    "unresolvedSlots": 8
+    "unresolvedSlots": 6
   },
   "objects": [
-    {
-      "speciesId": "sp_0065",
-      "variantKey": "Butterfly Tail",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "territoriality"
-      ],
-      "researchRuns": [
-        {
-          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research.v1.json",
-          "round": 1,
-          "attemptedUrls": 0,
-          "verifiedDocuments": 0,
-          "candidateFields": [],
-          "discoveryStatus": "discovery_empty"
-        },
-        {
-          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research-round2-goldfish.v1.json",
-          "round": 2,
-          "attemptedUrls": 0,
-          "verifiedDocuments": 0,
-          "candidateFields": [],
-          "discoveryStatus": "discovery_empty"
-        }
-      ],
-      "status": "discovery_evidence_ceiling",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
     {
       "speciesId": "sp_0066",
       "variantKey": "Red Cap Oranda",
@@ -116,30 +84,6 @@
         }
       ],
       "status": "discovery_evidence_ceiling",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0143",
-      "variantKey": "Red Grass",
-      "canonicalScientificName": "Poecilia reticulata",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "territoriality"
-      ],
-      "researchRuns": [
-        {
-          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research.v1.json",
-          "round": 1,
-          "attemptedUrls": 0,
-          "verifiedDocuments": 0,
-          "candidateFields": [],
-          "discoveryStatus": "discovery_empty"
-        }
-      ],
-      "status": "discovery_retry_required",
       "promotionAllowed": false,
       "writesAuthority": false,
       "grantsInheritance": false

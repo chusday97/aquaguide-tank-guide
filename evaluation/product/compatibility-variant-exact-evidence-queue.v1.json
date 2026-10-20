@@ -8,26 +8,13 @@
     "wholeProfileInheritanceAllowed": false
   },
   "summary": {
-    "variantObjects": 7,
-    "totalResearchSlots": 8,
+    "variantObjects": 5,
+    "totalResearchSlots": 6,
     "environmentVariantSpecificSlots": 0,
-    "exactObjectCoreSlots": 8,
+    "exactObjectCoreSlots": 6,
     "contractBlockedSlotsNotQueued": 0
   },
   "items": [
-    {
-      "speciesId": "sp_0065",
-      "name": "蝶尾金鱼",
-      "canonicalScientificName": "Carassius auratus",
-      "variantKey": "Butterfly Tail",
-      "relationshipType": "selectively_bred_variant",
-      "field": "territoriality",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for territoriality; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
     {
       "speciesId": "sp_0066",
       "name": "鹤顶红金鱼",
@@ -47,19 +34,6 @@
       "canonicalScientificName": "Carassius auratus",
       "variantKey": "Bubble Eye",
       "relationshipType": "selectively_bred_variant",
-      "field": "territoriality",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for territoriality; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "canonicalScientificName": "Poecilia reticulata",
-      "variantKey": "Red Grass",
-      "relationshipType": "trade_strain",
       "field": "territoriality",
       "sourceLane": "exact_object_policy",
       "reasonCode": "exact_object_evidence_required",

@@ -11,10 +11,10 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 102,
-  "coreFieldCompleteSpecies": 114,
-  "oneFieldGapSpecies": 15,
-  "runtimeReviewedProfileSpecies": 164,
+  "genericOnboardingReadySpecies": 104,
+  "coreFieldCompleteSpecies": 116,
+  "oneFieldGapSpecies": 13,
+  "runtimeReviewedProfileSpecies": 166,
   "fishCompatibilityDomainSpecies": 308,
   "fishIdentityHeldSpecies": 91,
   "unsupportedDomainSpecies": 167,
@@ -25,8 +25,8 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 86,
-  "completionEligibleResearchDebtFields": 8,
+  "visibleResearchDebtFields": 84,
+  "completionEligibleResearchDebtFields": 6,
   "deferredResearchDebtFields": 78,
   "fieldCounts": {
     "water": {
@@ -79,9 +79,9 @@
     },
     "territoriality": {
       "reviewed_supported": 93,
-      "reviewed_neutral_or_negative": 43,
+      "reviewed_neutral_or_negative": 45,
       "reviewed_unknown": 74,
-      "needs_research": 7,
+      "needs_research": 5,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
@@ -101,7 +101,7 @@
     },
     {
       "field": "territoriality",
-      "count": 7
+      "count": 5
     },
     {
       "field": "water",
@@ -5582,10 +5582,10 @@
       "name": "蝶尾金鱼",
       "scientificName": "Carassius auratus var.",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "reviewedProfile": "field_review_derived",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -5643,11 +5643,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
+          "evidenceIds": [
+            "masukoap-red-butterfly-tail-territoriality-phase2-20"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -11839,10 +11841,10 @@
       "name": "红草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "reviewedProfile": "field_review_derived",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -11900,11 +11902,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
+          "evidenceIds": [
+            "masukoap-red-grass-guppy-territoriality-phase2-20"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",

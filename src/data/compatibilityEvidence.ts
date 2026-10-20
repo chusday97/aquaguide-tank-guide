@@ -53,6 +53,7 @@ import { identityBoundaryCorrectionsPhase2_18Sources } from './catalogReviewBatc
 import { variantEvidencePhase2_17Sources } from './catalogReviewBatches/variant-evidence-phase2-17';
 import { variantEvidencePhase2_18Sources } from './catalogReviewBatches/variant-evidence-phase2-18';
 import { variantEvidencePhase2_19Sources } from './catalogReviewBatches/variant-evidence-phase2-19';
+import { variantEvidencePhase2_20Sources } from './catalogReviewBatches/variant-evidence-phase2-20';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
 import { getApprovedCatalogFieldReviews, type CatalogFieldReview } from './catalogFieldReviews';
@@ -1769,6 +1770,7 @@ const canonicalIdentitySourceById = new Map(
     ...Object.values(variantEvidencePhase2_17Sources),
     ...Object.values(variantEvidencePhase2_18Sources),
     ...Object.values(variantEvidencePhase2_19Sources),
+    ...Object.values(variantEvidencePhase2_20Sources),
     ...Object.values(compatibilityAuthorityPatchSources),
   ].map(source => [source.id, source] as const),
 );

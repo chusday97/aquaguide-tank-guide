@@ -243,6 +243,17 @@ const pearlscaleReview = reviewSpeciesAdditions({
 assert.ok(pearlscaleReview);
 assert.equal(pearlscaleReview.decision.metadata.decisionReadiness, 'reviewed');
 assert.notEqual(pearlscaleReview.decision.status, 'insufficient_data');
+for (const exactPromotedId of ['sp_0065', 'sp_0143']) {
+  assert.equal(getReviewedCompatibilityProfile(exactPromotedId), undefined, `${exactPromotedId} must not depend on a duplicate static Profile`);
+  const derived = buildReviewedCompatibilityProfileFromCatalogFields(exactPromotedId);
+  assert.ok(derived, `${exactPromotedId} reviewed 8/8 exact authority must auto-promote`);
+  assert.equal(derived.behaviorTraits.some(trait => /territor/i.test(trait)), false, `${exactPromotedId} explicit non-territorial evidence must not create a territorial trait`);
+  const coverage = buildCompatibilityCoreFieldCoverage().rows.find(row => row.speciesId === exactPromotedId);
+  assert.equal(coverage?.genericOnboardingReady, true);
+  assert.equal(coverage?.reviewedProfile, 'field_review_derived');
+}
+assert.equal(buildReviewedCompatibilityProfileFromCatalogFields('sp_0066'), undefined, 'Red Cap remains fail-closed at 7/8 without direct territoriality evidence');
+assert.equal(buildReviewedCompatibilityProfileFromCatalogFields('sp_0068'), undefined, 'Bubble Eye remains fail-closed at 7/8 without direct territoriality evidence');
 
 const quantityFor = (id: string) => Math.max(1, getReviewedCompatibilityProfile(id)?.minimumGroupSize || 1);
 const existingId = 'sp_0010';
