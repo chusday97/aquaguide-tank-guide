@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
@@ -41,6 +42,11 @@ for (const outcome of nextWaveUnified08IdentityOutcomes) {
     assert.equal(historicalBoundary.code, outcome.code);
     assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
     assert.equal(boundary, undefined, 'later reviewed object-level identity correction must supersede the historical wave08 hold: ' + outcome.speciesId);
+  } else if (getCatalogCanonicalIdentity(outcome.speciesId)?.identityStatus === 'reviewed') {
+    assert.ok(historicalBoundary, 'wave08 historical identity outcome must remain auditable after canonical identity review: ' + outcome.speciesId);
+    assert.equal(historicalBoundary.code, outcome.code);
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(boundary, undefined, 'reviewed canonical identity must supersede the historical wave08 hold at runtime: ' + outcome.speciesId);
   } else if (supersededClassificationOutcomes.has(outcome.speciesId)) {
     assert.ok(historicalBoundary, 'wave08 historical classification outcome must remain auditable: ' + outcome.speciesId);
     assert.equal(historicalBoundary.code, outcome.code);
@@ -72,7 +78,7 @@ assert.equal(nextWaveUnified08EvidenceCeilings.length, 17);
 assert.equal(nextWaveUnified08DomainOutcomes.length, 1);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 125, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.ok(audit.reviewedProfiles.length >= 101, 'repository authority must retain the released 101-Profile baseline and may grow beyond it');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

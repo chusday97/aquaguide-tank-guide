@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
 import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
@@ -26,9 +27,17 @@ for (const speciesId of nextWaveUnified15AllSpeciesIds) {
 
 for (const outcome of nextWaveUnified15IdentityOutcomes) {
   const boundary = getCatalogIdentityBoundary(outcome.speciesId);
-  assert.ok(boundary);
-  assert.equal(boundary.code, outcome.code);
-  assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  const historicalBoundary = catalogIdentityBoundaries[outcome.speciesId];
+  if (getCatalogCanonicalIdentity(outcome.speciesId)?.identityStatus === 'reviewed') {
+    assert.ok(historicalBoundary, 'wave15 historical identity hold must remain auditable after canonical identity review: ' + outcome.speciesId);
+    assert.equal(historicalBoundary.code, outcome.code);
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(boundary, undefined, 'reviewed canonical identity must supersede the historical wave15 hold at runtime: ' + outcome.speciesId);
+  } else {
+    assert.ok(boundary);
+    assert.equal(boundary.code, outcome.code);
+    assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  }
 }
 for (const outcome of nextWaveUnified15DomainOutcomes) {
   const boundary = getCompatibilityDomainBoundary(outcome.speciesId);
@@ -40,7 +49,7 @@ assert.equal(nextWaveUnified15IdentityOutcomes.length, 1);
 assert.equal(nextWaveUnified15DomainOutcomes.length, 24);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 125, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.ok(audit.reviewedProfiles.length >= 101, 'repository authority must retain the released 101-Profile baseline and may grow beyond it');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

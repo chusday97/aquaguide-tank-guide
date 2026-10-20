@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
 import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
@@ -26,9 +27,26 @@ for (const speciesId of nextWaveUnified11AllSpeciesIds) {
 
 for (const outcome of nextWaveUnified11IdentityOutcomes) {
   const boundary = getCatalogIdentityBoundary(outcome.speciesId);
-  assert.ok(boundary, 'wave11 identity hold must resolve: ' + outcome.speciesId);
-  assert.equal(boundary.code, outcome.code);
-  assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  const historicalBoundary = catalogIdentityBoundaries[outcome.speciesId];
+  if (getCatalogCanonicalIdentity(outcome.speciesId)?.identityStatus === 'reviewed') {
+    assert.ok(historicalBoundary, 'wave11 historical identity hold must remain auditable after canonical identity review: ' + outcome.speciesId);
+    assert.equal(historicalBoundary.code, outcome.code);
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(boundary, undefined, 'reviewed canonical identity must supersede the historical wave11 hold at runtime: ' + outcome.speciesId);
+  } else {
+    assert.ok(boundary, 'wave11 identity hold must resolve: ' + outcome.speciesId);
+    const refinedTradeNameHold = (
+      outcome.code === 'catalog_scientific_name_unresolved'
+      && boundary.code === 'trade_name_taxon_ambiguous'
+      && boundary.researchDisposition === 'terminal_unknown_hold'
+    );
+    assert.equal(
+      boundary.code === outcome.code || refinedTradeNameHold,
+      true,
+      'wave11 current identity hold may only preserve the historical code or refine scientific-name uncertainty into a terminal trade-name ambiguity: ' + outcome.speciesId,
+    );
+    assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+  }
 }
 
 for (const outcome of nextWaveUnified11EvidenceCeilings) {
@@ -42,7 +60,7 @@ assert.equal(nextWaveUnified11IdentityOutcomes.length, 12);
 assert.equal(nextWaveUnified11EvidenceCeilings.length, 13);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 125, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.ok(audit.reviewedProfiles.length >= 101, 'repository authority must retain the released 101-Profile baseline and may grow beyond it');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

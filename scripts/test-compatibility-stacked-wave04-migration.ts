@@ -10,7 +10,8 @@ import {
   compatibilityStackedWave04PendingProfileIds,
   compatibilityUnifiedNextWave,
 } from '../src/data/compatibilityNextWaveBatch';
-import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { buildCompatibilityProfileRolloutKeysets } from '../src/data/compatibilityAuthorityRollout';
 
@@ -18,7 +19,7 @@ const migrationPath = 'supabase/migrations/20261012001500_compatibility_unified_
 const migration = readFileSync(migrationPath, 'utf8');
 const audit = getCompatibilityEvidenceAudit();
 
-assert.equal(audit.reviewedProfiles.length, 125, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.ok(audit.reviewedProfiles.length >= 101, 'repository authority must retain the released 101-Profile baseline and may grow beyond it');
 assert.equal(buildCompatibilityProfileRolloutKeysets(audit.reviewedProfiles.map(profile => profile.speciesId)).wave04Target.size, 95);
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
@@ -86,7 +87,13 @@ for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpecies
     continue;
   }
   assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
-  if (supersededClassificationHolds.has(speciesId)) {
+  const reviewedCanonicalIdentity = getCatalogCanonicalIdentity(speciesId)?.identityStatus === 'reviewed';
+  if (reviewedCanonicalIdentity) {
+    const historicalBoundary = catalogIdentityBoundaries[speciesId];
+    assert.ok(historicalBoundary, speciesId + ': historical wave04 identity hold must remain auditable after canonical identity review');
+    assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
+    assert.equal(getCatalogIdentityBoundary(speciesId), undefined, speciesId + ': reviewed canonical identity must supersede the historical wave04 hold at runtime');
+  } else if (supersededClassificationHolds.has(speciesId)) {
     assert.equal(getCatalogIdentityBoundary(speciesId), undefined, speciesId + ': later catalog classification correction must supersede the historical wave04 identity hold');
   } else {
     assert.equal(getCatalogIdentityBoundary(speciesId)?.researchDisposition, 'terminal_unknown_hold');

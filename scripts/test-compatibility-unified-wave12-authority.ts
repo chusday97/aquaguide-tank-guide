@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
 import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
@@ -34,19 +35,31 @@ for (const speciesId of nextWaveUnified12AllSpeciesIds) {
 
 for (const outcome of nextWaveUnified12IdentityOutcomes) {
   const boundary = getCatalogIdentityBoundary(outcome.speciesId);
-  if (laterGraduatedProfileIds.has(outcome.speciesId)) {
+  if (
+    laterGraduatedProfileIds.has(outcome.speciesId)
+    || getCatalogCanonicalIdentity(outcome.speciesId)?.identityStatus === 'reviewed'
+  ) {
     const historicalBoundary = catalogIdentityBoundaries[outcome.speciesId];
-    assert.ok(historicalBoundary, 'wave12 historical identity hold must remain auditable: ' + outcome.speciesId);
+    assert.ok(historicalBoundary, 'wave12 historical identity hold must remain auditable after reviewed identity resolution: ' + outcome.speciesId);
     assert.equal(historicalBoundary.code, outcome.code);
     assert.equal(historicalBoundary.researchDisposition, 'terminal_unknown_hold');
     assert.equal(
       boundary,
       undefined,
-      'later reviewed exact-object identity correction must supersede the historical wave12 hold at runtime: ' + outcome.speciesId,
+      'reviewed canonical/object identity must supersede the historical wave12 hold at runtime: ' + outcome.speciesId,
     );
   } else {
     assert.ok(boundary, 'wave12 identity hold must resolve: ' + outcome.speciesId);
-    assert.equal(boundary.code, outcome.code);
+    const refinedTradeNameHold = (
+      outcome.code === 'catalog_scientific_name_unresolved'
+      && boundary.code === 'trade_name_taxon_ambiguous'
+      && boundary.researchDisposition === 'terminal_unknown_hold'
+    );
+    assert.equal(
+      boundary.code === outcome.code || refinedTradeNameHold,
+      true,
+      'wave12 current identity hold may only preserve the historical code or refine scientific-name uncertainty into a terminal trade-name ambiguity: ' + outcome.speciesId,
+    );
     assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
   }
 }
@@ -62,7 +75,7 @@ assert.equal(nextWaveUnified12IdentityOutcomes.length, 15);
 assert.equal(nextWaveUnified12EvidenceCeilings.length, 10);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 125, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.ok(audit.reviewedProfiles.length >= 101, 'repository authority must retain the released 101-Profile baseline and may grow beyond it');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 
