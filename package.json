@@ -453,6 +453,7 @@
     "test:compatibility-predation-wave24": "node --import tsx scripts/test-compatibility-predation-wave24.ts",
     "test:compatibility-predation-risk-discovery-wave32": "node --import tsx scripts/test-compatibility-predation-risk-discovery-wave32.ts",
     "test:compatibility-predation-risk-discovery-wave33": "node --import tsx scripts/test-compatibility-predation-risk-discovery-wave33.ts",
+    "test:compatibility-predation-risk-discovery-wave34": "node --import tsx scripts/test-compatibility-predation-risk-discovery-wave34.ts",
     "test:compatibility-research-direct-wave25": "node --import tsx scripts/test-compatibility-research-direct-wave25.ts",
     "test:compatibility-predation-negative-wave26": "node --import tsx scripts/test-compatibility-predation-negative-wave26.ts",
     "test:compatibility-water-wave27": "node --import tsx scripts/test-compatibility-water-wave27.ts",

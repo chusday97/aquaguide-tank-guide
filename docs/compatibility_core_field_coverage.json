@@ -25,16 +25,16 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 75,
+  "visibleResearchDebtFields": 72,
   "completionEligibleResearchDebtFields": 0,
-  "deferredResearchDebtFields": 75,
+  "deferredResearchDebtFields": 72,
   "activeCompletionResearchDebtFields": 0,
-  "deferredResearchOpportunityFields": 75,
-  "deferredResearchOpportunitySpecies": 75,
+  "deferredResearchOpportunityFields": 72,
+  "deferredResearchOpportunitySpecies": 72,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 75,
-  "predationRiskDiscoveryFields": 75,
-  "predationRiskDiscoveryHardReadySpecies": 20,
+  "softRiskDiscoveryResearchDebtFields": 72,
+  "predationRiskDiscoveryFields": 72,
+  "predationRiskDiscoveryHardReadySpecies": 17,
   "predationRiskDiscoveryVariantIdentityHeldSpecies": 53,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
@@ -95,10 +95,10 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 94,
-      "reviewed_neutral_or_negative": 38,
+      "reviewed_supported": 96,
+      "reviewed_neutral_or_negative": 39,
       "reviewed_unknown": 10,
-      "needs_research": 75,
+      "needs_research": 72,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -106,7 +106,7 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 75
+      "count": 72
     },
     {
       "field": "water",
@@ -9194,8 +9194,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -9262,11 +9262,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-epiplatys-annulatus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -11057,8 +11059,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -11125,11 +11127,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-iriatherina-werneri-predation-wave34"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -39321,8 +39325,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 0,
       "terminalGapCount": 2,
       "fields": {
         "water": {
@@ -39390,11 +39394,13 @@
           "reasonCode": "species_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-nannostomus-beckfordi-water-wave29"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

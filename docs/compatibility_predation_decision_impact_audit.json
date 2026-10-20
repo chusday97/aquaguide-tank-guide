@@ -14,11 +14,11 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "predationResearchBacklogFields": 75,
+    "predationResearchBacklogFields": 72,
     "hardDecisionResearchDebtFields": 0,
-    "softRiskDiscoveryResearchDebtFields": 75,
-    "riskDiscoveryReadyCatalogObjects": 20,
-    "riskDiscoveryReadyUniqueTaxa": 18,
+    "softRiskDiscoveryResearchDebtFields": 72,
+    "riskDiscoveryReadyCatalogObjects": 17,
+    "riskDiscoveryReadyUniqueTaxa": 15,
     "blockedByIdentityOrVariantCatalogObjects": 53,
     "blockedByOtherHardEvidenceCatalogObjects": 2,
     "currentPredationHardInsufficientDataBlockerFields": 0
@@ -74,18 +74,6 @@
       "catalogObjectCount": 1
     },
     {
-      "scientificName": "Epiplatys annulatus",
-      "catalogObjectIds": [
-        "sp_0113"
-      ],
-      "names": [
-        "斑节鳉"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 93,
-      "maxSmallFishReviewSurfacePairs": 44,
-      "catalogObjectCount": 1
-    },
-    {
       "scientificName": "Hyphessobrycon herbertaxelrodi",
       "catalogObjectIds": [
         "sp_0470"
@@ -116,18 +104,6 @@
       ],
       "names": [
         "钻石灯"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 93,
-      "maxSmallFishReviewSurfacePairs": 44,
-      "catalogObjectCount": 1
-    },
-    {
-      "scientificName": "Nannostomus beckfordi",
-      "catalogObjectIds": [
-        "sp_0473"
-      ],
-      "names": [
-        "红肚铅笔鱼"
       ],
       "maxRiskManagementReviewSurfacePairs": 93,
       "maxSmallFishReviewSurfacePairs": 44,
@@ -188,18 +164,6 @@
       ],
       "names": [
         "人字蝶"
-      ],
-      "maxRiskManagementReviewSurfacePairs": 0,
-      "maxSmallFishReviewSurfacePairs": 0,
-      "catalogObjectCount": 1
-    },
-    {
-      "scientificName": "Iriatherina werneri",
-      "catalogObjectIds": [
-        "sp_0134"
-      ],
-      "names": [
-        "燕子美人"
       ],
       "maxRiskManagementReviewSurfacePairs": 0,
       "maxSmallFishReviewSurfacePairs": 0,
@@ -362,29 +326,6 @@
       }
     },
     {
-      "speciesId": "sp_0113",
-      "name": "斑节鳉",
-      "scientificName": "Epiplatys annulatus",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 93,
-        "not_recommended": 87,
-        "insufficient_data": 127,
-        "riskManagementReviewSurfacePairs": 93,
-        "smallFishReviewSurfacePairs": 44,
-        "currentPredationRulePairs": 43
-      }
-    },
-    {
       "speciesId": "sp_0467",
       "name": "黑尾大勾",
       "scientificName": "Hyphessobrycon megalopterus",
@@ -457,29 +398,6 @@
       "speciesId": "sp_0472",
       "name": "企鹅灯",
       "scientificName": "Thayeria boehlkei",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 93,
-        "not_recommended": 87,
-        "insufficient_data": 127,
-        "riskManagementReviewSurfacePairs": 93,
-        "smallFishReviewSurfacePairs": 44,
-        "currentPredationRulePairs": 43
-      }
-    },
-    {
-      "speciesId": "sp_0473",
-      "name": "红肚铅笔鱼",
-      "scientificName": "Nannostomus beckfordi",
       "classification": "risk_discovery_ready",
       "authoritativeFieldCount": 5,
       "reviewedProfile": "none",
@@ -635,29 +553,6 @@
         "riskManagementReviewSurfacePairs": 0,
         "smallFishReviewSurfacePairs": 0,
         "currentPredationRulePairs": 3
-      }
-    },
-    {
-      "speciesId": "sp_0134",
-      "name": "燕子美人",
-      "scientificName": "Iriatherina werneri",
-      "classification": "risk_discovery_ready",
-      "authoritativeFieldCount": 5,
-      "reviewedProfile": "none",
-      "hardHolds": [],
-      "softTerminalFields": [
-        "social_behavior",
-        "territoriality"
-      ],
-      "pairSurface": {
-        "totalCounterpartPairs": 307,
-        "compatible": 0,
-        "caution": 0,
-        "not_recommended": 307,
-        "insufficient_data": 0,
-        "riskManagementReviewSurfacePairs": 0,
-        "smallFishReviewSurfacePairs": 0,
-        "currentPredationRulePairs": 43
       }
     },
     {

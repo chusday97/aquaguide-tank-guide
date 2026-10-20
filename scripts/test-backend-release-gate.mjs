@@ -47,6 +47,7 @@ const gates = [
   ['Compatibility Predation Wave24', 'npm', ['run', 'test:compatibility-predation-wave24']],
   ['Compatibility Predation Risk Discovery Wave32', 'npm', ['run', 'test:compatibility-predation-risk-discovery-wave32']],
   ['Compatibility Predation Risk Discovery Wave33', 'npm', ['run', 'test:compatibility-predation-risk-discovery-wave33']],
+  ['Compatibility Predation Risk Discovery Wave34', 'npm', ['run', 'test:compatibility-predation-risk-discovery-wave34']],
   ['Compatibility Research Direct Wave25', 'npm', ['run', 'test:compatibility-research-direct-wave25']],
   ['Compatibility Predation Negative Wave26', 'npm', ['run', 'test:compatibility-predation-negative-wave26']],
   ['Compatibility Direct Water Wave27', 'npm', ['run', 'test:compatibility-water-wave27']],
