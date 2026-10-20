@@ -32,13 +32,13 @@ const explicitCanonicalIds = Object.keys(catalogIdentityCorrectionBaseSpeciesIds
 const policyCanonicalIds = [...reviewedColorPolicyCanonicalSpeciesIds].sort();
 const expectedColorPolicyIds = [
   'sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156',
-  'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445',
+  'sp_0157', 'sp_0162', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445',
 ];
-const expectedTaxonRootIds = ['sp_0156', 'sp_0214', 'sp_0224', 'sp_0445'];
+const expectedTaxonRootIds = ['sp_0156', 'sp_0162', 'sp_0214', 'sp_0224', 'sp_0445'];
 assert.equal(explicitCanonicalIds.length, 21);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
 assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
-const expectedVariantFieldPolicyIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0258', 'sp_0361'];
+const expectedVariantFieldPolicyIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0258', 'sp_0361'];
 assert.deepEqual([...reviewedVariantFieldPolicySpeciesIds].sort(), expectedVariantFieldPolicyIds);
 assert.equal(Object.keys(catalogCanonicalIdentities).length, explicitCanonicalIds.length + expectedColorPolicyIds.length + expectedVariantFieldPolicyIds.length);
 for (const speciesId of explicitCanonicalIds) assert.ok(catalogCanonicalIdentities[speciesId]);
@@ -58,7 +58,7 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       assert.deepEqual(identity.inheritancePolicy.inheritedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation']);
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, ['social_behavior', 'territoriality']);
     } else {
-      assert.ok(['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361'].includes(identity.catalogSpeciesId));
+      assert.ok(['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId));
       assert.deepEqual(identity.inheritancePolicy.inheritedFacts, [], 'identity-only strain or morphology review must not imply husbandry inheritance');
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
     }
@@ -104,8 +104,11 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       || identity.registrySource === 'reviewed_variant_field_policy',
     );
     const resolvedProfile = getReviewedCompatibilityProfileForFish(catalog);
-    if (['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361'].includes(identity.catalogSpeciesId)) {
-      assert.equal(resolvedProfile, undefined, 'identity-only morphology policy must not manufacture a Compatibility Profile');
+    if (identity.catalogSpeciesId === 'sp_0067') {
+      assert.ok(resolvedProfile, 'Pearlscale exact reviewed 8/8 fields should synthesize a Compatibility Profile');
+      assert.equal(resolvedProfile.speciesId, 'sp_0067');
+    } else if (['sp_0065', 'sp_0066', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId)) {
+      assert.equal(resolvedProfile, undefined, 'incomplete identity-only morphology policy must not manufacture a Compatibility Profile');
     } else {
       assert.ok(resolvedProfile);
     }
@@ -151,26 +154,38 @@ for (const [speciesId, variantKey] of [
   assert.equal(getCatalogIdentityBoundary(speciesId), undefined);
   const fish = fishData.find(item => item.id === speciesId);
   assert.ok(fish);
-  assert.equal(getReviewedCompatibilityProfileForFish(fish), undefined);
+  const resolvedProfile = getReviewedCompatibilityProfileForFish(fish);
+  if (speciesId === 'sp_0067') {
+    assert.ok(resolvedProfile, 'Pearlscale exact reviewed 8/8 fields should synthesize a Compatibility Profile');
+    assert.equal(resolvedProfile.speciesId, 'sp_0067');
+  } else {
+    assert.equal(resolvedProfile, undefined, 'incomplete morphology variants must remain fail-closed');
+  }
 }
-for (const [speciesId, relationshipType, variantKey] of [
-  ['sp_0065', 'selectively_bred_variant', 'Butterfly Tail'],
-  ['sp_0162', 'color_morph', 'Red Grass Goldfish'],
-] as const) {
-  const identity = getCatalogCanonicalIdentity(speciesId);
-  assert.ok(identity);
-  assert.equal(identity.registrySource, 'reviewed_variant_field_policy');
-  assert.equal(identity.relationshipType, relationshipType);
-  assert.equal(identity.canonicalRootKind, 'reviewed_taxon');
-  assert.equal(identity.canonicalScientificName, 'Carassius auratus');
-  assert.equal(identity.variantKey, variantKey);
-  assert.deepEqual(identity.inheritancePolicy.inheritedFacts, []);
-  assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
-  assert.equal(getCatalogIdentityBoundary(speciesId), undefined);
-  const fish = fishData.find(item => item.id === speciesId);
-  assert.ok(fish);
-  assert.equal(getReviewedCompatibilityProfileForFish(fish), undefined);
-}
+const butterflyTailIdentity = getCatalogCanonicalIdentity('sp_0065');
+assert.ok(butterflyTailIdentity);
+assert.equal(butterflyTailIdentity.registrySource, 'reviewed_variant_field_policy');
+assert.equal(butterflyTailIdentity.relationshipType, 'selectively_bred_variant');
+assert.equal(butterflyTailIdentity.canonicalRootKind, 'reviewed_taxon');
+assert.equal(butterflyTailIdentity.canonicalScientificName, 'Carassius auratus');
+assert.equal(butterflyTailIdentity.variantKey, 'Butterfly Tail');
+assert.deepEqual(butterflyTailIdentity.inheritancePolicy.inheritedFacts, []);
+assert.deepEqual(butterflyTailIdentity.inheritancePolicy.blockedFacts, allFacts);
+assert.equal(getCatalogIdentityBoundary('sp_0065'), undefined);
+
+const redGrassGoldfishIdentity = getCatalogCanonicalIdentity('sp_0162');
+assert.ok(redGrassGoldfishIdentity);
+assert.equal(redGrassGoldfishIdentity.registrySource, 'reviewed_color_morph_taxon_policy');
+assert.equal(redGrassGoldfishIdentity.relationshipType, 'color_morph');
+assert.equal(redGrassGoldfishIdentity.canonicalRootKind, 'reviewed_taxon');
+assert.equal(redGrassGoldfishIdentity.canonicalScientificName, 'Carassius auratus');
+assert.equal(redGrassGoldfishIdentity.variantKey, 'Red Grass Goldfish');
+assert.deepEqual(redGrassGoldfishIdentity.inheritancePolicy.inheritedFacts, allFacts);
+assert.deepEqual(redGrassGoldfishIdentity.inheritancePolicy.blockedFacts, []);
+assert.equal(getCatalogIdentityBoundary('sp_0162'), undefined);
+const redGrassGoldfish = fishData.find(item => item.id === 'sp_0162');
+assert.ok(redGrassGoldfish);
+assert.ok(getReviewedCompatibilityProfileForFish(redGrassGoldfish));
 
 for (const [speciesId, variantKey] of [
   ['sp_0143', 'Red Grass'],
@@ -422,22 +437,33 @@ assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
 
 const coverage = buildCompatibilityCoreFieldCoverage();
-assert.equal(coverage.summary.genericOnboardingReadySpecies, 100);
+assert.equal(coverage.summary.genericOnboardingReadySpecies, 102);
 const blueGouramiCoverage = coverage.rows.find(item => item.speciesId === 'sp_0445');
 assert.ok(blueGouramiCoverage);
 assert.equal(blueGouramiCoverage.genericOnboardingReady, true);
 assert.equal(blueGouramiCoverage.authoritativeFieldCount, 8);
-const identityOnlyVariantIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361'];
+const identityOnlyVariantIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'];
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);
   if (!['sp_0224', 'sp_0258', ...identityOnlyVariantIds].includes(speciesId)) {
     assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant with complete authority must remain generic-ready: ' + speciesId);
   }
-  if (identityOnlyVariantIds.includes(speciesId)) {
-    assert.equal(row.genericOnboardingReady, false, 'identity-only strain or morphology review must remain not ready');
-    assert.equal(row.authoritativeFieldCount, 0);
-    assert.equal(row.actionableGapCount, 8);
+  const reviewedVariantCoverageExpectations: Record<string, { ready: boolean; authoritative: number; gaps: number }> = {
+    sp_0065: { ready: false, authoritative: 7, gaps: 1 },
+    sp_0066: { ready: false, authoritative: 7, gaps: 1 },
+    sp_0067: { ready: true, authoritative: 8, gaps: 0 },
+    sp_0068: { ready: false, authoritative: 7, gaps: 1 },
+    sp_0143: { ready: false, authoritative: 7, gaps: 1 },
+    sp_0144: { ready: false, authoritative: 7, gaps: 1 },
+    sp_0155: { ready: false, authoritative: 6, gaps: 2 },
+    sp_0361: { ready: false, authoritative: 7, gaps: 1 },
+  };
+  const expectedVariantCoverage = reviewedVariantCoverageExpectations[speciesId];
+  if (expectedVariantCoverage) {
+    assert.equal(row.genericOnboardingReady, expectedVariantCoverage.ready, 'reviewed exact-object field coverage must control readiness');
+    assert.equal(row.authoritativeFieldCount, expectedVariantCoverage.authoritative);
+    assert.equal(row.actionableGapCount, expectedVariantCoverage.gaps);
     assert.equal(row.terminalGapCount, 0);
   }
 }

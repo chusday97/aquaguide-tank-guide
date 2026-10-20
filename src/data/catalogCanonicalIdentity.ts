@@ -64,6 +64,7 @@ const reviewedColorOnlyVariantKeys = new Set([
   'green',
   'platinum',
   'red',
+  'red_grass_goldfish',
   'super_red',
   'white',
 ]);
@@ -123,12 +124,6 @@ const reviewedVariantFieldPolicyConfigs: Record<string, ReviewedVariantFieldPoli
     canonicalScientificName: 'Poecilia reticulata',
     relationshipType: 'trade_strain',
     expectedVariantKey: 'Blue Grass',
-    inheritedFacts: [],
-  },
-  sp_0162: {
-    canonicalScientificName: 'Carassius auratus',
-    relationshipType: 'color_morph',
-    expectedVariantKey: 'Red Grass Goldfish',
     inheritedFacts: [],
   },
   sp_0155: {

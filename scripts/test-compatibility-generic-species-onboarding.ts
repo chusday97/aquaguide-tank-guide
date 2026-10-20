@@ -9,7 +9,7 @@ import {
   type DomainSpeciesFact,
 } from '../packages/domain-rules/src/compatibility';
 import { fishData } from '../src/data/fishData';
-import { buildReviewedCompatibilityProfileFromCatalogFields, getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../src/data/compatibilityEvidence';
+import { buildReviewedCompatibilityProfileFromCatalogFields, getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish, getReviewedPairRule } from '../src/data/compatibilityEvidence';
 import {
   applyReviewedCompatibilityBootstrap,
   resetRuntimeCompatibilityEvidenceForTest,
@@ -212,7 +212,17 @@ assert.deepEqual(pearlscaleDerivedProfile.citations.map(source => source.id).sor
   'tankbud-pearlscale-goldfish-variant-phase2-18',
 ]);
 assert.equal(buildReviewedCompatibilityProfileFromCatalogFields('sp_0066'), undefined, '7/8 Red Cap authority must remain fail-closed');
-assert.equal(buildReviewedCompatibilityProfileFromCatalogFields('sp_0162'), undefined, 'incomplete Red Grass Goldfish authority must remain fail-closed');
+const redGrassGoldfishDerivedProfile = buildReviewedCompatibilityProfileFromCatalogFields('sp_0162');
+assert.ok(redGrassGoldfishDerivedProfile, 'reviewed Red Grass Goldfish 8/8 authority must auto-promote');
+assert.equal(redGrassGoldfishDerivedProfile.waterType, 'freshwater');
+assert.ok(redGrassGoldfishDerivedProfile.behaviorTraits.includes('group_living'));
+assert.equal(redGrassGoldfishDerivedProfile.minimumGroupSize, 2);
+assert.deepEqual(redGrassGoldfishDerivedProfile.predationTargets, ['fish_fry']);
+for (const rawVariantId of ['sp_0063', 'sp_0064', 'sp_0351']) {
+  const rawVariant = fishData.find(item => item.id === rawVariantId);
+  assert.ok(rawVariant);
+  assert.equal(getReviewedCompatibilityProfileForFish(rawVariant), undefined, 'unreviewed raw Carassius var. labels must not inherit the new goldfish taxon authority');
+}
 const pearlscaleCoverage = buildCompatibilityCoreFieldCoverage().rows.find(row => row.speciesId === 'sp_0067');
 assert.ok(pearlscaleCoverage);
 assert.equal(pearlscaleCoverage.genericOnboardingReady, true);

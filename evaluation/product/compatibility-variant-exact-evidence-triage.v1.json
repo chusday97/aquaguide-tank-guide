@@ -14,14 +14,14 @@
     "discoveryEvidenceCeilingMeaning": "Current trusted-source discovery route produced no eligible URLs in two independent rounds; do not repeat the same route without changing source strategy."
   },
   "summary": {
-    "variantObjects": 8,
-    "totalResearchSlots": 15,
+    "variantObjects": 7,
+    "totalResearchSlots": 8,
     "draftEvidenceFoundObjects": 0,
-    "discoveryRetryRequiredObjects": 5,
+    "discoveryRetryRequiredObjects": 4,
     "discoveryEvidenceCeilingObjects": 3,
     "notRunObjects": 0,
     "supportedSlots": 0,
-    "unresolvedSlots": 15
+    "unresolvedSlots": 8
   },
   "objects": [
     {
@@ -124,10 +124,9 @@
       "speciesId": "sp_0143",
       "variantKey": "Red Grass",
       "canonicalScientificName": "Poecilia reticulata",
-      "totalSlots": 2,
+      "totalSlots": 1,
       "supportedFields": [],
       "unresolvedFields": [
-        "predation",
         "territoriality"
       ],
       "researchRuns": [
@@ -195,41 +194,12 @@
       "grantsInheritance": false
     },
     {
-      "speciesId": "sp_0162",
-      "variantKey": "Red Grass Goldfish",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 5,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "adult_size",
-        "predation",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ],
-      "researchRuns": [
-        {
-          "reportPath": "evaluation/reports/compatibility-variant-exact-evidence-research.v1.json",
-          "round": 1,
-          "attemptedUrls": 0,
-          "verifiedDocuments": 0,
-          "candidateFields": [],
-          "discoveryStatus": "discovery_empty"
-        }
-      ],
-      "status": "discovery_retry_required",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
       "speciesId": "sp_0361",
       "variantKey": "Longfin",
       "canonicalScientificName": "Tanichthys albonubes",
-      "totalSlots": 2,
+      "totalSlots": 1,
       "supportedFields": [],
       "unresolvedFields": [
-        "predation",
         "territoriality"
       ],
       "researchRuns": [

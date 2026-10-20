@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 4,
+  "totalPackets": 6,
   "packets": [
     {
       "speciesId": "sp_0065",
@@ -94,6 +94,36 @@
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     },
     {
+      "speciesId": "sp_0143",
+      "name": "红草尾孔雀鱼",
+      "scientificName": "Poecilia reticulata var.",
+      "missingField": "territoriality",
+      "currentStatus": "needs_research",
+      "currentReasonCode": "missing_reviewed_field_authority",
+      "existingEvidenceIds": [
+        "aquaticarts-red-grass-guppy-variant-phase2-17",
+        "masukoap-red-grass-guppy-phase2-19"
+      ],
+      "existingSources": [
+        {
+          "id": "aquaticarts-red-grass-guppy-variant-phase2-17",
+          "title": "Red Grass Guppy (Poecilia reticulata \"Red Grass\") — exact-variant care guide",
+          "publisher": "Aquatic Arts",
+          "url": "https://aquaticarts.com/products/red-grass-guppy-poecilia-reticulata-bred-by-aquatic-arts",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "masukoap-red-grass-guppy-phase2-19",
+          "title": "Red Grass Guppy exact-strain care and breeding profile",
+          "publisher": "Aquarium Encyclopedia / Masukoap",
+          "url": "https://masukoap.com/aquacrypt/%E3%83%AC%E3%83%83%E3%83%89%E3%82%B0%E3%83%A9%E3%82%B9%E3%82%B0%E3%83%83%E3%83%94%E3%83%BC%E3%81%AE%E9%A3%BC%E3%81%84%E6%96%B9%E3%81%A8%E5%9B%B3%E9%91%91%E6%83%85%E5%A0%B1/",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
       "speciesId": "sp_0144",
       "name": "蓝草尾孔雀鱼",
       "scientificName": "Poecilia reticulata var.",
@@ -117,6 +147,36 @@
           "title": "Blue Grass Guppy (Poecilia reticulata) — exact-strain behaviour and fry predation",
           "publisher": "Shoal & Stem",
           "url": "https://shoalandstem.com/species/blue-grass-guppy",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0361",
+      "name": "长鳍白云金丝 (改良)",
+      "scientificName": "Tanichthys albonubes var.",
+      "missingField": "territoriality",
+      "currentStatus": "needs_research",
+      "currentReasonCode": "missing_reviewed_field_authority",
+      "existingEvidenceIds": [
+        "aquaticarts-longfin-white-cloud-variant-phase2-17",
+        "tropicalfishco-longfin-white-cloud-phase2-19"
+      ],
+      "existingSources": [
+        {
+          "id": "aquaticarts-longfin-white-cloud-variant-phase2-17",
+          "title": "Longfin White Cloud Mountain Minnow (Tanichthys albonubes) — exact-variant care guide",
+          "publisher": "Aquatic Arts",
+          "url": "https://aquaticarts.com/products/longfin-white-cloud-mountain-minnow-tanichthys-albonubes-tank-bred",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "tropicalfishco-longfin-white-cloud-phase2-19",
+          "title": "Longfin White Cloud Mountain Minnow exact-form care profile",
+          "publisher": "Tropical Fish Co",
+          "url": "https://tropicalfishco.co.uk/products/tropical-fish-uk-for-sale-buy-live-online-longfin-white-cloud",
           "reviewStatus": "reviewed"
         }
       ],

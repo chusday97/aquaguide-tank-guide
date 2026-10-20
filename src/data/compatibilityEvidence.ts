@@ -52,6 +52,7 @@ import { identityBoundaryCorrectionsPhase2_17Sources } from './catalogReviewBatc
 import { identityBoundaryCorrectionsPhase2_18Sources } from './catalogReviewBatches/identity-boundary-corrections-phase2-18';
 import { variantEvidencePhase2_17Sources } from './catalogReviewBatches/variant-evidence-phase2-17';
 import { variantEvidencePhase2_18Sources } from './catalogReviewBatches/variant-evidence-phase2-18';
+import { variantEvidencePhase2_19Sources } from './catalogReviewBatches/variant-evidence-phase2-19';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 import { catalogCanonicalIdentities, type CatalogCanonicalIdentity } from './catalogCanonicalIdentity';
 import { getApprovedCatalogFieldReviews, type CatalogFieldReview } from './catalogFieldReviews';
@@ -1767,6 +1768,7 @@ const canonicalIdentitySourceById = new Map(
     ...Object.values(identityBoundaryCorrectionsPhase2_18Sources),
     ...Object.values(variantEvidencePhase2_17Sources),
     ...Object.values(variantEvidencePhase2_18Sources),
+    ...Object.values(variantEvidencePhase2_19Sources),
     ...Object.values(compatibilityAuthorityPatchSources),
   ].map(source => [source.id, source] as const),
 );
@@ -1784,6 +1786,24 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
 }
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
+  'Carassius auratus': {
+    speciesId: 'base:Carassius auratus',
+    waterType: 'freshwater',
+    behaviorTraits: ['group_living'],
+    minimumGroupSize: 2,
+    predationTargets: ['fish_fry'],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [
+      variantEvidencePhase2_19Sources.goldfishOata,
+      variantEvidencePhase2_19Sources.goldfishRspca,
+      variantEvidencePhase2_19Sources.goldfishAdw,
+    ],
+    requiredFacts: [
+      'water', 'temperature', 'ph', 'adult_size', 'tank_size',
+      'social_behavior', 'territoriality', 'predation',
+    ],
+  },
 
   'Neocaridina davidi': {
     speciesId: 'base:Neocaridina davidi',
@@ -2145,6 +2165,10 @@ export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | '
       const availableFacts = new Set(base.requiredFacts ?? []);
       const inheritedFacts = canonicalIdentity.inheritancePolicy.inheritedFacts
         .filter(fact => availableFacts.has(fact));
+      // A reviewed canonical identity can establish what an object is without
+      // granting any husbandry inheritance. Zero approved facts must therefore
+      // remain fail-closed instead of manufacturing an empty runtime Profile.
+      if (inheritedFacts.length === 0) return undefined;
       const identityCitations = canonicalIdentity.identityEvidenceSourceIds.map(sourceId => {
         const source = canonicalIdentitySourceById.get(sourceId) ?? getKnowledgeSource(sourceId);
         if (!source) throw new Error('Missing canonical identity evidence source: ' + sourceId);
@@ -2169,8 +2193,14 @@ export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | '
   // Raw scientific-name morphology suffixes are not sufficient authority for
   // inheritance. Reviewed canonical variants are materialized or resolved via
   // an explicit reviewed taxon root above.
-  const baseScientificName = getBaseSpeciesScientificName(fish.scientificName);
-  return baseScientificName ? baseSpeciesProfiles[baseScientificName] : undefined;
+  const rawScientificName = fish.scientificName?.trim() ?? '';
+  const baseScientificName = getBaseSpeciesScientificName(rawScientificName);
+  if (!baseScientificName) return undefined;
+  // Some reviewed taxon authorities are intentionally canonical-identity-only
+  // for variant objects. Goldfish has many morphology-changing fancy forms, so
+  // a raw `Carassius auratus var. ...` string must not bypass identity review.
+  if (baseScientificName === 'Carassius auratus' && rawScientificName !== baseScientificName) return undefined;
+  return baseSpeciesProfiles[baseScientificName];
 };
 
 export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];

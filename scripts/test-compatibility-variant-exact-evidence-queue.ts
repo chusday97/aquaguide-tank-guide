@@ -13,13 +13,13 @@ assert.equal(queue.policy.promotionAllowed, false);
 assert.equal(queue.policy.writesAuthority, false);
 assert.equal(queue.policy.baseTaxonEvidenceCanCloseQueuedSlots, false);
 assert.equal(queue.policy.wholeProfileInheritanceAllowed, false);
-assert.equal(queue.summary.variantObjects, 8);
-assert.equal(queue.summary.totalResearchSlots, 15);
+assert.equal(queue.summary.variantObjects, 7);
+assert.equal(queue.summary.totalResearchSlots, 8);
 assert.equal(queue.summary.environmentVariantSpecificSlots, 0);
-assert.equal(queue.summary.exactObjectCoreSlots, 15);
+assert.equal(queue.summary.exactObjectCoreSlots, 8);
 assert.equal(queue.summary.contractBlockedSlotsNotQueued, 0);
 
-assert.equal(new Set(queue.items.map(item => item.speciesId + ':' + item.field)).size, 15);
+assert.equal(new Set(queue.items.map(item => item.speciesId + ':' + item.field)).size, 8);
 assert.equal(queue.items.every(item => item.promotionAllowed === false && item.writesAuthority === false), true);
 assert.equal(queue.items.filter(item => item.sourceLane === 'environment_bridge_hold').every(item => (
   item.field === 'temperature' || item.field === 'ph'
@@ -29,14 +29,12 @@ assert.equal(queue.items.filter(item => item.sourceLane === 'exact_object_policy
 )), true);
 
 assert.equal(queue.items.some(item => item.sourceLane === 'environment_bridge_hold'), false, 'all remaining queued slots are exact-object-only after phase2-18 environmental promotion');
-for (const speciesId of ['sp_0065', 'sp_0066', 'sp_0068', 'sp_0144']) {
+for (const speciesId of ['sp_0065', 'sp_0066', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0361']) {
   assert.deepEqual(queue.items.filter(item => item.speciesId === speciesId).map(item => item.field).sort(), ['territoriality']);
 }
-for (const speciesId of ['sp_0143', 'sp_0155', 'sp_0361']) {
-  assert.deepEqual(queue.items.filter(item => item.speciesId === speciesId).map(item => item.field).sort(), ['predation', 'territoriality']);
-}
-assert.deepEqual(queue.items.filter(item => item.speciesId === 'sp_0162').map(item => item.field).sort(), ['adult_size', 'predation', 'social_behavior', 'tank_size', 'territoriality']);
+assert.deepEqual(queue.items.filter(item => item.speciesId === 'sp_0155').map(item => item.field).sort(), ['predation', 'territoriality']);
+assert.equal(queue.items.some(item => item.speciesId === 'sp_0162'), false, 'Red Grass Goldfish 8/8 authority must leave the exact-evidence queue');
 assert.equal(queue.items.some(item => item.speciesId === 'sp_0067'), false, 'Pearlscale 8/8 exact authority must leave the research queue');
 assert.deepEqual(queue.blockedCandidateContracts, []);
 
-console.log('Compatibility variant exact-evidence queue PASS: 15 exact-object research slots remain after 54 variant fields close; Pearlscale 8/8 exits the queue.');
+console.log('Compatibility variant exact-evidence queue PASS: 8 exact-object behavior slots remain across 7 variants after phase2-19 promotion.');

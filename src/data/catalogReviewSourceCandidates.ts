@@ -1,6 +1,7 @@
 import type { CatalogEvidenceSource } from '../../packages/contracts/src';
 import { variantEvidencePhase2_17ProfileIds, variantEvidencePhase2_17Sources } from './catalogReviewBatches/variant-evidence-phase2-17';
 import { variantEvidencePhase2_18ProfileIds, variantEvidencePhase2_18Sources } from './catalogReviewBatches/variant-evidence-phase2-18';
+import { variantEvidencePhase2_19ProfileIds, variantEvidencePhase2_19Sources } from './catalogReviewBatches/variant-evidence-phase2-19';
 
 /**
  * Curated starting points for the first review batch.
@@ -101,6 +102,12 @@ for (const speciesId of variantEvidencePhase2_18ProfileIds) {
   reviewedVariantSourcesBySpecies.set(speciesId, [
     ...(reviewedVariantSourcesBySpecies.get(speciesId) ?? []),
     ...Object.values(variantEvidencePhase2_18Sources),
+  ]);
+}
+for (const speciesId of variantEvidencePhase2_19ProfileIds) {
+  reviewedVariantSourcesBySpecies.set(speciesId, [
+    ...(reviewedVariantSourcesBySpecies.get(speciesId) ?? []),
+    ...Object.values(variantEvidencePhase2_19Sources),
   ]);
 }
 

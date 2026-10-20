@@ -27,17 +27,17 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "genericOnboardingReadySpecies": 100,
+    "genericOnboardingReadySpecies": 102,
     "explicitReviewedCanonicalBridges": 21,
-    "reviewedColorPolicyCanonicalRecords": 13,
-    "reviewedColorTaxonRootRecords": 4,
-    "reviewedVariantFieldPolicyRecords": 10,
-    "reviewedVariantFieldResearchPolicies": 9,
-    "baseTaxonCandidateFactSlots": 27,
-    "exactObjectEvidenceFactSlots": 45,
+    "reviewedColorPolicyCanonicalRecords": 14,
+    "reviewedColorTaxonRootRecords": 5,
+    "reviewedVariantFieldPolicyRecords": 9,
+    "reviewedVariantFieldResearchPolicies": 8,
+    "baseTaxonCandidateFactSlots": 24,
+    "exactObjectEvidenceFactSlots": 40,
     "totalCanonicalIdentityRecords": 44,
-    "policyPromotedReadySpecies": 12,
-    "fieldPolicyReadySpecies": 0,
+    "policyPromotedReadySpecies": 13,
+    "fieldPolicyReadySpecies": 1,
     "directReviewedVariantObjects": 2,
     "remainingReviewedVariantObjects": 0,
     "remainingReviewedVariantsByClass": {}
@@ -211,6 +211,33 @@
       "registrySource": "reviewed_color_morph_policy",
       "evidenceIds": [
         "batch10-fishbase-mikrogeophagus-ramirezi-blue"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0162",
+      "name": "红草鱼",
+      "scientificName": "Carassius auratus var.",
+      "canonicalSpeciesId": null,
+      "canonicalRootKind": "reviewed_taxon",
+      "canonicalScientificName": "Carassius auratus",
+      "variantKey": "Red Grass Goldfish",
+      "registrySource": "reviewed_color_morph_taxon_policy",
+      "evidenceIds": [
+        "phase2-14-dalian-grass-goldfish",
+        "phase2-14-china-feed-red-grass-goldfish"
       ],
       "inheritedFacts": [
         "water",
@@ -423,7 +450,7 @@
       ],
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "authoritativeFieldCount": 7,
       "terminalGapFields": []
     },
     {
@@ -464,7 +491,7 @@
       ],
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "authoritativeFieldCount": 7,
       "terminalGapFields": []
     },
     {
@@ -504,8 +531,8 @@
         "predation"
       ],
       "researchPolicyGrantsInheritance": false,
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "terminalGapFields": []
     },
     {
@@ -546,7 +573,7 @@
       ],
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "authoritativeFieldCount": 7,
       "terminalGapFields": []
     },
     {
@@ -587,7 +614,7 @@
       ],
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "authoritativeFieldCount": 7,
       "terminalGapFields": []
     },
     {
@@ -628,7 +655,7 @@
       ],
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "authoritativeFieldCount": 7,
       "terminalGapFields": []
     },
     {
@@ -669,48 +696,7 @@
       ],
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "terminalGapFields": []
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "scientificName": "Carassius auratus var.",
-      "canonicalScientificName": "Carassius auratus",
-      "relationshipType": "color_morph",
-      "variantKey": "Red Grass Goldfish",
-      "registrySource": "reviewed_variant_field_policy",
-      "evidenceIds": [
-        "phase2-14-dalian-grass-goldfish",
-        "phase2-14-china-feed-red-grass-goldfish"
-      ],
-      "inheritedFacts": [],
-      "blockedFacts": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "researchPolicyPresent": true,
-      "baseTaxonCandidateFacts": [
-        "water",
-        "temperature",
-        "ph"
-      ],
-      "exactObjectEvidenceFacts": [
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "researchPolicyGrantsInheritance": false,
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "authoritativeFieldCount": 6,
       "terminalGapFields": []
     },
     {
@@ -784,7 +770,7 @@
       ],
       "researchPolicyGrantsInheritance": false,
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "authoritativeFieldCount": 7,
       "terminalGapFields": []
     }
   ],

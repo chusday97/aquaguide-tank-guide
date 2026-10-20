@@ -13,12 +13,12 @@
     "coral": 43
   },
   "fishDomainSpecies": 308,
-  "genericOnboardingReadySpecies": 101,
-  "genericReadyUniquePairs": 5050,
+  "genericOnboardingReadySpecies": 102,
+  "genericReadyUniquePairs": 5151,
   "fishPairs": 47278,
   "statuses": {
-    "compatible": 666,
-    "caution": 4876,
+    "compatible": 748,
+    "caution": 4794,
     "not_recommended": 19819,
     "insufficient_data": 21917
   },
@@ -26,7 +26,7 @@
   "unknownRatePct": 46.36,
   "systemGapPairs": 0,
   "systemGapPct": 0,
-  "fullyInformedPairs": 9493,
+  "fullyInformedPairs": 9631,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
@@ -2063,8 +2063,8 @@
     "policy": "Prioritize reviewed evidence work by actual UNKNOWN-pair impact. affectedUnknownPairs means the taxon participates in that many current UNKNOWN pairs; it is not a guarantee that resolving the taxon alone will unlock every pair because the opposite species or non-core facts can remain blocking.",
     "highestLeverageEvidenceTargets": [
       {
-        "speciesId": "sp_0144",
-        "name": "蓝草尾孔雀鱼",
+        "speciesId": "sp_0143",
+        "name": "红草尾孔雀鱼",
         "scientificName": "Poecilia reticulata var.",
         "unknownPairs": 129,
         "actionableFields": [
@@ -2073,13 +2073,12 @@
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0143",
-        "name": "红草尾孔雀鱼",
+        "speciesId": "sp_0144",
+        "name": "蓝草尾孔雀鱼",
         "scientificName": "Poecilia reticulata var.",
         "unknownPairs": 129,
         "actionableFields": [
-          "territoriality",
-          "predation"
+          "territoriality"
         ],
         "terminalReasons": []
       },
@@ -2093,96 +2092,19 @@
           "predation"
         ],
         "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0162",
-        "name": "红草鱼",
-        "scientificName": "Carassius auratus var.",
-        "unknownPairs": 129,
-        "actionableFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
       }
     ],
-    "taxonDecisionImpactQueue": [
-      {
-        "researchKey": "Carassius auratus",
-        "baseScientificName": "Carassius auratus",
-        "completionEligible": false,
-        "variantObjectEvidenceBlocked": true,
-        "canCompleteFromBaseTaxonResearch": false,
-        "affectedUnknownPairs": 129,
-        "gapInstances": 8,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 16.13,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph"
-        ],
-        "exactObjectEvidenceGapFields": [
-          "adult_size",
-          "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": true,
-        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      }
-    ],
+    "taxonDecisionImpactQueue": [],
     "completionEligibleTaxonQueue": [],
-    "variantObjectEvidenceTaxonQueue": [
-      {
-        "researchKey": "Carassius auratus",
-        "baseScientificName": "Carassius auratus",
-        "completionEligible": false,
-        "variantObjectEvidenceBlocked": true,
-        "canCompleteFromBaseTaxonResearch": false,
-        "affectedUnknownPairs": 129,
-        "gapInstances": 8,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 16.13,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph"
-        ],
-        "exactObjectEvidenceGapFields": [
-          "adult_size",
-          "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": true,
-        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      }
-    ],
+    "variantObjectEvidenceTaxonQueue": [],
     "terminalBlockedTaxonQueue": [],
     "taxonQueueSummary": {
-      "totalResearchJobs": 1,
+      "totalResearchJobs": 0,
       "completionEligibleJobs": 0,
-      "variantObjectEvidenceBlockedJobs": 1,
+      "variantObjectEvidenceBlockedJobs": 0,
       "terminalBlockedJobs": 0,
       "completionEligibleCatalogObjects": 0,
-      "variantObjectEvidenceBlockedCatalogObjects": 1,
+      "variantObjectEvidenceBlockedCatalogObjects": 0,
       "terminalBlockedCatalogObjects": 0
     },
     "terminalReasonCounts": [
@@ -2243,11 +2165,11 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 43446
+      "count": 43442
     },
     {
       "code": "missing_ph",
-      "count": 33315
+      "count": 33331
     },
     {
       "code": "missing_hardness",
@@ -2255,39 +2177,39 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 96,
+    "actionableGaps": 86,
     "fieldActionableGaps": [
       {
         "field": "predation",
-        "count": 82
+        "count": 79
       },
       {
         "field": "territoriality",
-        "count": 8
+        "count": 7
       },
       {
         "field": "water",
-        "count": 1
+        "count": 0
       },
       {
         "field": "temperature",
-        "count": 1
+        "count": 0
       },
       {
         "field": "tank_size",
-        "count": 1
+        "count": 0
       },
       {
         "field": "social_behavior",
-        "count": 1
+        "count": 0
       },
       {
         "field": "ph",
-        "count": 1
+        "count": 0
       },
       {
         "field": "adult_size",
-        "count": 1
+        "count": 0
       }
     ],
     "domainOrIdentityHeldSpecies": 258

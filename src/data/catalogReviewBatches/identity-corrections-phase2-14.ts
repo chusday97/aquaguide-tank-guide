@@ -84,7 +84,7 @@ export const identityCorrectionsPhase2_14FieldReviews: CatalogFieldReview[] = [
     ],
     [
       'Peer-reviewed Chinese aquaculture literature identifies grass goldfish (草金鱼) as Carassius auratus, and the China Feed study explicitly uses Carassius auratus red var. for the red grass-goldfish form.',
-      'The catalog label 红草鱼 is therefore treated as a shortened/truncated Red Grass Goldfish label within Carassius auratus, not as evidence for grass carp or another taxon. Identity closes, but Compatibility fields remain blocked pending object-level evidence.',
+      'The catalog label 红草鱼 is therefore treated as a shortened/truncated Red Grass Goldfish label within Carassius auratus, not as evidence for grass carp or another taxon. The reviewed evidence establishes a red colour form rather than a morphology-changing fancy-goldfish form; Compatibility facts may therefore use the reviewed color-morph taxon policy, while source-controlled field reviews still materialize runtime numeric values.',
     ],
   ),
 ];

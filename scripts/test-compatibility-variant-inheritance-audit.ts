@@ -9,16 +9,16 @@ assert.deepEqual(disk, audit, 'variant inheritance audit artifact must be regene
 
 assert.equal(audit.summary.fishDomainSpecies, 308);
 assert.equal(audit.summary.explicitReviewedCanonicalBridges, 21);
-assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 13);
-assert.equal(audit.summary.reviewedColorTaxonRootRecords, 4);
-assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 10);
-assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 9);
-assert.equal(audit.summary.baseTaxonCandidateFactSlots, 27);
-assert.equal(audit.summary.exactObjectEvidenceFactSlots, 45);
+assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 14);
+assert.equal(audit.summary.reviewedColorTaxonRootRecords, 5);
+assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 9);
+assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 8);
+assert.equal(audit.summary.baseTaxonCandidateFactSlots, 24);
+assert.equal(audit.summary.exactObjectEvidenceFactSlots, 40);
 assert.equal(audit.summary.totalCanonicalIdentityRecords, 44);
-assert.equal(audit.summary.genericOnboardingReadySpecies, 100);
-assert.equal(audit.summary.policyPromotedReadySpecies, 12);
-assert.equal(audit.summary.fieldPolicyReadySpecies, 0);
+assert.equal(audit.summary.genericOnboardingReadySpecies, 102);
+assert.equal(audit.summary.policyPromotedReadySpecies, 13);
+assert.equal(audit.summary.fieldPolicyReadySpecies, 1);
 assert.equal(audit.summary.directReviewedVariantObjects, 2);
 assert.equal(audit.summary.remainingReviewedVariantObjects, 0);
 assert.equal(audit.policy.pairRulesRequiredForPromotedColorMorphs, false);
@@ -34,7 +34,7 @@ assert.equal(audit.policy.unresolvedIdentityAutoPromoted, false);
 
 assert.deepEqual(
   audit.promoted.map(item => item.speciesId),
-  ['sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156', 'sp_0157', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445'],
+  ['sp_0016', 'sp_0104', 'sp_0116', 'sp_0146', 'sp_0151', 'sp_0156', 'sp_0157', 'sp_0162', 'sp_0174', 'sp_0207', 'sp_0214', 'sp_0224', 'sp_0283', 'sp_0445'],
 );
 assert.ok(audit.promoted.every(item => (
   item.registrySource === 'reviewed_color_morph_policy'
@@ -43,7 +43,7 @@ assert.ok(audit.promoted.every(item => (
 assert.ok(audit.promoted.filter(item => item.speciesId !== 'sp_0224').every(item => item.genericOnboardingReady && item.authoritativeFieldCount === 8));
 assert.ok(audit.promoted.every(item => item.blockedFacts.length === 0));
 const taxonRootRows = audit.promoted.filter(item => item.canonicalRootKind === 'reviewed_taxon');
-assert.deepEqual(taxonRootRows.map(item => item.speciesId), ['sp_0156', 'sp_0214', 'sp_0224', 'sp_0445']);
+assert.deepEqual(taxonRootRows.map(item => item.speciesId), ['sp_0156', 'sp_0162', 'sp_0214', 'sp_0224', 'sp_0445']);
 assert.ok(taxonRootRows.every(item => item.canonicalSpeciesId === null));
 const platinumSnakehead = audit.promoted.find(item => item.speciesId === 'sp_0224');
 assert.ok(platinumSnakehead);
@@ -57,23 +57,33 @@ assert.equal(blueGourami.variantKey, 'Blue');
 assert.equal(blueGourami.genericOnboardingReady, true);
 assert.equal(blueGourami.authoritativeFieldCount, 8);
 
-assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0258', 'sp_0361']);
-for (const [speciesId, relationshipType, variantKey] of [
-  ['sp_0065', 'selectively_bred_variant', 'Butterfly Tail'],
-  ['sp_0162', 'color_morph', 'Red Grass Goldfish'],
-] as const) {
-  const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
-  assert.ok(policy);
-  assert.equal(policy.registrySource, 'reviewed_variant_field_policy');
-  assert.equal(policy.relationshipType, relationshipType);
-  assert.equal(policy.canonicalScientificName, 'Carassius auratus');
-  assert.equal(policy.variantKey, variantKey);
-  assert.deepEqual(policy.inheritedFacts, []);
-  assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-  assert.equal(policy.authoritativeFieldCount, 0);
-  assert.equal(policy.genericOnboardingReady, false);
-  assert.deepEqual(policy.terminalGapFields, []);
-}
+assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0258', 'sp_0361']);
+const butterflyTailPolicy = audit.fieldScopedPolicies.find(item => item.speciesId === 'sp_0065');
+assert.ok(butterflyTailPolicy);
+assert.equal(butterflyTailPolicy.registrySource, 'reviewed_variant_field_policy');
+assert.equal(butterflyTailPolicy.relationshipType, 'selectively_bred_variant');
+assert.equal(butterflyTailPolicy.canonicalScientificName, 'Carassius auratus');
+assert.equal(butterflyTailPolicy.variantKey, 'Butterfly Tail');
+assert.deepEqual(butterflyTailPolicy.inheritedFacts, []);
+assert.equal(butterflyTailPolicy.genericOnboardingReady, false);
+
+const redGrassGoldfishPolicy = audit.promoted.find(item => item.speciesId === 'sp_0162');
+assert.ok(redGrassGoldfishPolicy);
+assert.equal(redGrassGoldfishPolicy.registrySource, 'reviewed_color_morph_taxon_policy');
+assert.equal(redGrassGoldfishPolicy.canonicalScientificName, 'Carassius auratus');
+assert.equal(redGrassGoldfishPolicy.variantKey, 'Red Grass Goldfish');
+assert.deepEqual(redGrassGoldfishPolicy.blockedFacts, []);
+assert.equal(redGrassGoldfishPolicy.authoritativeFieldCount, 8);
+assert.equal(redGrassGoldfishPolicy.genericOnboardingReady, true);
+const fieldScopedCoverageExpectations: Record<string, { authoritative: number; ready: boolean }> = {
+  sp_0066: { authoritative: 7, ready: false },
+  sp_0067: { authoritative: 8, ready: true },
+  sp_0068: { authoritative: 7, ready: false },
+  sp_0143: { authoritative: 7, ready: false },
+  sp_0144: { authoritative: 7, ready: false },
+  sp_0155: { authoritative: 6, ready: false },
+  sp_0361: { authoritative: 7, ready: false },
+};
 for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
   assert.ok(policy);
@@ -82,8 +92,8 @@ for (const speciesId of ['sp_0066', 'sp_0067', 'sp_0068']) {
   assert.equal(policy.canonicalScientificName, 'Carassius auratus');
   assert.deepEqual(policy.inheritedFacts, []);
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-  assert.equal(policy.authoritativeFieldCount, 0);
-  assert.equal(policy.genericOnboardingReady, false);
+  assert.equal(policy.authoritativeFieldCount, fieldScopedCoverageExpectations[speciesId].authoritative);
+  assert.equal(policy.genericOnboardingReady, fieldScopedCoverageExpectations[speciesId].ready);
   assert.deepEqual(policy.terminalGapFields, []);
 }
 for (const [speciesId, variantKey] of [
@@ -98,7 +108,7 @@ for (const [speciesId, variantKey] of [
   assert.equal(policy.variantKey, variantKey);
   assert.deepEqual(policy.inheritedFacts, []);
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-  assert.equal(policy.authoritativeFieldCount, 0);
+  assert.equal(policy.authoritativeFieldCount, fieldScopedCoverageExpectations[speciesId].authoritative);
   assert.equal(policy.genericOnboardingReady, false);
   assert.deepEqual(policy.terminalGapFields, []);
 }
@@ -113,11 +123,11 @@ for (const [speciesId, taxon] of [
   assert.equal(policy.canonicalScientificName, taxon);
   assert.deepEqual(policy.inheritedFacts, []);
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-  assert.equal(policy.authoritativeFieldCount, 0);
+  assert.equal(policy.authoritativeFieldCount, fieldScopedCoverageExpectations[speciesId].authoritative);
   assert.equal(policy.genericOnboardingReady, false);
   assert.deepEqual(policy.terminalGapFields, []);
 }
-for (const speciesId of ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361']) {
+for (const speciesId of ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']) {
   const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
   assert.ok(policy);
   assert.equal(policy.researchPolicyPresent, true);

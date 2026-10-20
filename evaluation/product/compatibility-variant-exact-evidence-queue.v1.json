@@ -8,10 +8,10 @@
     "wholeProfileInheritanceAllowed": false
   },
   "summary": {
-    "variantObjects": 8,
-    "totalResearchSlots": 15,
+    "variantObjects": 7,
+    "totalResearchSlots": 8,
     "environmentVariantSpecificSlots": 0,
-    "exactObjectCoreSlots": 15,
+    "exactObjectCoreSlots": 8,
     "contractBlockedSlotsNotQueued": 0
   },
   "items": [
@@ -68,19 +68,6 @@
       "writesAuthority": false
     },
     {
-      "speciesId": "sp_0143",
-      "name": "红草尾孔雀鱼",
-      "canonicalScientificName": "Poecilia reticulata",
-      "variantKey": "Red Grass",
-      "relationshipType": "trade_strain",
-      "field": "predation",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for predation; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
       "speciesId": "sp_0144",
       "name": "蓝草尾孔雀鱼",
       "canonicalScientificName": "Poecilia reticulata",
@@ -120,71 +107,6 @@
       "writesAuthority": false
     },
     {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "canonicalScientificName": "Carassius auratus",
-      "variantKey": "Red Grass Goldfish",
-      "relationshipType": "color_morph",
-      "field": "adult_size",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for adult_size; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "canonicalScientificName": "Carassius auratus",
-      "variantKey": "Red Grass Goldfish",
-      "relationshipType": "color_morph",
-      "field": "tank_size",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for tank_size; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "canonicalScientificName": "Carassius auratus",
-      "variantKey": "Red Grass Goldfish",
-      "relationshipType": "color_morph",
-      "field": "social_behavior",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for social_behavior; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "canonicalScientificName": "Carassius auratus",
-      "variantKey": "Red Grass Goldfish",
-      "relationshipType": "color_morph",
-      "field": "territoriality",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for territoriality; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
-      "speciesId": "sp_0162",
-      "name": "红草鱼",
-      "canonicalScientificName": "Carassius auratus",
-      "variantKey": "Red Grass Goldfish",
-      "relationshipType": "color_morph",
-      "field": "predation",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for predation; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
       "speciesId": "sp_0361",
       "name": "长鳍白云金丝 (改良)",
       "canonicalScientificName": "Tanichthys albonubes",
@@ -194,19 +116,6 @@
       "sourceLane": "exact_object_policy",
       "reasonCode": "exact_object_evidence_required",
       "researchGoal": "Find exact object/variant evidence for territoriality; base-taxon evidence is not sufficient for this field.",
-      "promotionAllowed": false,
-      "writesAuthority": false
-    },
-    {
-      "speciesId": "sp_0361",
-      "name": "长鳍白云金丝 (改良)",
-      "canonicalScientificName": "Tanichthys albonubes",
-      "variantKey": "Longfin",
-      "relationshipType": "longfin_variant",
-      "field": "predation",
-      "sourceLane": "exact_object_policy",
-      "reasonCode": "exact_object_evidence_required",
-      "researchGoal": "Find exact object/variant evidence for predation; base-taxon evidence is not sufficient for this field.",
       "promotionAllowed": false,
       "writesAuthority": false
     }

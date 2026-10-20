@@ -1,66 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "active completion research only: include completionEligible field gaps, defer evidence debt on objects with companion terminal holds; deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging",
-  "catalogObjects": 1,
-  "totalResearchJobs": 1,
-  "variantBridgeJobs": 1,
-  "items": [
-    {
-      "researchKey": "Carassius auratus",
-      "baseScientificName": "Carassius auratus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 0,
-      "variantObjectCount": 1,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph"
-      ],
-      "exactObjectEvidenceGapFields": [
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "canCompleteFromBaseTaxonResearch": false,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research only explicitly approved base-taxon candidate fields for source discovery. Candidate facts must never auto-promote; exact-object-gated fields require variant-specific evidence, and every candidate field still requires a reviewed field bridge or variant-specific evidence before authority changes.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0162",
-          "name": "红草鱼",
-          "scientificName": "Carassius auratus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "baseTaxonCandidateGaps": [
-            "water",
-            "temperature",
-            "ph"
-          ],
-          "exactObjectEvidenceGaps": [
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "variantResearchPolicyApplied": true,
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        }
-      ]
-    }
-  ]
+  "catalogObjects": 0,
+  "totalResearchJobs": 0,
+  "variantBridgeJobs": 0,
+  "items": []
 }

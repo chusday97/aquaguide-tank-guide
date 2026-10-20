@@ -37,8 +37,8 @@ assert.equal(
   'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
 );
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
-assert.equal(summary.visibleResearchDebtFields, 96, '54 exact-variant fields should be closed while the existing 78 deferred predation gaps remain visible');
-assert.equal(summary.completionEligibleResearchDebtFields, 18, 'exact-variant evidence should reduce completion-eligible debt from 72 to 18 without unsafe base-taxon inheritance');
+assert.equal(summary.visibleResearchDebtFields, 86, 'phase2-19 closes ten additional reviewed variant fields while preserving the existing 78 deferred predation gaps');
+assert.equal(summary.completionEligibleResearchDebtFields, 8, 'phase2-19 should leave only eight exact-object behavioral research gaps');
 assert.equal(summary.deferredResearchDebtFields, 78, 'the pre-existing deferred predation debt must remain unchanged');
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
@@ -68,21 +68,21 @@ assert.equal(rowOf('sp_0216')?.genericOnboardingReady, true, 'same-taxon Golden 
 assert.equal(rowOf('sp_0216')?.authoritativeFieldCount, 8);
 const redGrassGoldfish = rowOf('sp_0162');
 assert.ok(redGrassGoldfish);
-assert.equal(redGrassGoldfish.genericOnboardingReady, false);
-assert.equal(redGrassGoldfish.authoritativeFieldCount, 0);
-assert.equal(redGrassGoldfish.actionableGapCount, 8);
+assert.equal(redGrassGoldfish.genericOnboardingReady, true);
+assert.equal(redGrassGoldfish.authoritativeFieldCount, 8);
+assert.equal(redGrassGoldfish.actionableGapCount, 0);
 assert.equal(redGrassGoldfish.terminalGapCount, 0);
-assert.equal(redGrassGoldfish.reviewedProfile, 'none');
-assert.ok(fields.every(field => redGrassGoldfish.fields[field].disposition === 'targeted_source_expansion'));
+assert.equal(redGrassGoldfish.reviewedProfile, 'field_review_derived');
+assert.ok(fields.every(field => redGrassGoldfish.fields[field].disposition === 'ready'));
 const variantExpectations = {
   sp_0065: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'predation'], unresolved: ['territoriality'], genericReady: false, profile: 'none' },
   sp_0066: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'predation'], unresolved: ['territoriality'], genericReady: false, profile: 'none' },
   sp_0067: { authoritative: [...fields], unresolved: [], genericReady: true, profile: 'field_review_derived' },
   sp_0068: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'predation'], unresolved: ['territoriality'], genericReady: false, profile: 'none' },
-  sp_0143: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior'], unresolved: ['territoriality', 'predation'], genericReady: false, profile: 'none' },
+  sp_0143: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'predation'], unresolved: ['territoriality'], genericReady: false, profile: 'none' },
   sp_0144: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'predation'], unresolved: ['territoriality'], genericReady: false, profile: 'none' },
   sp_0155: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior'], unresolved: ['territoriality', 'predation'], genericReady: false, profile: 'none' },
-  sp_0361: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior'], unresolved: ['territoriality', 'predation'], genericReady: false, profile: 'none' },
+  sp_0361: { authoritative: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'predation'], unresolved: ['territoriality'], genericReady: false, profile: 'none' },
 } as const;
 for (const [speciesId, expected] of Object.entries(variantExpectations)) {
   const row = rowOf(speciesId);
@@ -885,22 +885,21 @@ for (const row of rows) {
   );
 }
 
-assert.equal(backlog.length, 96, 'field backlog must expose 78 deferred gaps plus 18 still-actionable variant fields after phase2-18 exact-evidence promotion');
+assert.equal(backlog.length, 86, 'field backlog must expose 78 deferred gaps plus 8 still-actionable exact-object behavior fields after phase2-19 promotion');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
 const completionEligibleBacklog = backlog.filter(item => item.completionEligible);
 const deferredBacklog = backlog.filter(item => !item.completionEligible);
-assert.equal(completionEligibleBacklog.length, 18);
+assert.equal(completionEligibleBacklog.length, 8);
 assert.equal(deferredBacklog.length, 78);
-assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), ['sp_0065', 'sp_0066', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0162', 'sp_0361']);
+assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), ['sp_0065', 'sp_0066', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']);
 const expectedCompletionFields: Record<string, string[]> = {
   sp_0065: ['territoriality'],
   sp_0066: ['territoriality'],
   sp_0068: ['territoriality'],
-  sp_0143: ['territoriality', 'predation'],
+  sp_0143: ['territoriality'],
   sp_0144: ['territoriality'],
   sp_0155: ['territoriality', 'predation'],
-  sp_0162: [...fields],
-  sp_0361: ['territoriality', 'predation'],
+  sp_0361: ['territoriality'],
 };
 for (const [speciesId, expectedFields] of Object.entries(expectedCompletionFields)) {
   assert.deepEqual(
@@ -915,48 +914,15 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 1, 'only Red Grass Goldfish still has base-taxon candidate gaps; all other remaining gaps are exact-object-only');
+assert.equal(taxonResearchPlan.length, 0, 'all remaining completion-eligible gaps are exact-object-only behavioral evidence work');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.deepEqual([...plannedCatalogObjects].sort(), ['sp_0162']);
-const plannedAllGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
-const plannedBacklogGapKeys = completionEligibleBacklog.filter(item => plannedCatalogObjects.has(item.speciesId)).map(item => `${item.speciesId}:${item.field}`).sort();
-assert.deepEqual(plannedAllGapKeys, plannedBacklogGapKeys, 'taxon research must cover the unresolved ledger only for variants that still have base-taxon candidate work');
-const plannedBaseCandidateGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.baseTaxonCandidateGaps.map(field => `${object.speciesId}:${field}`))).sort();
-const plannedExactObjectGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.exactObjectEvidenceGaps.map(field => `${object.speciesId}:${field}`))).sort();
-assert.equal(plannedBaseCandidateGapKeys.length, 3, 'Red Grass Goldfish has exactly three environmental fields eligible only for guarded base-taxon source discovery');
-assert.equal(plannedExactObjectGapKeys.length, 5, 'Red Grass Goldfish keeps five morphology/behavior-sensitive fields in exact-object evidence work');
-assert.equal(new Set([...plannedBaseCandidateGapKeys, ...plannedExactObjectGapKeys]).size, 8);
-for (const job of taxonResearchPlan) {
-  assert.deepEqual(job.combinedGapFields, ['water', 'temperature', 'ph']);
-  assert.deepEqual(job.exactObjectEvidenceGapFields, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-  assert.equal(job.canCompleteFromBaseTaxonResearch, false);
-  for (const object of job.catalogObjects) {
-    assert.equal(object.variantResearchPolicyApplied, true);
-    assert.deepEqual(object.baseTaxonCandidateGaps, ['water', 'temperature', 'ph']);
-    assert.deepEqual(object.exactObjectEvidenceGaps, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-    assert.deepEqual([...object.baseTaxonCandidateGaps, ...object.exactObjectEvidenceGaps], object.gaps);
-  }
-}
-assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.promotionPolicy.includes('must never auto-promote')), 'variant-bearing taxon jobs must explicitly forbid automatic authority inheritance');
-assert.ok(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).every(item => item.researchDisposition === 'base_taxon_candidate_research_with_variant_bridge'));
-assert.equal(taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length, 1);
-const exactOnlyCompletionKeys = completionEligibleBacklog
-  .filter(item => !plannedCatalogObjects.has(item.speciesId))
-  .map(item => `${item.speciesId}:${item.field}`)
-  .sort();
-assert.equal(exactOnlyCompletionKeys.length, 10, 'partially completed variants should retain ten exact-object-only gaps outside the remaining Red Grass Goldfish taxon job');
-const queuedExactObjectKeys = new Set(variantExactEvidenceQueue.items.filter(item => item.sourceLane === 'exact_object_policy').map(item => `${item.speciesId}:${item.field}`));
-assert.ok(exactOnlyCompletionKeys.every(key => queuedExactObjectKeys.has(key)), 'every partial-variant remainder must stay in the exact-object research queue');
-const goldfishTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus');
-assert.ok(goldfishTaxonJob);
-assert.equal(goldfishTaxonJob.researchDisposition, 'base_taxon_candidate_research_with_variant_bridge');
-assert.equal(goldfishTaxonJob.requiresVariantBridgeReview, true);
-assert.equal(goldfishTaxonJob.catalogObjectCount, 1);
-assert.equal(goldfishTaxonJob.exactObjectCount, 0);
-assert.equal(goldfishTaxonJob.variantObjectCount, 1);
-assert.deepEqual(goldfishTaxonJob.catalogObjects.map(object => object.speciesId), ['sp_0162']);
-assert.ok(goldfishTaxonJob.catalogObjects.every(object => object.isVariant && !object.isExactBaseTaxon));
-assert.ok(goldfishTaxonJob.promotionPolicy.includes('must never auto-promote'));
+assert.deepEqual([...plannedCatalogObjects], []);
+const exactOnlyCompletionKeys = completionEligibleBacklog.map(item => item.speciesId + ':' + item.field).sort();
+assert.equal(exactOnlyCompletionKeys.length, 8);
+const queuedExactObjectKeys = new Set(variantExactEvidenceQueue.items.filter(item => item.sourceLane === 'exact_object_policy').map(item => item.speciesId + ':' + item.field));
+assert.ok(exactOnlyCompletionKeys.every(key => queuedExactObjectKeys.has(key)), 'every remaining completion gap must stay in the exact-object research queue');
+assert.equal(taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus'), undefined, 'Red Grass Goldfish leaves taxon research after reviewed 8/8 field authority');
+
 const guppyTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Poecilia reticulata');
 assert.equal(guppyTaxonJob, undefined, 'Blue Grass exact evidence closes its base-candidate fields; Red Grass Guppy now has only exact-object behavioral gaps');
 for (const taxon of ['Paracheirodon innesi', 'Tanichthys albonubes']) {
@@ -1046,8 +1012,10 @@ assert.deepEqual(
     ['sp_0065', 'territoriality'],
     ['sp_0066', 'territoriality'],
     ['sp_0068', 'territoriality'],
+    ['sp_0143', 'territoriality'],
     ['sp_0144', 'territoriality'],
+    ['sp_0361', 'territoriality'],
   ],
-  'Fast Lane must contain only current 7/8 exact-object candidates whose final territoriality field remains researchable',
+  'Fast Lane must contain the six current 7/8 exact-object candidates whose final territoriality field remains researchable',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${summary.visibleResearchDebtFields} visible research-debt fields (${summary.completionEligibleResearchDebtFields} completion-eligible / ${summary.deferredResearchDebtFields} deferred behind terminal holds).`);
