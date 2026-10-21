@@ -10,8 +10,8 @@
     "presentation"
   ],
   "summary": {
-    "caseCount": 12,
-    "passedCases": 12,
+    "caseCount": 15,
+    "passedCases": 15,
     "failedCases": 0,
     "firstDivergenceCounts": {
       "input_normalization": 0,
@@ -693,6 +693,202 @@
             ]
           }
         ]
+      }
+    },
+    {
+      "id": "partial-space-adjustment-advances-primary-action",
+      "title": "用户只完成最低缸长调整后，即使仍有普通空间提醒，也必须推进到新的首要风险",
+      "expectedBoundaryStage": "action_plan",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "before adjustment explicit length risk and territory coexist",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "after reaching 100cm the hard length rule clears while a softer capacity warning remains",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "before adjustment every primary-action surface starts with the 100cm space requirement",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "partial adjustment advances the primary action to territory instead of repeating the completed 100cm step",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "before": {
+          "primaryAction": "至少需要 100cm 缸长再考虑加入。",
+          "firstNextStep": "至少需要 100cm 缸长再考虑加入。",
+          "firstTarget": "space"
+        },
+        "after": {
+          "primaryAction": "先保证有足够的可用空间、遮挡和退让路线，并准备可立即分隔的方案；不要因为暂时没有追逐就直接判定长期安全。",
+          "firstNextStep": "先不要加入 天使鱼（神仙鱼）；先为它与 红绿灯 规划遮挡、退让路线和可立即分隔的方案。",
+          "firstTarget": "territory",
+          "remainingWarningCodes": [
+            "territorial_pressure_context",
+            "tank_volume_below_species_minimum"
+          ]
+        }
+      }
+    },
+    {
+      "id": "multiple-candidates-emergent-conflict",
+      "title": "两个候选单独加入都没有硬阻断时，候选彼此的新冲突仍必须改变整缸结论",
+      "expectedBoundaryStage": "whole_tank_aggregation",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "each candidate is individually non-blocking against the existing fish",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "candidate-to-candidate pair is still evaluated and exposes the new predation block",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "whole-tank verdict follows the emergent candidate conflict instead of optimistic individual checks",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "the first machine target names the two conflicting candidates, not the unrelated existing fish",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "individualStatuses": {
+          "firstCandidate": "caution",
+          "secondCandidate": "compatible"
+        },
+        "combinedStatus": "not_recommended",
+        "candidatePairStatus": "not_recommended",
+        "resolutionTargets": [
+          {
+            "riskFamily": "predation",
+            "resolutionMode": "deterministic_clearance",
+            "criterion": "月光鱼 与 黑龙鱼 不再直接接触（分隔、分缸或替换组合），重新评估后不再出现该捕食阻断。",
+            "sourceRuleCode": "predation_risk",
+            "speciesIds": [
+              "sp_0011",
+              "sp_0118"
+            ]
+          },
+          {
+            "riskFamily": "territory",
+            "resolutionMode": "behavioral_recheck",
+            "criterion": "增加遮挡、退让路线或分区后复查持续追逐、堵角、躲藏与进食；只有实际压迫消失才能继续原组合。",
+            "sourceRuleCode": "territorial_conflict",
+            "speciesIds": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "hard-block-dominates-nondominant-unknown",
+      "title": "已知硬阻断与身份/证据未知同时存在时，硬阻断直接阻止混养，但未知信息仍必须保留",
+      "expectedBoundaryStage": "whole_tank_aggregation",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "identity_resolution",
+          "check": "non-dominant unresolved identity remains visible in the aggregated evidence boundary",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "known hard block dominates the final verdict instead of being overwritten by unknown status",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "user is told not to mix now; the non-dominant unknown is not promoted above the known hard block",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "not_recommended",
+        "dataLimitation": "unresolved_identity",
+        "missingCodes": [
+          "missing_ph",
+          "missing_hardness",
+          "behavior_evidence_unreviewed",
+          "behavior_evidence_unreviewed"
+        ],
+        "blockingFamilies": [
+          "housing",
+          "predation"
+        ],
+        "planVerdict": "do_not_mix"
       }
     }
   ]

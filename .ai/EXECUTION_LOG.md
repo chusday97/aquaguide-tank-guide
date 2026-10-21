@@ -1,3 +1,16 @@
+## 2026-10-21 — Sequential-action and emergent-conflict real-user pressure closure
+
+- Expanded the durable real-user Compatibility pressure suite from 12 to 15 cases.
+- Partial-adjustment case reproduces a real 60cm -> 100cm sequence for sp_0431 + sp_0446. At 60cm, explicit length_too_short and territory coexist. The primary action and resolutionTargets correctly chose space, but nextSteps skipped the space rule and started with territory.
+- First Divergence = action_plan. Root cause: decision-plan specificActionFor had no space-family mapping, so its ordered action list silently dropped the highest-priority rule.
+- Fix: exported getExplicitCompatibilitySpaceThreshold from compatibility-action.service and reused it in decision-plan specificActionFor. Planned-addition/current-tank space rules now emit concrete deterministic actions; reviewed numeric thresholds are reused, not guessed.
+- After the user reaches 100cm, length_too_short clears; territory becomes the first action/target while generic tank-volume caution remains secondary. Completed actions are not repeated as primary.
+- Multi-candidate case uses real reviewed species sp_0015 + sp_0011 + sp_0118: each candidate is individually non-blocking against the existing fish, but sp_0011/sp_0118 introduces a predation hard block, so the three-species whole-tank verdict is not_recommended and the resolution target names the conflicting candidate pair.
+- Hard-block-plus-unknown case uses sp_0049 + sp_0431 + unresolved sp_0474: final verdict remains not_recommended from known predation/housing hard blocks; unresolved identity/evidence remains preserved in missingData/data-limitation provenance without overriding the known hard block.
+- Pressure 15/15 PASS; action-specificity/result-card/user-conclusion targeted regressions PASS.
+- Full BACKEND_RELEASE_GATE=PASS. Fully-informed matrix remains 111 / 6,105 / 427 / 2,353 / 3,325 / 0 insufficient_data. Main build + diff check PASS.
+- No Production deployment/DB write/migration, broad species research, evidence promotion or UI redesign.
+
 ## 2026-10-21 — Staged-risk and action-priority real-user pressure closure
 
 - Expanded the real-user pressure suite from 9 to 12 cases.

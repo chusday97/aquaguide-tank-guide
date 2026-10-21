@@ -1,6 +1,7 @@
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
 import {
   buildBeginnerCompatibilityAction,
+  getExplicitCompatibilitySpaceThreshold,
   getCompatibilityRuleFamily,
   prioritizeDistinctCompatibilityRules,
   type BeginnerCompatibilityVerdict,
@@ -269,6 +270,18 @@ const specificActionFor = (
     return subject
       ? `先把鱼缸目标温度调整到 ${subject} 的已审核适温范围，并确认与其余物种仍有共同区间，再重新评估。`
       : '先把鱼缸目标温度调整到相关物种的已审核共同适温区间，再重新评估。';
+  }
+
+  if (family === 'space') {
+    const threshold = getExplicitCompatibilitySpaceThreshold([rule]);
+    if (mode === 'current_tank') {
+      return threshold
+        ? `把当前鱼缸调整到至少 ${threshold}，再重新评估空间风险是否已经解除。`
+        : '先减少现有数量或升级鱼缸空间，再重新评估。';
+    }
+    return threshold
+      ? `至少需要 ${threshold}再考虑加入。`
+      : '先按成体需求核对最低缸长或水体要求；当前空间达不到要求时不要加入。';
   }
 
   if (!pair) return null;

@@ -622,6 +622,175 @@ cases.push(makeCase(
   },
 ));
 
+const partialSpaceBefore = evaluateCompatibilityDecision({
+  tank: tank(60, 30, 35, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const partialSpaceAfter = evaluateCompatibilityDecision({
+  tank: tank(100, 30, 35, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const partialSpaceBeforeAction = buildBeginnerCompatibilityAction(partialSpaceBefore);
+const partialSpaceAfterAction = buildBeginnerCompatibilityAction(partialSpaceAfter);
+const partialSpaceBeforePlan = buildCompatibilityDecisionPlan(partialSpaceBefore);
+const partialSpaceAfterPlan = buildCompatibilityDecisionPlan(partialSpaceAfter);
+cases.push(makeCase(
+  'partial-space-adjustment-advances-primary-action',
+  '用户只完成最低缸长调整后，即使仍有普通空间提醒，也必须推进到新的首要风险',
+  'action_plan',
+  [
+    probe('whole_tank_aggregation', 'before adjustment explicit length risk and territory coexist', () => {
+      assert.ok(partialSpaceBefore.warningRules.some(rule => rule.code === 'length_too_short'));
+      assert.ok(partialSpaceBefore.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'territory'));
+      assert.equal(partialSpaceBefore.status, 'caution');
+    }),
+    probe('action_plan', 'before adjustment every primary-action surface starts with the 100cm space requirement', () => {
+      assert.match(partialSpaceBeforeAction.immediateAction, /100cm/);
+      assert.equal(partialSpaceBeforePlan.resolutionTargets[0]?.riskFamily, 'space');
+      assert.match(partialSpaceBeforePlan.nextSteps[0] || '', /100cm/);
+    }),
+    probe('whole_tank_aggregation', 'after reaching 100cm the hard length rule clears while a softer capacity warning remains', () => {
+      assert.equal(partialSpaceAfter.warningRules.some(rule => rule.code === 'length_too_short'), false);
+      assert.ok(partialSpaceAfter.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum'));
+      assert.ok(partialSpaceAfter.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'territory'));
+      assert.equal(partialSpaceAfter.status, 'caution');
+    }),
+    probe('action_plan', 'partial adjustment advances the primary action to territory instead of repeating the completed 100cm step', () => {
+      assert.match(partialSpaceAfterAction.headline, /领地/);
+      assert.equal(partialSpaceAfterPlan.resolutionTargets[0]?.riskFamily, 'territory');
+      assert.match(partialSpaceAfterPlan.nextSteps[0] || '', /遮挡|退让|分隔|领地/);
+      assert.doesNotMatch(partialSpaceAfterPlan.nextSteps[0] || '', /100cm/);
+    }),
+    ...presentationProbes(partialSpaceBefore),
+    ...presentationProbes(partialSpaceAfter),
+  ],
+  {
+    before: {
+      primaryAction: partialSpaceBeforeAction.immediateAction,
+      firstNextStep: partialSpaceBeforePlan.nextSteps[0] || null,
+      firstTarget: partialSpaceBeforePlan.resolutionTargets[0]?.riskFamily || null,
+    },
+    after: {
+      primaryAction: partialSpaceAfterAction.immediateAction,
+      firstNextStep: partialSpaceAfterPlan.nextSteps[0] || null,
+      firstTarget: partialSpaceAfterPlan.resolutionTargets[0]?.riskFamily || null,
+      remainingWarningCodes: partialSpaceAfter.warningRules.map(rule => rule.code),
+    },
+  },
+));
+
+const existingWithFirstCandidate = evaluateCompatibilityDecision({
+  tank: tank(500, 200, 100, 25),
+  items: [
+    { species: byId('sp_0015'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0011'), quantity: 10, origin: 'candidate' },
+  ],
+});
+const existingWithSecondCandidate = evaluateCompatibilityDecision({
+  tank: tank(500, 200, 100, 25),
+  items: [
+    { species: byId('sp_0015'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0118'), quantity: 10, origin: 'candidate' },
+  ],
+});
+const combinedCandidatesDecision = evaluateCompatibilityDecision({
+  tank: tank(500, 200, 100, 25),
+  items: [
+    { species: byId('sp_0015'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0011'), quantity: 10, origin: 'candidate' },
+    { species: byId('sp_0118'), quantity: 10, origin: 'candidate' },
+  ],
+});
+const combinedCandidatesPlan = buildCompatibilityDecisionPlan(combinedCandidatesDecision);
+const candidateToCandidatePair = combinedCandidatesDecision.pairResults.find(pair => (
+  new Set([pair.speciesA.id, pair.speciesB.id]).size === 2
+  && [pair.speciesA.id, pair.speciesB.id].includes('sp_0011')
+  && [pair.speciesA.id, pair.speciesB.id].includes('sp_0118')
+));
+cases.push(makeCase(
+  'multiple-candidates-emergent-conflict',
+  '两个候选单独加入都没有硬阻断时，候选彼此的新冲突仍必须改变整缸结论',
+  'whole_tank_aggregation',
+  [
+    probe('pair_domain_stage_evaluation', 'each candidate is individually non-blocking against the existing fish', () => {
+      assert.notEqual(existingWithFirstCandidate.status, 'not_recommended');
+      assert.notEqual(existingWithSecondCandidate.status, 'not_recommended');
+    }),
+    probe('pair_domain_stage_evaluation', 'candidate-to-candidate pair is still evaluated and exposes the new predation block', () => {
+      assert.ok(candidateToCandidatePair);
+      assert.equal(candidateToCandidatePair.status, 'not_recommended');
+      assert.ok(candidateToCandidatePair.rawResult.blockingRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'predation'));
+    }),
+    probe('whole_tank_aggregation', 'whole-tank verdict follows the emergent candidate conflict instead of optimistic individual checks', () => {
+      assert.equal(combinedCandidatesDecision.pairResults.length, 3);
+      assert.equal(combinedCandidatesDecision.status, 'not_recommended');
+      assert.equal(combinedCandidatesPlan.verdict, 'do_not_mix');
+    }),
+    probe('action_plan', 'the first machine target names the two conflicting candidates, not the unrelated existing fish', () => {
+      const predationTarget = combinedCandidatesPlan.resolutionTargets.find(target => target.riskFamily === 'predation');
+      assert.ok(predationTarget);
+      assert.deepEqual([...predationTarget.speciesIds].sort(), ['sp_0011', 'sp_0118']);
+    }),
+    ...presentationProbes(combinedCandidatesDecision),
+  ],
+  {
+    individualStatuses: {
+      firstCandidate: existingWithFirstCandidate.status,
+      secondCandidate: existingWithSecondCandidate.status,
+    },
+    combinedStatus: combinedCandidatesDecision.status,
+    candidatePairStatus: candidateToCandidatePair?.status || null,
+    resolutionTargets: combinedCandidatesPlan.resolutionTargets,
+  },
+));
+
+const hardBlockWithUnknown = evaluateCompatibilityDecision({
+  tank: tank(500, 200, 100, 25),
+  items: [
+    { species: byId('sp_0049'), quantity: 1, origin: 'existing' },
+    { species: byId('sp_0431'), quantity: 10, origin: 'candidate' },
+    { species: byId('sp_0474'), quantity: 6, origin: 'candidate' },
+  ],
+});
+const hardBlockWithUnknownPlan = buildCompatibilityDecisionPlan(hardBlockWithUnknown);
+cases.push(makeCase(
+  'hard-block-dominates-nondominant-unknown',
+  '已知硬阻断与身份/证据未知同时存在时，硬阻断直接阻止混养，但未知信息仍必须保留',
+  'whole_tank_aggregation',
+  [
+    probe('identity_resolution', 'non-dominant unresolved identity remains visible in the aggregated evidence boundary', () => {
+      assert.ok(hardBlockWithUnknown.missingData.length > 0);
+      assert.equal(getCompatibilityDataLimitationReason(hardBlockWithUnknown), 'unresolved_identity');
+      assert.ok(allCodes(hardBlockWithUnknown).has('species_identity_unresolved'));
+    }),
+    probe('whole_tank_aggregation', 'known hard block dominates the final verdict instead of being overwritten by unknown status', () => {
+      assert.equal(hardBlockWithUnknown.status, 'not_recommended');
+      assert.ok(hardBlockWithUnknown.blockingRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'predation'));
+      assert.ok(hardBlockWithUnknown.blockingRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'housing'));
+    }),
+    probe('action_plan', 'user is told not to mix now; the non-dominant unknown is not promoted above the known hard block', () => {
+      assert.equal(hardBlockWithUnknownPlan.verdict, 'do_not_mix');
+      assert.equal(hardBlockWithUnknownPlan.unknownReason, null);
+      assert.equal(hardBlockWithUnknownPlan.resolutionTargets.some(target => target.riskFamily === 'missing_information'), false);
+      assert.equal(hardBlockWithUnknownPlan.nextSteps.some(step => /先补齐|暂时无法判断/.test(step)), false);
+    }),
+    ...presentationProbes(hardBlockWithUnknown),
+  ],
+  {
+    status: hardBlockWithUnknown.status,
+    dataLimitation: getCompatibilityDataLimitationReason(hardBlockWithUnknown),
+    missingCodes: hardBlockWithUnknown.missingData.map(rule => rule.code),
+    blockingFamilies: [...new Set(hardBlockWithUnknown.blockingRules.map(rule => getCompatibilityRuleFamily(rule.code)))].sort(),
+    planVerdict: hardBlockWithUnknownPlan.verdict,
+  },
+));
+
 const report = {
   schemaVersion: 1,
   pipelineStages: stages,

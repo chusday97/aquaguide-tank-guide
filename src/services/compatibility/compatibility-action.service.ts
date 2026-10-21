@@ -195,7 +195,7 @@ const firstText = (rules: Array<{ title?: string; evidence?: string }>, fallback
   || fallback
 );
 
-const explicitSpaceThreshold = (rules: Array<{ title?: string; evidence?: string }>) => {
+export const getExplicitCompatibilitySpaceThreshold = (rules: Array<{ title?: string; evidence?: string }>) => {
   for (const rule of rules) {
     const text = `${rule.evidence || ''} ${rule.title || ''}`;
     const length = text.match(/至少\s*(\d+(?:\.\d+)?)\s*cm\s*缸长/i);
@@ -353,7 +353,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
     }
     if (hasSpaceConcern && primaryWarningFamily === 'space') {
       const spaceRules = decision.warningRules.filter(rule => SPACE_CODES.has(rule.code));
-      const threshold = explicitSpaceThreshold(spaceRules);
+      const threshold = getExplicitCompatibilitySpaceThreshold(spaceRules);
       return {
         verdict: 'add_with_conditions',
         headline: '当前鱼缸空间不够',

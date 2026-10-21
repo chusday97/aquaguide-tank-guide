@@ -1,3 +1,16 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 sequential-action Compatibility validation
+
+- Real-user Compatibility pressure suite now covers 15 distinct scenarios, up from 12.
+- New coverage: partial adjustment that should advance to the next risk; two candidates individually non-blocking but jointly creating a new candidate-to-candidate hard block; known hard block coexisting with unresolved identity/evidence.
+- One real action-plan divergence was reproduced: at 60cm, the primary action and resolutionTargets correctly ranked the explicit 100cm space requirement first, but nextSteps[0] skipped that rule and told the user to handle territory first.
+- Root cause was not rule ordering. compatibility-decision-plan specificActionFor had no space-family branch, so the highest-priority space rule produced no specific step and the next lower-priority territory rule became the first rendered step.
+- Narrow fix: share/export the reviewed explicit-space-threshold parser from compatibility-action.service and add deterministic space-family actions to decision-plan. Human headline, immediate action, nextSteps and resolutionTargets now follow the same prioritized source rule.
+- Partial adjustment behavior is now sequential: 60cm -> satisfy 100cm length first; after reaching 100cm, the explicit length rule clears and territory becomes primary while softer capacity guidance remains secondary.
+- The multi-candidate emergent-conflict and hard-block-plus-unknown scenarios already behaved correctly, so no speculative rule/evidence changes were made.
+- Pressure suite 15/15 PASS; fully-informed matrix remains 111 ready / 6,105 pairs / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Full BACKEND_RELEASE_GATE=PASS and main build PASS.
+- No deploy, Production DB write, migration, broad research, evidence promotion or UI redesign. Production remains release/production@1cff5be6.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 staged-risk Compatibility validation
 
 - Real-user Compatibility pressure suite now covers 12 distinct user scenarios, up from 9.

@@ -1,3 +1,14 @@
+## TOP LIVE STATUS — 2026-10-21 sequential-action pressure closure
+
+- Real-user pressure = 15/15 PASS.
+- Added three durable scenarios: partial adjustment advancing to the next risk; candidate-to-candidate emergent conflict; hard block dominating a non-dominant unknown while preserving the missing-evidence boundary.
+- First divergence found pre-fix at action_plan: explicit 100cm space rule was primary in headline/action/resolutionTargets, but nextSteps started with lower-priority territory guidance.
+- Fixed at root by giving decision-plan a deterministic space-family specific action backed by the same reviewed threshold parser used by the beginner action surface.
+- At 100cm the completed length condition no longer repeats; territory becomes primary while generic volume caution remains secondary.
+- Fully-informed matrix remains 111 / 6,105 / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Complete backend gate PASS; main build PASS. Existing large-bundle warnings remain unrelated performance debt.
+- Production remains frozen at 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP LIVE STATUS — 2026-10-21 staged-risk action priority
 
 - Real-user pressure = 12/12 PASS.
