@@ -232,7 +232,13 @@ const blockingActionFor = (
   assessmentMode: CompatibilityAssessmentMode,
 ) => {
   const family = getCompatibilityRuleFamily(rule.code);
+  const isCombinedBehaviorTerritoryConflict = rule.code.startsWith('pair_rule_')
+    && rule.code.includes('behavior')
+    && rule.code.includes('territor');
   if (assessmentMode === 'current_tank') {
+    if (isCombinedBehaviorTerritoryConflict) {
+      return '尽快分隔持续追逐或领地冲突的物种；不要把增加躲避物当作消除已知行为冲突的保证。';
+    }
     if (family === 'water_type') return '尽快分缸；分别按淡水或海水需求饲养。';
     if (rule.code === 'fry_predation_risk') return '把鱼苗转入育苗隔离区或独立育苗缸；不要依赖水草躲避来消除已知吞食风险。';
     if (family === 'predation') return '尽快分隔存在捕食关系的物种，并重新调整现有组合。';
@@ -248,6 +254,9 @@ const blockingActionFor = (
         : '先减少现有数量或补足该物种的最低空间条件，再重新评估。';
     }
     return '先分隔或调整高风险组合，再重新判断当前鱼缸。';
+  }
+  if (isCombinedBehaviorTerritoryConflict) {
+    return '不要直接混养；优先更换组合或准备可靠分隔，不要把增加躲避物当作消除持续追逐和领地冲突的保证。';
   }
   if (family === 'water_type') return '不要放在同一缸；分别按淡水或海水需求饲养，或更换其中一种。';
   if (rule.code === 'fry_predation_risk') return '不要把鱼苗直接放入该组合；优先使用育苗隔离区或独立育苗缸，待脱离鱼苗阶段后再重新评估。';

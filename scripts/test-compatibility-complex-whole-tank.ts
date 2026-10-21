@@ -160,6 +160,39 @@ assert.match(zebraDiscusMain.why[0] || '', /没有安全重叠|没有.*重叠/);
 assert.equal(zebraDiscusMain.howTo.length, 1);
 assert.match(zebraDiscusMain.howTo[0] || '', /分缸|更换温度需求更接近/);
 
+const underGroupedDenisonWithDiscus = reviewSpeciesAdditions({
+  aquarium: {
+    ...tankFor(['sp_0447'], { length: '150', width: '60', height: '60' }),
+    targetTemperature: '27',
+  },
+  items: [{ fishId: 'sp_0440', quantity: 4 }],
+  speciesCatalog: fishData,
+});
+assert.ok(underGroupedDenisonWithDiscus);
+assert.equal(underGroupedDenisonWithDiscus.status, 'not_recommended');
+const underGroupedDenisonMain = buildCompatibilityReadableConclusion(underGroupedDenisonWithDiscus.decision);
+assert.equal(underGroupedDenisonMain.why.length, 1, 'hard temperature incompatibility should stay the main conclusion instead of padding it with secondary husbandry warnings');
+assert.match(underGroupedDenisonMain.why[0] || '', /没有安全重叠|没有.*重叠/);
+assert.ok(underGroupedDenisonWithDiscus.decision.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'group_size'), 'secondary group-size husbandry issue should remain available in details');
+assert.ok(underGroupedDenisonWithDiscus.decision.evidenceIds.includes('seriouslyfish-sahyadria-denisonii'));
+assert.ok(underGroupedDenisonWithDiscus.decision.evidenceIds.includes('seriouslyfish-symphysodon-aequifasciatus'));
+
+const tigerMiniParrot = reviewCase(['sp_0021'], ['sp_0439'], {
+  length: '100',
+  width: '45',
+  height: '45',
+});
+assert.equal(tigerMiniParrot.status, 'not_recommended');
+const tigerMiniParrotRule = tigerMiniParrot.decision.blockingRules.find(rule => rule.code === 'pair_rule_behavior_and_territory_conflict');
+assert.ok(tigerMiniParrotRule);
+assert.equal(tigerMiniParrotRule.citations.length, 2, 'direct reviewed behavior conflict must keep both reviewed sources');
+const tigerMiniParrotMain = buildCompatibilityReadableConclusion(tigerMiniParrot.decision);
+assert.equal(tigerMiniParrotMain.why.length, 1, 'combined behavior/territory conflict should not be duplicated as separate user-facing causes');
+assert.match(tigerMiniParrotMain.why[0] || '', /攻击|领地|追逐/);
+assert.match(tigerMiniParrotMain.howTo[0] || '', /不要直接混养|分隔|更换组合/);
+assert.match(tigerMiniParrotMain.howTo[0] || '', /不要把增加躲避物/);
+assert.doesNotMatch(tigerMiniParrotMain.howTo[0] || '', /^先不要继续加入；重新规划领地和躲避空间/);
+
 const insufficient = reviewCase(['sp_0010', 'sp_0012'], ['sp_0004', 'sp_0014'], {
   length: '120',
   width: '50',
