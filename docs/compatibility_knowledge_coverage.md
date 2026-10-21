@@ -12,8 +12,8 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 409
-- Direct reviewed compatibility profiles: 126
-- Runtime effective compatibility profiles: 165 (39 inherited through reviewed-safe resolution)
+- Direct reviewed compatibility profiles: 132
+- Runtime effective compatibility profiles: 171 (39 inherited through reviewed-safe resolution)
 - Reviewed pair rules: 21
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30

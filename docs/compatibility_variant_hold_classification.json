@@ -9,10 +9,10 @@
     "pairPrecomputationRequired": false
   },
   "summary": {
-    "heldCatalogObjects": 49,
-    "color_only_identity_candidate": 10,
-    "morphology_variant": 26,
-    "trade_or_lineage_label": 12,
+    "heldCatalogObjects": 47,
+    "color_only_identity_candidate": 4,
+    "morphology_variant": 29,
+    "trade_or_lineage_label": 13,
     "size_grade_or_trade_label": 1
   },
   "priority": [
@@ -45,18 +45,18 @@
       "name": "蓝宝鹦鹉鱼",
       "scientificName": "Amatitlania nigrofasciata var. Blue",
       "variantSuffix": "Blue",
-      "classification": "color_only_identity_candidate",
+      "classification": "trade_or_lineage_label",
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
     },
     {
       "speciesId": "sp_0148",
       "name": "雪玉鹦鹉鱼",
       "scientificName": "Amatitlania nigrofasciata var. White",
       "variantSuffix": "White",
-      "classification": "color_only_identity_candidate",
+      "classification": "trade_or_lineage_label",
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
     },
     {
       "speciesId": "sp_0149",
@@ -99,9 +99,9 @@
       "name": "巧克力皮球",
       "scientificName": "Poecilia sphenops var. Chocolate",
       "variantSuffix": "Chocolate",
-      "classification": "trade_or_lineage_label",
+      "classification": "morphology_variant",
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
     },
     {
       "speciesId": "sp_0168",
@@ -122,15 +122,6 @@
       "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
     },
     {
-      "speciesId": "sp_0171",
-      "name": "白玉金丝鱼",
-      "scientificName": "Tanichthys albonubes var. Albino",
-      "variantSuffix": "Albino",
-      "classification": "color_only_identity_candidate",
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
-    },
-    {
       "speciesId": "sp_0172",
       "name": "长鳍白云金丝",
       "scientificName": "Tanichthys albonubes var. Longfin",
@@ -149,22 +140,13 @@
       "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
     },
     {
-      "speciesId": "sp_0196",
-      "name": "一眉道人 (黄金型)",
-      "scientificName": "Sahyadria denisonii var. Gold",
-      "variantSuffix": "Gold",
-      "classification": "color_only_identity_candidate",
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
-    },
-    {
       "speciesId": "sp_0203",
       "name": "绿赏皮球",
       "scientificName": "Poecilia sphenops var. Green",
       "variantSuffix": "Green",
-      "classification": "color_only_identity_candidate",
+      "classification": "morphology_variant",
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
     },
     {
       "speciesId": "sp_0209",
@@ -396,9 +378,9 @@
       "name": "白金半月斗鱼",
       "scientificName": "Betta splendens var. Platinum",
       "variantSuffix": "Platinum",
-      "classification": "color_only_identity_candidate",
+      "classification": "morphology_variant",
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
     },
     {
       "speciesId": "sp_0390",

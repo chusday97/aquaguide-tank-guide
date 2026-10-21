@@ -1,40 +1,40 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "field-oriented evidence ledger; decisionImpact separates hard decision blockers from soft risk-discovery gaps. Completion-blocked opportunities remain visible with explicit blocker fields/reasons/authority; predation research debt is a safety-risk discovery surface, not a current insufficient_data blocker; no ordinary Pair Rule generation",
-  "totalItems": 56,
+  "totalItems": 54,
   "activeCompletionItems": 0,
-  "deferredOpportunityItems": 56,
+  "deferredOpportunityItems": 54,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 56,
-  "predationRiskDiscoveryFields": 56,
+  "softRiskDiscoveryResearchDebtFields": 54,
+  "predationRiskDiscoveryFields": 54,
   "predationRiskDiscoveryHardReadySpecies": 5,
-  "predationRiskDiscoveryVariantIdentityHeldSpecies": 49,
+  "predationRiskDiscoveryVariantIdentityHeldSpecies": 47,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "deferredBlockerSummary": {
-    "items": 56,
-    "species": 56,
+    "items": 54,
+    "species": 54,
     "fields": {
-      "predation": 56
+      "predation": 54
     },
     "blockingTerminalFields": {
-      "adult_size": 49,
-      "ph": 52,
-      "social_behavior": 49,
-      "tank_size": 52,
-      "temperature": 51,
-      "territoriality": 46,
-      "water": 39
+      "adult_size": 47,
+      "ph": 50,
+      "social_behavior": 47,
+      "tank_size": 50,
+      "temperature": 49,
+      "territoriality": 44,
+      "water": 37
     },
     "blockingTerminalReasons": {
       "compatibility_field_source_strategy_exhausted": 3,
       "species_social_not_established": 7,
-      "variant_identity_research_exhausted": 49,
-      "variant_social_not_established": 42
+      "variant_identity_research_exhausted": 47,
+      "variant_social_not_established": 40
     },
     "blockingTerminalAuthoritySources": {
-      "evidence_ceiling": 49,
+      "evidence_ceiling": 47,
       "research_evidence_ceiling": 3,
-      "variant_evidence_ceiling": 49
+      "variant_evidence_ceiling": 47
     }
   },
   "items": [
@@ -770,37 +770,6 @@
     },
     {
       "rank": 27,
-      "speciesId": "sp_0171",
-      "name": "白玉金丝鱼",
-      "scientificName": "Tanichthys albonubes var. Albino",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "decisionImpact": "soft_risk_discovery",
-      "completionEligible": false,
-      "companionTerminalGapCount": 7,
-      "deferReason": "companion_terminal_holds",
-      "blockingTerminalFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "blockingTerminalReasons": [
-        "variant_identity_research_exhausted",
-        "variant_social_not_established"
-      ],
-      "blockingTerminalAuthoritySources": [
-        "variant_evidence_ceiling",
-        "evidence_ceiling"
-      ]
-    },
-    {
-      "rank": 28,
       "speciesId": "sp_0172",
       "name": "长鳍白云金丝",
       "scientificName": "Tanichthys albonubes var. Longfin",
@@ -831,7 +800,7 @@
       ]
     },
     {
-      "rank": 29,
+      "rank": 28,
       "speciesId": "sp_0180",
       "name": "龙睛金鱼",
       "scientificName": "Carassius auratus var. Telescopes",
@@ -862,38 +831,7 @@
       ]
     },
     {
-      "rank": 30,
-      "speciesId": "sp_0196",
-      "name": "一眉道人 (黄金型)",
-      "scientificName": "Sahyadria denisonii var. Gold",
-      "field": "predation",
-      "status": "needs_research",
-      "priorityScore": 100,
-      "reason": "missing_reviewed_authority",
-      "decisionImpact": "soft_risk_discovery",
-      "completionEligible": false,
-      "companionTerminalGapCount": 7,
-      "deferReason": "companion_terminal_holds",
-      "blockingTerminalFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "blockingTerminalReasons": [
-        "variant_identity_research_exhausted",
-        "variant_social_not_established"
-      ],
-      "blockingTerminalAuthoritySources": [
-        "variant_evidence_ceiling",
-        "evidence_ceiling"
-      ]
-    },
-    {
-      "rank": 31,
+      "rank": 29,
       "speciesId": "sp_0203",
       "name": "绿赏皮球",
       "scientificName": "Poecilia sphenops var. Green",
@@ -924,7 +862,7 @@
       ]
     },
     {
-      "rank": 32,
+      "rank": 30,
       "speciesId": "sp_0209",
       "name": "血玛丽鱼",
       "scientificName": "Poecilia latipinna var. Blood",
@@ -955,7 +893,7 @@
       ]
     },
     {
-      "rank": 33,
+      "rank": 31,
       "speciesId": "sp_0213",
       "name": "黑线飞狐 (金型)",
       "scientificName": "Crossocheilus langei var. Gold",
@@ -986,7 +924,7 @@
       ]
     },
     {
-      "rank": 34,
+      "rank": 32,
       "speciesId": "sp_0215",
       "name": "长鳍一眉道人",
       "scientificName": "Sahyadria denisonii var. Longfin",
@@ -1017,7 +955,7 @@
       ]
     },
     {
-      "rank": 35,
+      "rank": 33,
       "speciesId": "sp_0233",
       "name": "球形珍珠马甲 (红眼)",
       "scientificName": "Trichopodus leerii var. Albino Balloon",
@@ -1048,7 +986,7 @@
       ]
     },
     {
-      "rank": 36,
+      "rank": 34,
       "speciesId": "sp_0237",
       "name": "高鳍红玛丽",
       "scientificName": "Poecilia latipinna var. High Fin Red",
@@ -1079,7 +1017,7 @@
       ]
     },
     {
-      "rank": 37,
+      "rank": 35,
       "speciesId": "sp_0252",
       "name": "白金反游猫",
       "scientificName": "Synodontis nigriventris var. White",
@@ -1110,7 +1048,7 @@
       ]
     },
     {
-      "rank": 38,
+      "rank": 36,
       "speciesId": "sp_0253",
       "name": "红纹一眉道人",
       "scientificName": "Sahyadria denisonii var. Red Line",
@@ -1141,7 +1079,7 @@
       ]
     },
     {
-      "rank": 39,
+      "rank": 37,
       "speciesId": "sp_0254",
       "name": "白金黑线飞狐",
       "scientificName": "Crossocheilus langei var. Platinum",
@@ -1172,7 +1110,7 @@
       ]
     },
     {
-      "rank": 40,
+      "rank": 38,
       "speciesId": "sp_0267",
       "name": "红头珍珠马甲",
       "scientificName": "Trichopodus leerii var. Red Head",
@@ -1203,7 +1141,7 @@
       ]
     },
     {
-      "rank": 41,
+      "rank": 39,
       "speciesId": "sp_0292",
       "name": "球形金玛丽",
       "scientificName": "Poecilia latipinna var. Gold Balloon",
@@ -1234,7 +1172,7 @@
       ]
     },
     {
-      "rank": 42,
+      "rank": 40,
       "speciesId": "sp_0293",
       "name": "球形黑玛丽",
       "scientificName": "Poecilia sphenops var. Black Balloon",
@@ -1265,7 +1203,7 @@
       ]
     },
     {
-      "rank": 43,
+      "rank": 41,
       "speciesId": "sp_0295",
       "name": "长鳍电光美人",
       "scientificName": "Melanotaenia praecox var. Longfin",
@@ -1296,7 +1234,7 @@
       ]
     },
     {
-      "rank": 44,
+      "rank": 42,
       "speciesId": "sp_0348",
       "name": "红白虎头金鱼",
       "scientificName": "Carassius auratus var. Tigerhead",
@@ -1327,7 +1265,7 @@
       ]
     },
     {
-      "rank": 45,
+      "rank": 43,
       "speciesId": "sp_0349",
       "name": "蓝寿 (五花)",
       "scientificName": "Carassius auratus var. Calico Ranchu",
@@ -1358,7 +1296,7 @@
       ]
     },
     {
-      "rank": 46,
+      "rank": 44,
       "speciesId": "sp_0350",
       "name": "黑狮头金鱼",
       "scientificName": "Carassius auratus var. Black Oranda",
@@ -1389,7 +1327,7 @@
       ]
     },
     {
-      "rank": 47,
+      "rank": 45,
       "speciesId": "sp_0351",
       "name": "红白蝶尾",
       "scientificName": "Carassius auratus var. Butterfly Tail",
@@ -1420,7 +1358,7 @@
       ]
     },
     {
-      "rank": 48,
+      "rank": 46,
       "speciesId": "sp_0364",
       "name": "荧光粉斑马",
       "scientificName": "Danio rerio var. Glo Pink",
@@ -1451,7 +1389,7 @@
       ]
     },
     {
-      "rank": 49,
+      "rank": 47,
       "speciesId": "sp_0385",
       "name": "雪白金金鱼 (改良)",
       "scientificName": "Carassius auratus var. White Gold",
@@ -1482,7 +1420,7 @@
       ]
     },
     {
-      "rank": 50,
+      "rank": 48,
       "speciesId": "sp_0386",
       "name": "黑金刚龙睛",
       "scientificName": "Carassius auratus var. Black Moor",
@@ -1513,7 +1451,7 @@
       ]
     },
     {
-      "rank": 51,
+      "rank": 49,
       "speciesId": "sp_0387",
       "name": "熊猫蝶尾 (极品)",
       "scientificName": "Carassius auratus var. Panda Butterfly",
@@ -1544,7 +1482,7 @@
       ]
     },
     {
-      "rank": 52,
+      "rank": 50,
       "speciesId": "sp_0395",
       "name": "黄金大帆飞狐",
       "scientificName": "Crossocheilus langei var. Gold Longfin",
@@ -1575,7 +1513,7 @@
       ]
     },
     {
-      "rank": 53,
+      "rank": 51,
       "speciesId": "sp_0406",
       "name": "五彩青蛙 (大规格改良)",
       "scientificName": "Synchiropus splendidus var. XL",
@@ -1606,7 +1544,7 @@
       ]
     },
     {
-      "rank": 54,
+      "rank": 52,
       "speciesId": "sp_0413",
       "name": "黄金眼镜蛇蛇鱼 (长鳍)",
       "scientificName": "Pangio kuhlii var. Longfin",
@@ -1637,7 +1575,7 @@
       ]
     },
     {
-      "rank": 55,
+      "rank": 53,
       "speciesId": "sp_0419",
       "name": "荧光橙斑马 (长鳍)",
       "scientificName": "Danio rerio var. Glo Orange Longfin",
@@ -1668,7 +1606,7 @@
       ]
     },
     {
-      "rank": 56,
+      "rank": 54,
       "speciesId": "sp_0426",
       "name": "极地白云金丝",
       "scientificName": "Tanichthys albonubes var. Polar",

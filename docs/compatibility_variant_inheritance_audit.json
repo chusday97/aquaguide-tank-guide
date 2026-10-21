@@ -27,16 +27,16 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "genericOnboardingReadySpecies": 109,
+    "genericOnboardingReadySpecies": 111,
     "explicitReviewedCanonicalBridges": 21,
-    "reviewedColorPolicyCanonicalRecords": 18,
+    "reviewedColorPolicyCanonicalRecords": 20,
     "reviewedColorTaxonRootRecords": 5,
     "reviewedVariantFieldPolicyRecords": 9,
     "reviewedVariantFieldResearchPolicies": 8,
     "baseTaxonCandidateFactSlots": 24,
     "exactObjectEvidenceFactSlots": 40,
-    "totalCanonicalIdentityRecords": 48,
-    "policyPromotedReadySpecies": 17,
+    "totalCanonicalIdentityRecords": 50,
+    "policyPromotedReadySpecies": 19,
     "fieldPolicyReadySpecies": 3,
     "directReviewedVariantObjects": 2,
     "remainingReviewedVariantObjects": 0,
@@ -254,6 +254,32 @@
       "authoritativeFieldCount": 8
     },
     {
+      "speciesId": "sp_0171",
+      "name": "白玉金丝鱼",
+      "scientificName": "Tanichthys albonubes var. Albino",
+      "canonicalSpeciesId": "sp_0434",
+      "canonicalRootKind": "catalog_species",
+      "canonicalScientificName": "Tanichthys albonubes",
+      "variantKey": "Albino",
+      "registrySource": "reviewed_color_morph_policy",
+      "evidenceIds": [
+        "phase2-21-seriouslyfish-tanichthys-albonubes-color-strains"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
       "speciesId": "sp_0174",
       "name": "红眼白子红裙",
       "scientificName": "Gymnocorymbus ternetzi var. Albino",
@@ -264,6 +290,32 @@
       "registrySource": "reviewed_color_morph_policy",
       "evidenceIds": [
         "wave05-cbd-gymnocorymbus-albino-white"
+      ],
+      "inheritedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "blockedFacts": [],
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8
+    },
+    {
+      "speciesId": "sp_0196",
+      "name": "一眉道人 (黄金型)",
+      "scientificName": "Sahyadria denisonii var. Gold",
+      "canonicalSpeciesId": "sp_0440",
+      "canonicalRootKind": "catalog_species",
+      "canonicalScientificName": "Sahyadria denisonii",
+      "variantKey": "Gold",
+      "registrySource": "reviewed_color_morph_policy",
+      "evidenceIds": [
+        "phase2-21-quality-marine-golden-roseline"
       ],
       "inheritedFacts": [
         "water",

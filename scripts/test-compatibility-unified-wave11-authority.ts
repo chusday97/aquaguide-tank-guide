@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
-import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
+import { getCatalogCanonicalIdentity, hasFullGenericCompatibilityInheritance } from '../src/data/catalogCanonicalIdentity';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
 import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
@@ -22,7 +22,15 @@ assert.deepEqual(batch.members.map(item => item.speciesId), [...nextWaveUnified1
 const authority = readFileSync(batch.authorityOwner, 'utf8');
 for (const speciesId of nextWaveUnified11AllSpeciesIds) {
   assert.equal(authority.includes(speciesId), true);
-  assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
+  const currentProfile = getReviewedCompatibilityProfile(speciesId);
+  if (currentProfile) {
+    assert.equal(
+      hasFullGenericCompatibilityInheritance(speciesId),
+      true,
+      'a later static Profile may only supersede frozen Wave11 history through full reviewed canonical inheritance: ' + speciesId,
+    );
+    assert.equal(getCatalogCanonicalIdentity(speciesId)?.identityStatus, 'reviewed');
+  }
 }
 
 for (const outcome of nextWaveUnified11IdentityOutcomes) {
@@ -64,4 +72,4 @@ assert.ok(audit.reviewedProfiles.length >= 101, 'repository authority must retai
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 
-console.log('Compatibility unified wave11 authority PASS: 0 Profiles, 12 identity holds, 13 variant evidence ceilings; DB authority unchanged at 100/176.');
+console.log('Compatibility unified wave11 authority PASS: frozen 0-Profile release remains auditable while only later full canonical inheritance may supersede historical holds at runtime; partial/held objects stay fail-closed.');

@@ -364,6 +364,7 @@
     "test:identity-bound-catalog-bridges": "node --import tsx scripts/test-identity-bound-catalog-bridges.ts",
     "test:catalog-canonical-identity": "node --import tsx scripts/test-catalog-canonical-identity-architecture.ts",
     "test:identity-corrections-phase2-15": "node --import tsx scripts/test-identity-corrections-phase2-15.ts",
+    "test:identity-corrections-phase2-21": "node --import tsx scripts/test-identity-corrections-phase2-21.ts",
     "generate:compatibility-variant-inheritance-audit": "node --import tsx scripts/generate-compatibility-variant-inheritance-audit.ts",
     "test:compatibility-variant-inheritance-audit": "node --import tsx scripts/test-compatibility-variant-inheritance-audit.ts",
     "generate:compatibility-variant-hold-classification": "node --import tsx scripts/generate-compatibility-variant-hold-classification.ts",

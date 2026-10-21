@@ -236,7 +236,22 @@ assert.equal(denisonKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 11);
 assert.equal(denisonKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 243);
 assert.equal(denisonKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
 assert.equal(denisonKnowledge.knowledge.reproduction, undefined, 'Denison barb reproduction stays absent until stronger reviewed captive-breeding authority exists');
-assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0196', scientificName: 'Sahyadria denisonii var. Gold' }), undefined, 'Denison ornamental variants must not inherit standard-species authority automatically');
+const denisonGoldKnowledge = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0196', scientificName: 'Sahyadria denisonii var. Gold' });
+assert.ok(denisonGoldKnowledge, 'reviewed Gold Denison object may expose its own exact-object reviewed-unknown record once identity is resolved');
+assert.equal(denisonGoldKnowledge.environment?.waterType, 'unknown');
+assert.equal(denisonGoldKnowledge.socialBehavior?.mode, 'unknown');
+assert.equal(denisonGoldKnowledge.spaceAndGrowth?.activityLevel, 'unknown');
+assert.equal(denisonGoldKnowledge.sexIdentification?.confidence, 'unknown');
+assert.deepEqual(
+  denisonGoldKnowledge.environment?.evidence.sourceIds,
+  ['batch28-fishbase-sahyadria-denisonii-gold'],
+);
+const denisonBaseSourceIds = denisonKnowledge.knowledge.environment?.evidence.sourceIds || [];
+assert.equal(
+  denisonGoldKnowledge.environment?.evidence.sourceIds.some(sourceId => denisonBaseSourceIds.includes(sourceId)),
+  false,
+  'Compatibility identity resolution must not grant Species Knowledge base-species husbandry inheritance',
+);
 const denisonSources = resolveKnowledgeSources(denisonKnowledge.knowledge.environment?.evidence.sourceIds || []);
 assert.equal(denisonSources.length, 2);
 assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
-import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
+import { getCatalogCanonicalIdentity, hasFullGenericCompatibilityInheritance } from '../src/data/catalogCanonicalIdentity';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getReviewedCompatibilityProfile, getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
 import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
@@ -22,7 +22,15 @@ assert.deepEqual(batch.members.map(item => item.speciesId), [...nextWaveUnified1
 const authority = readFileSync(batch.authorityOwner, 'utf8');
 for (const speciesId of nextWaveUnified15AllSpeciesIds) {
   assert.equal(authority.includes(speciesId), true);
-  assert.equal(getReviewedCompatibilityProfile(speciesId), undefined);
+  const currentProfile = getReviewedCompatibilityProfile(speciesId);
+  if (currentProfile) {
+    assert.equal(
+      hasFullGenericCompatibilityInheritance(speciesId),
+      true,
+      'a later static Profile may only supersede frozen Wave15 history through full reviewed canonical inheritance: ' + speciesId,
+    );
+    assert.equal(getCatalogCanonicalIdentity(speciesId)?.identityStatus, 'reviewed');
+  }
 }
 
 for (const outcome of nextWaveUnified15IdentityOutcomes) {

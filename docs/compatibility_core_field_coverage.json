@@ -11,10 +11,10 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 109,
-  "coreFieldCompleteSpecies": 120,
+  "genericOnboardingReadySpecies": 111,
+  "coreFieldCompleteSpecies": 122,
   "oneFieldGapSpecies": 13,
-  "runtimeReviewedProfileSpecies": 170,
+  "runtimeReviewedProfileSpecies": 172,
   "fishCompatibilityDomainSpecies": 308,
   "fishIdentityHeldSpecies": 91,
   "unsupportedDomainSpecies": 167,
@@ -25,44 +25,28 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 56,
+  "visibleResearchDebtFields": 54,
   "completionEligibleResearchDebtFields": 0,
-  "deferredResearchDebtFields": 56,
+  "deferredResearchDebtFields": 54,
   "activeCompletionResearchDebtFields": 0,
-  "deferredResearchOpportunityFields": 56,
-  "deferredResearchOpportunitySpecies": 56,
+  "deferredResearchOpportunityFields": 54,
+  "deferredResearchOpportunitySpecies": 54,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 56,
-  "predationRiskDiscoveryFields": 56,
+  "softRiskDiscoveryResearchDebtFields": 54,
+  "predationRiskDiscoveryFields": 54,
   "predationRiskDiscoveryHardReadySpecies": 5,
-  "predationRiskDiscoveryVariantIdentityHeldSpecies": 49,
+  "predationRiskDiscoveryVariantIdentityHeldSpecies": 47,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 178,
+      "reviewed_supported": 180,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 39,
+      "reviewed_unknown": 37,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 165,
-      "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 52,
-      "needs_research": 0,
-      "missing_identity_or_domain": 258,
-      "not_applicable": 11
-    },
-    "ph": {
-      "reviewed_supported": 157,
-      "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 60,
-      "needs_research": 0,
-      "missing_identity_or_domain": 258,
-      "not_applicable": 11
-    },
-    "adult_size": {
       "reviewed_supported": 167,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 50,
@@ -70,35 +54,51 @@
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
-    "tank_size": {
-      "reviewed_supported": 156,
+    "ph": {
+      "reviewed_supported": 159,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 61,
+      "reviewed_unknown": 58,
+      "needs_research": 0,
+      "missing_identity_or_domain": 258,
+      "not_applicable": 11
+    },
+    "adult_size": {
+      "reviewed_supported": 169,
+      "reviewed_neutral_or_negative": 0,
+      "reviewed_unknown": 48,
+      "needs_research": 0,
+      "missing_identity_or_domain": 258,
+      "not_applicable": 11
+    },
+    "tank_size": {
+      "reviewed_supported": 158,
+      "reviewed_neutral_or_negative": 0,
+      "reviewed_unknown": 59,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 146,
+      "reviewed_supported": 148,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 71,
+      "reviewed_unknown": 69,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "territoriality": {
       "reviewed_supported": 93,
-      "reviewed_neutral_or_negative": 49,
-      "reviewed_unknown": 75,
+      "reviewed_neutral_or_negative": 51,
+      "reviewed_unknown": 73,
       "needs_research": 0,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 105,
-      "reviewed_neutral_or_negative": 39,
+      "reviewed_supported": 106,
+      "reviewed_neutral_or_negative": 40,
       "reviewed_unknown": 17,
-      "needs_research": 56,
+      "needs_research": 54,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -106,7 +106,7 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 56
+      "count": 54
     },
     {
       "field": "water",
@@ -14228,71 +14228,83 @@
       "name": "白玉金丝鱼",
       "scientificName": "Tanichthys albonubes var. Albino",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-tanichthys-albonubes"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-tanichthys-albonubes"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "batch42-fishbase-tanichthys-albonubes"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-tanichthys-albonubes"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-tanichthys-albonubes"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch32-fishbase-tanichthys-albonubes-albino"
+            "seriouslyfish-tanichthys-albonubes"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch32-fishbase-tanichthys-albonubes-albino"
+            "seriouslyfish-tanichthys-albonubes"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-tanichthys-albonubes"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },
@@ -16403,71 +16415,92 @@
       "name": "一眉道人 (黄金型)",
       "scientificName": "Sahyadria denisonii var. Gold",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "evidenceIds": [],
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_identity_research_exhausted"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch28-fishbase-sahyadria-denisonii-gold"
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch28-fishbase-sahyadria-denisonii-gold"
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
+          "evidenceIds": [
+            "phase2-21-quality-marine-golden-roseline",
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
+          ],
+          "authoritySource": "canonical_inheritance",
+          "reasonCode": "reviewed_canonical_variant_inheritance"
         }
       }
     },

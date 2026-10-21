@@ -24,12 +24,21 @@ export const classifyCompatibilityVariantHold = (
   const suffix = variantSuffix(scientificName);
   const normalized = `${suffix} ${name}`.toLowerCase();
 
-  // Morphology-sensitive labels always win over color tokens. A "Gold Longfin"
-  // object is a longfin variant, not a color-only inheritance candidate.
-  if (/longfin|long fin|high fin|halfmoon|crowntail|crown|dumbo|ranchu|oranda|telescope|tigerhead|butterfly|black moor|balloon|jellybean/.test(normalized)) {
+  // Morphology-sensitive labels always win over color tokens. Inspect both the
+  // scientific variant suffix and localized catalog name: commercial names may
+  // encode body/fin form only in Chinese (for example 半月 or 皮球).
+  if (/longfin|long fin|high fin|halfmoon|crowntail|crown|dumbo|ranchu|oranda|telescope|tigerhead|butterfly|black moor|balloon|jellybean|长鳍|大帆|高鳍|半月|冠尾|狮头|兰寿|龙睛|蝶尾|虎头|球形|皮球|短身/.test(normalized)) {
     return 'morphology_variant';
   }
   if (/^xl$/i.test(suffix)) return 'size_grade_or_trade_label';
+
+  // A color-looking suffix is not enough when the catalog/common name signals
+  // a commercial lineage or hybrid identity. These stay fail-closed until the
+  // lineage itself is reviewed.
+  if (/鹦鹉|parrot|hybrid|crossbreed|cross-bred/.test(normalized)) {
+    return 'trade_or_lineage_label';
+  }
+
   if (isReviewedColorOnlyVariantKey(suffix)) return 'color_only_identity_candidate';
   return 'trade_or_lineage_label';
 };

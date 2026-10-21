@@ -20,7 +20,7 @@ const migration = readFileSync(migrationPath, 'utf8');
 const audit = getCompatibilityEvidenceAudit();
 
 assert.ok(audit.reviewedProfiles.length >= 101, 'repository authority must retain the released 101-Profile baseline and may grow beyond it');
-assert.equal(buildCompatibilityProfileRolloutKeysets(audit.reviewedProfiles.map(profile => profile.speciesId)).wave04Target.size, 95);
+assert.equal(buildCompatibilityProfileRolloutKeysets(audit.reviewedProfiles.map(profile => profile.speciesId)).wave04Target.size, 101);
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 assert.equal(nextWaveUnified04ProfileIds.length, 10);

@@ -37,20 +37,20 @@ assert.equal(
   'legacy aggregate hold metric must equal fish identity holds plus unsupported-domain objects',
 );
 assert.equal(summary.visibleResearchDebtFields, backlog.length, 'visible research debt must equal the field backlog ledger');
-assert.equal(summary.visibleResearchDebtFields, 56, 'phase2-15 must remove four reviewed Danio color variants from predation research debt');
+assert.equal(summary.visibleResearchDebtFields, 54, 'phase2-21 verified color bridges must remove two additional reviewed color variants from predation research debt');
 assert.equal(summary.completionEligibleResearchDebtFields, 0, 'no ordinary completion work should remain after all exact-object candidates reach explicit evidence ceilings');
-assert.equal(summary.deferredResearchDebtFields, 56, 'phase2-15 reviewed identity bridges must reduce deferred predation debt by four');
+assert.equal(summary.deferredResearchDebtFields, 54, 'phase2-21 reviewed identity bridges must reduce deferred predation debt by two more');
 assert.equal(summary.activeCompletionResearchDebtFields, 0, 'active completion research debt must be zero; deferred source opportunities are not executable completion work');
-assert.equal(summary.deferredResearchOpportunityFields, 56, 'all remaining visible source opportunities are completion-blocked');
-assert.equal(summary.deferredResearchOpportunitySpecies, 56, 'each remaining deferred predation opportunity belongs to a distinct completion-blocked species');
+assert.equal(summary.deferredResearchOpportunityFields, 54, 'all remaining visible source opportunities are completion-blocked');
+assert.equal(summary.deferredResearchOpportunitySpecies, 54, 'each remaining deferred predation opportunity belongs to a distinct completion-blocked species');
 assert.equal(summary.hardDecisionResearchDebtFields, 0, 'no targeted-source-expansion backlog item currently blocks a hard insufficient_data decision');
-assert.equal(summary.softRiskDiscoveryResearchDebtFields, 56, 'all visible ordinary research debt is soft risk-discovery work');
-assert.equal(summary.predationRiskDiscoveryFields, 56, 'all current ordinary research opportunities are predation risk-discovery gaps');
+assert.equal(summary.softRiskDiscoveryResearchDebtFields, 54, 'all visible ordinary research debt is soft risk-discovery work');
+assert.equal(summary.predationRiskDiscoveryFields, 54, 'all current ordinary research opportunities are predation risk-discovery gaps');
 assert.equal(summary.predationRiskDiscoveryHardReadySpecies, 5, 'only five low-surface exact catalog objects remain hard-ready after wave36 terminalizes the seven exhausted high-impact searches');
-assert.equal(summary.predationRiskDiscoveryVariantIdentityHeldSpecies, 49, '49 predation gaps remain behind variant/identity hard holds after four reviewed Danio color bridges');
+assert.equal(summary.predationRiskDiscoveryVariantIdentityHeldSpecies, 47, '47 predation gaps remain behind variant/identity hard holds after two additional verified color bridges');
 assert.equal(summary.predationRiskDiscoveryOtherHardHeldSpecies, 2, 'only two predation gaps remain behind non-variant hard evidence ceilings');
 assert.equal(backlog.filter(item => item.decisionImpact === 'hard_decision_blocker').length, 0);
-assert.equal(backlog.filter(item => item.decisionImpact === 'soft_risk_discovery').length, 56);
+assert.equal(backlog.filter(item => item.decisionImpact === 'soft_risk_discovery').length, 54);
 
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
@@ -907,12 +907,12 @@ for (const row of rows) {
   );
 }
 
-assert.equal(backlog.length, 56, 'ordinary field backlog must exclude phase2-15 reviewed Danio color bridges in addition to prior reviewed and terminalized fields');
+assert.equal(backlog.length, 54, 'ordinary field backlog must exclude phase2-15 Danio bridges and phase2-21 verified color bridges in addition to prior reviewed and terminalized fields');
 assert.ok(backlog.every(item => ['reviewed_unknown', 'needs_research'].includes(item.status)));
 const completionEligibleBacklog = backlog.filter(item => item.completionEligible);
 const deferredBacklog = backlog.filter(item => !item.completionEligible);
 assert.equal(completionEligibleBacklog.length, 0);
-assert.equal(deferredBacklog.length, 56);
+assert.equal(deferredBacklog.length, 54);
 assert.deepEqual([...new Set(completionEligibleBacklog.map(item => item.speciesId))].sort(), []);
 assert.ok(deferredBacklog.every(item => item.field === 'predation'));
 assert.ok(deferredBacklog.every(item => item.companionTerminalGapCount > 0), 'legacy field gaps with companion terminal holds must stay visible but deferred from active completion');
@@ -1007,7 +1007,7 @@ assert.deepEqual(matrixArtifact.fieldActionableGaps, summary.fieldActionableGaps
 assert.deepEqual(matrixArtifact.rows, rows, 'source-controlled core-field matrix must be regenerated with current authority');
 assert.equal(backlogArtifact.totalItems, backlog.length);
 assert.equal(backlogArtifact.activeCompletionItems, 0);
-assert.equal(backlogArtifact.deferredOpportunityItems, 56);
+assert.equal(backlogArtifact.deferredOpportunityItems, 54);
 const deferredBlockerSummary = backlogArtifact.deferredBlockerSummary as {
   items: number;
   species: number;
@@ -1016,9 +1016,9 @@ const deferredBlockerSummary = backlogArtifact.deferredBlockerSummary as {
   blockingTerminalReasons: Record<string, number>;
   blockingTerminalAuthoritySources: Record<string, number>;
 };
-assert.equal(deferredBlockerSummary.items, 56);
-assert.equal(deferredBlockerSummary.species, 56);
-assert.deepEqual(deferredBlockerSummary.fields, { predation: 56 });
+assert.equal(deferredBlockerSummary.items, 54);
+assert.equal(deferredBlockerSummary.species, 54);
+assert.deepEqual(deferredBlockerSummary.fields, { predation: 54 });
 for (const reason of [
   'variant_identity_research_exhausted',
   'variant_social_not_established',

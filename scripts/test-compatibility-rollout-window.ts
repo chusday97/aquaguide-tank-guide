@@ -16,18 +16,18 @@ import {
 
 const audit = getCompatibilityEvidenceAudit();
 const targetIds = audit.reviewedProfiles.map(item => item.speciesId);
-assert.equal(targetIds.length, 126, 'repository authority includes twenty-five reviewed source-controlled post-target Profiles beyond the released target');
+assert.equal(targetIds.length, 132, 'repository authority includes twenty-five reviewed source-controlled post-target Profiles beyond the released 107-Profile target');
 
 const keysets = buildCompatibilityProfileRolloutKeysets(targetIds);
-assert.equal(keysets.currentProduction.size, 63);
-assert.equal(keysets.productionTarget.size, 85);
-assert.equal(keysets.wave04Target.size, 95);
-assert.equal(keysets.wave05Target.size, 99);
-assert.equal(keysets.wave06Target.size, 100);
-assert.equal(keysets.target.size, 101);
+assert.equal(keysets.currentProduction.size, 69);
+assert.equal(keysets.productionTarget.size, 91);
+assert.equal(keysets.wave04Target.size, 101);
+assert.equal(keysets.wave05Target.size, 105);
+assert.equal(keysets.wave06Target.size, 106);
+assert.equal(keysets.target.size, 107);
 assert.deepEqual([...compatibilitySourceControlledPendingProfileIds].sort(), ['sp_0112', 'sp_0115', 'sp_0120', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0216', 'sp_0221', 'sp_0229', 'sp_0231', 'sp_0234', 'sp_0236', 'sp_0240', 'sp_0242', 'sp_0257', 'sp_0266', 'sp_0272', 'sp_0284', 'sp_0338', 'sp_0362', 'sp_0388', 'sp_0407', 'sp_0408', 'sp_0411', 'sp_0442']);
 for (const speciesId of compatibilitySourceControlledPendingProfileIds) {
-  assert.equal(keysets.target.has(speciesId), false, 'source-controlled identity corrections must not silently enter the released 101-Profile target: ' + speciesId);
+  assert.equal(keysets.target.has(speciesId), false, 'source-controlled identity corrections must not silently enter the released 107-Profile target: ' + speciesId);
 }
 
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.target], targetIds), 'target');
@@ -66,26 +66,26 @@ const wave05Pending = [...compatibilityStackedWave05PendingProfileIds];
 const wave06Pending = [...compatibilityStackedWave06PendingProfileIds];
 const wave16Pending = [...compatibilityStackedWave16PendingProfileIds];
 
-assert.equal(getCompatibilityProfileRolloutGeneration(current.slice(0, -1), targetIds), null, '62 Profiles must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration([...current, productionPending[0]], targetIds), null, '64 Profiles must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(production.slice(0, -1), targetIds), null, '84 Profiles must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration([...production, wave04Pending[0]], targetIds), null, '86 Profiles must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(wave04.slice(0, -1), targetIds), null, '94 Profiles must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration([...wave04, wave05Pending[0]], targetIds), null, '96 Profiles must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(wave05.slice(0, -1), targetIds), null, '98 Profiles must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(current.slice(0, -1), targetIds), null, '68 Profiles must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration([...current, productionPending[0]], targetIds), null, '70 Profiles must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(production.slice(0, -1), targetIds), null, '90 Profiles must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration([...production, wave04Pending[0]], targetIds), null, '92 Profiles must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(wave04.slice(0, -1), targetIds), null, '100 Profiles must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration([...wave04, wave05Pending[0]], targetIds), null, '102 Profiles must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(wave05.slice(0, -1), targetIds), null, '104 Profiles must fail closed');
 
-const wrong63 = [...current]; wrong63[0] = productionPending[0];
-const wrong85 = [...production]; wrong85[0] = wave04Pending[0];
-const wrong95 = [...wave04]; wrong95[0] = wave05Pending[0];
-const wrong99 = [...wave05]; wrong99[0] = wave06Pending[0];
-const wrong100 = [...wave06]; wrong100[0] = 'sp_not_a_real_profile';
-const wrong101 = [...target]; wrong101[0] = 'sp_not_a_real_profile';
-assert.equal(getCompatibilityProfileRolloutGeneration(wrong63, targetIds), null, 'wrong 63-key baseline must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(wrong85, targetIds), null, 'wrong 85-key target must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(wrong95, targetIds), null, 'wrong 95-key target must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(wrong99, targetIds), null, 'wrong 99-key wave05 target must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(wrong100, targetIds), null, 'wrong 100-key wave06 target must fail closed');
-assert.equal(getCompatibilityProfileRolloutGeneration(wrong101, targetIds), null, 'wrong 101-key repository target must fail closed');
+const wrong69 = [...current]; wrong69[0] = productionPending[0];
+const wrong91 = [...production]; wrong91[0] = wave04Pending[0];
+const wrong101 = [...wave04]; wrong101[0] = wave05Pending[0];
+const wrong105 = [...wave05]; wrong105[0] = wave06Pending[0];
+const wrong106 = [...wave06]; wrong106[0] = 'sp_not_a_real_profile';
+const wrong107 = [...target]; wrong107[0] = 'sp_not_a_real_profile';
+assert.equal(getCompatibilityProfileRolloutGeneration(wrong69, targetIds), null, 'wrong 69-key baseline must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(wrong91, targetIds), null, 'wrong 91-key target must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(wrong101, targetIds), null, 'wrong 101-key target must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(wrong105, targetIds), null, 'wrong 105-key wave05 target must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(wrong106, targetIds), null, 'wrong 106-key wave06 target must fail closed');
+assert.equal(getCompatibilityProfileRolloutGeneration(wrong107, targetIds), null, 'wrong 107-key repository target must fail closed');
 
 for (const speciesId of compatibilityProductionRolloutPendingProfileIds) {
   assert.equal(keysets.productionTarget.has(speciesId), true);
@@ -108,4 +108,4 @@ for (const speciesId of wave16Pending) {
   assert.equal(keysets.wave06Target.has(speciesId), false);
 }
 
-console.log('Compatibility rollout window PASS: exact 63 / 85 / 95 / 99 / 100 / 101 rollout generations stay fail-closed, while complete-target authority can grow monotonically with reviewed new profiles.');
+console.log('Compatibility rollout window PASS: exact 69 / 91 / 101 / 105 / 106 / 107 rollout generations stay fail-closed, while complete-target authority can grow monotonically with reviewed new profiles.');
