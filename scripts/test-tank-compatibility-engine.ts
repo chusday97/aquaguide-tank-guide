@@ -9,6 +9,7 @@ import { getCompatibilityPreviewSpecies } from '../src/services/compatibility/co
 import { applyCompatibilityStabilityConfirmation } from '../src/services/compatibility/compatibility-stability.service';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { COMPATIBILITY_RULE_VERSION } from '../packages/domain-rules/src';
+import { buildCompatibilityReadableConclusion } from '../src/services/compatibility/compatibility-readable-copy.service';
 
 const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   id: 'peaceful-small-fish',
@@ -94,6 +95,44 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         && result.missingData.every(rule => !['missing_ph', 'missing_hardness'].includes(rule.code))
         && result.suggestions.some(item => item.includes('公开可靠资料不足'))
         && result.suggestions.some(item => item.includes('试纸') && item.includes('可选复核'));
+    },
+  },
+  {
+    name: 'room-temperature text is treated as unreported rather than a false temperature conflict',
+    run: () => {
+      const ember = fishData.find(item => item.id === 'sp_0114');
+      if (!ember) return false;
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ targetTemperature: '室温' }),
+        candidateSpecies: ember,
+        candidateQuantity: 8,
+      });
+      return result.status !== 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('tank_temperature_unreported')
+        && result.blockingRules.every(rule => rule.code !== 'tank_temperature_conflict')
+        && result.missingData.every(rule => !['missing_temperature', 'missing_tank_temperature'].includes(rule.code));
+    },
+  },
+  {
+    name: 'missing tank size asks only for size and does not require filter or heater details',
+    run: () => {
+      const review = reviewSpeciesAdditions({
+        aquarium: makeTank({
+          fishes: [{ id: 'existing-ember', fishId: 'sp_0114', quantity: 8, entryDate: '2026-10-01' }],
+          dimensions: undefined,
+          targetTemperature: undefined,
+          equipment: undefined,
+        }),
+        items: [{ fishId: 'sp_0448', quantity: 2 }],
+        speciesCatalog: fishData,
+      });
+      if (!review) return false;
+      const main = buildCompatibilityReadableConclusion(review.decision);
+      return review.status === 'insufficient_data'
+        && review.decision.missingData.length === 1
+        && review.decision.missingData[0]?.code === 'tank_volume_missing'
+        && main.howTo.some(text => /长宽高|水体容量/.test(text))
+        && !/过滤|加热|系统资料/.test([...main.why, ...main.howTo].join(' '));
     },
   },
   {

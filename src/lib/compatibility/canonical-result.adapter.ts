@@ -283,11 +283,16 @@ export const applyCanonicalCompatibilityDecision = (
   const orderedDomainBlockingRules = [...domainBlockingWithoutGenericPair].sort(
     (left, right) => (domainBlockingPriority[left.code] ?? 99) - (domainBlockingPriority[right.code] ?? 99),
   );
-  // pH / GH confirmations from the legacy fit layer are advisory checks, not
-  // decision-critical user inputs. When some other authority gap makes the
-  // overall decision insufficient, do not accidentally promote these optional
-  // measurements into missingData and make the user think a test kit is required.
-  const supersededLegacyMissingCodes = new Set<string>(['missing_ph', 'missing_hardness']);
+  // Legacy fit confirmations for pH / GH and unspecified equipment are advisory
+  // checks, not decision-critical user inputs. When some other authority gap makes
+  // the overall decision insufficient, do not promote them into missingData and
+  // make the user think test kits or equipment details are prerequisites.
+  const supersededLegacyMissingCodes = new Set<string>([
+    'missing_ph',
+    'missing_hardness',
+    'missing_filter',
+    'missing_heater',
+  ]);
   const domainCodeSet = new Set(domainRules.map(rule => rule.code));
 
   // Domain input semantics are the canonical authority for whether an omitted

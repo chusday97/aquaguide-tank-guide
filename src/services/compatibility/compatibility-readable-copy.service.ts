@@ -154,8 +154,8 @@ export const getCompatibilityReadableRuleText = (
   }
   if (code === 'missing_ph') return '未记录 pH 不会单独卡住普通混养判断；仅在水质敏感或边界风险时建议补测复核。';
   if (code === 'missing_hardness') return '未记录 GH / 硬度不会单独卡住普通混养判断；仅在硬度敏感时建议补测复核。';
-  if (code === 'missing_filter') return '还没有确认当前鱼缸是否有稳定过滤；这是需要补充的鱼缸信息。';
-  if (code === 'missing_heater') return '还没有确认当前鱼缸是否需要并配有加热设备；这是需要补充的鱼缸信息。';
+  if (code === 'missing_filter') return '未记录过滤设备不会单独卡住混养判断；如果后续涉及负荷或维护压力，再补充过滤情况即可。';
+  if (code === 'missing_heater') return '未记录加热设备不会单独卡住混养判断；如果需要稳定特定温区，再确认是否具备控温条件。';
   if (code === 'tank_missing') return '还缺少当前鱼缸的基础信息。';
   if (code === 'tank_water_type_missing' || code === 'water_type_unknown' || code === 'candidate_water_type_missing') {
     return '还不能确认这组生物需要的水体类型是否一致。';
@@ -347,11 +347,21 @@ const deterministicActionsFor = (
         ? '这不是你少填了信息；等关键混养资料完成可靠审核后，再重新判断当前组合。'
         : '这不是你少填了信息；先不要加入，等关键混养资料完成可靠审核后再判断。'];
     }
+    if (codes.has('tank_volume_missing') || codes.has('missing_tank_volume') || codes.has('missing_volume')) {
+      return [assessmentMode === 'current_tank'
+        ? '告诉我鱼缸大致长宽高，或实际水体容量，就可以重新判断当前组合。'
+        : '告诉我鱼缸大致长宽高，或实际水体容量，就可以继续判断是否适合加入。'];
+    }
     if (codes.has('tank_water_type_missing') || codes.has('water_type_unknown') || codes.has('candidate_water_type_missing')) {
       return ['先确认双方需要的水体类型，再重新判断是否适合同缸。'];
     }
-    if (codes.has('tank_temperature_missing') || codes.has('temperature_range_missing')) {
-      return ['先补充当前稳定水温和物种适温范围，再重新判断。'];
+    if (codes.has('tank_temperature_missing')) {
+      return ['告诉我当前大致水温或目标水温；不知道具体数值时写“室温/常温”也可以，再重新判断。'];
+    }
+    if (codes.has('temperature_range_missing')) {
+      return [assessmentMode === 'current_tank'
+        ? '这不是你少填了信息；当前物种缺少可靠的长期适温范围，等资料补齐并审核后再重新判断当前组合。'
+        : '这不是你少填了信息；当前物种缺少可靠的长期适温范围，等资料补齐并审核后再判断是否适合加入。'];
     }
     return [assessmentMode === 'current_tank'
       ? '这不是你少填了信息；当前系统资料未完成可靠审核，审核完成后再重新判断当前组合。'

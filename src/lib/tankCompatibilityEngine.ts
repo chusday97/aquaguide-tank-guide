@@ -912,7 +912,9 @@ const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
   waterType: tank.waterType === 'Freshwater' ? 'freshwater' : tank.waterType === 'Saltwater' ? 'saltwater' : 'unknown',
   volumeLiters: getAquariumVolumeLiters(tank) || null,
   lengthCm: tank.dimensions ? Number(tank.dimensions.length) || null : null,
-  targetTemperatureC: tank.targetTemperature ? Number(tank.targetTemperature) : null,
+  targetTemperatureC: tank.targetTemperature?.trim() && Number.isFinite(Number(tank.targetTemperature))
+    ? Number(tank.targetTemperature)
+    : null,
   ph: tank.ph !== undefined && tank.ph !== '' && Number.isFinite(Number(tank.ph)) ? Number(tank.ph) : null,
   stabilityContext: tank.stabilityContext,
 });

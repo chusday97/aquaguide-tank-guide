@@ -104,8 +104,6 @@ const MISSING_USER_INPUT_CODES = new Set([
   'missing_tank_volume',
   'tank_temperature_missing',
   'missing_tank_temperature',
-  'missing_filter',
-  'missing_heater',
 ]);
 
 const MISSING_SPECIES_FACT_CODES = new Set([
