@@ -1,11 +1,15 @@
 {
-  "version": 1,
-  "invariant": "Variant-name triage may prioritize identity research but never grants Compatibility inheritance or safety authority.",
+  "version": 2,
+  "invariant": "Variant intake may batch research by candidate parent taxon and morphology signal, but parsed labels never grant canonical identity, field inheritance, or safety authority.",
   "policy": {
     "colorOnlyRequiresReviewedIdentityBridge": true,
     "morphologyAutoInheritanceAllowed": false,
     "tradeLabelAutoInheritanceAllowed": false,
     "sizeGradeAutoInheritanceAllowed": false,
+    "parsedBaseTaxonIsCandidateOnly": true,
+    "morphologySignalsAreTriageOnly": true,
+    "exactObjectIdentityEvidenceRequired": true,
+    "clusterResearchNeverGrantsSharedVariantIdentity": true,
     "pairPrecomputationRequired": false
   },
   "summary": {
@@ -13,7 +17,12 @@
     "color_only_identity_candidate": 4,
     "morphology_variant": 29,
     "trade_or_lineage_label": 13,
-    "size_grade_or_trade_label": 1
+    "size_grade_or_trade_label": 1,
+    "missingIdentityReviewCatalogObjects": 47,
+    "reviewedSupportedIdentityCatalogObjects": 0,
+    "canonicalBridgeCatalogObjects": 0,
+    "candidateBaseTaxonClusters": 14,
+    "multiObjectCandidateBaseTaxonClusters": 10
   },
   "priority": [
     "color_only_identity_candidate",
@@ -21,429 +30,1005 @@
     "morphology_variant",
     "size_grade_or_trade_label"
   ],
+  "taxonClusters": [
+    {
+      "candidateBaseScientificName": "Carassius auratus",
+      "catalogObjectCount": 12,
+      "speciesIds": [
+        "sp_0063",
+        "sp_0064",
+        "sp_0149",
+        "sp_0150",
+        "sp_0180",
+        "sp_0348",
+        "sp_0349",
+        "sp_0350",
+        "sp_0351",
+        "sp_0385",
+        "sp_0386",
+        "sp_0387"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 10,
+        "trade_or_lineage_label": 2,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 12,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Betta splendens",
+      "catalogObjectCount": 7,
+      "speciesIds": [
+        "sp_0259",
+        "sp_0260",
+        "sp_0261",
+        "sp_0262",
+        "sp_0389",
+        "sp_0390",
+        "sp_0391"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 5,
+        "trade_or_lineage_label": 2,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 7,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Poecilia latipinna",
+      "catalogObjectCount": 5,
+      "speciesIds": [
+        "sp_0168",
+        "sp_0169",
+        "sp_0209",
+        "sp_0237",
+        "sp_0292"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 1,
+        "morphology_variant": 2,
+        "trade_or_lineage_label": 2,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 5,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
+      "catalogObjectCount": 3,
+      "speciesIds": [
+        "sp_0147",
+        "sp_0148",
+        "sp_0222"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 1,
+        "trade_or_lineage_label": 2,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 3,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Crossocheilus langei",
+      "catalogObjectCount": 3,
+      "speciesIds": [
+        "sp_0213",
+        "sp_0254",
+        "sp_0395"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 2,
+        "morphology_variant": 1,
+        "trade_or_lineage_label": 0,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 3,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Danio rerio",
+      "catalogObjectCount": 3,
+      "speciesIds": [
+        "sp_0152",
+        "sp_0364",
+        "sp_0419"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 1,
+        "trade_or_lineage_label": 2,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 3,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Poecilia sphenops",
+      "catalogObjectCount": 3,
+      "speciesIds": [
+        "sp_0161",
+        "sp_0203",
+        "sp_0293"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 3,
+        "trade_or_lineage_label": 0,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 3,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Trichopodus leerii",
+      "catalogObjectCount": 3,
+      "speciesIds": [
+        "sp_0153",
+        "sp_0233",
+        "sp_0267"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 2,
+        "trade_or_lineage_label": 1,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 3,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Sahyadria denisonii",
+      "catalogObjectCount": 2,
+      "speciesIds": [
+        "sp_0215",
+        "sp_0253"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 1,
+        "trade_or_lineage_label": 1,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 2,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Tanichthys albonubes",
+      "catalogObjectCount": 2,
+      "speciesIds": [
+        "sp_0172",
+        "sp_0426"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 1,
+        "trade_or_lineage_label": 1,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 2,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Melanotaenia praecox",
+      "catalogObjectCount": 1,
+      "speciesIds": [
+        "sp_0295"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 1,
+        "trade_or_lineage_label": 0,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 1,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Pangio kuhlii",
+      "catalogObjectCount": 1,
+      "speciesIds": [
+        "sp_0413"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 1,
+        "trade_or_lineage_label": 0,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 1,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Synchiropus splendidus",
+      "catalogObjectCount": 1,
+      "speciesIds": [
+        "sp_0406"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 0,
+        "trade_or_lineage_label": 0,
+        "size_grade_or_trade_label": 1
+      },
+      "missingIdentityReviewCatalogObjects": 1,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Synodontis nigriventris",
+      "catalogObjectCount": 1,
+      "speciesIds": [
+        "sp_0252"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 1,
+        "morphology_variant": 0,
+        "trade_or_lineage_label": 0,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 1,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+    }
+  ],
   "items": [
     {
       "speciesId": "sp_0063",
       "name": "兰寿金鱼",
       "scientificName": "Carassius auratus var. Ranchu",
       "variantSuffix": "Ranchu",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0064",
       "name": "泰狮金鱼",
       "scientificName": "Carassius auratus var. Oranda",
       "variantSuffix": "Oranda",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0147",
       "name": "蓝宝鹦鹉鱼",
       "scientificName": "Amatitlania nigrofasciata var. Blue",
       "variantSuffix": "Blue",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0148",
       "name": "雪玉鹦鹉鱼",
       "scientificName": "Amatitlania nigrofasciata var. White",
       "variantSuffix": "White",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0149",
       "name": "熊猫金鱼",
       "scientificName": "Carassius auratus var. Panda",
       "variantSuffix": "Panda",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0150",
       "name": "短尾狮头金鱼",
       "scientificName": "Carassius auratus var. Oranda",
       "variantSuffix": "Oranda",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0152",
       "name": "荧光斑马鱼",
       "scientificName": "Danio rerio var. GloFish",
       "variantSuffix": "GloFish",
+      "candidateBaseScientificName": "Danio rerio",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0153",
       "name": "球形珍珠马甲",
       "scientificName": "Trichopodus leerii var. Balloon",
       "variantSuffix": "Balloon",
+      "candidateBaseScientificName": "Trichopodus leerii",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape"
+      ],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0161",
       "name": "巧克力皮球",
       "scientificName": "Poecilia sphenops var. Chocolate",
       "variantSuffix": "Chocolate",
+      "candidateBaseScientificName": "Poecilia sphenops",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0168",
       "name": "金玛丽",
       "scientificName": "Poecilia latipinna var. Gold",
       "variantSuffix": "Gold",
+      "candidateBaseScientificName": "Poecilia latipinna",
       "classification": "color_only_identity_candidate",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0169",
       "name": "银玛丽",
       "scientificName": "Poecilia latipinna var. Silver",
       "variantSuffix": "Silver",
+      "candidateBaseScientificName": "Poecilia latipinna",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0172",
       "name": "长鳍白云金丝",
       "scientificName": "Tanichthys albonubes var. Longfin",
       "variantSuffix": "Longfin",
+      "candidateBaseScientificName": "Tanichthys albonubes",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0180",
       "name": "龙睛金鱼",
       "scientificName": "Carassius auratus var. Telescopes",
       "variantSuffix": "Telescopes",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0203",
       "name": "绿赏皮球",
       "scientificName": "Poecilia sphenops var. Green",
       "variantSuffix": "Green",
+      "candidateBaseScientificName": "Poecilia sphenops",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0209",
       "name": "血玛丽鱼",
       "scientificName": "Poecilia latipinna var. Blood",
       "variantSuffix": "Blood",
+      "candidateBaseScientificName": "Poecilia latipinna",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0213",
       "name": "黑线飞狐 (金型)",
       "scientificName": "Crossocheilus langei var. Gold",
       "variantSuffix": "Gold",
+      "candidateBaseScientificName": "Crossocheilus langei",
       "classification": "color_only_identity_candidate",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0215",
       "name": "长鳍一眉道人",
       "scientificName": "Sahyadria denisonii var. Longfin",
       "variantSuffix": "Longfin",
+      "candidateBaseScientificName": "Sahyadria denisonii",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0222",
       "name": "蓝宝鹦鹉 (球形)",
       "scientificName": "Amatitlania nigrofasciata var. Jellybean",
       "variantSuffix": "Jellybean",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0233",
       "name": "球形珍珠马甲 (红眼)",
       "scientificName": "Trichopodus leerii var. Albino Balloon",
       "variantSuffix": "Albino Balloon",
+      "candidateBaseScientificName": "Trichopodus leerii",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0237",
       "name": "高鳍红玛丽",
       "scientificName": "Poecilia latipinna var. High Fin Red",
       "variantSuffix": "High Fin Red",
+      "candidateBaseScientificName": "Poecilia latipinna",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0252",
       "name": "白金反游猫",
       "scientificName": "Synodontis nigriventris var. White",
       "variantSuffix": "White",
+      "candidateBaseScientificName": "Synodontis nigriventris",
       "classification": "color_only_identity_candidate",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0253",
       "name": "红纹一眉道人",
       "scientificName": "Sahyadria denisonii var. Red Line",
       "variantSuffix": "Red Line",
+      "candidateBaseScientificName": "Sahyadria denisonii",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0254",
       "name": "白金黑线飞狐",
       "scientificName": "Crossocheilus langei var. Platinum",
       "variantSuffix": "Platinum",
+      "candidateBaseScientificName": "Crossocheilus langei",
       "classification": "color_only_identity_candidate",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_identity_bridge_then_reuse_existing_color_morph_policy"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0259",
       "name": "半月斗鱼 (蓝蝴蝶)",
       "scientificName": "Betta splendens var. Halfmoon",
       "variantSuffix": "Halfmoon",
+      "candidateBaseScientificName": "Betta splendens",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0260",
       "name": "狮王斗鱼 (红黑)",
       "scientificName": "Betta splendens var. Crowntail",
       "variantSuffix": "Crowntail",
+      "candidateBaseScientificName": "Betta splendens",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0261",
       "name": "大耳半月斗鱼",
       "scientificName": "Betta splendens var. Dumbo Halfmoon",
       "variantSuffix": "Dumbo Halfmoon",
+      "candidateBaseScientificName": "Betta splendens",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0262",
       "name": "将军斗鱼 (蓝龙)",
       "scientificName": "Betta splendens var. Dragon",
       "variantSuffix": "Dragon",
+      "candidateBaseScientificName": "Betta splendens",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0267",
       "name": "红头珍珠马甲",
       "scientificName": "Trichopodus leerii var. Red Head",
       "variantSuffix": "Red Head",
+      "candidateBaseScientificName": "Trichopodus leerii",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0292",
       "name": "球形金玛丽",
       "scientificName": "Poecilia latipinna var. Gold Balloon",
       "variantSuffix": "Gold Balloon",
+      "candidateBaseScientificName": "Poecilia latipinna",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0293",
       "name": "球形黑玛丽",
       "scientificName": "Poecilia sphenops var. Black Balloon",
       "variantSuffix": "Black Balloon",
+      "candidateBaseScientificName": "Poecilia sphenops",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0295",
       "name": "长鳍电光美人",
       "scientificName": "Melanotaenia praecox var. Longfin",
       "variantSuffix": "Longfin",
+      "candidateBaseScientificName": "Melanotaenia praecox",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0348",
       "name": "红白虎头金鱼",
       "scientificName": "Carassius auratus var. Tigerhead",
       "variantSuffix": "Tigerhead",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0349",
       "name": "蓝寿 (五花)",
       "scientificName": "Carassius auratus var. Calico Ranchu",
       "variantSuffix": "Calico Ranchu",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0350",
       "name": "黑狮头金鱼",
       "scientificName": "Carassius auratus var. Black Oranda",
       "variantSuffix": "Black Oranda",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0351",
       "name": "红白蝶尾",
       "scientificName": "Carassius auratus var. Butterfly Tail",
       "variantSuffix": "Butterfly Tail",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0364",
       "name": "荧光粉斑马",
       "scientificName": "Danio rerio var. Glo Pink",
       "variantSuffix": "Glo Pink",
+      "candidateBaseScientificName": "Danio rerio",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0385",
       "name": "雪白金金鱼 (改良)",
       "scientificName": "Carassius auratus var. White Gold",
       "variantSuffix": "White Gold",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0386",
       "name": "黑金刚龙睛",
       "scientificName": "Carassius auratus var. Black Moor",
       "variantSuffix": "Black Moor",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0387",
       "name": "熊猫蝶尾 (极品)",
       "scientificName": "Carassius auratus var. Panda Butterfly",
       "variantSuffix": "Panda Butterfly",
+      "candidateBaseScientificName": "Carassius auratus",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0389",
       "name": "白金半月斗鱼",
       "scientificName": "Betta splendens var. Platinum",
       "variantSuffix": "Platinum",
+      "candidateBaseScientificName": "Betta splendens",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0390",
       "name": "红白狮头斗鱼",
       "scientificName": "Betta splendens var. Kohaku Crown",
       "variantSuffix": "Kohaku Crown",
+      "candidateBaseScientificName": "Betta splendens",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape",
+        "body_shape",
+        "head_or_eye_structure"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0391",
       "name": "蓝龙将军斗鱼",
       "scientificName": "Betta splendens var. Blue Dragon",
       "variantSuffix": "Blue Dragon",
+      "candidateBaseScientificName": "Betta splendens",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0395",
       "name": "黄金大帆飞狐",
       "scientificName": "Crossocheilus langei var. Gold Longfin",
       "variantSuffix": "Gold Longfin",
+      "candidateBaseScientificName": "Crossocheilus langei",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0406",
       "name": "五彩青蛙 (大规格改良)",
       "scientificName": "Synchiropus splendidus var. XL",
       "variantSuffix": "XL",
+      "candidateBaseScientificName": "Synchiropus splendidus",
       "classification": "size_grade_or_trade_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "resolve_catalog_semantics_before_compatibility_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0413",
       "name": "黄金眼镜蛇蛇鱼 (长鳍)",
       "scientificName": "Pangio kuhlii var. Longfin",
       "variantSuffix": "Longfin",
+      "candidateBaseScientificName": "Pangio kuhlii",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0419",
       "name": "荧光橙斑马 (长鳍)",
       "scientificName": "Danio rerio var. Glo Orange Longfin",
       "variantSuffix": "Glo Orange Longfin",
+      "candidateBaseScientificName": "Danio rerio",
       "classification": "morphology_variant",
+      "morphologySignals": [
+        "fin_shape"
+      ],
+      "compoundVariantLabel": true,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_and_field_scoped_authority"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     },
     {
       "speciesId": "sp_0426",
       "name": "极地白云金丝",
       "scientificName": "Tanichthys albonubes var. Polar",
       "variantSuffix": "Polar",
+      "candidateBaseScientificName": "Tanichthys albonubes",
       "classification": "trade_or_lineage_label",
+      "morphologySignals": [],
+      "compoundVariantLabel": false,
+      "identityReviewState": "missing",
+      "canonicalBridgePresent": false,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_identity_before_any_inheritance"
+      "nextAction": "review_exact_variant_identity_before_field_research"
     }
   ]
 }
