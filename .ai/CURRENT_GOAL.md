@@ -1,3 +1,17 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility deterministic sequence stability
+
+- Real-user Compatibility pressure suite is expanded from 26 to 30 cases, all with firstDivergence=null.
+- A real action-plan First Divergence was reproduced: the same physical multi-hard-block tank produced different actionSequence target pairs when candidate input order changed, despite identical final verdict and main card.
+- Root fix: same-priority Compatibility rules now use a deterministic tie-break over rule code + sorted affected species IDs + stable text, and pairContextFor normalizes eligible pair/member ordering before choosing the user-facing target pair.
+- The main hard-predation reason remains semantically explicit after deterministic ordering: if the selected reviewed evidence sentence only describes the size relation, the user-facing reason prefixes it with the actual predation/swallowing risk rather than exposing an unexplained size fact.
+- Sequential recheck coverage now proves a three-stage path can advance from not_recommended -> caution -> compatible without stale predation/territory actions.
+- Same-species split rows are tested across reviewed group threshold 6 -> 8 -> 10: group-size risk exists only below the minimum; once the threshold is reached it stays cleared while independent space/bioload risks continue normally.
+- insufficient_data actionSequence now exposes exactly one current decision-critical missing input. Other missing facts remain in decision.missingData/evidence and are reconsidered only after the user supplies the current input and reruns the assessment.
+- AI Shadow fixture now grounds its intentionally conflicting provider output in the same prioritized deterministic rule used by the reasoner. Guardrails were not relaxed; unsupported authority still rejects and AI cannot alter the verdict.
+- Deterministic matrix remains 111 ready / 6,105 fully-informed pairs / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- BACKEND_RELEASE_GATE=PASS and main build PASS.
+- No Production deploy, DB write, migration, research/evidence expansion, release/production movement or UI redesign. Production remains release/production@1cff5be6.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility sequential recheck closure
 
 - Real-user Compatibility pressure suite is expanded from 19 to 26 cases, all with firstDivergence=null.

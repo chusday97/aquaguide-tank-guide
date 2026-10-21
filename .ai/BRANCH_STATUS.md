@@ -1,3 +1,14 @@
+## TOP BRANCH STATUS — 2026-10-21 deterministic sequence closure
+
+- Development main started from clean pushed ca6c8a7eacaa7ece75da7254299b71413898677d.
+- Current runtime scope is intentionally narrow: deterministic same-priority rule/pair tie-break, explicit predation primary reason, and one-at-a-time insufficient-data action exposure.
+- Pressure suite expanded 26 -> 30 with: hard-block input-order invariance; three-stage not_recommended -> caution -> compatible recheck; group-size 6 -> 8 -> 10 monotonic threshold; sequential decision-critical input exposure.
+- Initial full gate exposed a test-fixture grounding mismatch in Compatibility V4 AI Shadow: raw blockingRules[0] was no longer guaranteed to be the prioritized narrative rule. Fixture now references prioritizeDistinctCompatibilityRules(blockingRules)[0]; reasoner and AI permissions are unchanged.
+- Final validation PASS: real-user pressure 30/30, user conclusion, action specificity, result-card, fully-informed matrix, AI shadow, lint, full backend release gate, main build and diff check.
+- Core matrix unchanged at 111 ready / 6,105 pairs / 0 insufficient_data.
+- No Production mutation/deploy/migration/research/evidence expansion or release branch movement.
+- Before commit verify origin/main remains ca6c8a7eacaa7ece75da7254299b71413898677d and origin/release/production remains 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP BRANCH STATUS — 2026-10-21 sequential recheck checkpoint
 
 - Development main started this scope at 5626725405b1c5dcb52696a1ffb12416947793c3.

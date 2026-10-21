@@ -1241,6 +1241,236 @@ cases.push(makeCase(
   },
 ));
 
+const orderStableHardBlockItems = [
+  { species: byId('sp_0049'), quantity: 1, origin: 'existing' as const },
+  { species: byId('sp_0011'), quantity: 8, origin: 'candidate' as const },
+  { species: byId('sp_0446'), quantity: 2, origin: 'candidate' as const },
+  { species: byId('sp_0431'), quantity: 10, origin: 'candidate' as const },
+  { species: byId('sp_0058'), quantity: 5, origin: 'candidate' as const },
+];
+const orderStableHardBlockA = evaluateCompatibilityDecision({
+  tank: tank(300, 100, 80, 24),
+  items: orderStableHardBlockItems,
+});
+const orderStableHardBlockB = evaluateCompatibilityDecision({
+  tank: tank(300, 100, 80, 24),
+  items: [
+    orderStableHardBlockItems[0],
+    orderStableHardBlockItems[4],
+    orderStableHardBlockItems[3],
+    orderStableHardBlockItems[2],
+    orderStableHardBlockItems[1],
+  ],
+});
+const orderStableHardBlockPlanA = buildCompatibilityDecisionPlan(orderStableHardBlockA);
+const orderStableHardBlockPlanB = buildCompatibilityDecisionPlan(orderStableHardBlockB);
+const orderStableHardBlockPresentationA = getCompatibilityPresentation(orderStableHardBlockA);
+const orderStableHardBlockPresentationB = getCompatibilityPresentation(orderStableHardBlockB);
+const sequenceSignature = (decisionPlan: ReturnType<typeof buildCompatibilityDecisionPlan>) => (
+  decisionPlan.actionSequence.map(step => ({
+    riskFamily: step.riskFamily,
+    sourceRuleCode: step.sourceRuleCode,
+    speciesIds: [...step.resolutionTarget.speciesIds].sort(),
+    state: step.state,
+  }))
+);
+cases.push(makeCase(
+  'hard-block-order-invariant',
+  '同一多 hard-block 鱼缸只改变录入顺序时，dominant blocker、处理对象和主层文案必须稳定，不能随数组顺序抖动',
+  'action_plan',
+  [
+    probe('whole_tank_aggregation', 'reordering identical livestock preserves canonical whole-tank verdict', () => {
+      assert.equal(orderStableHardBlockA.status, 'not_recommended');
+      assert.equal(orderStableHardBlockB.status, orderStableHardBlockA.status);
+      assert.deepEqual(
+        [...new Set(orderStableHardBlockB.blockingRules.map(rule => getCompatibilityRuleFamily(rule.code)))].sort(),
+        [...new Set(orderStableHardBlockA.blockingRules.map(rule => getCompatibilityRuleFamily(rule.code)))].sort(),
+      );
+    }),
+    probe('action_plan', 'same-priority hard blockers use deterministic species/rule tie-breaks', () => {
+      assert.deepEqual(sequenceSignature(orderStableHardBlockPlanB), sequenceSignature(orderStableHardBlockPlanA));
+      assert.equal(orderStableHardBlockPlanA.actionSequence[0]?.riskFamily, 'predation');
+      assert.deepEqual(orderStableHardBlockPlanA.actionSequence[0]?.resolutionTarget.speciesIds.sort(), ['sp_0011', 'sp_0049']);
+    }),
+    probe('presentation', 'primary verdict reason and action stay identical after reorder', () => {
+      assert.equal(orderStableHardBlockPresentationB.headline, orderStableHardBlockPresentationA.headline);
+      assert.equal(orderStableHardBlockPresentationB.primaryReason, orderStableHardBlockPresentationA.primaryReason);
+      assert.equal(orderStableHardBlockPresentationB.primaryActionText, orderStableHardBlockPresentationA.primaryActionText);
+    }),
+    ...presentationProbes(orderStableHardBlockA),
+    ...presentationProbes(orderStableHardBlockB),
+  ],
+  {
+    status: orderStableHardBlockA.status,
+    sequence: sequenceSignature(orderStableHardBlockPlanA),
+    primaryReason: orderStableHardBlockPresentationA.primaryReason,
+    primaryAction: orderStableHardBlockPresentationA.primaryActionText,
+  },
+));
+
+const threeStageInitial = evaluateCompatibilityDecision({
+  tank: tank(120, 50, 40, 24),
+  items: [
+    { species: byId('sp_0049'), quantity: 1, origin: 'existing' },
+    { species: byId('sp_0431'), quantity: 10, origin: 'candidate' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const threeStageMiddle = evaluateCompatibilityDecision({
+  tank: tank(120, 50, 40, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const threeStageFinal = evaluateCompatibilityDecision({
+  tank: tank(120, 50, 40, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+  ],
+});
+const threeStageInitialPlan = buildCompatibilityDecisionPlan(threeStageInitial);
+const threeStageMiddlePlan = buildCompatibilityDecisionPlan(threeStageMiddle);
+const threeStageFinalPlan = buildCompatibilityDecisionPlan(threeStageFinal);
+cases.push(makeCase(
+  'three-stage-recheck-advances-to-compatible',
+  '连续两次处理后必须按当前鱼缸重新推进：先清 hard block，再处理剩余 territory，最后才进入 compatible；任何旧动作都不能残留',
+  'action_plan',
+  [
+    probe('whole_tank_aggregation', 'initial state is hard blocked', () => {
+      assert.equal(threeStageInitial.status, 'not_recommended');
+      assert.equal(threeStageInitialPlan.actionSequence[0]?.riskFamily, 'predation');
+    }),
+    probe('action_plan', 'after removing the hard blocker only the remaining territory action becomes current', () => {
+      assert.equal(threeStageMiddle.status, 'caution');
+      assert.equal(threeStageMiddlePlan.actionSequence[0]?.riskFamily, 'territory');
+      assert.equal(threeStageMiddlePlan.actionSequence.some(step => ['predation', 'housing'].includes(step.riskFamily)), false);
+    }),
+    probe('action_plan', 'after resolving the second conflict no stale action survives', () => {
+      assert.equal(threeStageFinal.status, 'compatible');
+      assert.equal(threeStageFinalPlan.actionSequence.length, 0);
+      assert.equal(threeStageFinal.blockingRules.length, 0);
+      assert.equal(threeStageFinal.warningRules.length, 0);
+      assert.doesNotMatch(threeStageFinalPlan.nextSteps.join(' '), /捕食|单养|领地|分隔/);
+    }),
+    ...presentationProbes(threeStageInitial),
+    ...presentationProbes(threeStageMiddle),
+    ...presentationProbes(threeStageFinal),
+  ],
+  {
+    statuses: [threeStageInitial.status, threeStageMiddle.status, threeStageFinal.status],
+    firstFamilies: [
+      threeStageInitialPlan.actionSequence[0]?.riskFamily || null,
+      threeStageMiddlePlan.actionSequence[0]?.riskFamily || null,
+      threeStageFinalPlan.actionSequence[0]?.riskFamily || null,
+    ],
+  },
+));
+
+const groupThresholdBelow = duplicateGroupBefore;
+const groupThresholdAt = duplicateGroupAfter;
+const groupThresholdAbove = evaluateCompatibilityDecision({
+  tank: tank(45, 25, 25, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 2, origin: 'existing' },
+    { species: byId('sp_0431'), quantity: 8, origin: 'candidate' },
+    { species: byId('sp_0443'), quantity: 8, origin: 'candidate' },
+  ],
+});
+const groupThresholdAbovePlan = buildCompatibilityDecisionPlan(groupThresholdAbove);
+cases.push(makeCase(
+  'group-threshold-monotonic-below-at-above',
+  '同物种拆行数量从低于最低群体数到刚好达到再到超过时，group-size 风险只能存在于阈值以下；达到后不得复活，但其他空间/负荷风险继续独立计算',
+  'action_plan',
+  [
+    probe('input_normalization', 'merged quantity increases monotonically across 6 -> 8 -> 10', () => {
+      assert.equal(groupThresholdBelow.assessmentItems?.find(item => item.speciesId === 'sp_0431')?.quantity, 6);
+      assert.equal(groupThresholdAt.assessmentItems?.find(item => item.speciesId === 'sp_0431')?.quantity, 8);
+      assert.equal(groupThresholdAbove.assessmentItems?.find(item => item.speciesId === 'sp_0431')?.quantity, 10);
+    }),
+    probe('pair_domain_stage_evaluation', 'group-size warning exists only below reviewed minimum', () => {
+      assert.equal(groupThresholdBelow.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'group_size'), true);
+      assert.equal(groupThresholdAt.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'group_size'), false);
+      assert.equal(groupThresholdAbove.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'group_size'), false);
+    }),
+    probe('action_plan', 'above-minimum recheck never repeats the completed group-size action', () => {
+      assert.equal(groupThresholdAbovePlan.actionSequence.some(step => step.riskFamily === 'group_size'), false);
+      assert.ok(groupThresholdAbovePlan.actionSequence.some(step => ['space', 'bioload'].includes(step.riskFamily)));
+    }),
+    ...presentationProbes(groupThresholdAbove),
+  ],
+  {
+    quantities: [6, 8, 10],
+    statuses: [groupThresholdBelow.status, groupThresholdAt.status, groupThresholdAbove.status],
+    aboveSequence: groupThresholdAbovePlan.actionSequence,
+  },
+));
+
+const stagedInputMissingTank: Aquarium = {
+  ...tank(120, 50, 40, 24),
+  dimensions: { length: '', width: '', height: '' },
+  targetTemperature: '',
+  ph: '',
+  equipment: {},
+};
+const stagedInputFilledDimensions: Aquarium = {
+  ...tank(120, 50, 40, 24),
+  targetTemperature: '',
+  ph: '',
+  equipment: {},
+};
+const stagedInputItems = [
+  { species: byId('sp_0010'), quantity: quantityFor('sp_0010'), origin: 'existing' as const },
+  { species: byId('sp_0011'), quantity: quantityFor('sp_0011'), origin: 'candidate' as const },
+];
+const stagedInputBefore = evaluateCompatibilityDecision({ tank: stagedInputMissingTank, items: stagedInputItems });
+const stagedInputAfter = evaluateCompatibilityDecision({ tank: stagedInputFilledDimensions, items: stagedInputItems });
+const stagedInputBeforeAction = buildBeginnerCompatibilityAction(stagedInputBefore);
+const stagedInputAfterAction = buildBeginnerCompatibilityAction(stagedInputAfter);
+const stagedInputBeforePlan = buildCompatibilityDecisionPlan(stagedInputBefore);
+const stagedInputAfterPlan = buildCompatibilityDecisionPlan(stagedInputAfter);
+cases.push(makeCase(
+  'decision-critical-inputs-asked-sequentially',
+  '同时存在多个未填写字段时，只向用户询问当前真正阻断决策的一项；补齐并重算后才暴露下一项真实条件，而不是一次倾倒全部缺失字段',
+  'action_plan',
+  [
+    probe('input_normalization', 'first state is blocked by missing tank dimensions while temperature remains informational', () => {
+      assert.equal(stagedInputBefore.status, 'insufficient_data');
+      assert.ok(stagedInputBefore.metadata.domainRuleCodes.includes('tank_volume_missing'));
+      assert.ok(stagedInputBefore.metadata.domainRuleCodes.includes('tank_temperature_unreported'));
+    }),
+    probe('action_plan', 'insufficient-data sequence exposes exactly one current decision-critical input', () => {
+      assert.equal(stagedInputBeforePlan.actionSequence.length, 1);
+      assert.equal(stagedInputBeforePlan.actionSequence[0]?.sourceRuleCode, 'tank_volume_missing');
+      assert.match(stagedInputBeforeAction.immediateAction, /鱼缸长度|缸长/);
+      assert.doesNotMatch(stagedInputBeforeAction.immediateAction, /pH|过滤|加热|水温/);
+    }),
+    probe('action_plan', 'after dimensions are supplied, stale volume request disappears and the next real caution is evaluated fresh', () => {
+      assert.equal(stagedInputAfter.status, 'caution');
+      assert.equal(stagedInputAfter.missingData.length, 0);
+      assert.equal(stagedInputAfterPlan.actionSequence.some(step => step.sourceRuleCode === 'tank_volume_missing'), false);
+      assert.equal(stagedInputAfterPlan.actionSequence[0]?.riskFamily, 'ph');
+      assert.match(stagedInputAfterAction.immediateAction, /pH|水质/);
+    }),
+    ...presentationProbes(stagedInputBefore),
+    ...presentationProbes(stagedInputAfter),
+  ],
+  {
+    before: {
+      status: stagedInputBefore.status,
+      missingCodes: stagedInputBefore.missingData.map(rule => rule.code),
+      exposedSequence: stagedInputBeforePlan.actionSequence,
+      action: stagedInputBeforeAction.immediateAction,
+    },
+    after: {
+      status: stagedInputAfter.status,
+      missingCodes: stagedInputAfter.missingData.map(rule => rule.code),
+      exposedSequence: stagedInputAfterPlan.actionSequence,
+      action: stagedInputAfterAction.immediateAction,
+    },
+  },
+));
+
 const report = {
   schemaVersion: 1,
   pipelineStages: stages,

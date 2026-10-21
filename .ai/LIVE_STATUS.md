@@ -1,3 +1,16 @@
+## TOP LIVE STATUS — 2026-10-21 deterministic sequential stability
+
+- Real-user Compatibility pressure = 30/30 PASS with firstDivergence=null.
+- Multi-hard-block action targets are now order-invariant: reordering the same livestock rows does not change the dominant pair or actionSequence target.
+- Re-evaluation supports multi-step progression: hard block removed -> remaining caution becomes current -> second conflict removed -> compatible, with no stale action retained.
+- Group-size threshold handling is monotonic across below / at / above reviewed minimum; completing the quantity action does not make it reappear.
+- When several fields are unfilled, insufficient_data exposes only one decision-critical current input. Secondary missing facts stay internal until the next re-evaluation.
+- Hard predation main reasons explicitly say 捕食/吞食 even when the selected evidence sentence itself is a size relation.
+- AI remains explanation-only and authority-clamped; its shadow test uses prioritized deterministic grounding without permission changes.
+- Matrix remains 111 / 6,105 / 427 / 2,353 / 3,325 / 0 insufficient_data.
+- BACKEND_RELEASE_GATE=PASS; main build PASS.
+- Production remains frozen at 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP LIVE STATUS — 2026-10-21 sequential Compatibility decisions
 
 - Compatibility real-user pressure now has 26/26 PASS with no First Divergence.

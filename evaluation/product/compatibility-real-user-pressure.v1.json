@@ -10,8 +10,8 @@
     "presentation"
   ],
   "summary": {
-    "caseCount": 26,
-    "passedCases": 26,
+    "caseCount": 30,
+    "passedCases": 30,
     "failedCases": 0,
     "firstDivergenceCounts": {
       "input_normalization": 0,
@@ -555,11 +555,11 @@
           {
             "riskFamily": "aggression",
             "resolutionMode": "deterministic_clearance",
-            "criterion": "虎皮鱼 与 孔雀鱼 的直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。",
+            "criterion": "孔雀鱼 与 虎皮鱼 的直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。",
             "sourceRuleCode": "pair_rule_fin_nipping_long_fin_conflict",
             "speciesIds": [
-              "sp_0439",
-              "sp_0436"
+              "sp_0436",
+              "sp_0439"
             ]
           }
         ]
@@ -948,8 +948,8 @@
               "criterion": "调整群体、遮挡或退让路线后，持续复查追逐、破鳍、躲藏和进食；只有实际状态稳定才能继续当前组合。",
               "sourceRuleCode": "fin_nipping_target_vulnerability",
               "speciesIds": [
-                "sp_0436",
-                "sp_0010"
+                "sp_0010",
+                "sp_0436"
               ]
             },
             "blockedByHardStop": false
@@ -975,7 +975,7 @@
             "order": 3,
             "state": "next",
             "riskFamily": "ph",
-            "action": "先确认 红绿灯 与 孔雀鱼 有可长期维持的共同 pH 区间，再决定是否加入。",
+            "action": "先确认 黑裙鱼 与 孔雀鱼 有可长期维持的共同 pH 区间，再决定是否加入。",
             "sourceRuleCode": "ph_range_edge_overlap",
             "resolutionTarget": {
               "riskFamily": "ph",
@@ -983,8 +983,8 @@
               "criterion": "实际稳定 pH 进入已审核共同区间，并重新评估确认 pH 风险消失；不能只按一次测量值或理论中间值判断。",
               "sourceRuleCode": "ph_range_edge_overlap",
               "speciesIds": [
-                "sp_0436",
-                "sp_0431"
+                "sp_0010",
+                "sp_0436"
               ]
             },
             "blockedByHardStop": false
@@ -1154,11 +1154,11 @@
             "resolutionTarget": {
               "riskFamily": "aggression",
               "resolutionMode": "deterministic_clearance",
-              "criterion": "虎皮鱼 与 孔雀鱼 的直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。",
+              "criterion": "孔雀鱼 与 虎皮鱼 的直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。",
               "sourceRuleCode": "pair_rule_fin_nipping_long_fin_conflict",
               "speciesIds": [
-                "sp_0439",
-                "sp_0436"
+                "sp_0436",
+                "sp_0439"
               ]
             },
             "blockedByHardStop": false
@@ -1175,8 +1175,8 @@
               "criterion": "完成建议调整后重新评估，并用实际状态确认风险是否仍存在；没有新的确定性依据时不自动宣告风险已解除。",
               "sourceRuleCode": "reviewed_pair_rule",
               "speciesIds": [
-                "sp_0439",
-                "sp_0436"
+                "sp_0436",
+                "sp_0439"
               ]
             },
             "blockedByHardStop": true
@@ -1202,7 +1202,7 @@
             "order": 5,
             "state": "deferred",
             "riskFamily": "ph",
-            "action": "先确认 孔雀鱼 与 红绿灯 有可长期维持的共同 pH 区间，再决定是否加入。",
+            "action": "先确认 黑裙鱼 与 孔雀鱼 有可长期维持的共同 pH 区间，再决定是否加入。",
             "sourceRuleCode": "ph_range_edge_overlap",
             "resolutionTarget": {
               "riskFamily": "ph",
@@ -1210,8 +1210,8 @@
               "criterion": "实际稳定 pH 进入已审核共同区间，并重新评估确认 pH 风险消失；不能只按一次测量值或理论中间值判断。",
               "sourceRuleCode": "ph_range_edge_overlap",
               "speciesIds": [
-                "sp_0436",
-                "sp_0431"
+                "sp_0010",
+                "sp_0436"
               ]
             },
             "blockedByHardStop": true
@@ -1735,11 +1735,11 @@
             "resolutionTarget": {
               "riskFamily": "predation",
               "resolutionMode": "deterministic_clearance",
-              "criterion": "珍珠赤雷龙 与 月光鱼 不再直接接触（分隔、分缸或替换组合），重新评估后不再出现该捕食阻断。",
+              "criterion": "月光鱼 与 珍珠赤雷龙 不再直接接触（分隔、分缸或替换组合），重新评估后不再出现该捕食阻断。",
               "sourceRuleCode": "predation_risk",
               "speciesIds": [
-                "sp_0049",
-                "sp_0011"
+                "sp_0011",
+                "sp_0049"
               ]
             },
             "blockedByHardStop": false
@@ -1765,16 +1765,16 @@
             "order": 3,
             "state": "next",
             "riskFamily": "territory",
-            "action": "不要加入 天使鱼（神仙鱼）；它与 珍珠赤雷龙 存在明确领地冲突，应分隔或更换组合后再重新评估。",
+            "action": "不要加入 九间贝；它与 珍珠赤雷龙 存在明确领地冲突，应分隔或更换组合后再重新评估。",
             "sourceRuleCode": "territorial_conflict",
             "resolutionTarget": {
               "riskFamily": "territory",
               "resolutionMode": "deterministic_clearance",
-              "criterion": "珍珠赤雷龙 与 天使鱼（神仙鱼） 已通过分隔或更换组合消除明确领地冲突，重新评估后不再出现 territory 阻断。",
+              "criterion": "珍珠赤雷龙 与 九间贝 已通过分隔或更换组合消除明确领地冲突，重新评估后不再出现 territory 阻断。",
               "sourceRuleCode": "territorial_conflict",
               "speciesIds": [
                 "sp_0049",
-                "sp_0446"
+                "sp_0058"
               ]
             },
             "blockedByHardStop": false
@@ -2075,6 +2075,374 @@
             "blockedByHardStop": false
           }
         ]
+      }
+    },
+    {
+      "id": "hard-block-order-invariant",
+      "title": "同一多 hard-block 鱼缸只改变录入顺序时，dominant blocker、处理对象和主层文案必须稳定，不能随数组顺序抖动",
+      "expectedBoundaryStage": "action_plan",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "reordering identical livestock preserves canonical whole-tank verdict",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "same-priority hard blockers use deterministic species/rule tie-breaks",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary verdict reason and action stay identical after reorder",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "not_recommended",
+        "sequence": [
+          {
+            "riskFamily": "predation",
+            "sourceRuleCode": "predation_risk",
+            "speciesIds": [
+              "sp_0011",
+              "sp_0049"
+            ],
+            "state": "current"
+          },
+          {
+            "riskFamily": "housing",
+            "sourceRuleCode": "single_housing_required",
+            "speciesIds": [
+              "sp_0049"
+            ],
+            "state": "next"
+          },
+          {
+            "riskFamily": "territory",
+            "sourceRuleCode": "territorial_conflict",
+            "speciesIds": [
+              "sp_0049",
+              "sp_0058"
+            ],
+            "state": "next"
+          },
+          {
+            "riskFamily": "special_tank_required",
+            "sourceRuleCode": "special_tank_required",
+            "speciesIds": [
+              "sp_0049",
+              "sp_0058"
+            ],
+            "state": "next"
+          },
+          {
+            "riskFamily": "ph",
+            "sourceRuleCode": "ph_range_conflict",
+            "speciesIds": [
+              "sp_0049",
+              "sp_0058"
+            ],
+            "state": "deferred"
+          }
+        ],
+        "primaryReason": "存在捕食或吞食风险：当前鱼缸已有 珍珠赤雷龙，不建议再加入体型明显更小的 九间贝。",
+        "primaryAction": "先不要把这组生物放在一起；先处理下面的明确阻断风险，再重新判断。"
+      }
+    },
+    {
+      "id": "three-stage-recheck-advances-to-compatible",
+      "title": "连续两次处理后必须按当前鱼缸重新推进：先清 hard block，再处理剩余 territory，最后才进入 compatible；任何旧动作都不能残留",
+      "expectedBoundaryStage": "action_plan",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "initial state is hard blocked",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "after removing the hard blocker only the remaining territory action becomes current",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "after resolving the second conflict no stale action survives",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "statuses": [
+          "not_recommended",
+          "caution",
+          "compatible"
+        ],
+        "firstFamilies": [
+          "predation",
+          "territory",
+          null
+        ]
+      }
+    },
+    {
+      "id": "group-threshold-monotonic-below-at-above",
+      "title": "同物种拆行数量从低于最低群体数到刚好达到再到超过时，group-size 风险只能存在于阈值以下；达到后不得复活，但其他空间/负荷风险继续独立计算",
+      "expectedBoundaryStage": "action_plan",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "input_normalization",
+          "check": "merged quantity increases monotonically across 6 -> 8 -> 10",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "group-size warning exists only below reviewed minimum",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "above-minimum recheck never repeats the completed group-size action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "quantities": [
+          6,
+          8,
+          10
+        ],
+        "statuses": [
+          "caution",
+          "caution",
+          "caution"
+        ],
+        "aboveSequence": [
+          {
+            "order": 1,
+            "state": "current",
+            "riskFamily": "space",
+            "action": "至少需要 60cm 缸长再考虑加入。",
+            "sourceRuleCode": "length_too_short",
+            "resolutionTarget": {
+              "riskFamily": "space",
+              "resolutionMode": "parameter_recheck",
+              "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
+              "sourceRuleCode": "length_too_short",
+              "speciesIds": [
+                "sp_0431",
+                "sp_0443"
+              ]
+            },
+            "blockedByHardStop": false
+          },
+          {
+            "order": 2,
+            "state": "next",
+            "riskFamily": "bioload",
+            "action": "降低总负荷或提升过滤维护能力后重新评估；bioload 风险不再触发，且实际呼吸、进食与水质波动保持稳定。",
+            "sourceRuleCode": "bioload_screening_high",
+            "resolutionTarget": {
+              "riskFamily": "bioload",
+              "resolutionMode": "parameter_recheck",
+              "criterion": "降低总负荷或提升过滤维护能力后重新评估；bioload 风险不再触发，且实际呼吸、进食与水质波动保持稳定。",
+              "sourceRuleCode": "bioload_screening_high",
+              "speciesIds": []
+            },
+            "blockedByHardStop": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "decision-critical-inputs-asked-sequentially",
+      "title": "同时存在多个未填写字段时，只向用户询问当前真正阻断决策的一项；补齐并重算后才暴露下一项真实条件，而不是一次倾倒全部缺失字段",
+      "expectedBoundaryStage": "action_plan",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "input_normalization",
+          "check": "first state is blocked by missing tank dimensions while temperature remains informational",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "insufficient-data sequence exposes exactly one current decision-critical input",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "after dimensions are supplied, stale volume request disappears and the next real caution is evaluated fresh",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "before": {
+          "status": "insufficient_data",
+          "missingCodes": [
+            "tank_volume_missing",
+            "missing_ph",
+            "missing_filter",
+            "missing_heater",
+            "missing_ph"
+          ],
+          "exposedSequence": [
+            {
+              "order": 1,
+              "state": "current",
+              "riskFamily": "space",
+              "action": "请先填写鱼缸长度；当前组合涉及已审核的 60cm 缸长 条件，填写后再重新评估。",
+              "sourceRuleCode": "tank_volume_missing",
+              "resolutionTarget": {
+                "riskFamily": "space",
+                "resolutionMode": "information_required",
+                "criterion": "补齐对应身份、公开证据、物种核心事实或鱼缸输入后重新运行混养判断；新结论生成前不得把风险视为已解除。",
+                "sourceRuleCode": "tank_volume_missing",
+                "speciesIds": [
+                  "sp_0010",
+                  "sp_0011"
+                ]
+              },
+              "blockedByHardStop": false
+            }
+          ],
+          "action": "先填写鱼缸长度；这次判断涉及已审核的 60cm 缸长 条件，填写后再算一次。"
+        },
+        "after": {
+          "status": "caution",
+          "missingCodes": [],
+          "exposedSequence": [
+            {
+              "order": 1,
+              "state": "current",
+              "riskFamily": "ph",
+              "action": "先确认 月光鱼 与 黑裙鱼 有可长期维持的共同 pH 区间，再决定是否加入。",
+              "sourceRuleCode": "ph_range_edge_overlap",
+              "resolutionTarget": {
+                "riskFamily": "ph",
+                "resolutionMode": "parameter_recheck",
+                "criterion": "实际稳定 pH 进入已审核共同区间，并重新评估确认 pH 风险消失；不能只按一次测量值或理论中间值判断。",
+                "sourceRuleCode": "ph_range_edge_overlap",
+                "speciesIds": [
+                  "sp_0010",
+                  "sp_0011"
+                ]
+              },
+              "blockedByHardStop": false
+            }
+          ],
+          "action": "先测一次当前稳定 pH，并确认组合是否存在可长期维持的共同区间；如果只能卡在边界值，不要先加鱼再观察。"
+        }
       }
     }
   ]

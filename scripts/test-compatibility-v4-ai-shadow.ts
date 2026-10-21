@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import type { Aquarium } from '../src/types';
 import { evaluateTankCompatibility } from '../src/services/compatibility/compatibility.service';
+import { prioritizeDistinctCompatibilityRules } from '../src/services/compatibility/compatibility-action.service';
 import {
   COMPATIBILITY_AI_PROMPT_VERSION,
   buildCompatibilityAiModelPool,
@@ -146,12 +147,13 @@ const blocked = evaluateTankCompatibility({
 assert.equal(blocked.metadata.domainStatus, 'not_recommended');
 assert.equal(blocked.metadata.decisionReadiness, 'reviewed');
 assert.ok(blocked.blockingRules.length > 0);
+const blockedPrimaryRuleCode = prioritizeDistinctCompatibilityRules(blocked.blockingRules)[0]!.code;
 
 const optimisticProvider: CompatibilityAiReasoningProvider = async () => ({
   model: 'fixture-model',
   output: {
     suggestedVerdict: 'compatible',
-    reasons: [{ text: '错误地尝试弱化硬阻断。', ruleCodes: [blocked.blockingRules[0]!.code] }],
+    reasons: [{ text: '错误地尝试弱化硬阻断。', ruleCodes: [blockedPrimaryRuleCode] }],
     adjustments: [],
     uncertainties: [],
     confidence: 'high',

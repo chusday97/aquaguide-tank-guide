@@ -145,7 +145,13 @@ const RULE_PRIORITY: Record<string, number> = {
   ph_range_missing: 230,
 };
 
-type PrioritizableRule = { code: string; title?: string; evidence?: string; severity?: string };
+type PrioritizableRule = {
+  code: string;
+  title?: string;
+  evidence?: string;
+  severity?: string;
+  affectedSpeciesIds?: string[];
+};
 
 export const getCompatibilityRuleFamily = (code: string) => {
   const normalized = code.toLowerCase();
@@ -169,12 +175,20 @@ const severityPriority = (severity?: string) => (
   severity === 'high' ? 0 : severity === 'medium' ? 1 : severity === 'low' ? 2 : 3
 );
 
+const deterministicRuleTieBreakKey = (rule: PrioritizableRule) => ([
+  rule.code,
+  [...(rule.affectedSpeciesIds || [])].sort().join(','),
+  rule.title || '',
+  rule.evidence || '',
+].join('::'));
+
 export const prioritizeCompatibilityRules = <T extends PrioritizableRule>(rules: T[]): T[] => (
   rules
     .map((rule, index) => ({ rule, index }))
     .sort((a, b) => (
       (RULE_PRIORITY[a.rule.code] ?? 500) - (RULE_PRIORITY[b.rule.code] ?? 500)
       || severityPriority(a.rule.severity) - severityPriority(b.rule.severity)
+      || deterministicRuleTieBreakKey(a.rule).localeCompare(deterministicRuleTieBreakKey(b.rule), 'en')
       || a.index - b.index
     ))
     .map(item => item.rule)
@@ -195,6 +209,21 @@ const firstText = (rules: Array<{ title?: string; evidence?: string }>, fallback
   || rules.find(rule => rule.evidence || rule.title)?.title
   || fallback
 );
+
+const primaryBlockingReason = (rules: PrioritizableRule[], fallback: string) => {
+  const firstRule = rules[0];
+  const reason = firstText(rules, fallback);
+  if (!firstRule) return reason;
+
+  // Keep the main user reason semantically explicit even when a deterministic
+  // tie-break selects a more contextual evidence sentence for the same risk.
+  // Pair/species detail remains in that evidence sentence; this only prevents
+  // a hard biological blocker from being described as an unexplained size fact.
+  if (getCompatibilityRuleFamily(firstRule.code) === 'predation' && !/捕食|吞食/.test(reason)) {
+    return `存在捕食或吞食风险：${reason}`;
+  }
+  return reason;
+};
 
 export const getExplicitCompatibilitySpaceThreshold = (rules: Array<{ title?: string; evidence?: string }>) => {
   for (const rule of rules) {
@@ -287,7 +316,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         : hasHardBlock
           ? '先不要把这组生物放在一起；先处理下面的明确阻断风险，再重新判断。'
           : '先暂停新增，处理当前高风险项后再重新判断。',
-      primaryReason: firstText(blockingRules, decision.summary || '当前存在明确风险。'),
+      primaryReason: primaryBlockingReason(blockingRules, decision.summary || '当前存在明确风险。'),
       observeAfterAction: fryPredation
         ? '鱼苗隔离饲养；只有在生命阶段变化后重新评估通过，才考虑恢复普通混养。'
         : '只有在明确阻断条件已消除并重新评估通过后，才考虑新的混养方案。',

@@ -227,7 +227,11 @@ const namedItemForFamily = (decision: CompatibilityDecision, family: string) => 
 
 const pairContextFor = (decision: CompatibilityDecision, family: string, mode: CompatibilityAssessmentMode) => {
   const items = itemMapFor(decision);
-  const pairs = pairsForFamily(decision, family);
+  const pairs = [...pairsForFamily(decision, family)].sort((a, b) => {
+    const aKey = [a.speciesA.id, a.speciesB.id].sort().join('::');
+    const bKey = [b.speciesA.id, b.speciesB.id].sort().join('::');
+    return aKey.localeCompare(bKey, 'en');
+  });
   const preferred = mode === 'planned_addition'
     ? pairs.find(pair => {
       const a = items.get(pair.speciesA.id)?.origin;
@@ -236,19 +240,21 @@ const pairContextFor = (decision: CompatibilityDecision, family: string, mode: C
     }) || pairs[0]
     : pairs[0];
   if (!preferred) return null;
-  const aItem = items.get(preferred.speciesA.id);
-  const bItem = items.get(preferred.speciesB.id);
-  const candidate = aItem?.origin === 'candidate'
-    ? aItem
-    : bItem?.origin === 'candidate'
-      ? bItem
-      : undefined;
-  const other = candidate?.speciesId === preferred.speciesA.id ? preferred.speciesB : preferred.speciesA;
+
+  const members = [preferred.speciesA, preferred.speciesB]
+    .sort((a, b) => a.id.localeCompare(b.id, 'en'));
+  const candidateMembers = members.filter(member => items.get(member.id)?.origin === 'candidate');
+  const candidateMember = candidateMembers[0];
+  const candidate = candidateMember ? items.get(candidateMember.id) : undefined;
+  const other = candidateMember
+    ? members.find(member => member.id !== candidateMember.id) || members[0]
+    : members[0];
+
   return {
-    pairLabel: `${preferred.speciesA.name} 与 ${preferred.speciesB.name}`,
+    pairLabel: `${members[0].name} 与 ${members[1].name}`,
     candidate,
     otherName: other.name,
-    speciesIds: [preferred.speciesA.id, preferred.speciesB.id],
+    speciesIds: members.map(member => member.id),
   };
 };
 
@@ -643,7 +649,14 @@ const actionSequenceRulesFor = (decision: CompatibilityDecision): CompatibilityA
 
   if (decision.status === 'not_recommended') return [...blocking, ...warning, ...missing].slice(0, 6);
   if (decision.status === 'caution') return [...warning, ...missing].slice(0, 6);
-  if (decision.status === 'insufficient_data') return [...missing].slice(0, 6);
+  if (decision.status === 'insufficient_data') {
+    // Ask for exactly one decision-critical input at a time. All other missing
+    // facts stay in decision.missingData/evidence and are reconsidered after
+    // the user supplies the current input, instead of being dumped into the UI.
+    const domainCodes = new Set(decision.metadata.domainRuleCodes || []);
+    const domainMissing = missing.filter(item => domainCodes.has(item.rule.code));
+    return (domainMissing.length > 0 ? domainMissing : missing).slice(0, 1);
+  }
   return [];
 };
 

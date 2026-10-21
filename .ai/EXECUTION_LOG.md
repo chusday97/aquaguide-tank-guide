@@ -1,3 +1,19 @@
+## 2026-10-21 — Deterministic multi-step Compatibility sequence hardening
+
+- Reproduced an input-order instability using one 5-species, multi-hard-block tank. Final not_recommended verdict and main card were stable, but actionSequence selected different predation/territory target pairs when candidate rows were reordered. First Divergence = action_plan.
+- Added deterministic tie-break keys for same-priority rules using code + sorted affected species IDs + stable rule text, preserving semantic priority/severity ahead of the tie-break.
+- pairContextFor now sorts eligible pair results by normalized species IDs, normalizes selected pair members, and deterministically chooses candidate/other context. Same tank + same livestock therefore yields the same machine target regardless of row order.
+- The stable tie-break surfaced a wording regression where a predation hard block's primary reason could be only a size relation. Added a user-facing semantic guard so predation hard blocks explicitly state 捕食或吞食风险 while retaining the reviewed size evidence sentence.
+- Added durable pressure case hard-block-order-invariant.
+- Added durable three-stage recheck: sp_0049 + sp_0431 + sp_0446 starts not_recommended/predation; removing the hard blocker exposes territory caution; resolving the remaining conflict leaves compatible with no stale action.
+- Added group-threshold-monotonic-below-at-above: split sp_0431 rows merge to 6/8/10; group-size exists only at 6 while space/bioload remain independent.
+- Added decision-critical-inputs-asked-sequentially: with dimensions/temperature/pH/equipment unfilled, only tank_volume_missing is exposed as the current action; after dimensions are supplied that request disappears and the next current pH caution is evaluated fresh.
+- Root implementation for missing inputs: insufficient_data actionSequence prefers Domain-declared missing rules and exposes only the first current one; remaining missingData stays internal for the next assessment.
+- First complete backend gate found Compatibility V4 AI Shadow fixture was grounding the intentional optimistic conflict in raw blockingRules[0], which is not an authority-order contract. Updated the fixture to use prioritizeDistinctCompatibilityRules(blockingRules)[0]. The reasoner, unknown-authority rejection and deterministic authority clamp were not changed.
+- Final pressure = 30/30 PASS, firstDivergence=null. Fully-informed matrix unchanged: 111 / 6,105 / 427 / 2,353 / 3,325 / 0 insufficient_data.
+- Full BACKEND_RELEASE_GATE=PASS. Main build + git diff check PASS. Existing large-chunk warnings and PostHog-not-configured signal remain unrelated known debt.
+- No Production deploy/DB write/migration, broad research, evidence promotion, UI redesign or release/production movement.
+
 ## 2026-10-21 — Compatibility sequential-decision pressure closure
 
 - Expanded scripts/test-compatibility-real-user-pressure.ts from 19 to 26 realistic sequential-decision cases:
