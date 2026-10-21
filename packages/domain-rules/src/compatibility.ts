@@ -118,7 +118,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v15-minimal-user-input';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v16-space-input-relevance';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -513,8 +513,15 @@ export const evaluateCompatibility = ({
     }
     const hasTankVolume = tank.volumeLiters != null && tank.volumeLiters > 0;
     const hasTankLength = tank.lengthCm != null && tank.lengthCm > 0;
-    if (!hasTankVolume && !hasTankLength) raise('insufficient_data', 'tank_volume_missing');
-    else if (!hasTankVolume && hasTankLength) ruleCodes.push('tank_volume_unreported_length_available');
+    const requiresTankVolume = participatingSpecies.some(species => hasPositiveNumber(species.minTankLiters));
+    const requiresTankLength = participatingSpecies.some(species => hasPositiveNumber(species.minTankLengthCm));
+    if (!hasTankVolume && !hasTankLength && (requiresTankVolume || requiresTankLength)) {
+      raise('insufficient_data', 'tank_volume_missing');
+    } else {
+      if (requiresTankVolume && !hasTankVolume) raise('insufficient_data', 'tank_volume_missing');
+      if (requiresTankLength && !hasTankLength) raise('insufficient_data', 'tank_length_missing');
+      if (!requiresTankVolume && !hasTankVolume && hasTankLength) ruleCodes.push('tank_volume_unreported_length_available');
+    }
     if (tank.targetTemperatureC == null) ruleCodes.push('tank_temperature_unreported');
     const candidateTankTemperatureFit = rangeContains(
       tank.targetTemperatureC,

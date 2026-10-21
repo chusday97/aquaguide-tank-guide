@@ -356,6 +356,11 @@ const deterministicActionsFor = (
         ? '这不是你少填了信息；等关键混养资料完成可靠审核后，再重新判断当前组合。'
         : '这不是你少填了信息；先不要加入，等关键混养资料完成可靠审核后再判断。'];
     }
+    if (codes.has('tank_length_missing') || codes.has('missing_tank_length') || codes.has('missing_length')) {
+      return [assessmentMode === 'current_tank'
+        ? '告诉我鱼缸大致长度，就可以重新判断当前组合是否满足最低缸长要求。'
+        : '告诉我鱼缸大致长度，就可以继续判断是否满足最低缸长要求。'];
+    }
     if (codes.has('tank_volume_missing') || codes.has('missing_tank_volume') || codes.has('missing_volume')) {
       return [assessmentMode === 'current_tank'
         ? '告诉我鱼缸大致长宽高，或实际水体容量，就可以重新判断当前组合。'

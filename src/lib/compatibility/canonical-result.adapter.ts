@@ -85,6 +85,9 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   tank_volume_missing: {
     code: 'tank_volume_missing', title: '缺少鱼缸容量', evidence: '当前鱼缸容量尚未完整记录，暂时无法可靠判断负荷。', severity: 'medium', basis: 'tank_condition', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
+  tank_length_missing: {
+    code: 'tank_length_missing', title: '缺少鱼缸长度', evidence: '当前组合包含已审核的最低缸长条件，但尚未记录鱼缸长度。', severity: 'medium', basis: 'tank_condition', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
+  },
   tank_temperature_missing: {
     code: 'tank_temperature_missing', title: '缺少目标水温', evidence: '当前鱼缸目标水温尚未记录，暂时无法可靠判断。', severity: 'medium', basis: 'tank_condition', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
@@ -364,6 +367,9 @@ export const applyCanonicalCompatibilityDecision = (
   // source of truth and suppress duplicate legacy aliases for the same field.
   if (domainMissingRules.some(rule => rule.code === 'tank_volume_missing')) {
     ['missing_volume', 'missing_tank_volume'].forEach(code => supersededLegacyMissingCodes.add(code));
+  }
+  if (domainMissingRules.some(rule => rule.code === 'tank_length_missing')) {
+    ['missing_length', 'missing_tank_length'].forEach(code => supersededLegacyMissingCodes.add(code));
   }
   if (domainMissingRules.some(rule => rule.code === 'tank_temperature_missing')) {
     ['missing_temperature', 'missing_tank_temperature'].forEach(code => supersededLegacyMissingCodes.add(code));
