@@ -143,6 +143,10 @@ assert.equal(congoShortTankMain.why.length, 1, 'one risk family should not be re
 assert.equal(congoShortTankMain.howTo.length, 1, 'one risk family should not be padded with a generic second action');
 assert.match(congoShortTankMain.why[0] || '', /120cm/);
 assert.match(congoShortTankMain.howTo[0] || '', /120cm/);
+const congoCurrentTankMain = buildCompatibilityReadableConclusion(congoShortTank.decision, {}, 'current_tank');
+assert.match(congoCurrentTankMain.howTo[0] || '', /108L/);
+assert.match(congoCurrentTankMain.howTo[0] || '', /120cm/);
+assert.doesNotMatch(congoCurrentTankMain.howTo.join(' '), /加入|新增/);
 
 const zebraDiscus = reviewCase(['sp_0435'], ['sp_0447'], {
   length: '120',

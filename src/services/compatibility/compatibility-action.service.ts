@@ -645,10 +645,14 @@ const buildCurrentTankCompatibilityAction = (
     };
   }
   if (Array.from(codes).some(code => SPACE_CODES.has(code))) {
+    const spaceRules = decision.warningRules.filter(rule => SPACE_CODES.has(rule.code));
+    const threshold = getExplicitCompatibilitySpaceThreshold(spaceRules);
     return {
       ...plannedAction,
       headline: '当前空间余量需要调整',
-      immediateAction: '先按成体需求核对缸长和可用空间；空间偏紧就减少现有数量或升级空间。',
+      immediateAction: threshold
+        ? `当前至少需要 ${threshold}；未满足前先减少现有数量或保持分隔。`
+        : '先按成体需求核对缸长和可用空间；空间偏紧就减少现有数量或升级空间。',
       observeAfterAction: '调整后继续观察游动受限、抢位、躲藏和进食是否正常。',
     };
   }
