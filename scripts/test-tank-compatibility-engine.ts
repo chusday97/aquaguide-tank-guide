@@ -153,7 +153,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼', waterType: 'saltwater' }),
       });
       return result.status === 'not_recommended'
-        && result.blockingRules.some(rule => rule.code === 'water_type_mismatch');
+        && result.blockingRules.some(rule => rule.code === 'candidate_tank_water_type_conflict');
     },
   },
   {
@@ -441,7 +441,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       return result.status === 'caution'
         && result.metadata.domainStatus === 'caution'
         && result.stockingGuidance?.recommendedMin === 8
-        && result.warningRules.some(rule => rule.code === 'group_requirement_gap' && rule.evidence.includes('8'))
+        && result.warningRules.some(rule => rule.code === 'minimum_group_not_met')
         && result.metadata.domainRuleCodes.includes('minimum_group_not_met');
     },
   },
@@ -1061,7 +1061,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       });
       return result.status === 'caution'
         && result.stockingGuidance?.recommendedMin === 10
-        && result.warningRules.some(rule => rule.code === 'group_requirement_gap' && rule.evidence.includes('10'))
+        && result.warningRules.some(rule => rule.code === 'minimum_group_not_met')
         && result.metadata.domainRuleCodes.includes('minimum_group_not_met');
     },
   },

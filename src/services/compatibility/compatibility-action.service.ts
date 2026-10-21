@@ -1,5 +1,17 @@
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
 import type { TankCompatibilityRule } from '../../lib/tankCompatibilityEngine';
+import {
+  getCompatibilityRuleFamily,
+  prioritizeCompatibilityRules,
+  prioritizeDistinctCompatibilityRules,
+  type PrioritizableRule,
+} from '../../lib/compatibility/rule-semantics';
+
+export {
+  getCompatibilityRuleFamily,
+  prioritizeCompatibilityRules,
+  prioritizeDistinctCompatibilityRules,
+} from '../../lib/compatibility/rule-semantics';
 
 export type BeginnerCompatibilityVerdict =
   | 'add'
@@ -102,110 +114,6 @@ const TERRITORIAL_CODES = new Set([
   'territorial_conflict',
   'breeding_territory_active',
 ]);
-
-const RULE_PRIORITY: Record<string, number> = {
-  observed_emergency: 0,
-  water_type_conflict: 10,
-  species_water_type_conflict: 10,
-  candidate_tank_water_type_conflict: 10,
-  fry_predation_risk: 19,
-  predation_risk: 20,
-  predation_scope_uncertain: 45,
-  species_tank_required: 22,
-  single_housing_required: 25,
-  temperature_range_conflict: 30,
-  temperature_no_overlap: 30,
-  tank_temperature_conflict: 32,
-  reviewed_pair_rule: 35,
-  observed_intervention: 40,
-  predation_vulnerability_context: 50,
-  fin_nipping_target_vulnerability: 60,
-  length_too_short: 65,
-  territorial_pressure_context: 70,
-  territorial_conflict: 72,
-  breeding_territory_active: 74,
-  fin_nipping_group_pressure: 80,
-  group_requirement_gap: 89,
-  minimum_group_not_met: 90,
-  ph_range_conflict: 100,
-  tank_ph_conflict: 102,
-  ph_range_edge_overlap: 105,
-  tank_length_below_species_minimum: 110,
-  volume_too_small: 112,
-  tank_volume_below_species_minimum: 115,
-  volume_needs_adjustment: 116,
-  bioload_screening_high: 120,
-  bioload_over_limit: 122,
-  bioload_screening_elevated: 125,
-  bioload_near_limit: 127,
-  tank_missing: 200,
-  tank_water_type_missing: 205,
-  candidate_water_type_missing: 210,
-  tank_temperature_missing: 215,
-  temperature_range_missing: 220,
-  species_evidence_unreviewed: 225,
-  ph_range_missing: 230,
-};
-
-type PrioritizableRule = {
-  code: string;
-  title?: string;
-  evidence?: string;
-  severity?: string;
-  affectedSpeciesIds?: string[];
-};
-
-export const getCompatibilityRuleFamily = (code: string) => {
-  const normalized = code.toLowerCase();
-  if (normalized.includes('water_type')) return 'water_type';
-  if (normalized.includes('predation') || normalized.includes('prey')) return 'predation';
-  if (normalized.includes('species_tank') || normalized.includes('single_housing')) return 'housing';
-  if (normalized.includes('temperature')) return 'temperature';
-  if (normalized.includes('fin_nipping') || normalized.includes('attack') || normalized.includes('aggression')) return 'aggression';
-  if (normalized.includes('territor')) return 'territory';
-  if (normalized.includes('ph_') || normalized === 'ph' || normalized.includes('ph_range')) return 'ph';
-  if (normalized.includes('minimum_group') || normalized.includes('group_requirement') || normalized.includes('school')) return 'group_size';
-  if (normalized.includes('volume') || normalized.includes('length') || normalized.includes('space')) return 'space';
-  if (normalized.includes('bioload')) return 'bioload';
-  if (normalized.includes('observed_')) return 'observed';
-  if (normalized.includes('equipment') || normalized.includes('filter') || normalized.includes('heater') || normalized.includes('oxygen')) return 'equipment';
-  if (normalized.includes('unreviewed') || normalized.includes('unknown') || normalized.includes('missing')) return 'missing_information';
-  return normalized;
-};
-
-const severityPriority = (severity?: string) => (
-  severity === 'high' ? 0 : severity === 'medium' ? 1 : severity === 'low' ? 2 : 3
-);
-
-const deterministicRuleTieBreakKey = (rule: PrioritizableRule) => ([
-  rule.code,
-  [...(rule.affectedSpeciesIds || [])].sort().join(','),
-  rule.title || '',
-  rule.evidence || '',
-].join('::'));
-
-export const prioritizeCompatibilityRules = <T extends PrioritizableRule>(rules: T[]): T[] => (
-  rules
-    .map((rule, index) => ({ rule, index }))
-    .sort((a, b) => (
-      (RULE_PRIORITY[a.rule.code] ?? (a.rule.code.startsWith('pair_rule_') ? 35 : 500))
-      - (RULE_PRIORITY[b.rule.code] ?? (b.rule.code.startsWith('pair_rule_') ? 35 : 500))
-      || severityPriority(a.rule.severity) - severityPriority(b.rule.severity)
-      || deterministicRuleTieBreakKey(a.rule).localeCompare(deterministicRuleTieBreakKey(b.rule), 'en')
-      || a.index - b.index
-    ))
-    .map(item => item.rule)
-);
-
-export const prioritizeDistinctCompatibilityRules = <T extends PrioritizableRule>(rules: T[]): T[] => {
-  const seenFamilies = new Set<string>();
-  return prioritizeCompatibilityRules(rules).filter(rule => {
-    const family = getCompatibilityRuleFamily(rule.code);
-    if (seenFamilies.has(family)) return false;
-    seenFamilies.add(family);
-    return true;
-  });
-};
 
 const firstText = (rules: Array<{ title?: string; evidence?: string }>, fallback: string) => (
   rules.find(rule => rule.evidence || rule.title)?.evidence

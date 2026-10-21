@@ -33,7 +33,7 @@ const underGroupedNeon = evaluateTankCompatibility({
   candidateQuantity: 7,
 });
 assert.equal(underGroupedNeon.status, 'caution');
-assert.ok(underGroupedNeon.warningRules.some(rule => rule.code === 'group_requirement_gap'));
+assert.ok(underGroupedNeon.warningRules.some(rule => rule.code === 'minimum_group_not_met'));
 assert.ok(underGroupedNeon.suggestions.some(item => item.includes('最低群体数量')));
 assert.ok(underGroupedNeon.suggestions.every(item => !item.includes('移除阻断风险')));
 
@@ -185,14 +185,12 @@ const cumulativeLoadDecision = evaluateCompatibilityDecision({
 assert.equal(cumulativeLoadDecision.pairResults.length, 3);
 assert.equal(cumulativeLoadDecision.status, 'caution');
 assert.equal(cumulativeLoadDecision.metadata.domainStatus, cumulativeLoadDecision.status);
-assert.ok(cumulativeLoadDecision.warningRules.some(rule => rule.code === 'bioload_over_limit'));
+assert.ok(cumulativeLoadDecision.warningRules.some(rule => rule.code === 'bioload_screening_high'));
 assert.ok(cumulativeLoadDecision.adjustableReasons.some(reason => reason.riskType === 'bioload'));
-const cumulativeLoadLimitRule = cumulativeLoadDecision.warningRules.find(rule => rule.code === 'bioload_over_limit');
+const cumulativeLoadLimitRule = cumulativeLoadDecision.warningRules.find(rule => rule.code === 'bioload_screening_high');
 assert.ok(cumulativeLoadLimitRule);
-assert.equal(
-  cumulativeLoadLimitRule.evidence.split('该数值只用于粗略筛查，不代表硬性安全上限。').length - 1,
-  1,
-);
+assert.match(cumulativeLoadLimitRule.evidence, /粗粒度.*负荷偏高/);
+assert.match(cumulativeLoadLimitRule.evidence, /提醒.*不等于.*必须换缸/);
 const cumulativeLoadPresentation = getCompatibilityPresentation(cumulativeLoadDecision);
 assert.equal(cumulativeLoadPresentation.headline, '条件混养');
 assert.match(cumulativeLoadPresentation.primaryReason, /负荷|负载/);

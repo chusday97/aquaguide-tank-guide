@@ -384,11 +384,23 @@ const deterministicActionsFor = (
   }
 
   if (decision.status === 'caution') {
-    const secondaryActions = prioritizeDistinctCompatibilityRules(decision.warningRules)
+    const primaryWarningRules = prioritizeDistinctCompatibilityRules(decision.warningRules);
+    const primaryWarning = primaryWarningRules[0];
+    const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(
+      decision.warningRules.filter(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
+    );
+    const primaryAction = primaryWarning
+      && getCompatibilityRuleFamily(primaryWarning.code) === 'space'
+      && combinedSpaceThreshold
+      ? (assessmentMode === 'current_tank'
+        ? `当前空间至少需要 ${combinedSpaceThreshold}；未满足前先减少现有数量或保持分隔，再重新评估。`
+        : `至少满足 ${combinedSpaceThreshold}后再考虑加入。`)
+      : fallback;
+    const secondaryActions = primaryWarningRules
       .slice(1)
       .map(rule => cautionSecondaryActionFor(rule, assessmentMode))
       .filter((step): step is string => Boolean(step));
-    return [fallback, ...secondaryActions];
+    return [primaryAction, ...secondaryActions];
   }
 
   return [fallback];
@@ -400,7 +412,16 @@ export const buildCompatibilityReadableConclusion = (
   assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityReadableConclusion => {
   const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
-  const deterministicWhy = primaryRulesFor(decision).map(rule => getCompatibilityReadableRuleText(rule, assessmentMode));
+  const primaryRules = primaryRulesFor(decision);
+  const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(
+    [...decision.blockingRules, ...decision.warningRules]
+      .filter(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
+  );
+  const deterministicWhy = primaryRules.map(rule => (
+    getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold
+      ? `当前空间不足；按成体需求至少需要 ${combinedSpaceThreshold}。`
+      : getCompatibilityReadableRuleText(rule, assessmentMode)
+  ));
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
   const whySeed = decision.status === 'compatible'
     ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision, assessmentMode), ...aiWhy]

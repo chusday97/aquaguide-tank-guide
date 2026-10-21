@@ -5,6 +5,7 @@ import type {
   TankCompatibilityRule,
   TankCompatibilityStatus,
 } from '../tankCompatibilityEngine';
+import { consolidateCompatibilityRules } from './rule-semantics';
 
 const SOFT_CAPACITY_DISCLAIMER = '该数值只用于粗略筛查，不代表硬性安全上限。';
 
@@ -157,6 +158,7 @@ const uniqueRules = (rules: TankCompatibilityRule[]) => {
 };
 
 const LEGACY_SOFT_CAPACITY_CODES = new Set(['bioload_over_limit', 'bioload_near_limit']);
+const LEGACY_SPACE_THRESHOLD_DETAIL_CODES = new Set(['volume_too_small']);
 const CANONICAL_REVIEWED_STAGE_HARD_BLOCK_CODES = new Set(['conspecific_fry_predation']);
 
 const GENERIC_COMPATIBILITY_SUGGESTIONS = new Set([
@@ -258,7 +260,15 @@ export const applyCanonicalCompatibilityDecision = (
   const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'fry_predation_risk', 'predation_risk', 'species_tank_required', 'single_housing_required', 'observed_emergency']);
   const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_ph_conflict', 'ph_range_edge_overlap', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'predation_scope_uncertain', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
-  const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
+  const hasConcreteReviewedPairRule = [
+    ...result.blockingRules,
+    ...result.warningRules,
+    ...result.passedRules,
+  ].some(rule => rule.code.startsWith('pair_rule_'));
+  const domainWarningRules = domainRules.filter(rule => (
+    warningCodes.has(rule.code)
+    && (rule.code !== 'reviewed_pair_rule' || !hasConcreteReviewedPairRule)
+  ));
   const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context', 'tank_temperature_unreported', 'tank_volume_unreported_length_available', 'tank_water_type_unreported_species_overlap']);
   const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code) && !informationalCodes.has(rule.code));
   const domainInformationalRules = domainRules.filter(rule => informationalCodes.has(rule.code));
@@ -279,6 +289,16 @@ export const applyCanonicalCompatibilityDecision = (
     confidence: 'low' as const,
   }));
   const legacyHardBlocks = result.blockingRules.filter(rule => !LEGACY_SOFT_CAPACITY_CODES.has(rule.code));
+  // Species-fit can classify a severe volume shortfall as a legacy hard block,
+  // while Domain intentionally keeps minimum-space planning as a caution. When
+  // Domain does not hard-block, retain the exact reviewed threshold only as
+  // warning detail so canonical status stays authoritative and the user does
+  // not lose actionable values such as "至少 243L".
+  const legacyDowngradedSpaceThresholdWarnings = decision.status !== 'not_recommended'
+    ? result.blockingRules
+      .filter(rule => LEGACY_SPACE_THRESHOLD_DETAIL_CODES.has(rule.code))
+      .map(rule => ({ ...rule, severity: 'medium' as const }))
+    : [];
   const legacyWarnings = result.warningRules.filter(rule => !LEGACY_SOFT_CAPACITY_CODES.has(rule.code));
   const reviewedStageHardBlocks = legacyHardBlocks.filter(rule => (
     rule.reviewStatus === 'reviewed' && CANONICAL_REVIEWED_STAGE_HARD_BLOCK_CODES.has(rule.code)
@@ -357,7 +377,7 @@ export const applyCanonicalCompatibilityDecision = (
   );
 
   const blockingRules = effectiveStatus === 'not_recommended'
-    ? uniqueRules([
+    ? consolidateCompatibilityRules([
       ...orderedDomainBlockingRules,
       ...(decision.status === 'not_recommended' ? legacyHardBlocks : reviewedStageHardBlocks),
       ...reviewedPairBlocking,
@@ -367,7 +387,7 @@ export const applyCanonicalCompatibilityDecision = (
     ? uniqueRules([...domainMissingRules, ...effectiveLegacyMissingData])
     : [];
   const warningRules = effectiveStatus === 'caution' || effectiveStatus === 'insufficient_data' || effectiveStatus === 'not_recommended'
-    ? uniqueRules([...domainWarningRules, ...legacySoftCapacityWarnings, ...legacyWarnings])
+    ? consolidateCompatibilityRules([...domainWarningRules, ...legacySoftCapacityWarnings, ...legacyDowngradedSpaceThresholdWarnings, ...legacyWarnings])
     : [];
   const riskLevel: TankCompatibilityRiskLevel = effectiveStatus === 'not_recommended'
     ? 'high'

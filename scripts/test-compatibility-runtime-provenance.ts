@@ -8,6 +8,7 @@ import {
   compatibilityRuleRequiresReviewedSource,
   type TankCompatibilityRule,
 } from '../src/lib/tankCompatibilityEngine';
+import { getCompatibilityRuleSemanticKey } from '../src/lib/compatibility/rule-semantics';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
 import { getCompatibilityCoreFieldCoverageRow } from '../src/services/compatibility/compatibility-field-coverage.service';
@@ -89,7 +90,7 @@ const waterConflict = evaluateCompatibilityDecision({
     { species: yellowSnapper, quantity: 1, origin: 'candidate' },
   ],
 });
-const waterRule = waterConflict.blockingRules.find(rule => rule.code === 'water_type_conflict');
+const waterRule = waterConflict.blockingRules.find(rule => getCompatibilityRuleSemanticKey(rule.code) === 'water_type:conflict');
 assert.ok(waterRule, 'freshwater + saltwater reviewed species must expose water-type conflict');
 const expectedWaterSourceIds = new Set([
   ...getCompatibilityCoreFieldCoverageRow(blackSkirt).fields.water.evidenceIds,
@@ -124,12 +125,17 @@ const tigerGuppy = evaluateCompatibilityDecision({
     { species: guppy, quantity: 6, origin: 'candidate' },
   ],
 });
-const genericPairRule = tigerGuppy.warningRules.find(rule => rule.code === 'reviewed_pair_rule');
-assert.ok(genericPairRule, 'canonical reviewed_pair_rule must remain visible for direct reviewed pair authority');
+const concretePairRule = tigerGuppy.blockingRules.find(rule => rule.code === 'pair_rule_fin_nipping_long_fin_conflict');
+assert.ok(concretePairRule, 'direct reviewed pair authority must survive canonicalization as the concrete pair rule');
 assert.deepEqual(
-  new Set(reviewedCitationIds(genericPairRule)),
+  new Set(reviewedCitationIds(concretePairRule)),
   new Set(directPair.citations.map(citation => citation.id)),
-  'generic reviewed_pair_rule must inherit only direct pair citations, not generic species-profile citations',
+  'concrete pair rule must retain only direct pair citations, not generic species-profile citations',
+);
+assert.equal(
+  [...tigerGuppy.blockingRules, ...tigerGuppy.warningRules].some(rule => rule.code === 'reviewed_pair_rule'),
+  false,
+  'generic reviewed_pair_rule must not duplicate a concrete direct pair rule',
 );
 
 console.log(

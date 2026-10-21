@@ -2,6 +2,7 @@ import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type CompatibilityEvidenceProvider, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 import type { CompatibilityDecisionReadiness } from '../../../packages/domain-rules/src';
 import { getReviewedCompatibilityProfileForFish, getReviewedPairRule } from '../../data/compatibilityEvidence';
+import { consolidateCompatibilityRules } from '../../lib/compatibility/rule-semantics';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
 
 export type CompatibilityItem = {
@@ -128,8 +129,8 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
   const status = results.reduce<TankCompatibilityStatus>((current, result) => (
     statusRank[result.status] > statusRank[current] ? result.status : current
   ), 'compatible');
-  const blockingRules = uniqueRules(results.flatMap(result => result.blockingRules));
-  const warningRules = uniqueRules(results.flatMap(result => result.warningRules));
+  const blockingRules = consolidateCompatibilityRules(results.flatMap(result => result.blockingRules));
+  const warningRules = consolidateCompatibilityRules(results.flatMap(result => result.warningRules));
   const missingData = uniqueRules(results.flatMap(result => result.missingData));
   const passedRules = uniqueRules(results.flatMap(result => result.passedRules));
   const summary = results.find(result => result.status === status)?.summary || results[0]?.summary || '暂时无法判断。';

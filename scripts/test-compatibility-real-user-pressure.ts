@@ -452,7 +452,7 @@ cases.push(makeCase(
   [
     probe('whole_tank_aggregation', 'overload is detected at whole-tank level', () => {
       assert.equal(overloaded.status, 'caution');
-      assert.ok(overloaded.warningRules.some(rule => rule.code === 'bioload_over_limit'));
+      assert.ok(overloaded.warningRules.some(rule => rule.code === 'bioload_screening_high'));
     }),
     probe('action_plan', 'adjustment has recheck and whole-tank target semantics', () => {
       assert.match(overloadedPlan.expectedAfterAdjustment, /降低|负荷|重新评估/);
@@ -646,7 +646,7 @@ cases.push(makeCase(
   'action_plan',
   [
     probe('whole_tank_aggregation', 'before adjustment explicit length risk and territory coexist', () => {
-      assert.ok(partialSpaceBefore.warningRules.some(rule => rule.code === 'length_too_short'));
+      assert.ok(partialSpaceBefore.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum'));
       assert.ok(partialSpaceBefore.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'territory'));
       assert.equal(partialSpaceBefore.status, 'caution');
     }),
@@ -656,7 +656,7 @@ cases.push(makeCase(
       assert.match(partialSpaceBeforePlan.nextSteps[0] || '', /100cm/);
     }),
     probe('whole_tank_aggregation', 'after reaching 100cm the hard length rule clears while a softer capacity warning remains', () => {
-      assert.equal(partialSpaceAfter.warningRules.some(rule => rule.code === 'length_too_short'), false);
+      assert.equal(partialSpaceAfter.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum'), false);
       assert.ok(partialSpaceAfter.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum'));
       assert.ok(partialSpaceAfter.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'territory'));
       assert.equal(partialSpaceAfter.status, 'caution');
@@ -845,10 +845,10 @@ cases.push(makeCase(
     probe('action_plan', 'before adjustment the explicit length rule is the current action', () => {
       assert.equal(partialSpaceBeforePlan.actionSequence[0]?.state, 'current');
       assert.equal(partialSpaceBeforePlan.actionSequence[0]?.riskFamily, 'space');
-      assert.equal(partialSpaceBeforePlan.actionSequence[0]?.sourceRuleCode, 'length_too_short');
+      assert.equal(partialSpaceBeforePlan.actionSequence[0]?.sourceRuleCode, 'tank_length_below_species_minimum');
     }),
     probe('action_plan', 'after the 100cm threshold is met the completed length rule disappears and territory becomes current', () => {
-      assert.equal(partialSpaceAfterPlan.actionSequence.some(step => step.sourceRuleCode === 'length_too_short'), false);
+      assert.equal(partialSpaceAfterPlan.actionSequence.some(step => step.sourceRuleCode === 'tank_length_below_species_minimum'), false);
       assert.equal(partialSpaceAfterPlan.actionSequence[0]?.state, 'current');
       assert.equal(partialSpaceAfterPlan.actionSequence[0]?.riskFamily, 'territory');
     }),
@@ -1225,7 +1225,7 @@ cases.push(makeCase(
     probe('action_plan', 'post-adjustment sequence contains no stale group-size step', () => {
       assert.ok(duplicateGroupBeforePlan.actionSequence.some(step => step.riskFamily === 'group_size'));
       const beforeGroupStep = duplicateGroupBeforePlan.actionSequence.find(step => step.riskFamily === 'group_size');
-      assert.equal(beforeGroupStep?.sourceRuleCode, 'group_requirement_gap');
+      assert.equal(beforeGroupStep?.sourceRuleCode, 'minimum_group_not_met');
       assert.match(beforeGroupStep?.action || '', /从 6 调整到至少 8 条\/只/);
       assert.match(beforeGroupStep?.resolutionTarget.criterion || '', /红绿灯 数量达到至少 8 条\/只/);
       assert.equal(duplicateGroupAfterPlan.actionSequence.some(step => step.riskFamily === 'group_size'), false);

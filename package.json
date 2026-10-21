@@ -19,6 +19,7 @@
     "lint": "tsc --noEmit",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
     "test:compatibility:provenance": "node --import tsx scripts/test-compatibility-runtime-provenance.ts",
+    "test:compatibility:rule-dedup": "node --import tsx scripts/test-compatibility-runtime-rule-dedup.ts",
     "audit:compatibility-evidence": "node --import tsx scripts/audit_compatibility_evidence.ts",
     "test:favorites": "tsx scripts/test-favorites-service.ts",
     "test:taxonomy": "tsx scripts/assert_taxonomy_rules.ts",

@@ -194,8 +194,19 @@ const itemMapFor = (decision: CompatibilityDecision) => new Map(
   (decision.assessmentItems || []).map(item => [item.speciesId, item] as const),
 );
 
-const namedItemForFamily = (decision: CompatibilityDecision, family: string) => {
+const namedItemForFamily = (
+  decision: CompatibilityDecision,
+  family: string,
+  sourceRule?: TankCompatibilityRule,
+) => {
   const items = itemMapFor(decision);
+  const sourceIds = Array.from(new Set(sourceRule?.affectedSpeciesIds || []))
+    .filter(id => items.has(id))
+    .sort((left, right) => left.localeCompare(right, 'en'));
+  const sourceCandidateId = sourceIds.find(id => items.get(id)?.origin === 'candidate');
+  const sourceId = sourceCandidateId || sourceIds[0];
+  if (sourceId) return items.get(sourceId);
+
   const pool = [
     ...decision.blockingRules,
     ...decision.warningRules,
@@ -221,20 +232,29 @@ const namedItemForFamily = (decision: CompatibilityDecision, family: string) => 
   return undefined;
 };
 
-const pairContextFor = (decision: CompatibilityDecision, family: string, mode: CompatibilityAssessmentMode) => {
+const pairContextFor = (
+  decision: CompatibilityDecision,
+  family: string,
+  mode: CompatibilityAssessmentMode,
+  sourceRule?: TankCompatibilityRule,
+) => {
   const items = itemMapFor(decision);
   const pairs = [...pairsForFamily(decision, family)].sort((a, b) => {
     const aKey = [a.speciesA.id, a.speciesB.id].sort().join('::');
     const bKey = [b.speciesA.id, b.speciesB.id].sort().join('::');
     return aKey.localeCompare(bKey, 'en');
   });
-  const preferred = mode === 'planned_addition'
+  const sourceIds = new Set(sourceRule?.affectedSpeciesIds || []);
+  const sourcePair = sourceIds.size >= 2
+    ? pairs.find(pair => sourceIds.has(pair.speciesA.id) && sourceIds.has(pair.speciesB.id))
+    : undefined;
+  const preferred = sourcePair || (mode === 'planned_addition'
     ? pairs.find(pair => {
       const a = items.get(pair.speciesA.id)?.origin;
       const b = items.get(pair.speciesB.id)?.origin;
       return (a === 'candidate' && b === 'existing') || (a === 'existing' && b === 'candidate');
     }) || pairs[0]
-    : pairs[0];
+    : pairs[0]);
   if (!preferred) return null;
 
   const members = [preferred.speciesA, preferred.speciesB]
@@ -266,8 +286,8 @@ const specificActionFor = (
   mode: CompatibilityAssessmentMode,
 ): string | null => {
   const family = getCompatibilityRuleFamily(rule.code);
-  const pair = pairContextFor(decision, family, mode);
-  const namedItem = namedItemForFamily(decision, family);
+  const pair = pairContextFor(decision, family, mode, rule);
+  const namedItem = namedItemForFamily(decision, family, rule);
   const min = family === 'group_size'
     ? (getExplicitCompatibilityGroupMinimum([rule]) ?? decision.stockingGuidance?.recommendedMin)
     : decision.stockingGuidance?.recommendedMin;
@@ -292,7 +312,10 @@ const specificActionFor = (
   }
 
   if (family === 'space') {
-    const threshold = getExplicitCompatibilitySpaceThreshold([rule]);
+    const threshold = getExplicitCompatibilitySpaceThreshold(
+      [...decision.blockingRules, ...decision.warningRules]
+        .filter(candidate => getCompatibilityRuleFamily(candidate.code) === 'space'),
+    );
     if (mode === 'current_tank') {
       return threshold
         ? `把当前鱼缸调整到至少 ${threshold}，再重新评估空间风险是否已经解除。`
@@ -407,26 +430,24 @@ const targetSpeciesIdsFor = (
   mode: CompatibilityAssessmentMode,
 ) => {
   const family = getCompatibilityRuleFamily(rule.code);
-  const pair = pairContextFor(decision, family, mode);
-  const namedItem = namedItemForFamily(decision, family);
-  const directSpeciesIds = uniqueSpeciesIds([
-    ...(rule.affectedSpeciesIds || []),
-    namedItem?.speciesId,
-  ]);
-
-  // Housing and group-size rules describe a single species requirement.
-  // Pair context is useful for the user-facing sentence, but adding the
-  // counterpart species to a machine-readable resolution target makes
-  // downstream rechecks act on the wrong subject.
-  if (family === 'housing' || family === 'group_size') return directSpeciesIds;
+  const pair = pairContextFor(decision, family, mode, rule);
+  const namedItem = namedItemForFamily(decision, family, rule);
+  const directSpeciesIds = uniqueSpeciesIds(rule.affectedSpeciesIds || []);
 
   // Bioload is a whole-tank condition rather than a species-scoped target.
   if (family === 'bioload') return [];
 
-  return uniqueSpeciesIds([
-    ...(pair?.speciesIds || []),
-    ...directSpeciesIds,
-  ]);
+  // Once a consolidated runtime rule has an explicit affected scope, that
+  // scope is authoritative for machine-readable actions. Do not union another
+  // same-family pair or species into it.
+  if (directSpeciesIds.length > 0) return directSpeciesIds;
+
+  // Housing and group-size rules describe a single species requirement.
+  if (family === 'housing' || family === 'group_size') {
+    return uniqueSpeciesIds([namedItem?.speciesId]);
+  }
+
+  return uniqueSpeciesIds(pair?.speciesIds || [namedItem?.speciesId]);
 };
 
 const resolutionTargetFor = (
@@ -435,8 +456,8 @@ const resolutionTargetFor = (
   mode: CompatibilityAssessmentMode,
 ): CompatibilityResolutionTarget => {
   const family = getCompatibilityRuleFamily(rule.code);
-  const pair = pairContextFor(decision, family, mode);
-  const namedItem = namedItemForFamily(decision, family);
+  const pair = pairContextFor(decision, family, mode, rule);
+  const namedItem = namedItemForFamily(decision, family, rule);
   const minimumGroupSize = family === 'group_size'
     ? (getExplicitCompatibilityGroupMinimum([rule]) ?? decision.stockingGuidance?.recommendedMin)
     : decision.stockingGuidance?.recommendedMin;
@@ -790,7 +811,7 @@ const stopConditionForPlan = (
   fallback: string | null,
 ) => {
   const family = primaryFamilyFor(sourceRules);
-  const pair = family ? pairContextFor(decision, family, mode) : null;
+  const pair = family && sourceRules[0] ? pairContextFor(decision, family, mode, sourceRules[0]) : null;
   if (decision.status === 'not_recommended') {
     if (mode === 'current_tank') return pair
       ? `${pair.pairLabel} 的明确冲突解除前保持分隔，不要恢复原组合。`
