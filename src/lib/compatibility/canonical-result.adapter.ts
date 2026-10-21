@@ -220,13 +220,41 @@ const canonicalSuggestions = ({
   return Array.from(new Set(preserved)).slice(0, 5);
 };
 
+const dedupeRuleCitations = (rules: TankCompatibilityRule[]) => {
+  const seen = new Set<string>();
+  return rules.flatMap(rule => rule.citations || []).filter(citation => {
+    if (citation.reviewStatus !== 'reviewed' || seen.has(citation.id)) return false;
+    seen.add(citation.id);
+    return true;
+  });
+};
+
+const preserveExistingCanonicalProvenance = (
+  template: TankCompatibilityRule,
+  result: TankCompatibilityResult,
+): TankCompatibilityRule => {
+  const sameCodeRules = [
+    ...result.blockingRules,
+    ...result.warningRules,
+    ...result.passedRules,
+    ...result.missingData,
+  ].filter(rule => rule.code === template.code && (rule.citations?.length || 0) > 0);
+  if (!sameCodeRules.length) return { ...template, citations: [...template.citations] };
+  return {
+    ...template,
+    affectedSpeciesIds: Array.from(new Set(sameCodeRules.flatMap(rule => rule.affectedSpeciesIds || []))),
+    citations: dedupeRuleCitations(sameCodeRules),
+  };
+};
+
 export const applyCanonicalCompatibilityDecision = (
   result: TankCompatibilityResult,
   decision: CompatibilityDecision,
 ): TankCompatibilityResult => {
   const domainRules = decision.ruleCodes
     .map(code => DOMAIN_RULE_EVIDENCE[code])
-    .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
+    .filter((rule): rule is TankCompatibilityRule => Boolean(rule))
+    .map(rule => preserveExistingCanonicalProvenance(rule, result));
   const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'fry_predation_risk', 'predation_risk', 'species_tank_required', 'single_housing_required', 'observed_emergency']);
   const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_ph_conflict', 'ph_range_edge_overlap', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'predation_scope_uncertain', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));

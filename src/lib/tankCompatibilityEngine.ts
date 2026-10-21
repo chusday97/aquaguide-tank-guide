@@ -36,7 +36,7 @@ import {
 import { estimateBioloadUnits } from '../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
 import { LOCAL_CATALOG_VERSION } from '../data/catalogVersion';
-import { getCompatibilityCoreFieldCoverageRow } from '../services/compatibility/compatibility-field-coverage.service';
+import { getCompatibilityCoreFieldCoverageRow, type CompatibilityCoreField } from '../services/compatibility/compatibility-field-coverage.service';
 import { getCompatibilityPairEvidenceCeiling } from '../data/compatibilityPairEvidenceCeilings';
 import { getCatalogCanonicalIdentity } from '../data/catalogCanonicalIdentity';
 
@@ -183,6 +183,142 @@ const reviewedRuleEvidence: CompatibilityEvidenceDto = {
   reviewStatus: 'reviewed',
   affectedSpeciesIds: [],
   citations: [],
+};
+
+const CANONICAL_RULES_REQUIRING_REVIEWED_SPECIES_SOURCES = new Set([
+  'compatibility_clear',
+  'water_type_conflict',
+  'candidate_tank_water_type_conflict',
+  'temperature_range_conflict',
+  'tank_temperature_conflict',
+  'ph_range_conflict',
+  'ph_range_edge_overlap',
+  'tank_ph_conflict',
+  'tank_volume_below_species_minimum',
+  'tank_length_below_species_minimum',
+  'predation_risk',
+  'predation_scope_uncertain',
+  'fry_predation_risk',
+  'juvenile_predation_risk',
+  'predation_vulnerability_context',
+  'territorial_conflict',
+  'territorial_pressure_context',
+  'breeding_territory_active',
+  'species_tank_required',
+  'single_housing_required',
+  'minimum_group_not_met',
+  'fin_nipping_group_pressure',
+  'fin_nipping_target_vulnerability',
+  'shared_bottom_zone_context',
+]);
+
+export const compatibilityRuleRequiresReviewedSource = (
+  rule: Pick<TankCompatibilityRule, 'code' | 'basis' | 'reviewStatus'>,
+) => (
+  rule.reviewStatus === 'reviewed'
+  && (
+    CANONICAL_RULES_REQUIRING_REVIEWED_SPECIES_SOURCES.has(rule.code)
+    || rule.code === 'reviewed_pair_rule'
+    || (rule.basis === 'pair_rule' && rule.code.startsWith('pair_rule_'))
+  )
+);
+
+const CANONICAL_RULE_EVIDENCE_FIELDS: Partial<Record<string, CompatibilityCoreField[]>> = {
+  water_type_conflict: ['water'],
+  candidate_tank_water_type_conflict: ['water'],
+  temperature_range_conflict: ['temperature'],
+  tank_temperature_conflict: ['temperature'],
+  ph_range_conflict: ['ph'],
+  ph_range_edge_overlap: ['ph'],
+  tank_ph_conflict: ['ph'],
+  tank_volume_below_species_minimum: ['tank_size'],
+  tank_length_below_species_minimum: ['tank_size'],
+  predation_risk: ['predation'],
+  predation_scope_uncertain: ['predation'],
+  fry_predation_risk: ['predation'],
+  juvenile_predation_risk: ['predation', 'adult_size'],
+  predation_vulnerability_context: ['predation', 'adult_size'],
+  territorial_conflict: ['territoriality'],
+  territorial_pressure_context: ['territoriality'],
+  breeding_territory_active: ['territoriality'],
+  species_tank_required: ['social_behavior'],
+  single_housing_required: ['social_behavior'],
+  minimum_group_not_met: ['social_behavior'],
+  fin_nipping_group_pressure: ['social_behavior'],
+  fin_nipping_target_vulnerability: ['social_behavior'],
+  shared_bottom_zone_context: ['social_behavior', 'tank_size'],
+};
+
+const dedupeReviewedCitations = (
+  citations: CompatibilityEvidenceDto['citations'],
+): CompatibilityEvidenceDto['citations'] => {
+  const seen = new Set<string>();
+  return citations.filter(citation => {
+    if (citation.reviewStatus !== 'reviewed' || seen.has(citation.id)) return false;
+    seen.add(citation.id);
+    return true;
+  });
+};
+
+const attachCanonicalReviewedSources = (
+  result: TankCompatibilityResult,
+  species: Fish[],
+  provider: CompatibilityEvidenceProvider,
+): TankCompatibilityResult => {
+  const reviewedSpecies = species.flatMap(item => {
+    const profile = resolveReviewedProfileForFish(item, provider);
+    if (!profile) return [];
+    return [{
+      fish: item,
+      profile,
+      coverage: getCompatibilityCoreFieldCoverageRow(item),
+    }];
+  });
+  const sharedCitations = dedupeReviewedCitations(reviewedSpecies.flatMap(item => item.profile.citations));
+  const sharedSpeciesIds = Array.from(new Set(species.map(item => item.id)));
+  const allRules = [
+    ...result.blockingRules,
+    ...result.warningRules,
+    ...result.passedRules,
+    ...result.missingData,
+  ];
+  const directPairCitations = dedupeReviewedCitations(
+    allRules
+      .filter(rule => rule.code.startsWith('pair_rule_') && rule.code !== 'reviewed_pair_rule')
+      .flatMap(rule => rule.citations || []),
+  );
+
+  const attach = (rule: TankCompatibilityRule): TankCompatibilityRule => {
+    if ((rule.citations?.length || 0) > 0 || !compatibilityRuleRequiresReviewedSource(rule)) return rule;
+    let citations = rule.code === 'reviewed_pair_rule' ? directPairCitations : [];
+    if (rule.code !== 'reviewed_pair_rule') {
+      const fields = CANONICAL_RULE_EVIDENCE_FIELDS[rule.code];
+      if (fields?.length) {
+        citations = dedupeReviewedCitations(reviewedSpecies.flatMap(({ profile, coverage }) => {
+          const evidenceIds = new Set(fields.flatMap(field => coverage.fields[field]?.evidenceIds || []));
+          return profile.citations.filter(citation => evidenceIds.has(citation.id));
+        }));
+      }
+      // Some older reviewed Profiles predate field-granular evidence. Falling
+      // back to that Profile's reviewed citations preserves real provenance
+      // without fabricating a claim-specific source.
+      if (!citations.length) citations = sharedCitations;
+    }
+    if (!citations.length) return rule;
+    return {
+      ...rule,
+      affectedSpeciesIds: rule.affectedSpeciesIds.length ? rule.affectedSpeciesIds : sharedSpeciesIds,
+      citations,
+    };
+  };
+
+  return {
+    ...result,
+    blockingRules: result.blockingRules.map(attach),
+    warningRules: result.warningRules.map(attach),
+    passedRules: result.passedRules.map(attach),
+    missingData: result.missingData.map(attach),
+  };
 };
 
 const normalizeExistingSpecies = (
@@ -995,7 +1131,7 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
     catalogVersion: LOCAL_CATALOG_VERSION,
   };
   const domainDecision = evaluateCompatibility(domainInput);
-  return applyCanonicalCompatibilityDecision({
+  const canonical = applyCanonicalCompatibilityDecision({
     ...legacyWithPairEvidenceBoundaries,
     metadata: {
       ...legacyWithPairEvidenceBoundaries.metadata,
@@ -1007,6 +1143,11 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
       decisionReadiness: domainDecision.decisionReadiness,
     },
   }, domainDecision);
+  const speciesForEvidence = [
+    ...normalized.map(item => item.species),
+    ...(input.candidateSpecies ? [input.candidateSpecies] : []),
+  ];
+  return attachCanonicalReviewedSources(canonical, speciesForEvidence, provider);
 };
 
 export const getTankCompatibilityStatusLabel = (status: TankCompatibilityStatus) => {
