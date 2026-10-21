@@ -110,7 +110,7 @@ const acceptedProvider: CompatibilityAiReasoningProvider = async ({ system, user
     output: {
       suggestedVerdict: 'not_recommended',
       reasons: [{ text: 'AI 可以提出更保守的 shadow 风险判断，但不能覆盖确定性 caution 结论。', ruleCodes: ['reviewed_pair_rule'] }],
-      adjustments: [{ text: '先满足群体数量与共享水体窗口，再继续观察同缸状态。', ruleCodes: ['minimum_group_not_met'] }],
+      adjustments: [{ text: '先把候选鱼的群体数量调整到至少 8 条，再重新评估。', ruleCodes: ['group_requirement_gap'] }],
       uncertainties: [],
       confidence: 'medium',
       evidenceIds: reviewedCaution.evidenceIds || [],

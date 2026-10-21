@@ -1,3 +1,26 @@
+## 2026-10-21 — Compatibility sequential-decision pressure closure
+
+- Expanded scripts/test-compatibility-real-user-pressure.ts from 19 to 26 realistic sequential-decision cases:
+  - hard-predation-survives-space-adjustment
+  - group-size-adjustment-clears-only-group-risk
+  - missing-critical-tank-length-only
+  - multiple-hard-blocking-pairs-one-primary-output
+  - remove-hard-blocker-reveals-caution
+  - life-stage-recheck-clears-stale-fry-action
+  - duplicate-quantity-group-size-bioload
+- First probe produced two meaningful divergences: action_plan for missing critical tank length, and a presentation assertion for multiple hard blockers. The latter was confirmed to be an overstrict test assumption because secondary explanation already lives under 查看依据; no product change was made for it.
+- Fixed canonical-result missing-data merging so Domain-declared informational omissions do not reappear as legacy blocking missing rules when another field causes insufficient_data.
+- Added missing-input-specific action copy and made insufficient_data sequences prioritize actual missing rules over same-family warnings.
+- Verified missing tank length for reviewed red-neon/angelfish fixture now asks for tank length and the grounded 100cm condition only; it no longer generates a false no-common-temperature-range statement.
+- Investigated apparent neon group-size mismatch: old Compatibility Profile has a historical lower group value, but current reviewed Species Knowledge authority requires 8. Deterministic warning behavior was correct and was not weakened.
+- Found and fixed an action-grounding bug where a split neon total of 6 inherited another species' stockingGuidance minimum and said “6 -> at least 6”. Precise group_requirement_gap now outranks generic minimum_group_not_met, and the affected species' reviewed minimum is extracted from that rule first. The action and resolution target now correctly say 6 -> at least 8.
+- Replaced leaked internal field text “minimumGroupSize” in the primary reason with natural user-facing copy while retaining raw evidence internally.
+- Full release gate initially caught a stale AI Shadow fixture still grounded to generic minimum_group_not_met. Updated only the fixture to the new precise group_requirement_gap action (“at least 8”); AI authority guards were unchanged. AI Shadow and AI resolution-grounding tests pass.
+- Final real-user pressure 26/26 PASS, all firstDivergence=null.
+- Final fully-informed matrix unchanged at 111 / 6,105 / 427 / 2,353 / 3,325 / 0.
+- Final BACKEND_RELEASE_GATE=PASS and final build PASS.
+- No Production deploy/DB write/migration, release branch movement, UI redesign, broad research or evidence promotion.
+
 ## 2026-10-21 — Compatibility user verdict label consistency closure
 
 - Audited Compatibility verdict presentation across local readable copy, assessment projection, calculator, visual result, species detail, API product output and SharedReport.

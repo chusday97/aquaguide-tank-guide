@@ -1,3 +1,17 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility sequential recheck closure
+
+- Real-user Compatibility pressure suite is expanded from 19 to 26 cases, all with firstDivergence=null.
+- New sequential scenarios cover: hard predation surviving tank enlargement; group-size adjustment exposing remaining territory risk; missing critical tank length without false temperature incompatibility; multiple hard blocking pairs with one primary user output; blocker removal revealing residual caution; fry/adult life-stage re-evaluation clearing stale fry actions; duplicate existing/candidate quantities interacting with group-size and capacity risks.
+- Root fix: canonical missing-data projection now respects Domain input semantics. Informational unreported temperature/water-type/volume aliases cannot be re-promoted by legacy missing rules when another field makes the overall result insufficient_data.
+- Root fix: insufficient_data action planning asks only the actual decision-critical missing input. For reviewed tank-length constraints, the current action asks for tank length and may include only the reviewed threshold; it does not fabricate a temperature conflict.
+- Root fix: missing-input steps take precedence over same-family warnings inside insufficient_data sequences, preventing a true missing field from being deduped away.
+- Root fix: group-size actions now bind to the precise affected-species rule and extract its reviewed minimum. A split neon-tetra row totaling 6 now correctly says at least 8, rather than accidentally taking another species' stocking minimum.
+- User-facing group-size reason is natural language; internal field names such as minimumGroupSize remain evidence-only.
+- AI Shadow remains explanation-only and authority-clamped. Its fixture was updated to the now-primary precise group_requirement_gap grounding rule; no AI permissions were loosened.
+- Deterministic Compatibility matrix is unchanged: 111 ready / 6,105 fully-informed pairs / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Final BACKEND_RELEASE_GATE=PASS and final main build PASS.
+- No Production deploy, DB write, migration, research/evidence expansion, release/production movement or UI redesign. Production remains release/production@1cff5be6.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility verdict-label contract
 
 - User-facing Compatibility verdict labels are now centralized in one bilingual contract instead of being hand-written per surface.

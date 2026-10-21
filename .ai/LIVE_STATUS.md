@@ -1,3 +1,15 @@
+## TOP LIVE STATUS — 2026-10-21 sequential Compatibility decisions
+
+- Compatibility real-user pressure now has 26/26 PASS with no First Divergence.
+- Sequential re-evaluation is explicitly covered: completing one adjustment removes its stale action and surfaces the next still-active risk.
+- Hard biological blockers remain dominant after adjustable conditions improve; tank enlargement never converts a predation hard stop into implied safety.
+- Missing-input UX is narrowed to the true decision-critical field. Example: when the reviewed combination requires tank length and exact temperature is merely unreported, the system asks for tank length only and does not claim the species lack a common temperature range.
+- Duplicate existing/candidate rows merge before group-size evaluation. Red neon/cardinal-style fixture totals below the reviewed minimum remain flagged until 8; at 8, group-size clears while independent space/bioload risks remain.
+- Group-size action thresholds are taken from the precise affected-species reviewed rule before any generic stocking guidance.
+- Deterministic matrix remains 111 / 6,105 / 427 / 2,353 / 3,325 / 0 insufficient_data.
+- Final backend release gate PASS; final build PASS.
+- Production remains frozen at 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP LIVE STATUS — 2026-10-21 verdict-label consistency
 
 - Compatibility user verdict language is unified by one zh/en status-label service.

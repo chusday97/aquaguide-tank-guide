@@ -279,6 +279,42 @@ export const applyCanonicalCompatibilityDecision = (
   const orderedDomainBlockingRules = [...domainBlockingWithoutGenericPair].sort(
     (left, right) => (domainBlockingPriority[left.code] ?? 99) - (domainBlockingPriority[right.code] ?? 99),
   );
+  const supersededLegacyMissingCodes = new Set<string>();
+  const domainCodeSet = new Set(domainRules.map(rule => rule.code));
+
+  // Domain input semantics are the canonical authority for whether an omitted
+  // tank value is decision-critical. Do not let legacy confirmations promote
+  // the same omitted value back into missingData after another, unrelated
+  // field makes the overall decision insufficient.
+  if (domainCodeSet.has('tank_temperature_unreported')) {
+    ['missing_temperature', 'missing_tank_temperature', 'tank_temperature_missing']
+      .forEach(code => supersededLegacyMissingCodes.add(code));
+  }
+  if (domainCodeSet.has('tank_volume_unreported_length_available')) {
+    ['missing_volume', 'missing_tank_volume', 'tank_volume_missing']
+      .forEach(code => supersededLegacyMissingCodes.add(code));
+  }
+  if (domainCodeSet.has('tank_water_type_unreported_species_overlap')) {
+    ['missing_tank_water_type', 'tank_water_type_missing']
+      .forEach(code => supersededLegacyMissingCodes.add(code));
+  }
+
+  // When Domain already exposes the canonical missing input, keep that single
+  // source of truth and suppress duplicate legacy aliases for the same field.
+  if (domainMissingRules.some(rule => rule.code === 'tank_volume_missing')) {
+    ['missing_volume', 'missing_tank_volume'].forEach(code => supersededLegacyMissingCodes.add(code));
+  }
+  if (domainMissingRules.some(rule => rule.code === 'tank_temperature_missing')) {
+    ['missing_temperature', 'missing_tank_temperature'].forEach(code => supersededLegacyMissingCodes.add(code));
+  }
+  if (domainMissingRules.some(rule => rule.code === 'tank_water_type_missing')) {
+    supersededLegacyMissingCodes.add('missing_tank_water_type');
+  }
+
+  const effectiveLegacyMissingData = result.missingData.filter(
+    rule => !supersededLegacyMissingCodes.has(rule.code),
+  );
+
   const blockingRules = effectiveStatus === 'not_recommended'
     ? uniqueRules([
       ...orderedDomainBlockingRules,
@@ -287,7 +323,7 @@ export const applyCanonicalCompatibilityDecision = (
     ])
     : [];
   const missingData = effectiveStatus === 'insufficient_data'
-    ? uniqueRules([...domainMissingRules, ...result.missingData])
+    ? uniqueRules([...domainMissingRules, ...effectiveLegacyMissingData])
     : [];
   const warningRules = effectiveStatus === 'caution' || effectiveStatus === 'insufficient_data' || effectiveStatus === 'not_recommended'
     ? uniqueRules([...domainWarningRules, ...legacySoftCapacityWarnings, ...legacyWarnings])

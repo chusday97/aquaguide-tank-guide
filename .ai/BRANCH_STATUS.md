@@ -1,3 +1,14 @@
+## TOP BRANCH STATUS — 2026-10-21 sequential recheck checkpoint
+
+- Development main started this scope at 5626725405b1c5dcb52696a1ffb12416947793c3.
+- Current changes are limited to Compatibility canonical missing-data projection, action/decision-plan sequencing and threshold grounding, real-user pressure fixtures/report, and the AI Shadow fixture alignment required by the more precise deterministic primary rule.
+- Pressure suite expanded 19 -> 26 and is 26/26 PASS.
+- Fully-informed matrix remains 111 ready / 6,105 pairs / 0 insufficient_data with unchanged 427 / 2,353 / 3,325 distribution.
+- Final complete BACKEND_RELEASE_GATE=PASS.
+- Final main build PASS. Latest large bundles remain known performance debt: business API 3.19 MB; index 2,599.26 kB / gzip 559.00; react-three-fiber 889.15 / 238.43; App 668.86 / 149.14; Aquarium 379.68 / 110.36.
+- No UI redesign, species research expansion, evidence promotion, Production mutation/deploy/migration, or release branch movement.
+- Before commit, verify origin/main still equals 5626725405b1c5dcb52696a1ffb12416947793c3 and origin/release/production still equals 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP BRANCH STATUS — 2026-10-21 verdict-label closure
 
 - Development branch main started from pushed f54791edee7e375bafd00b5be546d662a2c4cdad.

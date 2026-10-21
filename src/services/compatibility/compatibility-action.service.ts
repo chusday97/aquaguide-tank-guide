@@ -1,4 +1,5 @@
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
+import type { TankCompatibilityRule } from '../../lib/tankCompatibilityEngine';
 
 export type BeginnerCompatibilityVerdict =
   | 'add'
@@ -124,8 +125,8 @@ const RULE_PRIORITY: Record<string, number> = {
   territorial_conflict: 72,
   breeding_territory_active: 74,
   fin_nipping_group_pressure: 80,
+  group_requirement_gap: 89,
   minimum_group_not_met: 90,
-  group_requirement_gap: 90,
   ph_range_conflict: 100,
   tank_ph_conflict: 102,
   ph_range_edge_overlap: 105,
@@ -206,12 +207,52 @@ export const getExplicitCompatibilitySpaceThreshold = (rules: Array<{ title?: st
   return null;
 };
 
+export const getExplicitCompatibilityGroupMinimum = (rules: Array<{ title?: string; evidence?: string }>) => {
+  for (const rule of rules) {
+    const text = `${rule.evidence || ''} ${rule.title || ''}`;
+    const reviewedField = text.match(/minimumGroupSize\s*为\s*(\d+)/i);
+    if (reviewedField) return Number(reviewedField[1]);
+    const explicitMinimum = text.match(/(?:至少|最低(?:群体)?数量(?:为|是)?)[^\d]{0,8}(\d+)\s*(?:条|只)?/i);
+    if (explicitMinimum) return Number(explicitMinimum[1]);
+  }
+  return null;
+};
+
 const codesOf = (decision: CompatibilityDecision) => new Set([
   ...(decision.metadata.domainRuleCodes || []),
   ...decision.blockingRules.map(rule => rule.code),
   ...decision.warningRules.map(rule => rule.code),
   ...decision.missingData.map(rule => rule.code),
 ]);
+
+const primaryMissingUserInputAction = (
+  decision: CompatibilityDecision,
+  missingData: TankCompatibilityRule[],
+) => {
+  const firstMissing = missingData[0];
+  if (!firstMissing) return '先别急着加；补齐当前鱼缸缺少的必要信息后再算一次。';
+
+  const family = getCompatibilityRuleFamily(firstMissing.code);
+  if (family === 'space') {
+    const threshold = getExplicitCompatibilitySpaceThreshold([
+      ...decision.blockingRules,
+      ...decision.warningRules,
+    ]);
+    if (threshold?.includes('cm 缸长')) {
+      return `先填写鱼缸长度；这次判断涉及已审核的 ${threshold} 条件，填写后再算一次。`;
+    }
+    if (threshold?.includes('L 水体')) {
+      return `先补齐鱼缸尺寸或实际水体容量；这次判断涉及已审核的 ${threshold} 条件，填写后再算一次。`;
+    }
+    return '先补齐鱼缸尺寸或实际水体容量，再算一次。';
+  }
+  if (family === 'temperature') return '先填写当前或目标水温，再算一次。';
+  if (family === 'water_type') return '先确认当前鱼缸是淡水还是海水，再算一次。';
+  if (family === 'ph') return '先测量并填写当前稳定 pH，再算一次。';
+  if (family === 'hardness') return '先测量并填写当前硬度，再算一次。';
+
+  return '先别急着加；补齐当前鱼缸缺少的必要信息后再算一次。';
+};
 
 const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision): BeginnerCompatibilityActionCore => {
   const codes = codesOf(decision);
@@ -279,7 +320,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
       return {
         verdict: 'need_information',
         headline: '先补齐这次判断需要的信息',
-        immediateAction: '先别急着加；补齐当前鱼缸缺少的必要信息后再算一次。',
+        immediateAction: primaryMissingUserInputAction(decision, missingData),
         primaryReason: firstText(missingData, decision.summary || '当前鱼缸缺少这次判断需要的信息。'),
         observeAfterAction: '补齐缺失的鱼缸信息后，重新运行混养判断。',
         detailsLabel: '还缺什么？',
@@ -389,14 +430,18 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
       };
     }
     if (hasGroupSizeGap) {
-      const minimumGroupSize = decision.stockingGuidance?.recommendedMin;
+      const primaryGroupRule = warningRules.find(rule => getCompatibilityRuleFamily(rule.code) === 'group_size');
+      const minimumGroupSize = getExplicitCompatibilityGroupMinimum(primaryGroupRule ? [primaryGroupRule] : [])
+        ?? decision.stockingGuidance?.recommendedMin;
       return {
         verdict: 'add_with_conditions',
         headline: '可以养，但数量要够',
         immediateAction: minimumGroupSize
           ? `当前计划数量还不够；先把该物种规划到至少 ${minimumGroupSize} 条/只，再观察是否正常群游和进食。`
           : '当前计划数量还不够；先按该物种的最低群体数量规划到位，再观察是否正常群游和进食。',
-        primaryReason: firstText(warningRules.filter(rule => rule.code === 'minimum_group_not_met' || rule.code === 'group_requirement_gap'), '该物种需要达到最低群体数量；少量个体长期饲养并不一定更保守。'),
+        primaryReason: minimumGroupSize
+          ? `当前计划数量低于已审核的最低群体数量 ${minimumGroupSize} 条/只。`
+          : '该物种需要达到已审核的最低群体数量；少量个体长期饲养并不一定更保守。',
         observeAfterAction: '加入后持续观察是否正常结群、进食，以及是否长期躲藏或被排挤。',
         detailsLabel: '为什么数量不能太少？',
       };

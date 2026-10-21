@@ -1,6 +1,7 @@
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
 import {
   buildBeginnerCompatibilityAction,
+  getExplicitCompatibilityGroupMinimum,
   getExplicitCompatibilitySpaceThreshold,
   getCompatibilityRuleFamily,
   prioritizeDistinctCompatibilityRules,
@@ -265,7 +266,9 @@ const specificActionFor = (
   const family = getCompatibilityRuleFamily(rule.code);
   const pair = pairContextFor(decision, family, mode);
   const namedItem = namedItemForFamily(decision, family);
-  const min = decision.stockingGuidance?.recommendedMin;
+  const min = family === 'group_size'
+    ? (getExplicitCompatibilityGroupMinimum([rule]) ?? decision.stockingGuidance?.recommendedMin)
+    : decision.stockingGuidance?.recommendedMin;
 
   if (family === 'group_size' && namedItem && min != null) {
     return mode === 'current_tank'
@@ -356,6 +359,42 @@ const specificActionFor = (
   return null;
 };
 
+const missingInputActionFor = (
+  decision: CompatibilityDecision,
+  rule: TankCompatibilityRule,
+): string => {
+  const family = getCompatibilityRuleFamily(rule.code);
+
+  if (family === 'space') {
+    const threshold = getExplicitCompatibilitySpaceThreshold([
+      ...decision.blockingRules,
+      ...decision.warningRules,
+    ]);
+    if (threshold?.includes('cm 缸长')) {
+      return `请先填写鱼缸长度；当前组合涉及已审核的 ${threshold} 条件，填写后再重新评估。`;
+    }
+    if (threshold?.includes('L 水体')) {
+      return `请先补齐鱼缸尺寸或实际水体容量；当前组合涉及已审核的 ${threshold} 条件，填写后再重新评估。`;
+    }
+    return '请先补齐鱼缸尺寸或实际水体容量，再重新评估空间是否满足要求。';
+  }
+
+  if (family === 'temperature') {
+    return '请先填写当前或目标水温，再重新评估；缺少水温本身不等于物种之间没有共同适温区间。';
+  }
+  if (family === 'water_type') {
+    return '请先确认当前鱼缸是淡水还是海水，再重新评估。';
+  }
+  if (family === 'ph') {
+    return '请先测量并填写当前稳定 pH，再重新评估。';
+  }
+  if (family === 'hardness') {
+    return '请先测量并填写当前硬度，再重新评估。';
+  }
+
+  return '请先补齐这次判断真正缺少的关键信息，再重新运行混养判断。';
+};
+
 const uniqueSpeciesIds = (values: Array<string | null | undefined>) => Array.from(new Set(
   values.filter((value): value is string => Boolean(value)),
 ));
@@ -396,7 +435,9 @@ const resolutionTargetFor = (
   const family = getCompatibilityRuleFamily(rule.code);
   const pair = pairContextFor(decision, family, mode);
   const namedItem = namedItemForFamily(decision, family);
-  const minimumGroupSize = decision.stockingGuidance?.recommendedMin;
+  const minimumGroupSize = family === 'group_size'
+    ? (getExplicitCompatibilityGroupMinimum([rule]) ?? decision.stockingGuidance?.recommendedMin)
+    : decision.stockingGuidance?.recommendedMin;
   const speciesIds = targetSpeciesIdsFor(decision, rule, mode);
 
   const target = (
@@ -594,7 +635,10 @@ const actionSequenceRulesFor = (decision: CompatibilityDecision): CompatibilityA
     .map(rule => ({ rule, kind: 'warning' as const }));
   warning.forEach(item => usedFamilies.add(getCompatibilityRuleFamily(item.rule.code)));
   const missing = orderedDistinctRules(decision.missingData)
-    .filter(rule => !usedFamilies.has(getCompatibilityRuleFamily(rule.code)))
+    .filter(rule => (
+      decision.status === 'insufficient_data'
+      || !usedFamilies.has(getCompatibilityRuleFamily(rule.code))
+    ))
     .map(rule => ({ rule, kind: 'missing' as const }));
 
   if (decision.status === 'not_recommended') return [...blocking, ...warning, ...missing].slice(0, 6);
@@ -638,17 +682,19 @@ export const buildCompatibilityActionSequence = (
       order: index + 1,
       state: deferred ? 'deferred' : index === 0 ? 'current' : 'next',
       riskFamily: getCompatibilityRuleFamily(entry.rule.code),
-      action: specificActionFor(
-        entry.kind === 'blocking'
-          ? decision
-          : {
-            ...decision,
-            status: entry.kind === 'warning' ? 'caution' : 'insufficient_data',
-            blockingRules: [],
-          },
-        entry.rule,
-        mode,
-      ) || resolutionTarget.criterion,
+      action: entry.kind === 'missing'
+        ? missingInputActionFor(decision, entry.rule)
+        : specificActionFor(
+          entry.kind === 'blocking'
+            ? decision
+            : {
+              ...decision,
+              status: 'caution',
+              blockingRules: [],
+            },
+          entry.rule,
+          mode,
+        ) || resolutionTarget.criterion,
       sourceRuleCode: entry.rule.code,
       resolutionTarget,
       blockedByHardStop: deferred,
@@ -685,7 +731,7 @@ const expectedOutcomeFor = (
     return '先处理当前现实异常并重新评估；状态恢复稳定前不要继续扩大组合。';
   }
   if (family === 'group_size') {
-    const min = decision.stockingGuidance?.recommendedMin;
+    const min = getExplicitCompatibilityGroupMinimum(sourceRules) ?? decision.stockingGuidance?.recommendedMin;
     return min != null
       ? `把群体数量调整到至少 ${min} 条/只后重新评估；只有群体数量风险解除，才考虑升级为“可以养”。`
       : '把群体数量调整到已审核最低要求后重新评估；只有该风险解除，才考虑升级为“可以养”。';
@@ -716,7 +762,7 @@ const reviewCheckpointFor = (
     if (family === 'aggression') return '完成更换或分隔后重新运行混养判断；不要用短期没有追咬替代直接配对证据。';
   }
   if (family === 'group_size') {
-    const min = decision.stockingGuidance?.recommendedMin;
+    const min = getExplicitCompatibilityGroupMinimum(sourceRules) ?? decision.stockingGuidance?.recommendedMin;
     return min != null
       ? `数量达到至少 ${min} 条/只后，确认正常群游、进食和躲藏状态，再重新运行混养判断。`
       : '达到已审核最低群体数量后，确认正常群游、进食和躲藏状态，再重新运行混养判断。';
@@ -745,7 +791,7 @@ const stopConditionForPlan = (
       : '明确阻断风险消除前，不要执行当前混养计划。';
   }
   if (decision.status === 'caution' && family === 'group_size') {
-    const min = decision.stockingGuidance?.recommendedMin;
+    const min = getExplicitCompatibilityGroupMinimum(sourceRules) ?? decision.stockingGuidance?.recommendedMin;
     return min != null
       ? `若达到至少 ${min} 条/只后仍持续躲藏、抢食或群游异常，停止继续增加数量并重新评估。`
       : '若达到最低群体要求后仍持续躲藏、抢食或群游异常，停止继续增加数量并重新评估。';

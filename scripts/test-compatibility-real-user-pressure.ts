@@ -918,6 +918,329 @@ cases.push(makeCase(
   },
 ));
 
+
+const hardPredationSmallTank = decisionFor([['sp_0011', 8], ['sp_0048', 1]], tank(60, 30, 35, 24));
+const hardPredationLargeTank = decisionFor([['sp_0011', 8], ['sp_0048', 1]], tank(300, 100, 80, 24));
+const hardPredationSmallPlan = buildCompatibilityDecisionPlan(hardPredationSmallTank);
+const hardPredationLargePlan = buildCompatibilityDecisionPlan(hardPredationLargeTank);
+cases.push(makeCase(
+  'hard-predation-survives-space-adjustment',
+  '捕食硬阻断与空间条件同时存在时，扩大鱼缸只能清除空间风险，不能暗示捕食风险可修复',
+  'action_plan',
+  [
+    probe('pair_domain_stage_evaluation', 'small tank contains both predation hard block and space pressure', () => {
+      assert.equal(hardPredationSmallTank.status, 'not_recommended');
+      assert.ok(hardPredationSmallTank.blockingRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'predation'));
+      assert.ok(
+        [...hardPredationSmallTank.blockingRules, ...hardPredationSmallTank.warningRules]
+          .some(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
+      );
+    }),
+    probe('action_plan', 'hard predation remains current before the adjustable space step', () => {
+      assert.equal(hardPredationSmallPlan.actionSequence[0]?.riskFamily, 'predation');
+      assert.equal(hardPredationSmallPlan.actionSequence[0]?.state, 'current');
+      assert.ok(hardPredationSmallPlan.actionSequence.some(step => step.riskFamily === 'space'));
+    }),
+    probe('pair_domain_stage_evaluation', 'larger tank clears space but cannot clear predation', () => {
+      assert.equal(hardPredationLargeTank.status, 'not_recommended');
+      assert.ok(hardPredationLargeTank.blockingRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'predation'));
+      assert.equal(
+        [...hardPredationLargeTank.blockingRules, ...hardPredationLargeTank.warningRules]
+          .some(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
+        false,
+      );
+    }),
+    probe('action_plan', 'after space adjustment the plan still starts with predation and does not imply tank expansion fixed the combination', () => {
+      assert.equal(hardPredationLargePlan.verdict, 'do_not_mix');
+      assert.equal(hardPredationLargePlan.actionSequence[0]?.riskFamily, 'predation');
+      assert.match(hardPredationLargePlan.nextSteps[0] || '', /捕食|更换|不要加入|分隔/);
+      assert.doesNotMatch(hardPredationLargePlan.nextSteps[0] || '', /扩大|升级鱼缸|缸长/);
+    }),
+    ...presentationProbes(hardPredationLargeTank),
+  ],
+  {
+    before: {
+      status: hardPredationSmallTank.status,
+      actionSequence: hardPredationSmallPlan.actionSequence,
+    },
+    after: {
+      status: hardPredationLargeTank.status,
+      actionSequence: hardPredationLargePlan.actionSequence,
+    },
+  },
+));
+
+const groupTerritoryBefore = decisionFor([['sp_0012', 1], ['sp_0015', 1]], largeTank);
+const groupTerritoryAfter = decisionFor([['sp_0012', 6], ['sp_0015', 1]], largeTank);
+const groupTerritoryBeforePlan = buildCompatibilityDecisionPlan(groupTerritoryBefore);
+const groupTerritoryAfterPlan = buildCompatibilityDecisionPlan(groupTerritoryAfter);
+cases.push(makeCase(
+  'group-size-adjustment-clears-only-group-risk',
+  '补足群游数量后，group-size 风险必须退出，剩余 territory 风险继续成为下一决策依据',
+  'action_plan',
+  [
+    probe('pair_domain_stage_evaluation', 'before adjustment both territory and group-size risks are present', () => {
+      const families = new Set(groupTerritoryBefore.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.equal(groupTerritoryBefore.status, 'caution');
+      assert.ok(families.has('territory'));
+      assert.ok(families.has('group_size'));
+    }),
+    probe('pair_domain_stage_evaluation', 'reviewed group minimum clears only group-size after quantity adjustment', () => {
+      const families = new Set(groupTerritoryAfter.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.equal(groupTerritoryAfter.status, 'caution');
+      assert.ok(families.has('territory'));
+      assert.equal(families.has('group_size'), false);
+    }),
+    probe('action_plan', 'stale group-size action disappears while territory remains actionable', () => {
+      assert.ok(groupTerritoryBeforePlan.actionSequence.some(step => step.riskFamily === 'group_size'));
+      assert.equal(groupTerritoryAfterPlan.actionSequence.some(step => step.riskFamily === 'group_size'), false);
+      assert.equal(groupTerritoryAfterPlan.actionSequence[0]?.riskFamily, 'territory');
+    }),
+    ...presentationProbes(groupTerritoryAfter),
+  ],
+  {
+    beforeSequence: groupTerritoryBeforePlan.actionSequence,
+    afterSequence: groupTerritoryAfterPlan.actionSequence,
+  },
+));
+
+const missingLengthTank: Aquarium = {
+  ...tank(120, 30, 35, 24),
+  dimensions: { length: '', width: '30', height: '35' },
+  targetTemperature: '',
+};
+const missingLengthDecision = evaluateCompatibilityDecision({
+  tank: missingLengthTank,
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const missingLengthPlan = buildCompatibilityDecisionPlan(missingLengthDecision);
+const missingLengthAction = buildBeginnerCompatibilityAction(missingLengthDecision);
+cases.push(makeCase(
+  'missing-critical-tank-length-only',
+  '存在已审核最低缸长条件时，只缺缸长就只问这个决策关键输入；未填准确水温不能伪造成无共同适温区间',
+  'action_plan',
+  [
+    probe('pair_domain_stage_evaluation', 'missing length is decision-critical while exact temperature is informational for this reviewed pair', () => {
+      assert.equal(missingLengthDecision.status, 'insufficient_data');
+      assert.ok(missingLengthDecision.metadata.domainRuleCodes.includes('tank_volume_missing'));
+      assert.ok(missingLengthDecision.metadata.domainRuleCodes.includes('tank_temperature_unreported'));
+      assert.equal(missingLengthDecision.metadata.domainRuleCodes.includes('temperature_range_conflict'), false);
+    }),
+    probe('action_plan', 'effective missing-data set does not re-promote informational exact temperature', () => {
+      assert.equal(
+        missingLengthDecision.missingData.some(rule => /temperature/.test(rule.code)),
+        false,
+      );
+    }),
+    probe('action_plan', 'current step asks for tank length/size instead of fabricating a temperature incompatibility', () => {
+      assert.equal(missingLengthPlan.actionSequence[0]?.riskFamily, 'space');
+      assert.match(missingLengthPlan.actionSequence[0]?.action || '', /缸长|鱼缸尺寸|长度/);
+      assert.doesNotMatch(missingLengthPlan.actionSequence[0]?.action || '', /没有安全的长期共同适温区间|分缸或更换组合/);
+      assert.match(missingLengthAction.immediateAction, /缸长|鱼缸尺寸|长度/);
+      assert.doesNotMatch(missingLengthAction.immediateAction, /水温|pH|硬度/);
+    }),
+    ...presentationProbes(missingLengthDecision),
+  ],
+  {
+    status: missingLengthDecision.status,
+    domainRuleCodes: missingLengthDecision.metadata.domainRuleCodes,
+    missingCodes: missingLengthDecision.missingData.map(rule => rule.code),
+    actionSequence: missingLengthPlan.actionSequence,
+    primaryAction: missingLengthAction.immediateAction,
+  },
+));
+
+const multipleHardPairDecision = evaluateCompatibilityDecision({
+  tank: tank(300, 100, 80, 24),
+  items: [
+    { species: byId('sp_0049'), quantity: 1, origin: 'existing' },
+    { species: byId('sp_0011'), quantity: 8, origin: 'candidate' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+    { species: byId('sp_0431'), quantity: 10, origin: 'candidate' },
+    { species: byId('sp_0058'), quantity: 5, origin: 'candidate' },
+  ],
+});
+const multipleHardPairPlan = buildCompatibilityDecisionPlan(multipleHardPairDecision);
+const multipleHardPairPresentation = getCompatibilityPresentation(multipleHardPairDecision);
+const hardPairIds = multipleHardPairDecision.pairResults
+  .filter(pair => pair.status === 'not_recommended')
+  .map(pair => pair.pairId);
+cases.push(makeCase(
+  'multiple-hard-blocking-pairs-one-primary-output',
+  '5 个物种出现多个不同 pair 硬阻断时，内部保留全部 blocker，但用户主层仍只给一个 dominant 原因和一个动作',
+  'presentation',
+  [
+    probe('whole_tank_aggregation', 'multiple distinct pairs independently contribute hard blocks', () => {
+      assert.equal(multipleHardPairDecision.status, 'not_recommended');
+      assert.ok(new Set(hardPairIds).size >= 3);
+      const families = new Set(multipleHardPairDecision.blockingRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.ok(families.has('predation'));
+      assert.ok(families.has('housing'));
+      assert.ok(families.has('territory'));
+    }),
+    probe('action_plan', 'machine sequence retains multiple blocking families behind one current action', () => {
+      const hardSteps = multipleHardPairPlan.actionSequence.filter(step => !step.blockedByHardStop);
+      assert.ok(hardSteps.length >= 3);
+      assert.equal(hardSteps[0]?.state, 'current');
+      assert.equal(hardSteps.slice(1).every(step => step.state === 'next'), true);
+    }),
+    probe('presentation', 'primary card exposes only one dominant reason and one action', () => {
+      assert.ok(multipleHardPairPresentation.primaryReason.trim().length > 0);
+      assert.ok(multipleHardPairPresentation.primaryActionText.trim().length > 0);
+      assert.equal(multipleHardPairPresentation.detailsLabel, '查看依据');
+    }),
+    ...presentationProbes(multipleHardPairDecision),
+  ],
+  {
+    status: multipleHardPairDecision.status,
+    hardPairIds,
+    blockingFamilies: [...new Set(multipleHardPairDecision.blockingRules.map(rule => getCompatibilityRuleFamily(rule.code)))],
+    actionSequence: multipleHardPairPlan.actionSequence,
+  },
+));
+
+const removeBlockerBefore = evaluateCompatibilityDecision({
+  tank: tank(120, 50, 40, 24),
+  items: [
+    { species: byId('sp_0049'), quantity: 1, origin: 'existing' },
+    { species: byId('sp_0431'), quantity: 10, origin: 'candidate' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const removeBlockerAfter = evaluateCompatibilityDecision({
+  tank: tank(120, 50, 40, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const removeBlockerAfterPlan = buildCompatibilityDecisionPlan(removeBlockerAfter);
+cases.push(makeCase(
+  'remove-hard-blocker-reveals-caution',
+  '移除导致硬阻断的物种后，重新评估必须露出剩余 caution，不能错误跳成 compatible，也不能残留旧 hard-stop action',
+  'action_plan',
+  [
+    probe('whole_tank_aggregation', 'before removal the whole tank is hard blocked', () => {
+      assert.equal(removeBlockerBefore.status, 'not_recommended');
+      assert.ok(removeBlockerBefore.blockingRules.length > 0);
+    }),
+    probe('whole_tank_aggregation', 'after removal the remaining reviewed pair is caution rather than compatible', () => {
+      assert.equal(removeBlockerAfter.status, 'caution');
+      assert.ok(removeBlockerAfter.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'territory'));
+      assert.equal(removeBlockerAfter.blockingRules.length, 0);
+    }),
+    probe('action_plan', 're-evaluation drops stale predation/housing hard-stop actions and surfaces territory', () => {
+      assert.equal(removeBlockerAfterPlan.actionSequence[0]?.riskFamily, 'territory');
+      assert.equal(removeBlockerAfterPlan.actionSequence.some(step => ['predation', 'housing'].includes(step.riskFamily)), false);
+      assert.doesNotMatch(removeBlockerAfterPlan.nextSteps.join(' '), /捕食|单养/);
+    }),
+    ...presentationProbes(removeBlockerAfter),
+  ],
+  {
+    beforeStatus: removeBlockerBefore.status,
+    afterStatus: removeBlockerAfter.status,
+    afterSequence: removeBlockerAfterPlan.actionSequence,
+  },
+));
+
+const fryTransition = evaluateTankCompatibility({
+  scope: 'species_only',
+  existingSpecies: [{ species: byId('sp_0042'), record: { quantity: 8 } }],
+  candidateSpecies: byId('sp_0434'),
+  candidateLifeStage: 'fry',
+});
+const adultTransition = evaluateTankCompatibility({
+  scope: 'species_only',
+  existingSpecies: [{ species: byId('sp_0042'), record: { quantity: 8 } }],
+  candidateSpecies: byId('sp_0434'),
+  candidateLifeStage: 'adult',
+});
+const fryTransitionAction = buildBeginnerCompatibilityAction(fryTransition as unknown as CompatibilityDecision);
+const adultTransitionAction = buildBeginnerCompatibilityAction(adultTransition as unknown as CompatibilityDecision);
+cases.push(makeCase(
+  'life-stage-recheck-clears-stale-fry-action',
+  '同一组合从鱼苗切换到成鱼阶段后，fry 硬阻断和隔离动作必须退出，重新露出当前阶段真实风险',
+  'action_plan',
+  [
+    probe('pair_domain_stage_evaluation', 'fry state has explicit life-stage hard block', () => {
+      assert.equal(fryTransition.status, 'not_recommended');
+      assert.ok(fryTransition.blockingRules.some(rule => rule.code === 'fry_predation_risk'));
+    }),
+    probe('pair_domain_stage_evaluation', 'adult state removes fry-only hard block', () => {
+      assert.equal(adultTransition.blockingRules.some(rule => rule.code === 'fry_predation_risk'), false);
+      assert.equal(adultTransition.status, 'caution');
+    }),
+    probe('action_plan', 'adult recheck does not retain stale fry isolation action', () => {
+      assert.ok(fryTransitionAction.sourceRuleCodes.includes('fry_predation_risk'));
+      assert.equal(adultTransitionAction.sourceRuleCodes.includes('fry_predation_risk'), false);
+      assert.doesNotMatch(adultTransitionAction.immediateAction, /鱼苗|育苗|脱离鱼苗阶段/);
+      assert.match(adultTransitionAction.immediateAction, /至少|数量|群游/);
+    }),
+  ],
+  {
+    fry: { status: fryTransition.status, action: fryTransitionAction.immediateAction },
+    adult: { status: adultTransition.status, action: adultTransitionAction.immediateAction },
+  },
+));
+
+const duplicateGroupBefore = evaluateCompatibilityDecision({
+  tank: tank(45, 25, 25, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 2, origin: 'existing' },
+    { species: byId('sp_0431'), quantity: 4, origin: 'candidate' },
+    { species: byId('sp_0443'), quantity: 8, origin: 'candidate' },
+  ],
+});
+const duplicateGroupAfter = evaluateCompatibilityDecision({
+  tank: tank(45, 25, 25, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 2, origin: 'existing' },
+    { species: byId('sp_0431'), quantity: 6, origin: 'candidate' },
+    { species: byId('sp_0443'), quantity: 8, origin: 'candidate' },
+  ],
+});
+const duplicateGroupBeforePlan = buildCompatibilityDecisionPlan(duplicateGroupBefore);
+const duplicateGroupAfterPlan = buildCompatibilityDecisionPlan(duplicateGroupAfter);
+cases.push(makeCase(
+  'duplicate-quantity-group-size-bioload',
+  'existing + candidate 同物种拆行必须先合并数量；达到 reviewed 8 条后 group-size 清除，但独立的空间/bioload 风险继续存在',
+  'action_plan',
+  [
+    probe('input_normalization', 'split neon rows merge into the exact whole-tank quantity', () => {
+      assert.equal(duplicateGroupBefore.assessmentItems?.find(item => item.speciesId === 'sp_0431')?.quantity, 6);
+      assert.equal(duplicateGroupAfter.assessmentItems?.find(item => item.speciesId === 'sp_0431')?.quantity, 8);
+    }),
+    probe('pair_domain_stage_evaluation', 'below reviewed group minimum keeps group-size warning', () => {
+      assert.ok(duplicateGroupBefore.warningRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'group_size'));
+    }),
+    probe('pair_domain_stage_evaluation', 'reaching reviewed group minimum clears group-size but preserves independent capacity risks', () => {
+      const families = new Set(duplicateGroupAfter.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.equal(families.has('group_size'), false);
+      assert.ok(families.has('space'));
+      assert.ok(families.has('bioload'));
+    }),
+    probe('action_plan', 'post-adjustment sequence contains no stale group-size step', () => {
+      assert.ok(duplicateGroupBeforePlan.actionSequence.some(step => step.riskFamily === 'group_size'));
+      const beforeGroupStep = duplicateGroupBeforePlan.actionSequence.find(step => step.riskFamily === 'group_size');
+      assert.equal(beforeGroupStep?.sourceRuleCode, 'group_requirement_gap');
+      assert.match(beforeGroupStep?.action || '', /从 6 调整到至少 8 条\/只/);
+      assert.match(beforeGroupStep?.resolutionTarget.criterion || '', /红绿灯 数量达到至少 8 条\/只/);
+      assert.equal(duplicateGroupAfterPlan.actionSequence.some(step => step.riskFamily === 'group_size'), false);
+      assert.ok(duplicateGroupAfterPlan.actionSequence.some(step => step.riskFamily === 'bioload'));
+    }),
+    ...presentationProbes(duplicateGroupAfter),
+  ],
+  {
+    beforeItems: duplicateGroupBefore.assessmentItems,
+    afterItems: duplicateGroupAfter.assessmentItems,
+    beforeSequence: duplicateGroupBeforePlan.actionSequence,
+    afterSequence: duplicateGroupAfterPlan.actionSequence,
+  },
+));
+
 const report = {
   schemaVersion: 1,
   pipelineStages: stages,
