@@ -1,5 +1,10 @@
 import type { CompatibilityDecision } from '../../../src/modules/knowledge/knowledge.types';
 import {
+  buildDeterministicCompatibilityEvidenceReasons,
+  enrichCompatibilityGroundedItemsWithCitations,
+  type CompatibilityGroundedEvidenceItem,
+} from '../../../src/services/compatibility/compatibility-evidence-projection.service';
+import {
   getCompatibilityRuleFamily,
   prioritizeDistinctCompatibilityRules,
   type CompatibilityAssessmentMode,
@@ -20,10 +25,7 @@ import {
 } from '../../../src/services/compatibility/compatibility-readable-copy.service';
 import type { CompatibilityAiShadowResult } from './compatibility-ai-reasoner';
 
-export type CompatibilityProductGroundedItem = {
-  text: string;
-  ruleCodes: string[];
-};
+export type CompatibilityProductGroundedItem = CompatibilityGroundedEvidenceItem;
 
 export type CompatibilityProductAssessment = {
   schemaVersion: CompatibilityProductSchemaVersion;
@@ -61,20 +63,8 @@ const uniqueItems = (items: CompatibilityProductGroundedItem[]) => {
   });
 };
 
-const fallbackRules = (decision: CompatibilityDecision) => {
-  if (decision.status === 'not_recommended') return decision.blockingRules;
-  if (decision.status === 'caution') return [...decision.warningRules, ...decision.missingData];
-  if (decision.status === 'insufficient_data') return decision.missingData;
-  return decision.passedRules;
-};
-
 const deterministicReasons = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => (
-  uniqueItems(
-    prioritizeDistinctCompatibilityRules(fallbackRules(decision)).map(rule => ({
-      text: rule.evidence || rule.title,
-      ruleCodes: [rule.code],
-    })),
-  ).slice(0, 3)
+  buildDeterministicCompatibilityEvidenceReasons(decision, 3)
 );
 
 const deterministicUncertainties = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => {
@@ -245,18 +235,27 @@ export const buildCompatibilityProductAssessment = (
     finalDecision.ruleCodes,
     assessmentMode,
   );
-  const reasons = aiNarrativeMatchesAuthority
-    ? uniqueItems([...clampedAiReasons, ...deterministicReasonItems]).slice(0, 3)
-    : deterministicReasonItems;
-  const adjustments = aiNarrativeMatchesAuthority
-    ? uniqueItems([...clampedAiAdjustments, ...deterministicAdjustmentItems]).slice(0, 2)
-    : deterministicAdjustmentItems;
-  const uncertainties = uniqueItems([
-    ...(aiNarrativeMatchesAuthority
-      ? clampAiItems(shadow.ai.uncertainties, uncertaintyRuleCodes, 'reason', resolutionTargets)
-      : []),
-    ...deterministicUncertaintyItems,
-  ]).slice(0, 3);
+  const reasons = enrichCompatibilityGroundedItemsWithCitations(
+    decision,
+    aiNarrativeMatchesAuthority
+      ? uniqueItems([...clampedAiReasons, ...deterministicReasonItems]).slice(0, 3)
+      : deterministicReasonItems,
+  );
+  const adjustments = enrichCompatibilityGroundedItemsWithCitations(
+    decision,
+    aiNarrativeMatchesAuthority
+      ? uniqueItems([...clampedAiAdjustments, ...deterministicAdjustmentItems]).slice(0, 2)
+      : deterministicAdjustmentItems,
+  );
+  const uncertainties = enrichCompatibilityGroundedItemsWithCitations(
+    decision,
+    uniqueItems([
+      ...(aiNarrativeMatchesAuthority
+        ? clampAiItems(shadow.ai.uncertainties, uncertaintyRuleCodes, 'reason', resolutionTargets)
+        : []),
+      ...deterministicUncertaintyItems,
+    ]).slice(0, 3),
+  );
 
   const deterministicMain = buildCompatibilityReadableConclusion(decision, {}, assessmentMode);
   const main = aiNarrativeMatchesAuthority

@@ -5,6 +5,10 @@ import { apiRequest } from '../api/api-client';
 import { resolveRepositoryMode } from '../repository/repository-provider';
 import type { CompatibilityAssessmentMode } from './compatibility-action.service';
 import {
+  buildDeterministicCompatibilityEvidenceReasons,
+  type CompatibilityGroundedEvidenceItem,
+} from './compatibility-evidence-projection.service';
+import {
   buildCompatibilityDecisionPlan,
   type CompatibilityDecisionPlan,
 } from './compatibility-decision-plan.service';
@@ -16,10 +20,7 @@ import {
 } from './compatibility-readable-copy.service';
 import { getCompatibilityStatusLabel } from './compatibility-status-label.service';
 
-type GroundedItem = {
-  text: string;
-  ruleCodes: string[];
-};
+type GroundedItem = CompatibilityGroundedEvidenceItem;
 
 export type CompatibilityAssessmentUiModel = {
   assessmentMode: 'planned_addition';
@@ -65,7 +66,7 @@ const localAssessment = (decision: CompatibilityDecision): CompatibilityAssessme
   decisionPlan: buildCompatibilityDecisionPlan(decision),
   details: {
     label: '查看依据',
-    reasons: [],
+    reasons: buildDeterministicCompatibilityEvidenceReasons(decision),
     adjustments: [],
     uncertainties: [],
     model: null,

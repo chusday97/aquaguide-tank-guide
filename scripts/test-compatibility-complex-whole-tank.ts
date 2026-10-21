@@ -192,6 +192,58 @@ assert.match(tigerMiniParrotMain.why[0] || '', /攻击|领地|追逐/);
 assert.match(tigerMiniParrotMain.howTo[0] || '', /不要直接混养|分隔|更换组合/);
 assert.match(tigerMiniParrotMain.howTo[0] || '', /不要把增加躲避物/);
 assert.doesNotMatch(tigerMiniParrotMain.howTo[0] || '', /^先不要继续加入；重新规划领地和躲避空间/);
+const tigerMiniParrotFinalDecision = getCompatibilityDecision(tigerMiniParrot.decision.aggregateResult, 'planned_addition');
+const tigerMiniParrotShadow: CompatibilityAiShadowResult = {
+  mode: 'shadow',
+  finalDecision: tigerMiniParrotFinalDecision,
+  ai: {
+    status: 'skipped',
+    reason: 'deterministic evidence projection fixture',
+    reasons: [],
+    adjustments: [],
+    uncertainties: [],
+  },
+  provenance: {
+    promptVersion: 'evidence-projection-fixture',
+    authorityVersion: tigerMiniParrot.decision.aggregateResult.metadata.authorityVersion,
+    catalogVersion: tigerMiniParrot.decision.aggregateResult.metadata.catalogVersion,
+    ruleVersion: tigerMiniParrot.decision.aggregateResult.metadata.ruleVersion,
+    evidenceIds: tigerMiniParrotFinalDecision.evidenceIds,
+    repairCount: 0,
+  },
+};
+const tigerMiniParrotProduct = buildCompatibilityProductAssessment(tigerMiniParrot.decision, tigerMiniParrotShadow);
+const tigerMiniParrotEvidence = tigerMiniParrotProduct.details.reasons.find(item => item.ruleCodes.includes('pair_rule_behavior_and_territory_conflict'));
+assert.ok(tigerMiniParrotEvidence);
+assert.deepEqual(tigerMiniParrotEvidence.citations?.map(item => item.id), [
+  'tiger-barb-group-size-study',
+  'convict-cichlid-territory-study',
+]);
+const tigerMiniParrotAiShadow: CompatibilityAiShadowResult = {
+  ...tigerMiniParrotShadow,
+  ai: {
+    status: 'accepted',
+    suggestedVerdict: 'not_recommended',
+    reasons: [{
+      text: '这组鱼存在持续追逐和领地冲突风险。',
+      ruleCodes: ['pair_rule_behavior_and_territory_conflict'],
+    }],
+    adjustments: [{
+      text: '不要直接混养；优先分缸或更换组合。',
+      ruleCodes: ['pair_rule_behavior_and_territory_conflict'],
+    }],
+    uncertainties: [],
+    confidence: 'high',
+  },
+};
+const tigerMiniParrotAiProduct = buildCompatibilityProductAssessment(tigerMiniParrot.decision, tigerMiniParrotAiShadow);
+assert.equal(tigerMiniParrotAiProduct.details.explanation.source, 'ai_grounded');
+const tigerMiniParrotAiEvidence = tigerMiniParrotAiProduct.details.reasons.find(item => item.text.includes('持续追逐和领地冲突风险'));
+assert.ok(tigerMiniParrotAiEvidence);
+assert.deepEqual(tigerMiniParrotAiEvidence.citations?.map(item => item.id), [
+  'tiger-barb-group-size-study',
+  'convict-cichlid-territory-study',
+]);
 
 const insufficient = reviewCase(['sp_0010', 'sp_0012'], ['sp_0004', 'sp_0014'], {
   length: '120',

@@ -55,6 +55,30 @@ assert.ok(local.decisionPlan.expectedAfterAdjustment.length > 0);
 assert.ok(local.decisionPlan.reviewCheckpoint.length > 0);
 assert.ok(local.decisionPlan.stopCondition.length > 0);
 
+const sourceBackedReview = reviewSpeciesAdditions({
+  aquarium: {
+    id: 'source-backed-tank',
+    name: 'Source Backed Tank',
+    fishes: [{ id: 'mini-parrot', fishId: 'sp_0021', quantity: 2, entryDate: '2026-10-01T00:00:00.000Z' }],
+    dimensions: { length: '100', width: '45', height: '45' },
+    waterType: 'Freshwater',
+    targetTemperature: '25',
+  },
+  items: [{ fishId: 'sp_0439', quantity: 8 }],
+  speciesCatalog: fishData,
+});
+assert.ok(sourceBackedReview);
+assert.equal(sourceBackedReview.status, 'not_recommended');
+const sourceBackedLocal = buildLocalCompatibilityAssessment(sourceBackedReview.decision);
+const sourceBackedReason = sourceBackedLocal.details.reasons.find(item => item.ruleCodes.includes('pair_rule_behavior_and_territory_conflict'));
+assert.ok(sourceBackedReason);
+assert.deepEqual(sourceBackedReason.citations?.map(item => item.id), [
+  'tiger-barb-group-size-study',
+  'convict-cichlid-territory-study',
+]);
+assert.ok(sourceBackedReason.citations?.every(item => item.reviewStatus === 'reviewed'));
+assert.ok(sourceBackedReason.citations?.every(item => /^https?:\/\//.test(item.url)));
+
 const remoteFixture: RemoteCompatibilityAssessment = {
   schemaVersion: COMPATIBILITY_PRODUCT_SCHEMA_VERSION,
   assessmentMode: 'planned_addition',
@@ -153,6 +177,11 @@ assert.match(cardSource, /addFishCompatibilityReview\.status !== 'compatible'/);
 assert.doesNotMatch(cardSource, /main\.judgment !== '可以混养'/);
 assert.match(cardSource, /<details/);
 assert.match(cardSource, /查看依据/);
+assert.match(cardSource, /item\.citations\?\.length/);
+assert.match(cardSource, /citation\.url/);
+assert.match(cardSource, /citation\.publisher/);
+assert.match(cardSource, /target="_blank"/);
+assert.match(cardSource, /rel="noreferrer"/);
 assert.match(cardSource, /data-add-fish-compatibility-result/);
 assert.match(cardSource, /border-red-200 bg-red-50/);
 assert.match(cardSource, /border-amber-100 bg-amber-50/);

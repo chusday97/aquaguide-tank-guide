@@ -6818,7 +6818,26 @@ export default function AquariumManager() {
                         <div className="grid gap-1.5 rounded-[12px] bg-violet-50/70 px-3 py-2">
                           <div className="text-[10px] font-black text-violet-800">{isEn ? 'Supporting explanation' : '补充依据'}</div>
                           {addFishAssessmentPresentation.details.reasons.slice(0, 3).map((item, index) => (
-                            <div key={`assessment-detail-${index}`} className="text-[11px] font-medium leading-5 text-violet-950/75">{item.text}</div>
+                            <div key={`assessment-detail-${index}`} className="grid gap-0.5 text-[11px] font-medium leading-5 text-violet-950/75">
+                              <div>{item.text}</div>
+                              {item.citations?.length ? (
+                                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[9px] font-bold text-violet-900/45">
+                                  <span>{isEn ? 'Sources:' : '来源：'}</span>
+                                  {item.citations.slice(0, 2).map(citation => (
+                                    <a
+                                      key={citation.id}
+                                      href={citation.url}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      title={citation.title}
+                                      className="underline decoration-violet-300 underline-offset-2 hover:text-violet-900/70"
+                                    >
+                                      {citation.publisher}
+                                    </a>
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
                           ))}
                         </div>
                       ) : null}

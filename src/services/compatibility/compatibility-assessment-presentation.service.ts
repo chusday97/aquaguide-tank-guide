@@ -5,6 +5,7 @@ import {
   prioritizeDistinctCompatibilityRules,
 } from './compatibility-action.service';
 import type { TankCompatibilityRule } from '../../lib/tankCompatibilityEngine';
+import type { CompatibilityGroundedEvidenceItem } from './compatibility-evidence-projection.service';
 import { getCompatibilityStatusLabelLocalized } from './compatibility-status-label.service';
 
 export type CompatibilityAssessmentPresentation = {
@@ -26,7 +27,7 @@ export type CompatibilityAssessmentPresentation = {
   };
   details: {
     label: string;
-    reasons: Array<{ text: string; ruleCodes: string[] }>;
+    reasons: CompatibilityGroundedEvidenceItem[];
   };
 };
 
