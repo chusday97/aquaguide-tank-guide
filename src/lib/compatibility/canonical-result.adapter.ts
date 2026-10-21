@@ -186,6 +186,9 @@ const canonicalSuggestions = ({
     && !item.startsWith('群游物种不要只按少量个体试养')
     && !item.startsWith('先把 ')
   ));
+  const sensitiveWaterCheck = result.missingData.some(item => (
+    item.code === 'missing_ph' || item.code === 'missing_hardness'
+  ));
 
   if (status === 'not_recommended') {
     preserved.push('先解决明确阻断项；如果无法消除，建议更换候选生物。');
@@ -194,23 +197,24 @@ const canonicalSuggestions = ({
       item.code.includes('unreviewed')
       || item.code.includes('evidence')
       || item.code.includes('unknown')
-    ));
-    const sensitiveWaterCheck = missingData.some(item => (
-      item.code === 'missing_ph'
-      || item.code === 'missing_hardness'
+    )) || (result.metadata.domainRuleCodes || []).some(code => (
+      code.includes('evidence')
+      || code.includes('unreviewed')
+      || code.includes('identity')
     ));
     preserved.push(evidenceMissing
-      ? '关键物种或行为资料尚未审核；先保留方案，补齐可靠资料后再决定是否加入。'
+      ? '当前公开可靠资料不足以确认关键风险；这不是你少填了鱼缸信息。'
       : '先补充鱼缸尺寸、水温或必要设备信息后再评估。');
-    if (sensitiveWaterCheck) {
-      preserved.push('敏感物种建议用试纸或滴定测试复核 pH / 硬度；环境线索不能代替实测。');
-    }
   } else if (warningRules.some(rule => rule.code === 'minimum_group_not_met' || rule.code === 'group_requirement_gap')) {
     preserved.push('先满足已审核的最低群体数量，再评估是否加入。');
   } else if (status === 'caution') {
     preserved.push('先处理主要风险项，再按计划加入并持续观察。');
   } else {
     preserved.push('当前条件可加入；建议分步加入，并在 3-7 天内观察追咬、拒食和水质波动。');
+  }
+
+  if (sensitiveWaterCheck && status !== 'not_recommended') {
+    preserved.push('敏感物种可用试纸或滴定测试复核水质；这只是可选复核，不影响当前混养结论。');
   }
 
   return Array.from(new Set(preserved)).slice(0, 5);
@@ -279,7 +283,11 @@ export const applyCanonicalCompatibilityDecision = (
   const orderedDomainBlockingRules = [...domainBlockingWithoutGenericPair].sort(
     (left, right) => (domainBlockingPriority[left.code] ?? 99) - (domainBlockingPriority[right.code] ?? 99),
   );
-  const supersededLegacyMissingCodes = new Set<string>();
+  // pH / GH confirmations from the legacy fit layer are advisory checks, not
+  // decision-critical user inputs. When some other authority gap makes the
+  // overall decision insufficient, do not accidentally promote these optional
+  // measurements into missingData and make the user think a test kit is required.
+  const supersededLegacyMissingCodes = new Set<string>(['missing_ph', 'missing_hardness']);
   const domainCodeSet = new Set(domainRules.map(rule => rule.code));
 
   // Domain input semantics are the canonical authority for whether an omitted

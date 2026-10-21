@@ -135,6 +135,11 @@ const insufficientDecision = evaluateCompatibilityDecision({
   ],
 });
 assert.equal(insufficientDecision.status, 'insufficient_data');
+assert.equal(
+  insufficientDecision.missingData.some(rule => rule.code === 'missing_ph' || rule.code === 'missing_hardness'),
+  false,
+  'optional pH/GH measurements must not be promoted into decision-limiting missing data when another authority gap makes the result insufficient',
+);
 let skippedProviderCalls = 0;
 const skippedShadow = await createCompatibilityAiCombinationAssessment({
   deterministicResult: insufficientDecision.aggregateResult,

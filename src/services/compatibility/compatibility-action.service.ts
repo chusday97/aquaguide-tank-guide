@@ -59,6 +59,8 @@ const SOFT_CAPACITY_CODES = new Set([
 const SPACE_CODES = new Set([
   'tank_volume_below_species_minimum',
   'tank_length_below_species_minimum',
+  'volume_too_small',
+  'volume_needs_adjustment',
   'length_too_short',
 ]);
 
@@ -89,8 +91,6 @@ const USER_INPUT_REQUIRED_CODES = new Set([
   'missing_tank_volume',
   'tank_temperature_missing',
   'missing_tank_temperature',
-  'missing_ph',
-  'missing_hardness',
 ]);
 
 const hasMissingUserInput = (codes: ReadonlySet<string>) => (
@@ -115,7 +115,7 @@ const RULE_PRIORITY: Record<string, number> = {
   single_housing_required: 25,
   temperature_range_conflict: 30,
   temperature_no_overlap: 30,
-  tank_temperature_conflict: 30,
+  tank_temperature_conflict: 32,
   reviewed_pair_rule: 35,
   observed_intervention: 40,
   predation_vulnerability_context: 50,
@@ -131,7 +131,9 @@ const RULE_PRIORITY: Record<string, number> = {
   tank_ph_conflict: 102,
   ph_range_edge_overlap: 105,
   tank_length_below_species_minimum: 110,
+  volume_too_small: 112,
   tank_volume_below_species_minimum: 115,
+  volume_needs_adjustment: 116,
   bioload_screening_high: 120,
   bioload_over_limit: 122,
   bioload_screening_elevated: 125,
@@ -186,7 +188,8 @@ export const prioritizeCompatibilityRules = <T extends PrioritizableRule>(rules:
   rules
     .map((rule, index) => ({ rule, index }))
     .sort((a, b) => (
-      (RULE_PRIORITY[a.rule.code] ?? 500) - (RULE_PRIORITY[b.rule.code] ?? 500)
+      (RULE_PRIORITY[a.rule.code] ?? (a.rule.code.startsWith('pair_rule_') ? 35 : 500))
+      - (RULE_PRIORITY[b.rule.code] ?? (b.rule.code.startsWith('pair_rule_') ? 35 : 500))
       || severityPriority(a.rule.severity) - severityPriority(b.rule.severity)
       || deterministicRuleTieBreakKey(a.rule).localeCompare(deterministicRuleTieBreakKey(b.rule), 'en')
       || a.index - b.index
@@ -226,14 +229,22 @@ const primaryBlockingReason = (rules: PrioritizableRule[], fallback: string) => 
 };
 
 export const getExplicitCompatibilitySpaceThreshold = (rules: Array<{ title?: string; evidence?: string }>) => {
+  let maxLengthCm: number | null = null;
+  let maxVolumeLiters: number | null = null;
+
   for (const rule of rules) {
     const text = `${rule.evidence || ''} ${rule.title || ''}`;
-    const length = text.match(/至少\s*(\d+(?:\.\d+)?)\s*cm\s*缸长/i);
-    if (length) return `${length[1]}cm 缸长`;
-    const volume = text.match(/至少\s*(\d+(?:\.\d+)?)\s*(?:升|L)\b/i);
-    if (volume) return `${volume[1]}L 水体`;
+    const length = text.match(/(?:至少|最低(?:缸长)?(?:为|是)?)\s*(\d+(?:\.\d+)?)\s*cm(?:\s*缸长)?/i);
+    const volume = text.match(/(?:至少|最低(?:水体|容量)?(?:为|是)?)\s*(\d+(?:\.\d+)?)\s*(?:升|L)(?:\s*(?:水体|要求))?/i);
+    if (length) maxLengthCm = Math.max(maxLengthCm ?? 0, Number(length[1]));
+    if (volume) maxVolumeLiters = Math.max(maxVolumeLiters ?? 0, Number(volume[1]));
   }
-  return null;
+
+  const thresholds = [
+    maxVolumeLiters != null ? `${maxVolumeLiters}L 水体` : null,
+    maxLengthCm != null ? `${maxLengthCm}cm 缸长` : null,
+  ].filter((item): item is string => Boolean(item));
+  return thresholds.length > 0 ? thresholds.join('且 ') : null;
 };
 
 export const getExplicitCompatibilityGroupMinimum = (rules: Array<{ title?: string; evidence?: string }>) => {

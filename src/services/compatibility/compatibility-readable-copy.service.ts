@@ -2,6 +2,8 @@ import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.ty
 import {
   buildBeginnerCompatibilityAction,
   getCompatibilityRuleFamily,
+  getExplicitCompatibilityGroupMinimum,
+  getExplicitCompatibilitySpaceThreshold,
   prioritizeDistinctCompatibilityRules,
   type CompatibilityAssessmentMode,
 } from './compatibility-action.service';
@@ -97,10 +99,13 @@ export const getCompatibilityReadableRuleText = (
   if (code === 'tank_ph_conflict') {
     return '你记录的 pH 不在至少一种生物的已审核长期适宜范围内，先复测确认稳定值。';
   }
-  if (code === 'length_too_short') return cleanText(rule.evidence || '当前缸长低于该物种的最低建议。');
-  if (code === 'tank_length_below_species_minimum' || code === 'tank_volume_below_species_minimum') {
+  if (code === 'length_too_short' || code === 'tank_length_below_species_minimum' || code === 'tank_volume_below_species_minimum') {
+    const threshold = getExplicitCompatibilitySpaceThreshold([rule]);
+    if (threshold) return `当前空间不足；按成体需求至少需要 ${threshold}。`;
+    if (code === 'length_too_short') return cleanText(rule.evidence || '当前缸长低于该物种的最低建议。');
     return '按成体需求看，当前鱼缸的活动空间偏紧。';
   }
+  if (code === 'bioload_ok') return '按当前数量估算，生物负荷没有超过当前筛查阈值。';
   if (code.includes('bioload')) {
     return '按当前总数量看，过滤和日常维护压力偏高。';
   }
@@ -147,8 +152,8 @@ export const getCompatibilityReadableRuleText = (
   if (code === 'species_evidence_unreviewed' || code === 'behavior_evidence_unreviewed') {
     return '其中有物种的关键混养资料还没有完成可靠审核。';
   }
-  if (code === 'missing_ph') return '还缺少当前鱼缸的稳定 pH 实测值；这是需要补充的鱼缸信息。';
-  if (code === 'missing_hardness') return '还缺少当前鱼缸的 GH / 硬度实测值；这是需要补充的鱼缸信息。';
+  if (code === 'missing_ph') return '未记录 pH 不会单独卡住普通混养判断；仅在水质敏感或边界风险时建议补测复核。';
+  if (code === 'missing_hardness') return '未记录 GH / 硬度不会单独卡住普通混养判断；仅在硬度敏感时建议补测复核。';
   if (code === 'missing_filter') return '还没有确认当前鱼缸是否有稳定过滤；这是需要补充的鱼缸信息。';
   if (code === 'missing_heater') return '还没有确认当前鱼缸是否需要并配有加热设备；这是需要补充的鱼缸信息。';
   if (code === 'tank_missing') return '还缺少当前鱼缸的基础信息。';
@@ -200,10 +205,7 @@ const primaryRulesFor = (decision: CompatibilityDecision): ReadableRule[] => {
   if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules);
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData);
-  return [
-    { code: 'compatibility_clear', title: '当前没有发现明确混养冲突。' },
-    ...prioritizeDistinctCompatibilityRules(decision.passedRules).filter(rule => rule.code !== 'compatibility_clear'),
-  ];
+  return [{ code: 'compatibility_clear', title: '当前没有发现明确混养冲突。' }];
 };
 
 const defaultReason = (
@@ -239,7 +241,12 @@ const blockingActionFor = (
     if (family === 'temperature') return '不要硬取中间温度；分缸，或调整成温度需求更接近的组合。';
     if (family === 'aggression') return '先分隔持续冲突的物种，确认恢复稳定后再重新评估。';
     if (family === 'territory') return '增加遮挡和退让空间；如果持续压迫就分缸。';
-    if (family === 'space') return '先减少现有数量或升级鱼缸空间，再重新评估。';
+    if (family === 'space') {
+      const threshold = getExplicitCompatibilitySpaceThreshold([rule]);
+      return threshold
+        ? `当前空间至少需要 ${threshold}；未满足前先减少数量或保持分隔，再重新评估。`
+        : '先减少现有数量或补足该物种的最低空间条件，再重新评估。';
+    }
     return '先分隔或调整高风险组合，再重新判断当前鱼缸。';
   }
   if (family === 'water_type') return '不要放在同一缸；分别按淡水或海水需求饲养，或更换其中一种。';
@@ -250,8 +257,43 @@ const blockingActionFor = (
   if (family === 'temperature') return '不要为了兼顾双方硬取中间温度；分缸，或更换温度需求更接近的物种。';
   if (family === 'aggression') return '不要直接混养；优先更换冲突物种，或先准备可靠分隔方案。';
   if (family === 'territory') return '先不要继续加入；重新规划领地和躲避空间，无法缓解就分缸。';
-  if (family === 'space') return '先不要按当前方案加入；先减少数量或更换更合适的鱼缸方案。';
+  if (family === 'space') {
+    const threshold = getExplicitCompatibilitySpaceThreshold([rule]);
+    return threshold
+      ? `至少满足 ${threshold}后再重新评估；未达到前不要按当前方案混养。`
+      : '先不要按当前方案加入；先满足该物种的最低空间条件。';
+  }
   return '先不要混养；更换其中一种或分缸后，再重新判断。';
+};
+
+const cautionSecondaryActionFor = (
+  rule: ReadableRule,
+  assessmentMode: CompatibilityAssessmentMode,
+): string | null => {
+  const family = getCompatibilityRuleFamily(rule.code);
+  if (family === 'space') {
+    const threshold = getExplicitCompatibilitySpaceThreshold([rule]);
+    return threshold
+      ? (assessmentMode === 'current_tank'
+        ? `当前空间至少需要 ${threshold}；未满足前不要继续增加数量。`
+        : `至少满足 ${threshold} 后再考虑加入。`)
+      : (assessmentMode === 'current_tank'
+        ? '先满足该物种的最低空间条件，再继续增加数量。'
+        : '先满足该物种的最低空间条件，再考虑加入。');
+  }
+  if (family === 'group_size') {
+    const minimum = getExplicitCompatibilityGroupMinimum([rule]);
+    return minimum != null
+      ? `先把该物种数量补到至少 ${minimum} 条/只，再重新评估。`
+      : '先满足该物种的最低群体数量，再重新评估。';
+  }
+  if (family === 'temperature') return '先确认并调整到双方可长期维持的共同适温区间，再重新评估。';
+  if (family === 'ph') return '先确认双方有可长期维持的共同 pH 区间；只有水质敏感或边界风险时再补测稳定 pH。';
+  if (family === 'bioload') return '先降低新增数量或总负荷，并确认过滤与维护能稳定承受。';
+  if (family === 'territory') return '先补足遮挡和退让空间；仍持续压迫就分隔。';
+  if (family === 'aggression') return '先避免直接加入容易被追咬的一方，并准备可立即分隔的方案。';
+  if (family === 'predation') return '先避免明显体型悬殊或可入口的组合，并准备可立即分隔的方案。';
+  return null;
 };
 
 const deterministicActionsFor = (
@@ -262,8 +304,25 @@ const deterministicActionsFor = (
   const codes = ruleCodes(decision);
 
   if (decision.status === 'not_recommended') {
-    const actions = prioritizeDistinctCompatibilityRules(decision.blockingRules)
-      .map(rule => blockingActionFor(rule, assessmentMode));
+    const primaryBlockingRules = prioritizeDistinctCompatibilityRules(decision.blockingRules);
+    const hasNonSpaceBlocker = primaryBlockingRules.some(rule => getCompatibilityRuleFamily(rule.code) !== 'space');
+    const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(
+      [...decision.blockingRules, ...decision.warningRules]
+        .filter(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
+    );
+    const actions = primaryBlockingRules.map(rule => {
+      if (getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold) {
+        if (assessmentMode === 'current_tank') {
+          return hasNonSpaceBlocker
+            ? `先确认该物种至少有 ${combinedSpaceThreshold}；满足空间也仍需处理其他冲突。`
+            : `当前空间至少需要 ${combinedSpaceThreshold}；未满足前先保持分隔，再重新评估。`;
+        }
+        return hasNonSpaceBlocker
+          ? `先按该物种至少 ${combinedSpaceThreshold}准备；这仍不能解决上述混养冲突。`
+          : `至少满足 ${combinedSpaceThreshold}后再重新评估；未达到前不要按当前方案混养。`;
+      }
+      return blockingActionFor(rule, assessmentMode);
+    });
     return actions.length > 0 ? actions : [fallback];
   }
 
@@ -305,6 +364,14 @@ const deterministicActionsFor = (
       : '先不要把明显更小、能入口的鱼直接加入；先核对双方成体体型和口裂，并准备可立即分隔的方案。'];
   }
 
+  if (decision.status === 'caution') {
+    const secondaryActions = prioritizeDistinctCompatibilityRules(decision.warningRules)
+      .slice(1)
+      .map(rule => cautionSecondaryActionFor(rule, assessmentMode))
+      .filter((step): step is string => Boolean(step));
+    return [fallback, ...secondaryActions];
+  }
+
   return [fallback];
 };
 
@@ -316,12 +383,12 @@ export const buildCompatibilityReadableConclusion = (
   const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
   const deterministicWhy = primaryRulesFor(decision).map(rule => getCompatibilityReadableRuleText(rule, assessmentMode));
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
-  const why = uniqueReadable(
-    decision.status === 'compatible'
-      ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision, assessmentMode), ...aiWhy, ...deterministicWhy.slice(1)]
-      : [...deterministicWhy, ...aiWhy, action.primaryReason || defaultReason(decision, assessmentMode)],
-    'reason',
-  ).slice(0, 2);
+  const whySeed = decision.status === 'compatible'
+    ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision, assessmentMode), ...aiWhy]
+    : deterministicWhy.length > 0 || aiWhy.length > 0
+      ? [...deterministicWhy, ...aiWhy]
+      : [action.primaryReason || defaultReason(decision, assessmentMode)];
+  const why = uniqueReadable(whySeed, 'reason').slice(0, 2);
 
   const aiActions = decision.status === 'compatible'
     ? []
@@ -330,7 +397,7 @@ export const buildCompatibilityReadableConclusion = (
   const howTo = uniqueReadable([
     ...deterministicActions,
     ...aiActions,
-    ...(action.observeAfterAction ? [action.observeAfterAction] : []),
+    ...(decision.status === 'compatible' && action.observeAfterAction ? [action.observeAfterAction] : []),
   ], 'action').slice(0, 2);
 
   return {

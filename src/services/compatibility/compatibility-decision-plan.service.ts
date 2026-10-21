@@ -104,8 +104,6 @@ const MISSING_USER_INPUT_CODES = new Set([
   'missing_tank_volume',
   'tank_temperature_missing',
   'missing_tank_temperature',
-  'missing_ph',
-  'missing_hardness',
   'missing_filter',
   'missing_heater',
 ]);

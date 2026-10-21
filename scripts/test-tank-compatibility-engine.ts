@@ -77,7 +77,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'sensitive species gets an optional test reminder instead of insufficient data',
+    name: 'sensitive species keeps optional pH reminder without treating pH as decision-limiting input',
     run: () => {
       const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ substrate: '水草泥', hardscape: ['沉木'] }),
@@ -90,8 +90,10 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         }),
       });
       return result.status === 'insufficient_data'
-        && result.missingData.some(rule => rule.code === 'missing_ph' && rule.severity === 'low')
-        && result.suggestions.some(item => item.includes('试纸'));
+        && result.metadata.domainRuleCodes.includes('species_public_evidence_insufficient')
+        && result.missingData.every(rule => !['missing_ph', 'missing_hardness'].includes(rule.code))
+        && result.suggestions.some(item => item.includes('公开可靠资料不足'))
+        && result.suggestions.some(item => item.includes('试纸') && item.includes('可选复核'));
     },
   },
   {

@@ -59,7 +59,10 @@ const reviewCase = (
 const compatible = reviewCase(['sp_0010', 'sp_0012'], ['sp_0014', 'sp_0020']);
 assert.equal(compatible.status, 'compatible');
 assert.equal(compatible.decision.pairResults.length, 6);
-assert.equal(buildCompatibilityReadableConclusion(compatible.decision).judgment, '可以混养');
+const compatibleMain = buildCompatibilityReadableConclusion(compatible.decision);
+assert.equal(compatibleMain.judgment, '可以混养');
+assert.equal(compatibleMain.why.length, 1, 'compatible main copy should state the conclusion once instead of listing passed checks');
+assert.doesNotMatch(compatibleMain.why.join(' '), /压力偏高/);
 
 const caution = reviewCase(['sp_0001', 'sp_0012'], ['sp_0014', 'sp_0431']);
 assert.equal(caution.status, 'caution');
@@ -70,6 +73,88 @@ assert.equal(
   caution.keyRules.length,
   'caution key rules should not repeat the same risk family',
 );
+
+const cautionFixtureRule = caution.decision.warningRules[0];
+assert.ok(cautionFixtureRule);
+const multiCauseCautionDecision = {
+  ...caution.decision,
+  status: 'caution' as const,
+  blockingRules: [],
+  missingData: [],
+  warningRules: [
+    {
+      ...cautionFixtureRule,
+      code: 'tank_length_below_species_minimum',
+      title: '当前缸长不足',
+      evidence: '当前缸长为 60cm；该物种已审核要求至少 120cm 缸长。',
+    },
+    {
+      ...cautionFixtureRule,
+      code: 'predation_vulnerability_context',
+      title: '存在追食风险',
+      evidence: '组合中有更容易被追食的一方。',
+    },
+  ],
+  metadata: {
+    ...caution.decision.metadata,
+    domainStatus: 'caution' as const,
+    decisionReadiness: 'reviewed' as const,
+    domainRuleCodes: ['tank_length_below_species_minimum', 'predation_vulnerability_context'],
+  },
+};
+const multiCauseMain = buildCompatibilityReadableConclusion(multiCauseCautionDecision);
+assert.equal(multiCauseMain.why.length, 2, 'main conclusion should keep only the two highest-priority distinct causes');
+assert.match(multiCauseMain.why[0] || '', /追食|啄咬|捕食/);
+assert.match(multiCauseMain.why[1] || '', /120cm/);
+assert.match(multiCauseMain.howTo[0] || '', /确认|追食|分隔|躲避/);
+assert.match(multiCauseMain.howTo[1] || '', /120cm/);
+
+const denisonSmallTank = reviewCase(['sp_0431'], ['sp_0440'], {
+  length: '60',
+  width: '30',
+  height: '36',
+});
+assert.equal(denisonSmallTank.status, 'caution');
+const denisonSmallTankMain = buildCompatibilityReadableConclusion(denisonSmallTank.decision);
+assert.match(denisonSmallTankMain.why[0] || '', /120cm/);
+assert.match(denisonSmallTankMain.howTo[0] || '', /120cm/);
+
+const arowanaSmallTank = reviewCase(['sp_0431'], ['sp_0116'], {
+  length: '120',
+  width: '50',
+  height: '50',
+});
+assert.equal(arowanaSmallTank.status, 'not_recommended');
+const arowanaSmallTankMain = buildCompatibilityReadableConclusion(arowanaSmallTank.decision);
+assert.match(arowanaSmallTankMain.why[0] || '', /捕食|吞食/);
+assert.match(arowanaSmallTankMain.why[1] || '', /480L/);
+assert.match(arowanaSmallTankMain.howTo[1] || '', /480L/);
+assert.match(arowanaSmallTankMain.howTo[1] || '', /200cm/);
+assert.doesNotMatch(arowanaSmallTankMain.howTo[1] || '', /再考虑加入/);
+
+const congoShortTank = reviewCase(['sp_0012'], ['sp_0020'], {
+  length: '80',
+  width: '35',
+  height: '40',
+});
+assert.equal(congoShortTank.status, 'caution');
+const congoShortTankMain = buildCompatibilityReadableConclusion(congoShortTank.decision);
+assert.equal(congoShortTankMain.why.length, 1, 'one risk family should not be repeated as two reasons');
+assert.equal(congoShortTankMain.howTo.length, 1, 'one risk family should not be padded with a generic second action');
+assert.match(congoShortTankMain.why[0] || '', /120cm/);
+assert.match(congoShortTankMain.howTo[0] || '', /120cm/);
+
+const zebraDiscus = reviewCase(['sp_0435'], ['sp_0447'], {
+  length: '120',
+  width: '50',
+  height: '50',
+});
+assert.equal(zebraDiscus.status, 'not_recommended');
+const zebraDiscusMain = buildCompatibilityReadableConclusion(zebraDiscus.decision);
+assert.equal(zebraDiscusMain.why.length, 1, 'temperature conflicts from the same family should collapse to one reason');
+assert.match(zebraDiscusMain.why[0] || '', /没有安全重叠|没有.*重叠/);
+assert.equal(zebraDiscusMain.howTo.length, 1);
+assert.match(zebraDiscusMain.howTo[0] || '', /分缸|更换温度需求更接近/);
 
 const insufficient = reviewCase(['sp_0010', 'sp_0012'], ['sp_0004', 'sp_0014'], {
   length: '120',
