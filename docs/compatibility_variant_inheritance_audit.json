@@ -31,11 +31,11 @@
     "explicitReviewedCanonicalBridges": 21,
     "reviewedColorPolicyCanonicalRecords": 20,
     "reviewedColorTaxonRootRecords": 5,
-    "reviewedVariantFieldPolicyRecords": 9,
+    "reviewedVariantFieldPolicyRecords": 15,
     "reviewedVariantFieldResearchPolicies": 8,
     "baseTaxonCandidateFactSlots": 24,
     "exactObjectEvidenceFactSlots": 40,
-    "totalCanonicalIdentityRecords": 50,
+    "totalCanonicalIdentityRecords": 56,
     "policyPromotedReadySpecies": 19,
     "fieldPolicyReadySpecies": 3,
     "directReviewedVariantObjects": 2,
@@ -573,6 +573,44 @@
   ],
   "fieldScopedPolicies": [
     {
+      "speciesId": "sp_0063",
+      "name": "兰寿金鱼",
+      "scientificName": "Carassius auratus var. Ranchu",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Ranchu",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-22-pnas-goldfish-domestication"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyPresent": false,
+      "baseTaxonCandidateFacts": [],
+      "exactObjectEvidenceFacts": [],
+      "researchPolicyGrantsInheritance": false,
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ]
+    },
+    {
       "speciesId": "sp_0065",
       "name": "蝶尾金鱼",
       "scientificName": "Carassius auratus var.",
@@ -825,6 +863,44 @@
       ]
     },
     {
+      "speciesId": "sp_0149",
+      "name": "熊猫金鱼",
+      "scientificName": "Carassius auratus var. Panda",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Panda",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-22-aquaculture-goldfish-monophyly-breeds"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyPresent": false,
+      "baseTaxonCandidateFacts": [],
+      "exactObjectEvidenceFacts": [],
+      "researchPolicyGrantsInheritance": false,
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ]
+    },
+    {
       "speciesId": "sp_0155",
       "name": "长鳍红绿灯",
       "scientificName": "Paracheirodon innesi var.",
@@ -869,6 +945,44 @@
       ]
     },
     {
+      "speciesId": "sp_0180",
+      "name": "龙睛金鱼",
+      "scientificName": "Carassius auratus var. Telescopes",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Telescope",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-22-pnas-goldfish-domestication"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyPresent": false,
+      "baseTaxonCandidateFacts": [],
+      "exactObjectEvidenceFacts": [],
+      "researchPolicyGrantsInheritance": false,
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ]
+    },
+    {
       "speciesId": "sp_0258",
       "name": "糖果KOI斗鱼",
       "scientificName": "Betta splendens var. Koi",
@@ -899,6 +1013,82 @@
       "authoritativeFieldCount": 7,
       "terminalGapFields": [
         "social_behavior"
+      ]
+    },
+    {
+      "speciesId": "sp_0348",
+      "name": "红白虎头金鱼",
+      "scientificName": "Carassius auratus var. Tigerhead",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Tigerhead",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-22-dalian-red-white-tigerhead-butterfly"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyPresent": false,
+      "baseTaxonCandidateFacts": [],
+      "exactObjectEvidenceFacts": [],
+      "researchPolicyGrantsInheritance": false,
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0351",
+      "name": "红白蝶尾",
+      "scientificName": "Carassius auratus var. Butterfly Tail",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Butterfly Tail",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-22-dalian-red-white-tigerhead-butterfly"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyPresent": false,
+      "baseTaxonCandidateFacts": [],
+      "exactObjectEvidenceFacts": [],
+      "researchPolicyGrantsInheritance": false,
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
       ]
     },
     {
@@ -941,6 +1131,44 @@
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
       "terminalGapFields": [
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0386",
+      "name": "黑金刚龙睛",
+      "scientificName": "Carassius auratus var. Black Moor",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Black Moor",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-22-aquaculture-black-moor-variant"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyPresent": false,
+      "baseTaxonCandidateFacts": [],
+      "exactObjectEvidenceFacts": [],
+      "researchPolicyGrantsInheritance": false,
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
         "territoriality"
       ]
     }

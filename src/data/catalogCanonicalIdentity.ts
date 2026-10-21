@@ -100,6 +100,42 @@ const reviewedVariantFieldPolicyConfigs: Record<string, ReviewedVariantFieldPoli
     expectedVariantKey: 'Butterfly Tail',
     inheritedFacts: [],
   },
+  sp_0063: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Ranchu',
+    inheritedFacts: [],
+  },
+  sp_0149: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Panda',
+    inheritedFacts: [],
+  },
+  sp_0180: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Telescope',
+    inheritedFacts: [],
+  },
+  sp_0348: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Tigerhead',
+    inheritedFacts: [],
+  },
+  sp_0351: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Butterfly Tail',
+    inheritedFacts: [],
+  },
+  sp_0386: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Black Moor',
+    inheritedFacts: [],
+  },
   sp_0066: {
     canonicalScientificName: 'Carassius auratus',
     relationshipType: 'selectively_bred_variant',

@@ -41,7 +41,7 @@ const expectedTaxonRootIds = ['sp_0156', 'sp_0162', 'sp_0214', 'sp_0224', 'sp_04
 assert.equal(explicitCanonicalIds.length, 21);
 assert.deepEqual(policyCanonicalIds, expectedColorPolicyIds);
 assert.deepEqual([...reviewedColorTaxonPolicyCanonicalSpeciesIds].sort(), expectedTaxonRootIds);
-const expectedVariantFieldPolicyIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0258', 'sp_0361'];
+const expectedVariantFieldPolicyIds = ['sp_0063', 'sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0149', 'sp_0155', 'sp_0180', 'sp_0258', 'sp_0348', 'sp_0351', 'sp_0361', 'sp_0386'];
 assert.deepEqual([...reviewedVariantFieldPolicySpeciesIds].sort(), expectedVariantFieldPolicyIds);
 assert.equal(Object.keys(catalogCanonicalIdentities).length, explicitCanonicalIds.length + expectedColorPolicyIds.length + expectedVariantFieldPolicyIds.length);
 for (const speciesId of explicitCanonicalIds) assert.ok(catalogCanonicalIdentities[speciesId]);
@@ -61,7 +61,7 @@ for (const identity of Object.values(catalogCanonicalIdentities)) {
       assert.deepEqual(identity.inheritancePolicy.inheritedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'predation']);
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, ['social_behavior', 'territoriality']);
     } else {
-      assert.ok(['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'].includes(identity.catalogSpeciesId));
+      assert.ok(['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0351', 'sp_0386', ...['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361']].includes(identity.catalogSpeciesId));
       assert.deepEqual(identity.inheritancePolicy.inheritedFacts, [], 'identity-only strain or morphology review must not imply husbandry inheritance');
       assert.deepEqual(identity.inheritancePolicy.blockedFacts, allFacts);
     }
@@ -477,11 +477,18 @@ assert.ok(blueGouramiCoverage);
 assert.equal(blueGouramiCoverage.genericOnboardingReady, true);
 assert.equal(blueGouramiCoverage.authoritativeFieldCount, 8);
 const identityOnlyVariantIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'];
+const identityResolvedPendingFieldReviewIds = ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0351', 'sp_0386'];
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);
-  if (!['sp_0224', 'sp_0258', ...identityOnlyVariantIds].includes(speciesId)) {
+  if (!['sp_0224', 'sp_0258', ...identityOnlyVariantIds, ...identityResolvedPendingFieldReviewIds].includes(speciesId)) {
     assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant with complete authority must remain generic-ready: ' + speciesId);
+  }
+  if (identityResolvedPendingFieldReviewIds.includes(speciesId)) {
+    assert.equal(row.authoritativeFieldCount, 0, 'newly identity-resolved morphology variants must not gain Compatibility facts automatically: ' + speciesId);
+    assert.equal(row.terminalGapCount, 7, 'existing exact-object evidence ceilings must remain intact after identity resolution: ' + speciesId);
+    assert.equal(row.actionableGapCount, 1, 'predation remains the only targeted research slot after identity resolution: ' + speciesId);
+    assert.equal(row.genericOnboardingReady, false);
   }
   if (identityOnlyVariantIds.includes(speciesId)) {
     assert.equal(

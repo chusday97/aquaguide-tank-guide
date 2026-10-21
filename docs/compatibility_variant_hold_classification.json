@@ -18,9 +18,9 @@
     "morphology_variant": 29,
     "trade_or_lineage_label": 13,
     "size_grade_or_trade_label": 1,
-    "missingIdentityReviewCatalogObjects": 47,
-    "reviewedSupportedIdentityCatalogObjects": 0,
-    "canonicalBridgeCatalogObjects": 0,
+    "missingIdentityReviewCatalogObjects": 41,
+    "reviewedSupportedIdentityCatalogObjects": 6,
+    "canonicalBridgeCatalogObjects": 6,
     "candidateBaseTaxonClusters": 14,
     "multiObjectCandidateBaseTaxonClusters": 10
   },
@@ -54,9 +54,9 @@
         "trade_or_lineage_label": 2,
         "size_grade_or_trade_label": 0
       },
-      "missingIdentityReviewCatalogObjects": 12,
-      "reviewedSupportedIdentityCatalogObjects": 0,
-      "canonicalBridgeCatalogObjects": 0,
+      "missingIdentityReviewCatalogObjects": 6,
+      "reviewedSupportedIdentityCatalogObjects": 6,
+      "canonicalBridgeCatalogObjects": 6,
       "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
     },
     {
@@ -316,10 +316,10 @@
         "head_or_eye_structure"
       ],
       "compoundVariantLabel": true,
-      "identityReviewState": "missing",
-      "canonicalBridgePresent": false,
+      "identityReviewState": "reviewed_supported",
+      "canonicalBridgePresent": true,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_before_field_research"
+      "nextAction": "review_field_scoped_authority_after_identity_bridge"
     },
     {
       "speciesId": "sp_0064",
@@ -375,10 +375,10 @@
       "classification": "trade_or_lineage_label",
       "morphologySignals": [],
       "compoundVariantLabel": false,
-      "identityReviewState": "missing",
-      "canonicalBridgePresent": false,
+      "identityReviewState": "reviewed_supported",
+      "canonicalBridgePresent": true,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_before_field_research"
+      "nextAction": "review_trade_or_lineage_field_authority_after_identity_bridge"
     },
     {
       "speciesId": "sp_0150",
@@ -499,10 +499,10 @@
         "head_or_eye_structure"
       ],
       "compoundVariantLabel": true,
-      "identityReviewState": "missing",
-      "canonicalBridgePresent": false,
+      "identityReviewState": "reviewed_supported",
+      "canonicalBridgePresent": true,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_before_field_research"
+      "nextAction": "review_field_scoped_authority_after_identity_bridge"
     },
     {
       "speciesId": "sp_0203",
@@ -790,10 +790,10 @@
         "head_or_eye_structure"
       ],
       "compoundVariantLabel": true,
-      "identityReviewState": "missing",
-      "canonicalBridgePresent": false,
+      "identityReviewState": "reviewed_supported",
+      "canonicalBridgePresent": true,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_before_field_research"
+      "nextAction": "review_field_scoped_authority_after_identity_bridge"
     },
     {
       "speciesId": "sp_0349",
@@ -840,10 +840,10 @@
         "fin_shape"
       ],
       "compoundVariantLabel": true,
-      "identityReviewState": "missing",
-      "canonicalBridgePresent": false,
+      "identityReviewState": "reviewed_supported",
+      "canonicalBridgePresent": true,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_before_field_research"
+      "nextAction": "review_field_scoped_authority_after_identity_bridge"
     },
     {
       "speciesId": "sp_0364",
@@ -885,10 +885,10 @@
         "head_or_eye_structure"
       ],
       "compoundVariantLabel": true,
-      "identityReviewState": "missing",
-      "canonicalBridgePresent": false,
+      "identityReviewState": "reviewed_supported",
+      "canonicalBridgePresent": true,
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_exact_variant_identity_before_field_research"
+      "nextAction": "review_field_scoped_authority_after_identity_bridge"
     },
     {
       "speciesId": "sp_0387",

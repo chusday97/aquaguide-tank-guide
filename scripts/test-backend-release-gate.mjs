@@ -102,6 +102,7 @@ const gates = [
   ['Catalog Canonical Identity Architecture', 'npm', ['run', 'test:catalog-canonical-identity']],
   ['GloFish Danio Identity Bridge', 'npm', ['run', 'test:identity-corrections-phase2-15']],
   ['Verified Color Identity Bridge', 'npm', ['run', 'test:identity-corrections-phase2-21']],
+  ['Goldfish Exact Variant Identity Bridges', 'npm', ['run', 'test:identity-corrections-phase2-22']],
   ['Compatibility Variant Inheritance Audit', 'npm', ['run', 'test:compatibility-variant-inheritance-audit']],
   ['Compatibility Variant Hold Classification', 'npm', ['run', 'test:compatibility-variant-hold-classification']],
   ['Catalog Identity Boundaries', 'npm', ['run', 'test:catalog-identity-boundaries']],
