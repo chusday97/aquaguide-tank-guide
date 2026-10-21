@@ -1,3 +1,13 @@
+## TOP LIVE STATUS — 2026-10-21 staged-risk action priority
+
+- Real-user pressure = 12/12 PASS.
+- Added three durable scenarios: six-species hard-block + multiple soft risks, post-adjustment secondary-risk reveal, and human/machine action-order consistency.
+- First divergence found pre-fix at action_plan: human copy prioritized generic space while resolutionTargets prioritized territory.
+- Fixed by gating the special space action on the actual highest-priority warning family. Explicit severe space constraints retain their higher priority; generic soft-space guidance does not override higher-priority territory/group/environment warnings.
+- Fully-informed matrix remains 111 / 6,105 / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Complete backend gate PASS; main build PASS. Existing bundle-size warnings remain unrelated debt.
+- Production remains frozen at 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP LIVE STATUS — 2026-10-21 concise minimal-input Compatibility
 
 - Primary user result: exactly one decision + one primary reason + one primary action; technical depth stays under 查看依据/internal contracts.

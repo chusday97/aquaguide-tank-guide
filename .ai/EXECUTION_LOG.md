@@ -1,3 +1,16 @@
+## 2026-10-21 — Staged-risk and action-priority real-user pressure closure
+
+- Expanded the real-user pressure suite from 9 to 12 cases.
+- Six-species case evaluates all 15 unordered pairs and proves a hard block remains the whole-tank verdict while aggression, group-size and pH soft risks remain available for later re-evaluation.
+- Staged-adjustment case uses the same reviewed pair at 60cm and 120cm: space + territory is initially present; after the space issue clears, the system must switch to territory as the remaining primary risk instead of repeating the old space action.
+- Action-order case reproduced a concrete pre-fix divergence at 100cm: resolutionTargets ranked territory first, but user copy still entered the generic space branch.
+- Root cause was a hardcoded hasSpaceConcern branch in compatibility-action.service that bypassed the existing warning priority ordering. Fix: only use that special space branch when space is itself the primary prioritized warning family.
+- This preserves the intended 60cm behavior because explicit length_too_short has higher priority than territory, while generic tank-volume/length cautions at 100cm remain below territory.
+- Regenerated evaluation/product/compatibility-real-user-pressure.v1.json. Pressure 12/12 PASS, all firstDivergence=null after fix.
+- Targeted action/result-card/user-conclusion tests PASS. Complete BACKEND_RELEASE_GATE=PASS. Main build and git diff check PASS.
+- Fully-informed matrix remains 111 ready / 6,105 pairs / 0 insufficient_data. Deterministic authority and evidence were not changed.
+- No deployment, Production DB write, migration, broad species research, release branch movement or UI redesign.
+
 ## 2026-10-21 — Minimal-input, concise Compatibility decision closure
 
 - Audited an existing 11-file candidate worktree aligned with the user's requested behavior rather than overwriting it.

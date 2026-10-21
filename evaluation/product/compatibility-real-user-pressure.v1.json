@@ -10,8 +10,8 @@
     "presentation"
   ],
   "summary": {
-    "caseCount": 9,
-    "passedCases": 9,
+    "caseCount": 12,
+    "passedCases": 12,
     "failedCases": 0,
     "firstDivergenceCounts": {
       "input_normalization": 0,
@@ -492,6 +492,207 @@
         "before": "caution",
         "after": "compatible",
         "clearedRisk": "bioload"
+      }
+    },
+    {
+      "id": "six-species-hard-block-dominates-soft-risks",
+      "title": "六物种整缸同时有多项可调风险和硬阻断时，硬阻断主导但软风险不能被抹掉",
+      "expectedBoundaryStage": null,
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "six species generate all fifteen unordered pair evaluations",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "hard block dominates while multiple soft-risk families remain available for later re-evaluation",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "primary action remains do-not-mix and machine targets stay executable",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "not_recommended",
+        "pairCount": 15,
+        "blockingFamilies": [
+          "aggression",
+          "territory"
+        ],
+        "warningFamilies": [
+          "aggression",
+          "group_size",
+          "ph",
+          "reviewed_pair_rule"
+        ],
+        "resolutionTargets": [
+          {
+            "riskFamily": "territory",
+            "resolutionMode": "behavioral_recheck",
+            "criterion": "增加遮挡、退让路线或分区后复查持续追逐、堵角、躲藏与进食；只有实际压迫消失才能继续原组合。",
+            "sourceRuleCode": "territorial_conflict",
+            "speciesIds": []
+          },
+          {
+            "riskFamily": "aggression",
+            "resolutionMode": "deterministic_clearance",
+            "criterion": "虎皮鱼 与 孔雀鱼 的直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。",
+            "sourceRuleCode": "pair_rule_fin_nipping_long_fin_conflict",
+            "speciesIds": [
+              "sp_0439",
+              "sp_0436"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "adjustment-reveals-secondary-risk",
+      "title": "先解决空间不足后必须重新计算并暴露剩余领地风险，不能重复旧动作",
+      "expectedBoundaryStage": null,
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "before adjustment both space and territory are present",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "after adjustment space clears but territory remains",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "before adjustment the explicit 100cm space condition is primary",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "re-evaluation switches to the newly exposed territory action instead of repeating the old space action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "before": {
+          "status": "caution",
+          "primaryAction": "当前鱼缸空间不够",
+          "firstTarget": "space"
+        },
+        "after": {
+          "status": "caution",
+          "primaryAction": "先处理领地压迫风险",
+          "firstTarget": "territory"
+        }
+      }
+    },
+    {
+      "id": "action-priority-territory-before-soft-space",
+      "title": "多个可调风险并存时，用户主动作与机器 resolutionTargets 必须遵循同一优先级",
+      "expectedBoundaryStage": "action_plan",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "territory and soft space warnings coexist without a hard block",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "territory outranks generic soft-space warning in both human and machine action order",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "caution",
+        "warningFamilies": [
+          "space",
+          "territory"
+        ],
+        "primaryAction": "先处理领地压迫风险",
+        "resolutionTargets": [
+          {
+            "riskFamily": "territory",
+            "resolutionMode": "behavioral_recheck",
+            "criterion": "为 红绿灯 与 天使鱼（神仙鱼） 增加遮挡、退让路线或分区后复查持续追逐、堵角、躲藏与进食；只有实际压迫消失才能继续原组合。",
+            "sourceRuleCode": "territorial_pressure_context",
+            "speciesIds": [
+              "sp_0431",
+              "sp_0446"
+            ]
+          },
+          {
+            "riskFamily": "space",
+            "resolutionMode": "parameter_recheck",
+            "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
+            "sourceRuleCode": "tank_volume_below_species_minimum",
+            "speciesIds": [
+              "sp_0431",
+              "sp_0446"
+            ]
+          }
+        ]
       }
     }
   ]

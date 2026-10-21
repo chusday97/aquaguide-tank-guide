@@ -217,6 +217,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   const codes = codesOf(decision);
   const blockingRules = prioritizeDistinctCompatibilityRules(decision.blockingRules);
   const warningRules = prioritizeDistinctCompatibilityRules(decision.warningRules);
+  const primaryWarningFamily = warningRules[0] ? getCompatibilityRuleFamily(warningRules[0].code) : null;
   const missingData = prioritizeDistinctCompatibilityRules(decision.missingData);
   const hasHardBlock = Array.from(codes).some(code => HARD_BLOCK_CODES.has(code));
   const hasSoftCapacityConcern = Array.from(codes).some(code => SOFT_CAPACITY_CODES.has(code));
@@ -350,7 +351,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         detailsLabel: '为什么这组风险更高？',
       };
     }
-    if (hasSpaceConcern) {
+    if (hasSpaceConcern && primaryWarningFamily === 'space') {
       const spaceRules = decision.warningRules.filter(rule => SPACE_CODES.has(rule.code));
       const threshold = explicitSpaceThreshold(spaceRules);
       return {

@@ -1,3 +1,14 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 staged-risk Compatibility validation
+
+- Real-user Compatibility pressure suite now covers 12 distinct user scenarios, up from 9.
+- New coverage: six-species whole-tank hard-block dominance with preserved soft risks; adjustment that clears space and exposes territory as the next primary risk; deterministic priority alignment when territory and generic soft-space warnings coexist.
+- A real action-plan divergence was reproduced before the fix: at 100cm, machine resolutionTargets correctly ranked territory before generic soft-space, while the human primary action still said to handle space first.
+- Root fix is narrow: planned-addition user copy now lets the same prioritized warning family decide whether the space branch can become primary. Explicit length_too_short still outranks territory when its rule priority is genuinely higher; generic tank volume/length soft warnings no longer steal priority.
+- Deterministic rules, reviewed species facts, evidence authority and AI authority are unchanged.
+- Pressure suite 12/12 PASS with firstDivergence=null after the fix. Fully-informed matrix remains 111 ready / 6,105 pairs / 0 insufficient_data.
+- Full BACKEND_RELEASE_GATE=PASS and main build PASS.
+- No deploy, Production DB write, migration, broad research or UI redesign. Production remains release/production@1cff5be6.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 minimal-input Compatibility decisions
 
 - User-facing Compatibility now optimizes for ordinary hobbyist input: tank size + current livestock + candidate livestock is enough whenever deterministic reviewed authority already establishes the decision.

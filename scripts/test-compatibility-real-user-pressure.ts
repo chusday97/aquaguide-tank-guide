@@ -469,6 +469,159 @@ cases.push(makeCase(
   { before: overloaded.status, after: adjusted.status, clearedRisk: 'bioload' },
 ));
 
+const sixSpeciesMixedRiskDecision = evaluateCompatibilityDecision({
+  tank: tank(300, 100, 80, 24),
+  items: [
+    ['sp_0439', 8],
+    ['sp_0436', 5],
+    ['sp_0431', 10],
+    ['sp_0443', 6],
+    ['sp_0012', 6],
+    ['sp_0010', 6],
+  ].map(([id, quantity], index) => ({
+    species: byId(id as string),
+    quantity: quantity as number,
+    origin: index === 0 ? 'existing' as const : 'candidate' as const,
+  })),
+});
+const sixSpeciesMixedRiskPlan = buildCompatibilityDecisionPlan(sixSpeciesMixedRiskDecision);
+const sixSpeciesBlockingFamilies = new Set(
+  sixSpeciesMixedRiskDecision.blockingRules.map(rule => getCompatibilityRuleFamily(rule.code)),
+);
+const sixSpeciesWarningFamilies = new Set(
+  sixSpeciesMixedRiskDecision.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)),
+);
+cases.push(makeCase(
+  'six-species-hard-block-dominates-soft-risks',
+  '六物种整缸同时有多项可调风险和硬阻断时，硬阻断主导但软风险不能被抹掉',
+  null,
+  [
+    probe('pair_domain_stage_evaluation', 'six species generate all fifteen unordered pair evaluations', () => {
+      assert.equal(sixSpeciesMixedRiskDecision.pairResults.length, 15);
+    }),
+    probe('whole_tank_aggregation', 'hard block dominates while multiple soft-risk families remain available for later re-evaluation', () => {
+      assert.equal(sixSpeciesMixedRiskDecision.status, 'not_recommended');
+      assert.ok(sixSpeciesBlockingFamilies.size >= 1);
+      assert.ok(sixSpeciesWarningFamilies.has('aggression'));
+      assert.ok(sixSpeciesWarningFamilies.has('group_size'));
+      assert.ok(sixSpeciesWarningFamilies.has('ph'));
+    }),
+    probe('action_plan', 'primary action remains do-not-mix and machine targets stay executable', () => {
+      assert.equal(sixSpeciesMixedRiskPlan.verdict, 'do_not_mix');
+      assert.ok(sixSpeciesMixedRiskPlan.resolutionTargets.length >= 1);
+      assert.ok(sixSpeciesMixedRiskPlan.resolutionTargets.every(target => target.criterion.trim().length > 0));
+      assert.equal(sixSpeciesMixedRiskPlan.nextSteps.some(step => /直接加入|可以按当前计划加入/.test(step)), false);
+    }),
+    ...presentationProbes(sixSpeciesMixedRiskDecision),
+  ],
+  {
+    status: sixSpeciesMixedRiskDecision.status,
+    pairCount: sixSpeciesMixedRiskDecision.pairResults.length,
+    blockingFamilies: [...sixSpeciesBlockingFamilies].sort(),
+    warningFamilies: [...sixSpeciesWarningFamilies].sort(),
+    resolutionTargets: sixSpeciesMixedRiskPlan.resolutionTargets,
+  },
+));
+
+const stagedRiskBefore = evaluateCompatibilityDecision({
+  tank: tank(60, 30, 35, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const stagedRiskAfter = evaluateCompatibilityDecision({
+  tank: tank(120, 50, 40, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const stagedRiskBeforeAction = buildBeginnerCompatibilityAction(stagedRiskBefore);
+const stagedRiskAfterAction = buildBeginnerCompatibilityAction(stagedRiskAfter);
+const stagedRiskBeforePlan = buildCompatibilityDecisionPlan(stagedRiskBefore);
+const stagedRiskAfterPlan = buildCompatibilityDecisionPlan(stagedRiskAfter);
+cases.push(makeCase(
+  'adjustment-reveals-secondary-risk',
+  '先解决空间不足后必须重新计算并暴露剩余领地风险，不能重复旧动作',
+  null,
+  [
+    probe('whole_tank_aggregation', 'before adjustment both space and territory are present', () => {
+      const families = new Set(stagedRiskBefore.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.ok(families.has('space'));
+      assert.ok(families.has('territory'));
+      assert.equal(stagedRiskBefore.status, 'caution');
+    }),
+    probe('action_plan', 'before adjustment the explicit 100cm space condition is primary', () => {
+      assert.match(stagedRiskBeforeAction.immediateAction, /100cm/);
+      assert.equal(stagedRiskBeforePlan.resolutionTargets[0]?.riskFamily, 'space');
+    }),
+    probe('whole_tank_aggregation', 'after adjustment space clears but territory remains', () => {
+      const families = new Set(stagedRiskAfter.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.equal(families.has('space'), false);
+      assert.ok(families.has('territory'));
+      assert.equal(stagedRiskAfter.status, 'caution');
+    }),
+    probe('action_plan', 're-evaluation switches to the newly exposed territory action instead of repeating the old space action', () => {
+      assert.match(stagedRiskAfterAction.headline, /领地/);
+      assert.doesNotMatch(stagedRiskAfterAction.immediateAction, /100cm|最低缸长/);
+      assert.equal(stagedRiskAfterPlan.resolutionTargets[0]?.riskFamily, 'territory');
+    }),
+    ...presentationProbes(stagedRiskBefore),
+    ...presentationProbes(stagedRiskAfter),
+  ],
+  {
+    before: {
+      status: stagedRiskBefore.status,
+      primaryAction: stagedRiskBeforeAction.headline,
+      firstTarget: stagedRiskBeforePlan.resolutionTargets[0]?.riskFamily || null,
+    },
+    after: {
+      status: stagedRiskAfter.status,
+      primaryAction: stagedRiskAfterAction.headline,
+      firstTarget: stagedRiskAfterPlan.resolutionTargets[0]?.riskFamily || null,
+    },
+  },
+));
+
+const competingAdjustableDecision = evaluateCompatibilityDecision({
+  tank: tank(100, 30, 35, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const competingAdjustableAction = buildBeginnerCompatibilityAction(competingAdjustableDecision);
+const competingAdjustablePlan = buildCompatibilityDecisionPlan(competingAdjustableDecision);
+cases.push(makeCase(
+  'action-priority-territory-before-soft-space',
+  '多个可调风险并存时，用户主动作与机器 resolutionTargets 必须遵循同一优先级',
+  'action_plan',
+  [
+    probe('whole_tank_aggregation', 'territory and soft space warnings coexist without a hard block', () => {
+      const families = new Set(competingAdjustableDecision.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.equal(competingAdjustableDecision.status, 'caution');
+      assert.ok(families.has('territory'));
+      assert.ok(families.has('space'));
+      assert.equal(competingAdjustableDecision.blockingRules.length, 0);
+    }),
+    probe('action_plan', 'territory outranks generic soft-space warning in both human and machine action order', () => {
+      assert.equal(competingAdjustablePlan.resolutionTargets[0]?.riskFamily, 'territory');
+      assert.equal(competingAdjustablePlan.resolutionTargets[1]?.riskFamily, 'space');
+      assert.match(competingAdjustableAction.headline, /领地/);
+      assert.match(competingAdjustableAction.immediateAction, /遮挡|退让|分隔/);
+      assert.doesNotMatch(competingAdjustableAction.immediateAction, /最低缸长|水体要求/);
+    }),
+    ...presentationProbes(competingAdjustableDecision),
+  ],
+  {
+    status: competingAdjustableDecision.status,
+    warningFamilies: [...new Set(competingAdjustableDecision.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)))].sort(),
+    primaryAction: competingAdjustableAction.headline,
+    resolutionTargets: competingAdjustablePlan.resolutionTargets,
+  },
+));
+
 const report = {
   schemaVersion: 1,
   pipelineStages: stages,
