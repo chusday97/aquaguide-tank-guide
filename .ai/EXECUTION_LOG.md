@@ -1,3 +1,16 @@
+## 2026-10-21 — Compatibility materialized-authority Production release closure
+
+- Preflight reached `READY_TO_PROMOTE` with zero blockers after backend release gate 148/148, Golden Path, Vision fallback, core user-state parity and Supabase health checks passed.
+- Fast-forwarded `release/production` from `3aadabd2` to accepted `main@1cff5be6` without force.
+- Vercel read-back identified deployment `dpl_5SQzZ5mEFEqqPg67Kz9dfRHzfBoW`: READY, target production, `release/production`, Git SHA `1cff5be6`; its aliases include `aqua-tank-guide.vercel.app`.
+- Re-ran the Production DB guard after runtime cutover: exact baseline `73 / 131 / 21 / 1 / 279`, target `74 / 137 / 21 / 1 / 281`, runtimeCompatible=true, blockers=[].
+- Committed `20261021142700_compatibility_materialized_authority_reconciliation.sql` atomically. The migration added six materialized reviewed Profiles, activated four current evidence sources, retired two unreferenced stale evidence sources, reconciled Profile-source links, and left Pair/Stage/content/feeding authority unchanged.
+- Live read-back: 74 migrations, latest 20261021142700, 137 Profiles, 21 Pair Rules, 1 Stage Risk, 281 Evidence; species/feeding/care/care steps/content remain 486/486/41/128/527.
+- Post-migration verifier passed exact key-set parity: `ready=true`, `runtimeReady=true`, blockers=[].
+- Compatibility regression, user canary and fully-informed matrix passed; 111 ready species / 6,105 pairs / 0 insufficient_data.
+- Public `/api/v1/health` returned HTTP 200 with DeepSeek `deepseek-v4.1-flash`.
+- No UI changes. Production is frozen again at runtime SHA `1cff5be6`.
+
 ## 2026-09-16 — RC1 Production browser smoke and release closure
 - Confirmed Production deployment `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` is READY/production at candidate commit `93549ddf`.
 - Direct `/api/v1/health` returned 200 with `ok=true`.

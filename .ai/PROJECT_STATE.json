@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-14",
+  "updatedAt": "2026-10-21",
   "canonicalBranch": "main",
   "canonicalRole": "single code source after source convergence; production is pinned separately until release gates pass",
   "sourceConvergenceBranch": "main",
@@ -10,9 +10,9 @@
     "vercel": {
       "status": "ACTIVE_FROZEN",
       "productionBranch": "release/production",
-      "verifiedSha": "d1229ee622a5b608f394f33e5f87095b316af48f",
-      "checkedAt": "2026-10-14",
-      "evidence": "Vercel live read-back: release/production@d1229ee6 deployment dpl_7NuvxYjrYnPRVUvu9t8BKPLVkdNn is READY and owns aqua-tank-guide.vercel.app; Production health HTTP 200 with deepseek-v4.1-flash"
+      "verifiedSha": "1cff5be6108654003df5eb07afe8df58ceb7c3df",
+      "checkedAt": "2026-10-21",
+      "evidence": "Vercel live read-back: release/production@1cff5be6 deployment dpl_5SQzZ5mEFEqqPg67Kz9dfRHzfBoW is READY / target=production and owns aqua-tank-guide.vercel.app; Production health HTTP 200 with deepseek-v4.1-flash"
     },
     "cloudflare": {
       "status": "INACTIVE_LEGACY",
@@ -23,9 +23,9 @@
     }
   },
   "productionAnchor": {
-    "sha": "d1229ee622a5b608f394f33e5f87095b316af48f",
+    "sha": "1cff5be6108654003df5eb07afe8df58ceb7c3df",
     "source": "Vercel aliased production deployment metadata",
-    "verifiedAt": "2026-10-14",
+    "verifiedAt": "2026-10-21",
     "role": "rollback and production freeze anchor; no independent development"
   },
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
@@ -46,7 +46,7 @@
   "releaseBranch": "main",
   "canonicalBase": {
     "branch": "main",
-    "sha": "d1229ee622a5b608f394f33e5f87095b316af48f",
+    "sha": "1cff5be6108654003df5eb07afe8df58ceb7c3df",
     "role": "deployed business/runtime release base; canonical main may be ahead by a docs-only release-state checkpoint"
   },
   "productReference": {
@@ -77,9 +77,9 @@
   "supabaseDeployment": {
     "status": "deployed_verified",
     "parityStatus": "compatibility_authority_current",
-    "confirmedAt": "2026-10-14",
-    "lastReadOnlyCheck": "2026-10-14",
-    "evidence": "Production post-verifier READY_COMPATIBILITY_PRODUCTION at migration 69 / latest 20261014163500 / Profiles 101 / Pair Rules 21 / Stage Risk 1 / Evidence 189; runtimeReady true; blockers []"
+    "confirmedAt": "2026-10-21",
+    "lastReadOnlyCheck": "2026-10-21",
+    "evidence": "Production post-verifier ready=true / runtimeReady=true / blockers=[] at migration 74 / latest 20261021142700 / Profiles 137 / Pair Rules 21 / Stage Risk 1 / Evidence 281; exact evidence-key set matches materialized authority"
   },
   "localPreview": "http://127.0.0.1:4319/_preview/interactive",
   "visualBaselinePreview": "http://127.0.0.1:4317/_preview/interactive",

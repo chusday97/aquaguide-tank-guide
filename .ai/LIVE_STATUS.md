@@ -1,3 +1,15 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility Production release closed
+
+- Production runtime SHA: `1cff5be6108654003df5eb07afe8df58ceb7c3df`; Vercel deployment `dpl_5SQzZ5mEFEqqPg67Kz9dfRHzfBoW` is READY / production and owns `aqua-tank-guide.vercel.app`.
+- Production DB: **74 migrations / latest 20261021142700 / 137 Profiles / 21 Pair Rules / 1 Stage Risk / 281 Evidence Sources**.
+- Unrelated business/content baselines stayed unchanged: **486 species / 486 feeding / 41 care / 128 care steps / 527 content publications**.
+- `readiness:compatibility-production` => `READY_COMPATIBILITY_DB`, blockers `[]`.
+- Post-migration verifier => `ready=true`, `runtimeReady=true`, blockers `[]`, with exact evidence-key validation and runtime/main parity.
+- Compatibility matrix remains **111 ready species / 6,105 pairs / 0 insufficient_data**; dynamic new-species onboarding still requires no precomputed pair table.
+- Evidence workflow now retains 41 unresolved slots as audit history but executes only the 7 currently actionable goldfish-predation research slots; terminal holds are excluded from repeat research.
+- Public health: HTTP 200, DeepSeek `deepseek-v4.1-flash` configured.
+- Production is frozen again at this verified anchor. UI unchanged.
+
 ## TOP CURRENT OVERRIDE — 2026-10-20 exact-variant evidence acquisition
 
 - Working authority: local `main` at `4c8b8e02`; this Compatibility pass has no deploy/Production/migration/rollout/UI change.

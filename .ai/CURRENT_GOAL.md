@@ -1,3 +1,17 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility Production materialized-authority release CLOSED
+
+- **FINAL RELEASE STATE:** `origin/main` and `origin/release/production` converged at runtime SHA `1cff5be6108654003df5eb07afe8df58ceb7c3df` before the DB cutover.
+- Vercel Production deployment `dpl_5SQzZ5mEFEqqPg67Kz9dfRHzfBoW` is `READY`, target=`production`, Git ref `release/production`, Git SHA `1cff5be6`, and owns `aqua-tank-guide.vercel.app`.
+- Public `/api/v1/health` is HTTP 200 with `deepseek-v4.1-flash` configured.
+- Production migration `20261021142700_compatibility_materialized_authority_reconciliation.sql` committed atomically through the fail-closed guard after a real rollback simulation and runtime-parity check.
+- Exact Production authority is now **74 migrations / 137 reviewed Profiles / 21 Pair Rules / 1 Stage Risk / 281 reviewed Evidence Sources**. Species / feeding / care / care steps / content baselines remain **486 / 486 / 41 / 128 / 527**.
+- Post-migration verifier: `ready=true`, `runtimeReady=true`, `blockers=[]`; exact Profile/Pair/Stage/Evidence keysets match current materialized authority.
+- Runtime behavior remains dynamic rather than precomputed: **111 8/8 ready species / 6,105 evaluated pairs / 0 insufficient_data**. A synthetic unregistered 8/8 species evaluates against all 111 ready species without writing a catalog/Profile or precomputing pair rules.
+- Exact-evidence research is now split correctly: **41 unresolved audit-ledger slots** are retained for traceability, while only **7 actionable goldfish predation slots** remain in the active research queue; terminal holds do not re-enter research.
+- Release validation: backend release gate **148/148 PASS** (split only to avoid the WebCodex 120s wrapper limit), Golden Path PASS, Vision fallback PASS, core user-state parity PASS, Compatibility regression/user-canary/fully-informed matrix PASS.
+- UI was not changed in this release. After this release-state metadata checkpoint, `main` may be one docs-only commit ahead of `release/production`; do not trigger another runtime cutover for that metadata-only drift.
+- NEXT: continue evidence work only on the 7 actionable predation slots or other genuinely new authority gaps; do not reopen terminal holds or return to per-species precomputed pairing.
+
 ## TOP CURRENT OVERRIDE — 2026-10-20 exact-variant evidence acquisition + discovery ceilings via WebCodex
 
 - Canonical branch is `main`, current base `4c8b8e02` (includes prior Compatibility checkpoints plus an unrelated Supabase log-diagnostics commit already on origin). Scope here remains Compatibility research/evidence workflow only: **no UI, no deploy, no Production DB mutation, no migration, no rollout or runtime authority change**.

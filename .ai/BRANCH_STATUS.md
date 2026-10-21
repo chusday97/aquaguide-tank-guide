@@ -1,3 +1,12 @@
+## TOP CURRENT BRANCH — 2026-10-21 Production runtime/DB convergence
+
+- Runtime release anchor: `release/production@1cff5be6108654003df5eb07afe8df58ceb7c3df`; it was a strict fast-forward from the prior production branch, with no force push or merge divergence.
+- Vercel: `dpl_5SQzZ5mEFEqqPg67Kz9dfRHzfBoW` = READY / production / Git SHA `1cff5be6`; aliases include `aqua-tank-guide.vercel.app`.
+- Supabase Production: migration `20261021142700` committed and verified; live authority **137 Profiles / 21 Pair Rules / 1 Stage Risk / 281 Evidence Sources**.
+- All post-release gates are green: DB readiness, exact-key post-verifier, Compatibility regression, user canary, fully-informed matrix, public health.
+- `main` may receive one metadata-only release-state commit after this runtime anchor; keep `release/production` pinned to `1cff5be6` unless a later runtime release is explicitly accepted.
+- No UI changes are part of this release.
+
 ## TOP CURRENT BRANCH — 2026-10-20 main exact-variant evidence acquisition
 
 - Canonical local branch: `main`, current base `4c8b8e02`.
