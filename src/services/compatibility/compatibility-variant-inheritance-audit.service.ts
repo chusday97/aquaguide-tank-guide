@@ -94,6 +94,36 @@ export const buildCompatibilityVariantInheritanceAudit = () => {
         baseTaxonCandidateFacts: [...(researchPolicy?.baseTaxonCandidateFacts ?? [])],
         exactObjectEvidenceFacts: [...(researchPolicy?.exactObjectEvidenceFacts ?? [])],
         researchPolicyGrantsInheritance: researchPolicy?.grantsInheritance ?? false,
+        fieldReviewRequirements: Object.entries(row.fields).map(([field, cell]) => {
+          const baseTaxonCandidate = Boolean(researchPolicy?.baseTaxonCandidateFacts.includes(field as never));
+          const exactObjectRequired = Boolean(researchPolicy?.exactObjectEvidenceFacts.includes(field as never));
+          const evidenceScope = baseTaxonCandidate
+            ? 'base_taxon_candidate'
+            : exactObjectRequired
+              ? 'exact_object_required'
+              : 'unclassified';
+          const nextAction = cell.disposition === 'ready'
+            ? 'none_ready'
+            : evidenceScope === 'base_taxon_candidate'
+              ? cell.disposition === 'terminal_hold'
+                ? 'deferred_reviewed_field_bridge'
+                : 'research_base_taxon_candidate_then_review_bridge'
+              : evidenceScope === 'exact_object_required'
+                ? cell.disposition === 'terminal_hold'
+                  ? 'deferred_exact_object_evidence'
+                  : 'research_exact_object_evidence'
+                : 'review_research_policy';
+          return {
+            field,
+            evidenceScope,
+            status: cell.status,
+            disposition: cell.disposition,
+            authoritySource: cell.authoritySource,
+            reasonCode: cell.reasonCode,
+            nextAction,
+            grantsRuntimeAuthority: cell.disposition === 'ready',
+          };
+        }),
         genericOnboardingReady: row.genericOnboardingReady,
         authoritativeFieldCount: row.authoritativeFieldCount,
         terminalGapFields: Object.entries(row.fields)

@@ -12,9 +12,9 @@ assert.equal(audit.summary.explicitReviewedCanonicalBridges, 21);
 assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 20);
 assert.equal(audit.summary.reviewedColorTaxonRootRecords, 5);
 assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 15);
-assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 8);
-assert.equal(audit.summary.baseTaxonCandidateFactSlots, 24);
-assert.equal(audit.summary.exactObjectEvidenceFactSlots, 40);
+assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 14);
+assert.equal(audit.summary.baseTaxonCandidateFactSlots, 42);
+assert.equal(audit.summary.exactObjectEvidenceFactSlots, 70);
 assert.equal(audit.summary.totalCanonicalIdentityRecords, 56);
 assert.equal(audit.summary.genericOnboardingReadySpecies, 111);
 assert.equal(audit.summary.policyPromotedReadySpecies, 19);
@@ -66,10 +66,24 @@ for (const speciesId of ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0351', 
   assert.equal(policy.canonicalScientificName, 'Carassius auratus');
   assert.deepEqual(policy.inheritedFacts, []);
   assert.deepEqual(policy.blockedFacts, ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
-  assert.equal(policy.researchPolicyPresent, false);
+  assert.equal(policy.researchPolicyPresent, true);
+  assert.deepEqual(policy.baseTaxonCandidateFacts, ['water', 'temperature', 'ph']);
+  assert.deepEqual(policy.exactObjectEvidenceFacts, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
   assert.equal(policy.researchPolicyGrantsInheritance, false);
   assert.equal(policy.authoritativeFieldCount, 0);
   assert.equal(policy.genericOnboardingReady, false);
+  assert.equal(policy.fieldReviewRequirements.length, 8);
+  assert.deepEqual(
+    policy.fieldReviewRequirements.filter(item => item.evidenceScope === 'base_taxon_candidate').map(item => item.field),
+    ['water', 'temperature', 'ph'],
+  );
+  assert.deepEqual(
+    policy.fieldReviewRequirements.filter(item => item.evidenceScope === 'exact_object_required').map(item => item.field),
+    ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation'],
+  );
+  assert.ok(policy.fieldReviewRequirements.every(item => item.grantsRuntimeAuthority === false));
+  assert.ok(policy.fieldReviewRequirements.filter(item => ['water', 'temperature', 'ph'].includes(item.field)).every(item => item.nextAction === 'deferred_reviewed_field_bridge'));
+  assert.equal(policy.fieldReviewRequirements.find(item => item.field === 'predation')?.nextAction, 'research_exact_object_evidence');
 }
 
 const butterflyTailPolicy = audit.fieldScopedPolicies.find(item => item.speciesId === 'sp_0065');

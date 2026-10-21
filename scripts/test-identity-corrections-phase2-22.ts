@@ -7,6 +7,11 @@ import {
 } from '../src/data/catalogCanonicalIdentity';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
+import { getCompatibilityVariantFieldResearchPolicy } from '../src/data/compatibilityVariantFieldResearchPolicy';
+import {
+  compatibilityVariantResearchCeilings,
+  getCompatibilityVariantResearchCeiling,
+} from '../src/data/compatibilityVariantResearchCeilings';
 import { identityCorrectionsPhase2_22Sources } from '../src/data/catalogReviewBatches/identity-corrections-phase2-22';
 import { getKnowledgeSource } from '../src/modules/knowledge/knowledgeSources';
 import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
@@ -61,6 +66,19 @@ for (const [speciesId, variantKey] of bridged) {
   assert.equal(coverageRow.actionableGapCount, 1);
   assert.equal(coverageRow.fields.predation.disposition, 'targeted_source_expansion');
 
+  const researchPolicy = getCompatibilityVariantFieldResearchPolicy(speciesId);
+  assert.ok(researchPolicy, speciesId + ' must enter the reviewed field-research pipeline after identity resolution');
+  assert.deepEqual(researchPolicy.baseTaxonCandidateFacts, ['water', 'temperature', 'ph']);
+  assert.deepEqual(researchPolicy.exactObjectEvidenceFacts, ['adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation']);
+  assert.equal(researchPolicy.grantsInheritance, false);
+  for (const field of ['water', 'temperature', 'ph', 'adult_size', 'tank_size'] as const) {
+    const ceiling = getCompatibilityVariantResearchCeiling(speciesId, field);
+    assert.ok(ceiling, speciesId + ':' + field + ' must retain a research ceiling after identity resolution');
+    assert.equal(ceiling.status, 'field_bridge_evidence_ceiling');
+    assert.equal(ceiling.reasonCode, 'variant_field_bridge_research_exhausted');
+  }
+  assert.equal(getCompatibilityVariantResearchCeiling(speciesId, 'predation'), undefined);
+
   const holdItem = hold.items.find(item => item.speciesId === speciesId);
   assert.ok(holdItem, speciesId + ' must remain in held intake until fields are reviewed');
   assert.equal(holdItem.identityReviewState, 'reviewed_supported');
@@ -73,6 +91,22 @@ assert.equal(hold.summary.missingIdentityReviewCatalogObjects, 41);
 assert.equal(hold.summary.reviewedSupportedIdentityCatalogObjects, 6);
 assert.equal(hold.summary.canonicalBridgeCatalogObjects, 6);
 
+assert.equal(
+  compatibilityVariantResearchCeilings.length,
+  56,
+  'durable variant research ceilings must survive cleanup or emptying of working bridge manifests',
+);
+assert.equal(
+  compatibilityVariantResearchCeilings.filter(item => item.status === 'field_bridge_evidence_ceiling').length,
+  7,
+  'six newly identity-resolved goldfish plus the existing field-bridge record must remain field-stage ceilings',
+);
+assert.equal(
+  compatibilityVariantResearchCeilings.find(item => item.speciesId === 'sp_0419')?.status,
+  'identity_evidence_ceiling',
+  'unresolved control variants must not be migrated merely because other variants gained reviewed identity',
+);
+
 for (const speciesId of ['sp_0064', 'sp_0150', 'sp_0349', 'sp_0350', 'sp_0385', 'sp_0387']) {
   assert.equal(getCatalogCanonicalIdentity(speciesId), undefined, speciesId + ' lacks sufficient exact-form evidence and must stay identity-held');
   assert.equal(row(speciesId)?.genericOnboardingReady, false);
@@ -84,4 +118,4 @@ assert.equal(
   'goldfish identity resolution must not add pair-specific rules',
 );
 
-console.log('Goldfish exact variant identity bridge PASS: six evidence-backed Carassius auratus forms gain reviewed canonical identity with zero inherited Compatibility facts; six weaker compound/trade forms remain identity-held; ready count and pair-rule architecture are not promoted by identity alone.');
+console.log('Goldfish exact variant identity bridge PASS: six evidence-backed Carassius auratus forms retain zero runtime inheritance, move from identity-stage ceilings into reviewed field-bridge research policy, and leave weaker compound/trade forms identity-held.');

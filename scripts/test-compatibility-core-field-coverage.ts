@@ -931,14 +931,29 @@ assert.deepEqual([...plannedCatalogObjects], []);
 const exactOnlyCompletionKeys = completionEligibleBacklog.map(item => item.speciesId + ':' + item.field).sort();
 assert.deepEqual(exactOnlyCompletionKeys, []);
 const queuedExactObjectKeys = new Set(variantExactEvidenceQueue.items.filter(item => item.sourceLane === 'exact_object_policy').map(item => item.speciesId + ':' + item.field));
+const identityResolvedGoldfishExactObjectKeys = [
+  'sp_0063',
+  'sp_0149',
+  'sp_0180',
+  'sp_0348',
+  'sp_0351',
+  'sp_0386',
+].flatMap(speciesId => [
+  speciesId + ':adult_size',
+  speciesId + ':predation',
+  speciesId + ':social_behavior',
+  speciesId + ':tank_size',
+  speciesId + ':territoriality',
+]);
 assert.deepEqual([...queuedExactObjectKeys].sort(), [
+  ...identityResolvedGoldfishExactObjectKeys,
   'sp_0066:territoriality',
   'sp_0068:territoriality',
   'sp_0144:territoriality',
   'sp_0155:predation',
   'sp_0155:territoriality',
   'sp_0361:territoriality',
-], 'exact-object queue must remain as the unresolved audit ledger even after ordinary completion research is terminally classified');
+].sort(), 'exact-object queue must remain as the unresolved audit ledger after identity resolution; adding a reviewed field-research policy must not make terminal or targeted exact-object gaps disappear');
 assert.equal(taxonResearchPlan.find(item => item.baseScientificName === 'Carassius auratus'), undefined, 'Red Grass Goldfish leaves taxon research after reviewed 8/8 field authority');
 
 const guppyTaxonJob = taxonResearchPlan.find(item => item.baseScientificName === 'Poecilia reticulata');

@@ -89,7 +89,7 @@
           "predation"
         ],
         "terminalReasons": [
-          "variant_identity_research_exhausted",
+          "variant_field_bridge_research_exhausted",
           "variant_social_not_established"
         ],
         "exposureSharePct": 77.85,
@@ -143,7 +143,7 @@
           "predation"
         ],
         "terminalReasons": [
-          "variant_identity_research_exhausted",
+          "variant_field_bridge_research_exhausted",
           "variant_social_not_established"
         ],
         "exposureSharePct": 77.85,
@@ -290,7 +290,7 @@
           "predation"
         ],
         "terminalReasons": [
-          "variant_identity_research_exhausted",
+          "variant_field_bridge_research_exhausted",
           "variant_social_not_established"
         ],
         "exposureSharePct": 77.85,
@@ -701,7 +701,7 @@
           "predation"
         ],
         "terminalReasons": [
-          "variant_identity_research_exhausted",
+          "variant_field_bridge_research_exhausted",
           "variant_social_not_established"
         ],
         "exposureSharePct": 77.85,
@@ -746,7 +746,7 @@
           "predation"
         ],
         "terminalReasons": [
-          "variant_identity_research_exhausted",
+          "variant_field_bridge_research_exhausted",
           "variant_social_not_established"
         ],
         "exposureSharePct": 77.85,
@@ -848,7 +848,7 @@
           "predation"
         ],
         "terminalReasons": [
-          "variant_identity_research_exhausted",
+          "variant_field_bridge_research_exhausted",
           "variant_social_not_established"
         ],
         "exposureSharePct": 77.85,
@@ -2013,7 +2013,7 @@
       },
       {
         "reason": "variant_identity_research_exhausted",
-        "speciesCount": 38
+        "speciesCount": 32
       },
       {
         "reason": "species_social_not_established",
@@ -2037,6 +2037,10 @@
       },
       {
         "reason": "trade_name_taxon_ambiguous",
+        "speciesCount": 6
+      },
+      {
+        "reason": "variant_field_bridge_research_exhausted",
         "speciesCount": 6
       },
       {

@@ -13,7 +13,7 @@ export type CompatibilityVariantResearchCeiling = {
 export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchCeiling[] = [
   {
     "speciesId": "sp_0063",
-    "status": "identity_evidence_ceiling",
+    "status": "field_bridge_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
     "fields": [
       "adult_size",
@@ -22,7 +22,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
       "temperature",
       "water"
     ],
-    "reasonCode": "variant_identity_research_exhausted",
+    "reasonCode": "variant_field_bridge_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {
@@ -67,7 +67,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
   },
   {
     "speciesId": "sp_0149",
-    "status": "identity_evidence_ceiling",
+    "status": "field_bridge_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
     "fields": [
       "adult_size",
@@ -76,7 +76,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
       "temperature",
       "water"
     ],
-    "reasonCode": "variant_identity_research_exhausted",
+    "reasonCode": "variant_field_bridge_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {
@@ -193,7 +193,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
   },
   {
     "speciesId": "sp_0180",
-    "status": "identity_evidence_ceiling",
+    "status": "field_bridge_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
     "fields": [
       "adult_size",
@@ -202,7 +202,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
       "temperature",
       "water"
     ],
-    "reasonCode": "variant_identity_research_exhausted",
+    "reasonCode": "variant_field_bridge_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {
@@ -544,7 +544,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
   },
   {
     "speciesId": "sp_0348",
-    "status": "identity_evidence_ceiling",
+    "status": "field_bridge_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
     "fields": [
       "adult_size",
@@ -553,7 +553,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
       "temperature",
       "water"
     ],
-    "reasonCode": "variant_identity_research_exhausted",
+    "reasonCode": "variant_field_bridge_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {
@@ -586,7 +586,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
   },
   {
     "speciesId": "sp_0351",
-    "status": "identity_evidence_ceiling",
+    "status": "field_bridge_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
     "fields": [
       "adult_size",
@@ -595,7 +595,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
       "temperature",
       "water"
     ],
-    "reasonCode": "variant_identity_research_exhausted",
+    "reasonCode": "variant_field_bridge_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {
@@ -642,7 +642,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
   },
   {
     "speciesId": "sp_0386",
-    "status": "identity_evidence_ceiling",
+    "status": "field_bridge_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
     "fields": [
       "adult_size",
@@ -651,7 +651,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
       "temperature",
       "water"
     ],
-    "reasonCode": "variant_identity_research_exhausted",
+    "reasonCode": "variant_field_bridge_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {

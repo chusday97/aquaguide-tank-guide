@@ -1,14 +1,21 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 
+import { getCatalogCanonicalIdentity } from '../src/data/catalogCanonicalIdentity';
+import { compatibilityVariantResearchCeilings as existingVariantResearchCeilings } from '../src/data/compatibilityVariantResearchCeilings';
+
 const arg = (name: string) => {
   const prefix = `--${name}=`;
   return process.argv.find(value => value.startsWith(prefix))?.slice(prefix.length);
 };
 
 const input = arg('input') || 'evaluation/product/compatibility-variant-bridge-review.v1.json';
-const appendInputs = (arg('append-input') || '')
-  .split(',')
+const defaultAppendInputs = [
+  'evaluation/product/compatibility-variant-bridge-review-current-terminal.v1.json',
+  'evaluation/product/compatibility-variant-bridge-review-new-variants-terminal.v1.json',
+];
+const appendInputArg = arg('append-input');
+const appendInputs = (appendInputArg === undefined ? defaultAppendInputs : appendInputArg.split(','))
   .map(value => value.trim())
   .filter(Boolean);
 const inputPaths = [...new Set([input, ...appendInputs])];
@@ -36,7 +43,27 @@ type VariantCeilingRow = {
   sourceArtifact: string;
 };
 
-const rowBySpeciesId = new Map<string, VariantCeilingRow>();
+const reconcileCurrentIdentityAuthority = (row: VariantCeilingRow): VariantCeilingRow => {
+  const canonicalIdentity = getCatalogCanonicalIdentity(row.speciesId);
+  const identityStageResolvedByFieldPolicy = Boolean(
+    row.status === 'identity_evidence_ceiling'
+    && canonicalIdentity?.registrySource === 'reviewed_variant_field_policy',
+  );
+  return identityStageResolvedByFieldPolicy
+    ? {
+        ...row,
+        status: 'field_bridge_evidence_ceiling',
+        reasonCode: 'variant_field_bridge_research_exhausted',
+      }
+    : row;
+};
+
+// Research ceilings are durable stop-search records. Upstream bridge manifests are
+// working artifacts and may later be emptied after a wave closes, so regeneration
+// must preserve source-controlled terminal ceilings unless a newer manifest replaces them.
+const rowBySpeciesId = new Map<string, VariantCeilingRow>(
+  existingVariantResearchCeilings.map(row => [row.speciesId, reconcileCurrentIdentityAuthority({ ...row })]),
+);
 for (const sourceArtifact of inputPaths) {
   const manifest = JSON.parse(readFileSync(sourceArtifact, 'utf8')) as VariantBridgeManifest;
   for (const object of (manifest.groups || []).flatMap(group => group.objects || [])) {
@@ -46,7 +73,7 @@ for (const sourceArtifact of inputPaths) {
       ? (object.unresolvedFields || [])
       : (object.candidateFields || [])).filter(Boolean))].sort();
     if (!speciesId || fields.length === 0) continue;
-    rowBySpeciesId.set(speciesId, {
+    rowBySpeciesId.set(speciesId, reconcileCurrentIdentityAuthority({
       speciesId,
       status: object.status,
       baseScientificName: String(object.baseScientificName || ''),
@@ -55,7 +82,7 @@ for (const sourceArtifact of inputPaths) {
         ? 'variant_identity_research_exhausted'
         : 'variant_field_bridge_research_exhausted',
       sourceArtifact,
-    });
+    }));
   }
 }
 
