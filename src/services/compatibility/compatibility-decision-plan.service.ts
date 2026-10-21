@@ -4,8 +4,11 @@ import {
   getExplicitCompatibilityGroupMinimum,
   getExplicitCompatibilitySpaceThreshold,
   getCompatibilityRuleFamily,
+  getCompatibilityRuleOriginScope,
   getPreExistingBlockingLabel,
+  hasCandidateInvolvedBlockingRules,
   hasOnlyPreExistingBlockingRules,
+  prioritizePlannedAdditionBlockingRules,
   prioritizeDistinctCompatibilityRules,
   type BeginnerCompatibilityVerdict,
   type CompatibilityActionAuthorityLevel,
@@ -169,8 +172,15 @@ export const getCompatibilityUnknownReason = (decision: CompatibilityUnknownReas
     : null
 );
 
-const sourceRulesForPlan = (decision: CompatibilityDecision): TankCompatibilityRule[] => {
-  if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules).slice(0, 2);
+const sourceRulesForPlan = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode = 'planned_addition',
+): TankCompatibilityRule[] => {
+  if (decision.status === 'not_recommended') return (
+    mode === 'planned_addition'
+      ? prioritizePlannedAdditionBlockingRules(decision)
+      : prioritizeDistinctCompatibilityRules(decision.blockingRules)
+  ).slice(0, 2);
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules).slice(0, 2);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData).slice(0, 2);
   // A compatible decision has no remediation source rules. Feeding passed
@@ -385,6 +395,24 @@ const specificActionFor = (
   }
 
   return null;
+};
+
+const specificActionForPresentation = (
+  decision: CompatibilityDecision,
+  rule: TankCompatibilityRule,
+  mode: CompatibilityAssessmentMode,
+): string | null => {
+  const isSecondaryPreExistingBlock = mode === 'planned_addition'
+    && decision.status === 'not_recommended'
+    && hasCandidateInvolvedBlockingRules(decision)
+    && getCompatibilityRuleOriginScope(decision, rule) === 'existing_only';
+  const action = specificActionFor(
+    decision,
+    rule,
+    isSecondaryPreExistingBlock ? 'current_tank' : mode,
+  );
+  if (!action || !isSecondaryPreExistingBlock) return action;
+  return `另外，${action}`;
 };
 
 const missingInputActionFor = (
@@ -631,7 +659,7 @@ export const buildCompatibilityResolutionTargets = (
   mode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityResolutionTarget[] => {
   if (decision.status === 'compatible') return [];
-  return sourceRulesForPlan(decision)
+  return sourceRulesForPlan(decision, mode)
     .map(rule => resolutionTargetFor(decision, rule, mode))
     .slice(0, 2);
 };
@@ -651,10 +679,16 @@ type CompatibilityActionSequenceRule = {
   kind: 'blocking' | 'warning' | 'missing';
 };
 
-const actionSequenceRulesFor = (decision: CompatibilityDecision): CompatibilityActionSequenceRule[] => {
+const actionSequenceRulesFor = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode,
+): CompatibilityActionSequenceRule[] => {
   if (decision.status === 'compatible') return [];
 
-  const blocking = orderedDistinctRules(decision.blockingRules).map(rule => ({ rule, kind: 'blocking' as const }));
+  const blockingRules = decision.status === 'not_recommended' && mode === 'planned_addition'
+    ? prioritizePlannedAdditionBlockingRules(decision)
+    : orderedDistinctRules(decision.blockingRules);
+  const blocking = blockingRules.map(rule => ({ rule, kind: 'blocking' as const }));
   const usedFamilies = new Set(blocking.map(item => getCompatibilityRuleFamily(item.rule.code)));
   const warning = orderedDistinctRules(decision.warningRules)
     .filter(rule => !usedFamilies.has(getCompatibilityRuleFamily(rule.code)))
@@ -705,7 +739,7 @@ export const buildCompatibilityActionSequence = (
   decision: CompatibilityDecision,
   mode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityActionSequenceStep[] => {
-  const entries = actionSequenceRulesFor(decision);
+  const entries = actionSequenceRulesFor(decision, mode);
   const hasHardStop = decision.status === 'not_recommended' && entries.some(entry => entry.kind === 'blocking');
 
   return entries.map((entry, index) => {
@@ -717,7 +751,7 @@ export const buildCompatibilityActionSequence = (
       riskFamily: getCompatibilityRuleFamily(entry.rule.code),
       action: entry.kind === 'missing'
         ? missingInputActionFor(decision, entry.rule)
-        : specificActionFor(
+        : specificActionForPresentation(
           entry.kind === 'blocking'
             ? decision
             : {
@@ -864,13 +898,13 @@ export const buildCompatibilityDecisionPlan = (
     throw new Error('compatibility_invariant_fully_informed_cannot_be_unknown');
   }
 
-  const sourceRules = sourceRulesForPlan(decision);
+  const sourceRules = sourceRulesForPlan(decision, mode);
   const preExistingOnlyBlock = mode === 'planned_addition'
     && hasOnlyPreExistingBlockingRules(decision);
   const specificActions = preExistingOnlyBlock
     ? [action.immediateAction]
     : sourceRules
-      .map(rule => specificActionFor(decision, rule, mode))
+      .map(rule => specificActionForPresentation(decision, rule, mode))
       .filter((step): step is string => Boolean(step));
   const specificCoverageComplete = specificActions.length > 0 && specificActions.length >= sourceRules.length;
   const nextSteps = unique(specificCoverageComplete

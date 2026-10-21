@@ -4,8 +4,11 @@ import {
   getCompatibilityRuleFamily,
   getExplicitCompatibilityGroupMinimum,
   getExplicitCompatibilitySpaceThreshold,
+  getCompatibilityRuleOriginScope,
   getPreExistingBlockingLabel,
+  hasCandidateInvolvedBlockingRules,
   hasOnlyPreExistingBlockingRules,
+  prioritizePlannedAdditionBlockingRules,
   prioritizeDistinctCompatibilityRules,
   type CompatibilityAssessmentMode,
 } from './compatibility-action.service';
@@ -15,6 +18,7 @@ type ReadableRule = {
   code: string;
   title?: string;
   evidence?: string;
+  affectedSpeciesIds?: string[];
 };
 
 export type CompatibilityReadableConclusion = {
@@ -203,8 +207,13 @@ const uniqueReadable = (values: string[], kind: 'reason' | 'action') => {
   return result;
 };
 
-const primaryRulesFor = (decision: CompatibilityDecision): ReadableRule[] => {
-  if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules);
+const primaryRulesFor = (
+  decision: CompatibilityDecision,
+  assessmentMode: CompatibilityAssessmentMode,
+): ReadableRule[] => {
+  if (decision.status === 'not_recommended') return assessmentMode === 'planned_addition'
+    ? prioritizePlannedAdditionBlockingRules(decision)
+    : prioritizeDistinctCompatibilityRules(decision.blockingRules);
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData);
   return [{ code: 'compatibility_clear', title: '当前没有发现明确混养冲突。' }];
@@ -220,6 +229,19 @@ const defaultReason = (
     : '当前有可以处理的风险，调整后再加入会更稳妥。';
   if (decision.status === 'not_recommended') return '当前存在明确的混养风险。';
   return '关键资料还不够，暂时不能给出可靠结论。';
+};
+
+const conciseConflictLabelFor = (rule: ReadableRule) => {
+  const family = getCompatibilityRuleFamily(rule.code);
+  if (family === 'water_type') return '水体冲突';
+  if (family === 'predation') return '捕食冲突';
+  if (family === 'housing') return '单养要求冲突';
+  if (family === 'temperature') return '温度冲突';
+  if (family === 'aggression') return '攻击或追鳍冲突';
+  if (family === 'territory') return '领地冲突';
+  if (family === 'ph') return '水质冲突';
+  if (family === 'space') return '空间风险';
+  return '独立冲突';
 };
 
 const ruleCodes = (decision: CompatibilityDecision) => new Set([
@@ -315,13 +337,27 @@ const deterministicActionsFor = (
   const codes = ruleCodes(decision);
 
   if (decision.status === 'not_recommended') {
-    const primaryBlockingRules = prioritizeDistinctCompatibilityRules(decision.blockingRules);
+    const primaryBlockingRules = assessmentMode === 'planned_addition'
+      ? prioritizePlannedAdditionBlockingRules(decision)
+      : prioritizeDistinctCompatibilityRules(decision.blockingRules);
+    const hasCandidateBlock = assessmentMode === 'planned_addition'
+      && hasCandidateInvolvedBlockingRules(decision);
     const hasNonSpaceBlocker = primaryBlockingRules.some(rule => getCompatibilityRuleFamily(rule.code) !== 'space');
     const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(
       [...decision.blockingRules, ...decision.warningRules]
         .filter(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
     );
     const actions = primaryBlockingRules.map(rule => {
+      if (
+        hasCandidateBlock
+        && getCompatibilityRuleOriginScope(decision, rule) === 'existing_only'
+      ) {
+        const existingConflictLabel = getPreExistingBlockingLabel(decision, rule);
+        const existingAction = blockingActionFor(rule, 'current_tank');
+        return existingConflictLabel
+          ? `另外，当前缸原有的 ${existingConflictLabel} 也要单独处理：${existingAction}`
+          : `另外，当前缸还有原有冲突需要单独处理：${existingAction}`;
+      }
       if (getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold) {
         if (assessmentMode === 'current_tank') {
           return hasNonSpaceBlocker
@@ -419,12 +455,14 @@ export const buildCompatibilityReadableConclusion = (
   assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityReadableConclusion => {
   const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
-  const primaryRules = primaryRulesFor(decision);
+  const primaryRules = primaryRulesFor(decision, assessmentMode);
   const preExistingOnlyBlock = assessmentMode === 'planned_addition'
     && hasOnlyPreExistingBlockingRules(decision);
   const preExistingBlockingLabel = preExistingOnlyBlock
     ? getPreExistingBlockingLabel(decision)
     : null;
+  const hasCandidateBlock = assessmentMode === 'planned_addition'
+    && hasCandidateInvolvedBlockingRules(decision);
   const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(
     [...decision.blockingRules, ...decision.warningRules]
       .filter(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
@@ -433,11 +471,21 @@ export const buildCompatibilityReadableConclusion = (
     ? [preExistingBlockingLabel
       ? `当前缸已有 ${preExistingBlockingLabel} 的明确冲突；这次硬阻断不是候选生物新触发的。`
       : '当前硬阻断来自鱼缸原有组合，不是这次候选生物新触发的冲突。']
-    : primaryRules.map(rule => (
-      getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold
+    : primaryRules.map(rule => {
+      if (
+        hasCandidateBlock
+        && getCompatibilityRuleOriginScope(decision, rule) === 'existing_only'
+      ) {
+        const existingConflictLabel = getPreExistingBlockingLabel(decision, rule);
+        const conflictLabel = conciseConflictLabelFor(rule);
+        return existingConflictLabel
+          ? `另外，当前缸原有的 ${existingConflictLabel} 还有${conflictLabel}，不是候选生物新触发。`
+          : `另外，当前缸还有原有的${conflictLabel}，不是候选生物新触发。`;
+      }
+      return getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold
         ? `当前空间不足；按成体需求至少需要 ${combinedSpaceThreshold}。`
-        : getCompatibilityReadableRuleText(rule, assessmentMode)
-    ));
+        : getCompatibilityReadableRuleText(rule, assessmentMode);
+    });
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
   const whySeed = decision.status === 'compatible'
     ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision, assessmentMode), ...aiWhy]

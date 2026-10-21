@@ -106,4 +106,81 @@ assert.ok(
 const candidateReadable = buildCompatibilityReadableConclusion(candidateConflict.decision, {}, 'planned_addition');
 assert.doesNotMatch(candidateReadable.why.join(' '), /这次硬阻断不是候选生物新触发/);
 
+
+const mixedConflictReview = reviewSpeciesAdditions({
+  aquarium: tank,
+  items: [{ fishId: 'sp_0003', quantity: 1 }],
+  speciesCatalog: fishData,
+});
+assert.ok(mixedConflictReview);
+assert.equal(mixedConflictReview.status, 'not_recommended');
+assert.ok(
+  mixedConflictReview.decision.blockingRules.some(
+    rule => getCompatibilityRuleOriginScope(mixedConflictReview.decision, rule) === 'candidate_involved',
+  ),
+  'fixture must contain a hard blocker triggered by the candidate',
+);
+assert.ok(
+  mixedConflictReview.decision.blockingRules.some(
+    rule => getCompatibilityRuleOriginScope(mixedConflictReview.decision, rule) === 'existing_only',
+  ),
+  'fixture must also retain an independent pre-existing hard blocker',
+);
+
+const mixedReadable = buildCompatibilityReadableConclusion(
+  mixedConflictReview.decision,
+  {},
+  'planned_addition',
+);
+assert.match(
+  mixedReadable.why[0] || '',
+  /长期水温|适温/,
+  'candidate-involved hard blocker must drive the primary user-facing reason',
+);
+assert.doesNotMatch(
+  mixedReadable.why[0] || '',
+  /黑裙鱼 与 马口鱼|不是候选生物新触发/,
+  'the primary reason must not be the pre-existing tank conflict',
+);
+assert.match(
+  mixedReadable.why[1] || '',
+  /当前缸原有的 黑裙鱼 与 马口鱼/,
+  'the pre-existing blocker should remain visible only as secondary context',
+);
+assert.match(mixedReadable.why[1] || '', /不是候选生物新触发/);
+assert.match(
+  mixedReadable.howTo[0] || '',
+  /温度|分缸|更换温度需求更接近/,
+  'the first action must address the candidate-involved blocker',
+);
+assert.match(
+  mixedReadable.howTo[1] || '',
+  /当前缸原有的 黑裙鱼 与 马口鱼/,
+  'the old tank conflict action must be explicitly labeled as pre-existing',
+);
+
+const mixedPlan = buildCompatibilityDecisionPlan(mixedConflictReview.decision, 'planned_addition');
+assert.equal(mixedPlan.evidence.sourceRuleCodes[0], 'temperature_range_conflict');
+assert.equal(
+  getCompatibilityRuleOriginScope(
+    mixedConflictReview.decision,
+    mixedConflictReview.decision.blockingRules.find(rule => rule.code === mixedPlan.evidence.sourceRuleCodes[0])!,
+  ),
+  'candidate_involved',
+  'surfaced provenance must follow the candidate-involved primary blocker',
+);
+assert.match(mixedPlan.nextSteps[0] || '', /不要加入 苏拉威西虾|温度/);
+assert.match(
+  mixedPlan.nextSteps[1] || '',
+  /另外，黑裙鱼 与 马口鱼 存在捕食风险/,
+  'the pre-existing blocker must remain a clearly secondary next step',
+);
+assert.equal(mixedPlan.actionSequence[0]?.riskFamily, 'temperature');
+assert.equal(mixedPlan.actionSequence[0]?.sourceRuleCode, 'temperature_range_conflict');
+assert.equal(mixedPlan.actionSequence[1]?.riskFamily, 'predation');
+assert.match(mixedPlan.actionSequence[1]?.action || '', /另外，黑裙鱼 与 马口鱼 存在捕食风险/);
+assert.equal(mixedPlan.resolutionTargets[0]?.riskFamily, 'temperature');
+assert.equal(mixedPlan.resolutionTargets[1]?.riskFamily, 'predation');
+assert.match(mixedPlan.stopCondition, /苏拉威西虾|温度|适温|混养计划/);
+
 console.log('Compatibility pre-existing risk attribution PASS: planned additions remain paused by unresolved existing hard conflicts without falsely attributing those blockers to the candidate, while candidate-involved blockers keep normal attribution.');

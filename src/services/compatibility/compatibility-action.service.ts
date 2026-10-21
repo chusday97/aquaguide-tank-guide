@@ -48,7 +48,7 @@ export type CompatibilityRuleOriginScope = 'candidate_involved' | 'existing_only
 
 export const getCompatibilityRuleOriginScope = (
   decision: CompatibilityDecision,
-  rule: TankCompatibilityRule,
+  rule: { affectedSpeciesIds?: string[]; code?: string },
 ): CompatibilityRuleOriginScope => {
   const originBySpeciesId = new Map(
     (decision.assessmentItems || []).map(item => [item.speciesId, item.origin] as const),
@@ -58,6 +58,16 @@ export const getCompatibilityRuleOriginScope = (
     .filter((origin): origin is 'candidate' | 'existing' | 'unknown' => Boolean(origin));
 
   if (affectedOrigins.length === 0 || affectedOrigins.includes('unknown')) return 'unknown';
+  const candidateCount = (decision.assessmentItems || [])
+    .filter(item => item.origin === 'candidate')
+    .length;
+  if (
+    candidateCount > 0
+    && (rule.code === 'single_housing_required' || rule.code === 'species_tank_required')
+    && affectedOrigins.every(origin => origin === 'existing')
+  ) {
+    return 'candidate_involved';
+  }
   if (affectedOrigins.includes('candidate')) return 'candidate_involved';
   return affectedOrigins.every(origin => origin === 'existing') ? 'existing_only' : 'unknown';
 };
@@ -68,9 +78,33 @@ export const hasOnlyPreExistingBlockingRules = (decision: CompatibilityDecision)
   && decision.blockingRules.every(rule => getCompatibilityRuleOriginScope(decision, rule) === 'existing_only')
 );
 
-export const getPreExistingBlockingLabel = (decision: CompatibilityDecision): string | null => {
-  const rule = prioritizeDistinctCompatibilityRules(decision.blockingRules)
-    .find(candidate => getCompatibilityRuleOriginScope(decision, candidate) === 'existing_only');
+export const hasCandidateInvolvedBlockingRules = (decision: CompatibilityDecision) => (
+  decision.blockingRules.some(rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved')
+);
+
+export const prioritizePlannedAdditionBlockingRules = (
+  decision: CompatibilityDecision,
+): TankCompatibilityRule[] => {
+  const ordered = prioritizeDistinctCompatibilityRules(decision.blockingRules);
+  if (!ordered.some(rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved')) {
+    return ordered;
+  }
+
+  return [
+    ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved'),
+    ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'unknown'),
+    ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'existing_only'),
+  ];
+};
+
+export const getPreExistingBlockingLabel = (
+  decision: CompatibilityDecision,
+  sourceRule?: { affectedSpeciesIds?: string[]; code?: string },
+): string | null => {
+  const rule = sourceRule && getCompatibilityRuleOriginScope(decision, sourceRule) === 'existing_only'
+    ? sourceRule
+    : prioritizeDistinctCompatibilityRules(decision.blockingRules)
+      .find(candidate => getCompatibilityRuleOriginScope(decision, candidate) === 'existing_only');
   if (!rule) return null;
   const nameBySpeciesId = new Map(
     (decision.assessmentItems || []).map(item => [item.speciesId, item.name] as const),
@@ -244,7 +278,7 @@ const primaryMissingUserInputAction = (
 
 const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision): BeginnerCompatibilityActionCore => {
   const codes = codesOf(decision);
-  const blockingRules = prioritizeDistinctCompatibilityRules(decision.blockingRules);
+  const blockingRules = prioritizePlannedAdditionBlockingRules(decision);
   const warningRules = prioritizeDistinctCompatibilityRules(decision.warningRules);
   const primaryWarningFamily = warningRules[0] ? getCompatibilityRuleFamily(warningRules[0].code) : null;
   const missingData = prioritizeDistinctCompatibilityRules(decision.missingData);
@@ -636,8 +670,15 @@ const buildCurrentTankCompatibilityAction = (
   };
 };
 
-const actionSourceRules = (decision: CompatibilityDecision) => {
-  if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules).slice(0, 2);
+const actionSourceRules = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode,
+) => {
+  if (decision.status === 'not_recommended') return (
+    mode === 'planned_addition'
+      ? prioritizePlannedAdditionBlockingRules(decision)
+      : prioritizeDistinctCompatibilityRules(decision.blockingRules)
+  ).slice(0, 2);
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules).slice(0, 2);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData).slice(0, 2);
   return prioritizeDistinctCompatibilityRules(decision.passedRules).slice(0, 2);
@@ -697,7 +738,7 @@ export const buildBeginnerCompatibilityAction = (
   const core = mode === 'current_tank'
     ? buildCurrentTankCompatibilityAction(decision, plannedAction)
     : plannedAction;
-  const sourceRules = actionSourceRules(decision);
+  const sourceRules = actionSourceRules(decision, mode);
   const domainSourceCodes = domainAuthoritySourceCodes(decision);
   const sourceRuleCodes = Array.from(new Set([...domainSourceCodes, ...sourceRules.map(rule => rule.code)])).slice(0, 2);
   const ruleEvidenceIds = sourceRules.flatMap(rule => (rule.citations || []).map(source => source.id));
