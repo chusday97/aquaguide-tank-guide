@@ -662,8 +662,9 @@ export function SpeciesDetailDialog({
       focusSpeciesId: fish.id,
       primaryActionLabel: t('encyclopedia.compatibilityCalc'),
       primaryActionType: 'route',
+      isEnglish: isEn,
     });
-  }, [aquariumContext, compatibilityDecision, fish, t]);
+  }, [aquariumContext, compatibilityDecision, fish, isEn, t]);
 
   const getMetricSettingsPanel = (metric: FitDimension) => {
     if (metric.type === 'space') return 'size' as const;

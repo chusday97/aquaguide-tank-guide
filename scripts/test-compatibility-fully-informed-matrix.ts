@@ -71,7 +71,7 @@ for (let leftIndex = 0; leftIndex < readySpecies.length; leftIndex += 1) {
     );
 
     const plan = buildCompatibilityDecisionPlan(decision);
-    assert.notEqual(plan.judgment, '暂时无法判断');
+    assert.notEqual(plan.judgment, '需要关键信息');
     assert.equal(plan.unknownReason, null);
     assert.ok(plan.nextSteps.length > 0);
     assert.ok(plan.reviewCheckpoint.length > 0);

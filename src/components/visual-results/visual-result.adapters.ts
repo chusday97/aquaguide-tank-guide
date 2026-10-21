@@ -5,6 +5,7 @@ import { getSpeciesDisplayImage } from '../../lib/speciesVisual';
 import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
 import type { VisualResultStatus, VisualResultSubject, VisualResultViewModel } from './visual-result.types';
 import { getCompatibilityPresentation } from '../../services/compatibility/compatibility-presentation.service';
+import { getCompatibilityStatusLabelLocalized } from '../../services/compatibility/compatibility-status-label.service';
 import { buildBeginnerCompatibilityAction } from '../../services/compatibility/compatibility-action.service';
 import { getDiagnosisCanonicalValuePresentation, projectDiagnosisOutputForPresentation } from '../../modules/diagnosis/diagnosis.presentation';
 
@@ -67,12 +68,14 @@ export function buildCompatibilityVisualResult({
   primaryActionLabel,
   primaryActionType = 'mutation',
   focusSpeciesId,
+  isEnglish = false,
 }: {
   decision: CompatibilityDecision;
   species: Fish[];
   primaryActionLabel: string;
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
   focusSpeciesId?: string;
+  isEnglish?: boolean;
 }): VisualResultViewModel {
   const presentation = getCompatibilityPresentation(decision);
   const beginnerAction = buildBeginnerCompatibilityAction(decision);
@@ -116,9 +119,9 @@ export function buildCompatibilityVisualResult({
   return {
     status: decision.status,
     presentationMode: presentation.mode,
-    statusLabel: beginnerAction.headline,
+    statusLabel: getCompatibilityStatusLabelLocalized(decision.status, isEnglish),
     coverageLabel: presentation.coverageLabel,
-    title: presentation.headline,
+    title: getCompatibilityStatusLabelLocalized(decision.status, isEnglish),
     conclusion: presentation.primaryReason,
     emphasis: getVisualEmphasis(presentation.primaryReason),
     subjects,

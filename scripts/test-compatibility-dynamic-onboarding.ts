@@ -173,7 +173,7 @@ for (const existing of readySpecies) {
   assert.ok(!decision.metadata.domainRuleCodes.includes('reviewed_pair_rule'));
 
   const plan = buildCompatibilityDecisionPlan(decision);
-  assert.notEqual(plan.judgment, '暂时无法判断');
+  assert.notEqual(plan.judgment, '需要关键信息');
   assert.ok(plan.nextSteps.length > 0, 'dynamic result must include next steps for ' + existing.id);
   assert.ok(plan.reviewCheckpoint.length > 0, 'dynamic result must include a recheck point for ' + existing.id);
   assert.ok(plan.stopCondition.length > 0, 'dynamic result must include a stop condition for ' + existing.id);
@@ -206,7 +206,7 @@ for (const pair of wholeTankDecision.pairResults.filter(pair => pair.speciesA.id
   assert.ok(!pair.rawResult.metadata.domainRuleCodes.includes('reviewed_pair_rule'), 'synthetic whole-tank pairs must remain generic-rule decisions');
 }
 const wholeTankPlan = buildCompatibilityDecisionPlan(wholeTankDecision);
-assert.notEqual(wholeTankPlan.judgment, '暂时无法判断');
+assert.notEqual(wholeTankPlan.judgment, '需要关键信息');
 assert.ok(wholeTankPlan.nextSteps.length > 0);
 assert.ok(wholeTankPlan.reviewCheckpoint.length > 0);
 assert.ok(wholeTankPlan.stopCondition.length > 0);

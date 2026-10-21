@@ -310,6 +310,7 @@
     "test:compatibility-launch-cohort": "node --import tsx scripts/test-compatibility-launch-cohort.ts",
     "test:compatibility-launch-matrix": "node --import tsx scripts/test-compatibility-launch-matrix.ts",
     "test:compatibility-presentation": "node --import tsx scripts/test-compatibility-presentation.ts",
+    "test:compatibility-status-label-consistency": "node --import tsx scripts/test-compatibility-status-label-consistency.ts",
     "test:recommendation-unknown-filter": "node --import tsx scripts/test-recommendation-unknown-filter.ts",
     "test:ui-action-contract": "tsx scripts/test-ui-action-contract.ts",
     "test:formal-scenes": "node scripts/verify-formal-interactive-scenes.mjs",

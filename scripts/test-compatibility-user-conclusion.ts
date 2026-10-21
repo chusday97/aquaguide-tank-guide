@@ -81,7 +81,7 @@ const duplicateWarningDecision = {
 } as unknown as CompatibilityDecision;
 
 const presentation = getCompatibilityPresentation(duplicateWarningDecision);
-assert.equal(presentation.headline, '有条件可以');
+assert.equal(presentation.headline, '条件混养');
 assert.equal(presentation.cautions.length, 1);
 assert.equal(presentation.confirmedFindings.length, 1);
 assert.equal(presentation.primaryReason, '证据 A');
@@ -106,7 +106,7 @@ const evidenceCeilingDecision = {
 } as unknown as CompatibilityDecision;
 const evidenceCeilingPresentation = getCompatibilityPresentation(evidenceCeilingDecision);
 const evidenceCeilingAction = buildBeginnerCompatibilityAction(evidenceCeilingDecision, 'planned_addition');
-assert.equal(evidenceCeilingPresentation.headline, '有条件可以');
+assert.equal(evidenceCeilingPresentation.headline, '条件混养');
 assert.doesNotMatch(evidenceCeilingPresentation.headline, /暂时无法判断/);
 assert.match(evidenceCeilingPresentation.primaryReason, /没有足够直接|不能当作/);
 assert.equal(evidenceCeilingAction.verdict, 'add_with_conditions');
@@ -116,19 +116,19 @@ assert.match(evidenceCeilingAction.observeAfterAction, /立即分隔|撤回/);
 
 
 const underGroupedPresentation = getCompatibilityPresentation(underGroupedNeon as unknown as CompatibilityDecision);
-assert.equal(underGroupedPresentation.headline, '有条件可以');
+assert.equal(underGroupedPresentation.headline, '条件混养');
 assert.match(underGroupedPresentation.primaryReason, /群体|最低/);
 assert.match(underGroupedPresentation.primaryActionText, /当前计划数量还不够/);
 assert.match(underGroupedPresentation.primaryActionText, /至少 8 条\/只/);
 assert.doesNotMatch(underGroupedPresentation.primaryActionText, /只加 1–2 条/);
 
 const predationPresentation = getCompatibilityPresentation(channaWithNeon as unknown as CompatibilityDecision);
-assert.equal(predationPresentation.headline, '不建议');
+assert.equal(predationPresentation.headline, '不建议混养');
 assert.match(predationPresentation.primaryReason, /捕食|吞食/);
 assert.match(predationPresentation.primaryActionText, /不要|先不要/);
 
 const predationPlan = buildCompatibilityDecisionPlan(channaWithNeon as unknown as CompatibilityDecision);
-assert.equal(predationPlan.judgment, '不建议');
+assert.equal(predationPlan.judgment, '不建议混养');
 assert.equal(predationPlan.verdict, 'do_not_mix');
 assert.match(predationPlan.expectedAfterAdjustment, /消除阻断风险|更换|分隔/);
 assert.match(predationPlan.stopCondition, /不要执行当前混养计划|阻断风险/);
@@ -150,7 +150,7 @@ assert.equal(tigerGuppyPair.primaryReason.sourceRule.code, 'pair_rule_fin_nippin
 assert.match(tigerGuppyPair.primaryReason.evidence, /追鳍|长鳍/);
 assert.doesNotMatch(tigerGuppyPair.primaryReason.evidence, /捕食风险实验支持/);
 const tigerGuppyPlan = buildCompatibilityDecisionPlan(tigerGuppyDecision);
-assert.equal(tigerGuppyPlan.judgment, '不建议');
+assert.equal(tigerGuppyPlan.judgment, '不建议混养');
 assert.match(tigerGuppyPlan.riskSummary.join(' '), /追鳍|长鳍|慢游/);
 assert.doesNotMatch(tigerGuppyPlan.riskSummary.join(' '), /有一项已审核条件需要继续确认/);
 assert.ok(tigerGuppyPlan.evidence.sourceRuleCodes.includes('pair_rule_fin_nipping_long_fin_conflict'));
@@ -170,7 +170,7 @@ assert.equal(multiSpeciesConflict.metadata.domainStatus, multiSpeciesConflict.st
 assert.ok(multiSpeciesConflict.blockingRules.some(rule => rule.code === 'predation_risk'));
 assert.ok(multiSpeciesConflict.blockedReasons.some(reason => reason.sourceRule.code === 'predation_risk'));
 const multiSpeciesConflictPresentation = getCompatibilityPresentation(multiSpeciesConflict);
-assert.equal(multiSpeciesConflictPresentation.headline, '不建议');
+assert.equal(multiSpeciesConflictPresentation.headline, '不建议混养');
 assert.match(multiSpeciesConflictPresentation.primaryReason, /捕食|吞食/);
 assert.match(multiSpeciesConflictPresentation.primaryActionText, /不要|先不要/);
 
@@ -194,12 +194,12 @@ assert.equal(
   1,
 );
 const cumulativeLoadPresentation = getCompatibilityPresentation(cumulativeLoadDecision);
-assert.equal(cumulativeLoadPresentation.headline, '有条件可以');
+assert.equal(cumulativeLoadPresentation.headline, '条件混养');
 assert.match(cumulativeLoadPresentation.primaryReason, /负荷|负载/);
 assert.match(cumulativeLoadPresentation.primaryActionText, /数量|过滤|加入/);
 
 const cumulativeLoadPlan = buildCompatibilityDecisionPlan(cumulativeLoadDecision);
-assert.equal(cumulativeLoadPlan.judgment, '有条件可以');
+assert.equal(cumulativeLoadPlan.judgment, '条件混养');
 assert.equal(cumulativeLoadPlan.verdict, 'add_with_conditions');
 assert.match(cumulativeLoadPlan.expectedAfterAdjustment, /重新评估/);
 assert.match(cumulativeLoadPlan.reviewCheckpoint, /观察|稳定/);
@@ -213,11 +213,11 @@ assert.equal(reducedLoadDecision.status, 'compatible');
 assert.equal(reducedLoadDecision.metadata.domainStatus, reducedLoadDecision.status);
 assert.ok(reducedLoadDecision.warningRules.every(rule => !rule.code.includes('bioload')));
 const reducedLoadPresentation = getCompatibilityPresentation(reducedLoadDecision);
-assert.equal(reducedLoadPresentation.headline, '可以养');
+assert.equal(reducedLoadPresentation.headline, '可以混养');
 assert.match(reducedLoadPresentation.primaryActionText, /可以按当前计划加入/);
 
 const reducedLoadPlan = buildCompatibilityDecisionPlan(reducedLoadDecision);
-assert.equal(reducedLoadPlan.judgment, '可以养');
+assert.equal(reducedLoadPlan.judgment, '可以混养');
 assert.equal(reducedLoadPlan.verdict, 'add');
 assert.equal(reducedLoadPlan.unknownReason, null);
 assert.equal(reducedLoadPlan.fullyInformed, isCompatibilityDecisionFullyInformed(reducedLoadDecision));

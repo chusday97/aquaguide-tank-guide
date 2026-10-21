@@ -14,6 +14,7 @@ import {
   isCompatibilityUserReadableText,
   type CompatibilityReadableConclusion,
 } from './compatibility-readable-copy.service';
+import { getCompatibilityStatusLabel } from './compatibility-status-label.service';
 
 type GroundedItem = {
   text: string;
@@ -73,18 +74,11 @@ const localAssessment = (decision: CompatibilityDecision): CompatibilityAssessme
   },
 });
 
-const JUDGMENT_BY_STATUS: Record<CompatibilityDecision['status'], CompatibilityReadableConclusion['judgment']> = {
-  compatible: '可以养',
-  caution: '有条件可以',
-  not_recommended: '不建议',
-  insufficient_data: '暂时无法判断',
-};
-
 const isValidMain = (
   main: RemoteCompatibilityAssessment['main'],
   status: CompatibilityDecision['status'],
 ) => (
-  main?.judgment === JUDGMENT_BY_STATUS[status]
+  main?.judgment === getCompatibilityStatusLabel(status, 'zh-CN')
   && Array.isArray(main?.why)
   && main.why.length > 0
   && main.why.length <= 2

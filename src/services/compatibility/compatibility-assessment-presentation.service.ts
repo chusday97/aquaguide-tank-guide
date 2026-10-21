@@ -5,6 +5,7 @@ import {
   prioritizeDistinctCompatibilityRules,
 } from './compatibility-action.service';
 import type { TankCompatibilityRule } from '../../lib/tankCompatibilityEngine';
+import { getCompatibilityStatusLabelLocalized } from './compatibility-status-label.service';
 
 export type CompatibilityAssessmentPresentation = {
   judgment: string;
@@ -93,12 +94,7 @@ const familyAction = (family: string, status: CompatibilityDecision['status']) =
   );
 };
 
-const judgmentFor = (status: CompatibilityDecision['status']) => ({
-  compatible: 'Compatible',
-  caution: 'Compatible with adjustments',
-  not_recommended: 'Not recommended',
-  insufficient_data: 'More information needed',
-}[status]);
+const judgmentFor = (status: CompatibilityDecision['status']) => getCompatibilityStatusLabelLocalized(status, true);
 
 const defaultReasonFor = (status: CompatibilityDecision['status']) => ({
   compatible: 'No blocking conflict was found in the reviewed water, temperature, space, and behavior conditions.',
@@ -213,14 +209,6 @@ export const projectCompatibilityAssessmentForLocale = ({
   };
 };
 
-export const getCompatibilityStatusLabelLocalized = (
-  status: CompatibilityDecision['status'],
-  isEnglish: boolean,
-) => isEnglish ? judgmentFor(status) : ({
-  compatible: '可以养',
-  caution: '有条件可以',
-  not_recommended: '不建议',
-  insufficient_data: '暂时无法判断',
-}[status]);
+export { getCompatibilityStatusLabelLocalized } from './compatibility-status-label.service';
 
 export const getCompatibilityRuleFamilyEnglishReason = familyReason;

@@ -94,6 +94,7 @@ const gates = [
   ['Compatibility Release Badcases', 'npm', ['run', 'test:compatibility-release-badcases']],
   ['Compatibility Real User Pressure', 'npm', ['run', 'test:compatibility-real-user-pressure']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
+  ['Compatibility Status Label Consistency', 'npm', ['run', 'test:compatibility-status-label-consistency']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
   ['Unified Compatibility Next Wave', 'npm', ['run', 'test:compatibility-next-wave']],
   ['Gold Ram Compatibility Authority', 'npm', ['run', 'test:gold-ram-compatibility-authority']],

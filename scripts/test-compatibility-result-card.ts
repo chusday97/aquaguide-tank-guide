@@ -42,7 +42,7 @@ assert.equal(review.status, 'caution');
 
 const local = buildLocalCompatibilityAssessment(review.decision);
 assert.equal(local.source, 'local_deterministic');
-assert.equal(local.main.judgment, '有条件可以');
+assert.equal(local.main.judgment, '条件混养');
 assert.ok(local.main.why.length >= 1 && local.main.why.length <= 2);
 assert.ok(local.main.howTo.length >= 1 && local.main.howTo.length <= 2);
 assert.equal(local.details.label, '查看依据');
@@ -103,7 +103,7 @@ assert.equal(
 assert.equal(
   adaptRemoteCompatibilityAssessmentForPlan({
     ...remoteFixture,
-    main: { ...remoteFixture.main, judgment: '可以养' },
+    main: { ...remoteFixture.main, judgment: '可以混养' },
   }, review.decision),
   null,
   'remote readable judgment must exactly match the local deterministic authority status',
@@ -150,7 +150,7 @@ assert.match(cardSource, /addFishAssessmentPresentation\.plan\.expectedAfterAdju
 assert.match(cardSource, /addFishAssessmentPresentation\.plan\.reviewCheckpoint/);
 assert.match(cardSource, /addFishAssessmentPresentation\.plan\.stopCondition/);
 assert.match(cardSource, /addFishCompatibilityReview\.status !== 'compatible'/);
-assert.doesNotMatch(cardSource, /main\.judgment !== '可以养'/);
+assert.doesNotMatch(cardSource, /main\.judgment !== '可以混养'/);
 assert.match(cardSource, /<details/);
 assert.match(cardSource, /查看依据/);
 assert.match(cardSource, /data-add-fish-compatibility-result/);
@@ -196,7 +196,7 @@ assert.match(serviceSource, /compatibility-assessment/);
 assert.match(serviceSource, /schemaVersion !== COMPATIBILITY_PRODUCT_SCHEMA_VERSION/);
 assert.match(serviceSource, /assessmentMode !== 'planned_addition'/);
 assert.match(serviceSource, /remote\.details\.authority\.status !== decision\.status/);
-assert.match(serviceSource, /main\?\.judgment === JUDGMENT_BY_STATUS\[status\]/);
+assert.match(serviceSource, /main\?\.judgment === getCompatibilityStatusLabel\(status, 'zh-CN'\)/);
 assert.match(serviceSource, /isCompatibilityUserReadableText\(text, 'reason'\)/);
 assert.match(serviceSource, /isCompatibilityUserReadableText\(text, 'action'\)/);
 assert.doesNotMatch(serviceSource, /method:\s*['"](POST|PATCH|PUT|DELETE)['"]/);

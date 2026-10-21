@@ -97,7 +97,7 @@ try {
 
     const firstResult = dialog.locator('[data-add-fish-compatibility-result]');
     await firstResult.waitFor();
-    assert(await firstResult.getAttribute('data-compatibility-judgment') === '不建议', '淡水缸 + 公子小丑应直接给出不建议');
+    assert(await firstResult.getAttribute('data-compatibility-judgment') === '不建议混养', '淡水缸 + 公子小丑应直接给出不建议混养');
     assert(await firstResult.getByText('为什么', { exact: true }).count() === 1, '混养结果缺少“为什么”');
     assert(await firstResult.getByText('怎么做', { exact: true }).count() === 1, '混养结果缺少“怎么做”');
     assert(await firstResult.getByText('查看依据', { exact: true }).count() === 1, '混养结果缺少折叠依据');
@@ -115,7 +115,7 @@ try {
 
     const secondResult = dialog.locator('[data-add-fish-compatibility-result]');
     await secondResult.waitFor();
-    assert(await secondResult.getAttribute('data-compatibility-judgment') === '暂时无法判断', '调整组合后应重新计算，而不是沿用上一次“不建议”结果');
+    assert(await secondResult.getAttribute('data-compatibility-judgment') === '需要关键信息', '调整组合后应重新计算，而不是沿用上一次“不建议混养”结果');
     assert(await secondResult.getByText('查看依据', { exact: true }).count() === 1, '重新计算后的依据入口缺失');
     assert(errors.length === 0, `添加生物发生页面错误：${errors.join('；')}`);
     await page.close();

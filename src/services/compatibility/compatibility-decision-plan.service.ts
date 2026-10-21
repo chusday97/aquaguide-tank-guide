@@ -9,6 +9,7 @@ import {
   type CompatibilityAssessmentMode,
 } from './compatibility-action.service';
 import { buildCompatibilityReadableConclusion } from './compatibility-readable-copy.service';
+import type { CompatibilityChineseStatusLabel } from './compatibility-status-label.service';
 import type { TankCompatibilityResult, TankCompatibilityRule } from './compatibility.service';
 
 export type CompatibilityUnknownReason =
@@ -46,7 +47,7 @@ export type CompatibilityActionSequenceStep = {
 };
 
 export type CompatibilityDecisionPlan = {
-  judgment: '可以养' | '有条件可以' | '不建议' | '暂时无法判断';
+  judgment: CompatibilityChineseStatusLabel;
   verdict: BeginnerCompatibilityVerdict;
   fullyInformed: boolean;
   riskSummary: string[];

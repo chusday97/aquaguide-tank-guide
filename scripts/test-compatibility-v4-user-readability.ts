@@ -47,10 +47,10 @@ const fixtures: Fixture[] = [
 ];
 
 const expectedJudgment: Record<ExpectedStatus, string> = {
-  compatible: '可以养',
-  caution: '有条件可以',
-  not_recommended: '不建议',
-  insufficient_data: '暂时无法判断',
+  compatible: '可以混养',
+  caution: '条件混养',
+  not_recommended: '不建议混养',
+  insufficient_data: '需要关键信息',
 };
 
 const tank: Aquarium = {

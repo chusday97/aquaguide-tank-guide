@@ -1,3 +1,16 @@
+## TOP LIVE STATUS — 2026-10-21 verdict-label consistency
+
+- Compatibility user verdict language is unified by one zh/en status-label service.
+- Chinese: 可以混养 / 条件混养 / 不建议混养 / 需要关键信息.
+- English: Compatible / Compatible with conditions / Not recommended / Key information needed.
+- Calculator chips, main result presentation and visual-result titles now use the same canonical presentation labels; no surface-specific confidence/probability labels were introduced.
+- API-readable assessments continue to derive from deterministic Compatibility status/readable copy; AI remains explanation-only.
+- SharedReport has no separate Compatibility verdict mapping, avoiding a second source of truth.
+- Compatibility status-label consistency is now part of backend release gate.
+- Real-user pressure 19/19 PASS; matrix 111 / 6,105 / 427 / 2,353 / 3,325 / 0 insufficient_data.
+- BACKEND_RELEASE_GATE=PASS; main build PASS.
+- Production remains frozen at 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP LIVE STATUS — 2026-10-21 multi-risk handling
 
 - Primary Compatibility UI still shows one conclusion + one reason + one immediate action.

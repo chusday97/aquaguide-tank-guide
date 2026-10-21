@@ -1,3 +1,14 @@
+## TOP BRANCH STATUS — 2026-10-21 verdict-label closure
+
+- Development branch main started from pushed f54791edee7e375bafd00b5be546d662a2c4cdad.
+- Current scope is presentation-contract consolidation only: one shared bilingual Compatibility status label mapping, migration of runtime surfaces/tests, plus a release-gate consistency test.
+- Deterministic Compatibility status/rule/evidence logic is unchanged.
+- Validation PASS: status-label consistency, presentation, result-card, user conclusion, complex whole tank, V4 product/readability, Add Fish i18n, real-user pressure 19/19, fully-informed matrix, lint, complete backend release gate and main build/diff check.
+- The committed pressure report was regenerated only because one stored presentation snapshot changed from 有条件可以 to 条件混养; no decision result changed.
+- An unrelated stale non-gate visual-results test was probed, found to contain historical assumptions beyond this task, and restored untouched rather than broadening scope.
+- No Production mutation/deploy/migration/research/evidence expansion or release branch movement.
+- Before commit verify origin/main remains f54791edee7e375bafd00b5be546d662a2c4cdad and origin/release/production remains 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP BRANCH STATUS — 2026-10-21 action-sequence closure
 
 - Development branch main started from pushed e4898b2563f5d8cc52ba5f3c7880bb02e8dc5f0f.

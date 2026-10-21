@@ -2,7 +2,6 @@ import {
   evaluateSpeciesCombination as evaluateLegacySpeciesCombination,
   evaluateTankCompatibility as evaluateLegacyTankCompatibility,
   getTankCompatibilityAddPolicy as getLegacyTankCompatibilityAddPolicy,
-  getTankCompatibilityStatusLabel as getLegacyTankCompatibilityStatusLabel,
   type CompatibilityEvidenceProvider,
   type EvaluateTankCompatibilityInput,
   type TankCompatibilityAddPolicy,
@@ -13,6 +12,7 @@ import {
 import type { CompatibilityDecisionReadiness, CompatibilityIntent, StockingGuidance, ObservedCoexistenceStatus } from '../../../packages/domain-rules/src';
 import { getCompatibilityAddPolicy } from '../../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from '../../lib/compatibility/canonical-result.adapter';
+import { getCompatibilityStatusLabel } from './compatibility-status-label.service';
 
 /**
  * Application boundary for compatibility decisions.
@@ -33,7 +33,7 @@ export const getTankCompatibilityAddPolicy = (status: TankCompatibilityStatus): 
 );
 
 export const getTankCompatibilityStatusLabel = (status: TankCompatibilityStatus): string => (
-  status === 'insufficient_data' ? '当前可确认' : getLegacyTankCompatibilityStatusLabel(status)
+  getCompatibilityStatusLabel(status, 'zh-CN')
 );
 
 export type CanonicalCompatibilityDecision = {

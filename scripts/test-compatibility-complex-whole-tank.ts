@@ -59,7 +59,7 @@ const reviewCase = (
 const compatible = reviewCase(['sp_0010', 'sp_0012'], ['sp_0014', 'sp_0020']);
 assert.equal(compatible.status, 'compatible');
 assert.equal(compatible.decision.pairResults.length, 6);
-assert.equal(buildCompatibilityReadableConclusion(compatible.decision).judgment, '可以养');
+assert.equal(buildCompatibilityReadableConclusion(compatible.decision).judgment, '可以混养');
 
 const caution = reviewCase(['sp_0001', 'sp_0012'], ['sp_0014', 'sp_0431']);
 assert.equal(caution.status, 'caution');
@@ -345,7 +345,7 @@ assert.equal(currentTankProduct.assessmentMode, 'current_tank');
 assert.equal(currentTankProduct.schemaVersion, 1);
 assert.equal(currentTankProduct.details.authority.addPolicy, 'allow');
 assert.equal(currentTankProduct.details.presentation.primaryAction, 'none');
-assert.equal(currentTankProduct.main.judgment, '有条件可以');
+assert.equal(currentTankProduct.main.judgment, '条件混养');
 assert.doesNotMatch(
   [...currentTankProduct.main.why, ...currentTankProduct.main.howTo].join(' '),
   /当前计划|按当前计划|再加入|继续加鱼|暂停新增|愿望单/,

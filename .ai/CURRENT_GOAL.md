@@ -1,3 +1,16 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility verdict-label contract
+
+- User-facing Compatibility verdict labels are now centralized in one bilingual contract instead of being hand-written per surface.
+- Canonical Chinese labels: compatible=可以混养; caution=条件混养; not_recommended=不建议混养; insufficient_data=需要关键信息.
+- Canonical English labels: compatible=Compatible; caution=Compatible with conditions; not_recommended=Not recommended; insufficient_data=Key information needed.
+- The shared contract is presentation-only. Canonical statuses, rule codes, deterministic authority, action plans, evidence and thresholds are unchanged.
+- Aquarium/add-fish presentation, Compatibility calculator, visual-result title/status, species-detail Compatibility visual, local readable copy, remote assessment validation, English projection and API-readable product output now converge on the shared label contract.
+- SharedReport remains a general aquarium-health report and intentionally does not maintain a second Compatibility verdict mapping.
+- A formal release-gate test now blocks reintroduction of old runtime aliases such as 可以养 / 有条件可以 / 暂时无法判断 / Compatible with adjustments / More information needed.
+- Real-user pressure remains 19/19 PASS. Fully-informed matrix remains 111 ready / 6,105 pairs / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Full BACKEND_RELEASE_GATE=PASS and main build PASS.
+- No Production deploy, DB write, migration, research/evidence promotion or release/production movement. Production remains release/production@1cff5be6.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 multi-cause Compatibility action sequence
 
 - Compatibility now has a machine-readable actionSequence for multi-cause decisions. The main user result remains intentionally compact: one verdict, one highest-priority reason, one current action.

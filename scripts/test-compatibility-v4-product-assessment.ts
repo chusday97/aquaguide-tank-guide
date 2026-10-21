@@ -86,7 +86,7 @@ assert.equal(cautionShadow.finalDecision.status, 'caution');
 const product = buildCompatibilityProductAssessment(cautionDecision, cautionShadow);
 assert.equal(product.schemaVersion, COMPATIBILITY_PRODUCT_SCHEMA_VERSION);
 assert.equal(product.assessmentMode, 'planned_addition');
-assert.equal(product.main.judgment, '有条件可以');
+assert.equal(product.main.judgment, '条件混养');
 assert.ok(product.main.why.length > 0);
 assert.ok(product.main.howTo.length > 0);
 assert.equal(product.main.why[0], '组合里有更容易被追食的一方，需要先确认实际捕食风险。');
@@ -120,7 +120,7 @@ const conservativeShadow: CompatibilityAiShadowResult = {
   },
 };
 const conservativeProduct = buildCompatibilityProductAssessment(cautionDecision, conservativeShadow);
-assert.equal(conservativeProduct.main.judgment, '有条件可以');
+assert.equal(conservativeProduct.main.judgment, '条件混养');
 assert.equal(conservativeProduct.details.explanation.source, 'deterministic_fallback');
 assert.equal(conservativeProduct.details.explanation.narrativeAccepted, false);
 assert.notEqual(conservativeProduct.details.reasons[0]?.text, 'AI 更保守，但不能覆盖最终判断。');
@@ -151,7 +151,7 @@ const skippedShadow = await createCompatibilityAiCombinationAssessment({
 assert.equal(skippedProviderCalls, 0);
 assert.equal(skippedShadow.ai.status, 'skipped');
 const insufficientProduct = buildCompatibilityProductAssessment(insufficientDecision, skippedShadow);
-assert.equal(insufficientProduct.main.judgment, '暂时无法判断');
+assert.equal(insufficientProduct.main.judgment, '需要关键信息');
 assert.equal(insufficientProduct.details.explanation.source, 'deterministic_fallback');
 assert.equal(insufficientProduct.details.authority.finalSource, 'deterministic');
 assert.ok(insufficientProduct.details.uncertainties.length > 0);
@@ -180,7 +180,7 @@ const blockedWithUnknownShadow: CompatibilityAiShadowResult = {
   },
 };
 const blockedWithUnknownProduct = buildCompatibilityProductAssessment(blockedWithUnknownDecision, blockedWithUnknownShadow);
-assert.equal(blockedWithUnknownProduct.main.judgment, '不建议');
+assert.equal(blockedWithUnknownProduct.main.judgment, '不建议混养');
 assert.equal(blockedWithUnknownProduct.details.authority.status, 'not_recommended');
 assert.ok(blockedWithUnknownProduct.details.uncertainties.length > 0, 'a stronger hard-block verdict must not erase independent missing-data boundaries');
 const blockedWithUnknownLimitationCodes = new Set(getCompatibilityDataLimitationCodes(blockedWithUnknownDecision));
@@ -205,7 +205,7 @@ const blockedWithPublicEvidence = evaluateCompatibilityDecision({
 });
 assert.equal(blockedWithPublicEvidence.status, 'not_recommended');
 const blockedWithPublicEvidenceProduct = buildCompatibilityProductAssessment(blockedWithPublicEvidence, blockedWithUnknownShadow);
-assert.equal(blockedWithPublicEvidenceProduct.main.judgment, '不建议');
+assert.equal(blockedWithPublicEvidenceProduct.main.judgment, '不建议混养');
 assert.ok(
   blockedWithPublicEvidenceProduct.details.uncertainties.some(item => item.ruleCodes.includes('species_public_evidence_insufficient')),
   'mixed hard blocks must surface the public-evidence ceiling itself, not only secondary unreviewed behavior rows',
@@ -222,7 +222,7 @@ const blockedWithIdentity = evaluateCompatibilityDecision({
 });
 assert.equal(blockedWithIdentity.status, 'not_recommended');
 const blockedWithIdentityProduct = buildCompatibilityProductAssessment(blockedWithIdentity, blockedWithUnknownShadow);
-assert.equal(blockedWithIdentityProduct.main.judgment, '不建议');
+assert.equal(blockedWithIdentityProduct.main.judgment, '不建议混养');
 assert.ok(blockedWithIdentityProduct.details.uncertainties.some(item => item.ruleCodes.includes('species_identity_unresolved')));
 assert.ok(blockedWithIdentityProduct.details.uncertainties.some(item => /身份|商品名|明确物种/.test(item.text)));
 

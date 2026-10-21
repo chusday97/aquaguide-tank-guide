@@ -189,7 +189,7 @@ cases.push(makeCase(
     }),
     probe('action_plan', 'unknown cause remains identity, not generic system gap', () => {
       assert.equal(unresolvedIdentityPlan.unknownReason, 'unresolved_identity');
-      assert.equal(unresolvedIdentityPlan.judgment, '暂时无法判断');
+      assert.equal(unresolvedIdentityPlan.judgment, '需要关键信息');
       assert.match(unresolvedIdentityPlan.nextSteps.join(' '), /身份|学名|品系|确认/);
     }),
     ...presentationProbes(unresolvedIdentity),
@@ -416,7 +416,7 @@ cases.push(makeCase(
       assert.doesNotMatch(minimalInputAction.immediateAction, /换大|改善环境|补齐|测.*pH|水温/);
     }),
     probe('presentation', 'primary copy is one conclusion + one reason + one action', () => {
-      assert.equal(minimalInputPresentation.judgment, '有条件可以');
+      assert.equal(minimalInputPresentation.judgment, '条件混养');
       assert.equal(minimalInputPresentation.why.length, 1);
       assert.equal(minimalInputPresentation.howTo.length, 1);
       assert.match(minimalInputPresentation.why[0], /100cm/);

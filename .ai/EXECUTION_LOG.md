@@ -1,3 +1,16 @@
+## 2026-10-21 — Compatibility user verdict label consistency closure
+
+- Audited Compatibility verdict presentation across local readable copy, assessment projection, calculator, visual result, species detail, API product output and SharedReport.
+- Root cause: compatible/caution/not_recommended/insufficient_data labels were duplicated across services and surfaces. Examples included 可以养 / 有条件可以 / 不建议 / 暂时无法判断, 适合 / 谨慎尝试 / 不建议加入 / 当前可确认, and Compatible with adjustments / More information needed.
+- Added src/services/compatibility/compatibility-status-label.service.ts as the single bilingual label contract.
+- Migrated readable copy, assessment validation/projection, Compatibility presentation/service, calculator chips, visual result title/status, species-detail visual locale handling and tests to the shared mapping.
+- SharedReport was audited and intentionally left as a general aquarium-health report; a new contract test asserts it does not create a competing Compatibility verdict mapping.
+- Added scripts/test-compatibility-status-label-consistency.ts and wired it into the formal backend release gate. It verifies all eight zh/en labels, shared presentation delegation, calculator/visual use, API-readable derivation and absence of old aliases in active runtime surfaces.
+- Updated pressure/test snapshots to the new user labels. Real-user pressure remains 19/19 with firstDivergence=null; fully-informed matrix remains 111 / 6,105 / 427 / 2,353 / 3,325 / 0 insufficient_data.
+- A probe of the old scripts/test-visual-results.ts exposed unrelated historical expectations (presentation mode treated as canonical status, then a fixed 3–7 day copy assertion). All temporary edits to that non-gate file were reverted; deterministic status was not changed to satisfy stale expectations.
+- Full backend release gate PASS and main build + git diff check PASS. Existing chunk-size and DEP0205 warnings remain unrelated debt.
+- No Production deploy/DB write/migration, release branch movement, research or evidence promotion.
+
 ## 2026-10-21 — Multi-cause ordered action sequence closure
 
 - Implemented CompatibilityActionSequenceStep with order, state(current/next/deferred), riskFamily, action, sourceRuleCode, resolutionTarget and blockedByHardStop.

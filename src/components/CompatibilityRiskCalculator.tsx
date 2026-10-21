@@ -111,6 +111,7 @@ import { getCompatibilityPresentation } from '../services/compatibility/compatib
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
 import { isCompatibilityCalculatorSelectableSpecies } from '../services/compatibility/compatibility-domain-scope.service';
 import { getCompatibilityDataLimitationReason } from '../services/compatibility/compatibility-decision-plan.service';
+import { getCompatibilityStatusLabelLocalized } from '../services/compatibility/compatibility-status-label.service';
 import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
 const getDisplayImage = getSpeciesDisplayImage;
@@ -160,13 +161,13 @@ const getCompatibilityWaterType = (fish: Fish) => {
 const getRiskMeta = (level: CompatibilityRiskLevel) => {
   switch (level) {
     case 'not_recommended':
-      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Avoid' : '不建议加入', tone: 'border-red-200 bg-red-50 text-red-600', iconTone: 'bg-red-500 text-white' };
+      return { label: getCompatibilityStatusLabelLocalized(level, Boolean(i18n.language?.startsWith('en'))), tone: 'border-red-200 bg-red-50 text-red-600', iconTone: 'bg-red-500 text-white' };
     case 'caution':
-      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Caution' : '谨慎尝试', tone: 'border-amber-200 bg-amber-50 text-amber-700', iconTone: 'bg-amber-500 text-white' };
+      return { label: getCompatibilityStatusLabelLocalized(level, Boolean(i18n.language?.startsWith('en'))), tone: 'border-amber-200 bg-amber-50 text-amber-700', iconTone: 'bg-amber-500 text-white' };
     case 'insufficient_data':
-      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Confirmed Factors' : '当前可确认', tone: 'border-sky-200 bg-sky-50 text-sky-700', iconTone: 'bg-sky-500 text-white' };
+      return { label: getCompatibilityStatusLabelLocalized(level, Boolean(i18n.language?.startsWith('en'))), tone: 'border-sky-200 bg-sky-50 text-sky-700', iconTone: 'bg-sky-500 text-white' };
     case 'compatible':
-      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Compatible' : '适合', tone: 'border-emerald-200 bg-emerald-50 text-emerald-700', iconTone: 'bg-emerald-500 text-white' };
+      return { label: getCompatibilityStatusLabelLocalized(level, Boolean(i18n.language?.startsWith('en'))), tone: 'border-emerald-200 bg-emerald-50 text-emerald-700', iconTone: 'bg-emerald-500 text-white' };
     default:
       return { label: Boolean(i18n.language?.startsWith('en')) ? 'Pending' : '待添加', tone: 'border-border bg-white text-ink/55', iconTone: 'bg-bg text-ink/45' };
   }
@@ -689,8 +690,9 @@ export function CompatibilityRiskCalculator({
       decision: result.decision,
       species: selectedSpecies,
       primaryActionLabel: getPrimaryResultButtonLabel(result.level),
+      isEnglish: isEn,
     });
-  }, [result.decision, result.level, selectedSpecies]);
+  }, [isEn, result.decision, result.level, selectedSpecies]);
   const compatibilityPresentation = useMemo(
     () => result.decision ? getCompatibilityPresentation(result.decision) : null,
     [result.decision],
@@ -741,11 +743,7 @@ export function CompatibilityRiskCalculator({
     ? (isEn ? 'Not Started' : '未开始')
     : selectedCount === 1
       ? (isEn ? 'Pending Addition' : '待添加')
-      : compatibilityPresentation?.mode === 'confirmed_facts'
-        ? (isEn ? 'Confirmed factors' : '当前可确认')
-        : compatibilityPresentation?.mode === 'unavailable'
-          ? (isEn ? 'Not yet available' : '暂未开放')
-          : meta.label;
+      : getCompatibilityStatusLabelLocalized(result.level as TankCompatibilityStatus, isEn);
   const selectedTitle = selectedCount < 2
     ? (isEn ? `Selected ${selectedCount}/2` : `已选生物 ${selectedCount}/2`)
     : (isEn ? `Selected ${selectedCount} species` : `已选生物 ${selectedCount} 种`);

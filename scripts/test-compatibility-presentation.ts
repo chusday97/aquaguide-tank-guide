@@ -32,23 +32,23 @@ const partial = getCompatibilityPresentation(baseDecision({
   passedRules: [rule('water_type_match', '水体类型相符'), rule('temperature_range_overlap', '温度区间可重合')],
 }));
 assert.equal(partial.mode, 'confirmed_facts');
-assert.equal(partial.headline, '暂时无法判断');
+assert.equal(partial.headline, '需要关键信息');
 assert.equal(partial.primaryAction, 'save_to_wishlist');
 assert.match(partial.coverageLabel || '', /水体/);
 assert.doesNotMatch(JSON.stringify(partial), /资料不足|信息不足/);
 
 const unavailable = getCompatibilityPresentation(baseDecision());
 assert.equal(unavailable.mode, 'unavailable');
-assert.equal(unavailable.headline, '暂时无法判断');
+assert.equal(unavailable.headline, '需要关键信息');
 assert.equal(unavailable.primaryAction, 'save_to_wishlist');
 assert.ok(unavailable.primaryReason.length > 0);
 assert.ok(unavailable.primaryActionText.length > 0);
 assert.equal(unavailable.detailsLabel, '查看依据');
 
 for (const [status, headline] of [
-  ['compatible', '可以养'],
-  ['caution', '有条件可以'],
-  ['not_recommended', '不建议'],
+  ['compatible', '可以混养'],
+  ['caution', '条件混养'],
+  ['not_recommended', '不建议混养'],
 ] as const) {
   const presentation = getCompatibilityPresentation(baseDecision({ status }));
   assert.equal(presentation.mode, 'verdict');
@@ -69,8 +69,8 @@ const model = buildCompatibilityVisualResult({
   primaryActionLabel: '加入种草清单',
 });
 assert.equal(model.presentationMode, 'confirmed_facts');
-assert.equal(model.title, '暂时无法判断');
-assert.equal(model.statusLabel, '系统资料还没完成审核');
+assert.equal(model.title, '需要关键信息');
+assert.equal(model.statusLabel, '需要关键信息');
 assert.match(partial.primaryActionText, /不是你少填|审核/);
 assert.match(unavailable.primaryActionText, /不是你少填|审核/);
 assert.doesNotMatch(JSON.stringify(model), /资料不足|信息不足/);

@@ -431,7 +431,7 @@
       "snapshot": {
         "status": "caution",
         "readiness": "partial",
-        "judgment": "有条件可以",
+        "judgment": "条件混养",
         "reason": "该物种建议至少 100cm 缸长，当前缸长未满足。",
         "action": "至少需要 100cm 缸长再考虑加入。",
         "optionalInputSignals": [

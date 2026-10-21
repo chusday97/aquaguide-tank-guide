@@ -5,6 +5,7 @@ import {
   prioritizeDistinctCompatibilityRules,
   type CompatibilityAssessmentMode,
 } from './compatibility-action.service';
+import { COMPATIBILITY_STATUS_LABELS, type CompatibilityChineseStatusLabel } from './compatibility-status-label.service';
 
 type ReadableRule = {
   code: string;
@@ -13,7 +14,7 @@ type ReadableRule = {
 };
 
 export type CompatibilityReadableConclusion = {
-  judgment: '可以养' | '有条件可以' | '不建议' | '暂时无法判断';
+  judgment: CompatibilityChineseStatusLabel;
   why: string[];
   howTo: string[];
 };
@@ -21,13 +22,6 @@ export type CompatibilityReadableConclusion = {
 export type CompatibilityReadableAiNarrative = {
   reasons?: Array<{ text: string }>;
   adjustments?: Array<{ text: string }>;
-};
-
-const JUDGMENT: Record<CompatibilityDecision['status'], CompatibilityReadableConclusion['judgment']> = {
-  compatible: '可以养',
-  caution: '有条件可以',
-  not_recommended: '不建议',
-  insufficient_data: '暂时无法判断',
 };
 
 const forbiddenTechnicalPattern = /(?:\b(?:ruleCodes|evidenceIds|finalDecision|decisionReadiness|deterministic|domainStatus|provider|schema|model|compatibility)\b|sp_\d+|[a-z0-9]+_[a-z0-9_]+|https?:\/\/|\{[^}]*\}|\[[^\]]*\]|阻断性冲突|阻断规则|配对研究证据|基于物种特征的推断|高脆弱性)/i;
@@ -340,7 +334,7 @@ export const buildCompatibilityReadableConclusion = (
   ], 'action').slice(0, 2);
 
   return {
-    judgment: JUDGMENT[decision.status],
+    judgment: COMPATIBILITY_STATUS_LABELS.zh[decision.status],
     why: why.length > 0 ? why : [defaultReason(decision, assessmentMode)],
     howTo: howTo.length > 0 ? howTo : ['先保持当前方案不变，补齐信息后再重新判断。'],
   };

@@ -1,5 +1,6 @@
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
 import { buildBeginnerCompatibilityAction, prioritizeCompatibilityRules, type CompatibilityAssessmentMode } from './compatibility-action.service';
+import { getCompatibilityStatusLabel, type CompatibilityChineseStatusLabel } from './compatibility-status-label.service';
 
 export type CompatibilityDimension =
   | 'water_type'
@@ -23,7 +24,7 @@ export type CompatibilityCoverage = {
 };
 export type CompatibilityPresentation = {
   mode: CompatibilityPresentationMode;
-  headline: '可以养' | '有条件可以' | '不建议' | '暂时无法判断';
+  headline: CompatibilityChineseStatusLabel;
   primaryReason: string;
   secondaryReason: string | null;
   primaryActionText: string;
@@ -66,12 +67,9 @@ const ruleDimension = (code: string, riskType?: CompatibilityRiskType): Compatib
 
 const ruleText = (rule: { code: string; title: string; evidence?: string }, fallback: string) => rule.evidence || rule.title || fallback;
 
-const headlineForStatus = (status: CompatibilityDecision['status']): CompatibilityPresentation['headline'] => {
-  if (status === 'compatible') return '可以养';
-  if (status === 'caution') return '有条件可以';
-  if (status === 'not_recommended') return '不建议';
-  return '暂时无法判断';
-};
+const headlineForStatus = (status: CompatibilityDecision['status']): CompatibilityPresentation['headline'] => (
+  getCompatibilityStatusLabel(status, 'zh-CN') as CompatibilityChineseStatusLabel
+);
 
 const firstDistinctText = (primaryReason: string, values: string[]) => (
   Array.from(new Set(values.map(value => value.trim()).filter(Boolean)))

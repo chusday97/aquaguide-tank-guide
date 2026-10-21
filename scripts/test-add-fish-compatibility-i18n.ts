@@ -17,7 +17,7 @@ const collectStrings = (value: unknown): string[] => {
 
 const chineseModel = {
   main: {
-    judgment: '有条件可以',
+    judgment: '条件混养',
     why: ['中文原因'],
     howTo: ['中文动作'],
   },
@@ -106,11 +106,11 @@ const makeDecision = (
 
 const scenarios: Array<[CompatibilityDecision['status'], string, string]> = [
   ['compatible', 'compatibility_clear', 'Compatible'],
-  ['caution', 'fin_nipping_target_vulnerability', 'Compatible with adjustments'],
+  ['caution', 'fin_nipping_target_vulnerability', 'Compatible with conditions'],
   ['not_recommended', 'species_water_type_conflict', 'Not recommended'],
   ['not_recommended', 'predation_risk', 'Not recommended'],
-  ['caution', 'minimum_group_not_met', 'Compatible with adjustments'],
-  ['insufficient_data', 'species_evidence_unreviewed', 'More information needed'],
+  ['caution', 'minimum_group_not_met', 'Compatible with conditions'],
+  ['insufficient_data', 'species_evidence_unreviewed', 'Key information needed'],
 ];
 
 for (const [status, code, expectedJudgment] of scenarios) {
@@ -150,7 +150,7 @@ const chineseProjection = projectCompatibilityAssessmentForLocale({
   decision: makeDecision('caution', 'fin_nipping_target_vulnerability'),
   isEnglish: false,
 });
-assert.equal(chineseProjection?.judgment, '有条件可以');
+assert.equal(chineseProjection?.judgment, '条件混养');
 assert.deepEqual(chineseProjection?.why, ['中文原因']);
 
 const aquariumSource = readFileSync(new URL('../src/pages/Aquarium.tsx', import.meta.url), 'utf8');

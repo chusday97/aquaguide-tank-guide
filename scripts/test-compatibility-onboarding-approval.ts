@@ -140,7 +140,7 @@ assert.notEqual(review.status, 'insufficient_data');
 assert.equal(review.decision.metadata.decisionReadiness, 'reviewed');
 assert.ok(!review.decision.metadata.domainRuleCodes.includes('reviewed_pair_rule'));
 const plan = buildCompatibilityDecisionPlan(review.decision);
-assert.notEqual(plan.judgment, '暂时无法判断');
+assert.notEqual(plan.judgment, '需要关键信息');
 assert.ok(plan.nextSteps.length > 0);
 assert.ok(plan.reviewCheckpoint.length > 0);
 assert.ok(plan.stopCondition.length > 0);
