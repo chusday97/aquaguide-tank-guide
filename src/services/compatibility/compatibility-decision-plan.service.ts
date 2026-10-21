@@ -4,6 +4,8 @@ import {
   getExplicitCompatibilityGroupMinimum,
   getExplicitCompatibilitySpaceThreshold,
   getCompatibilityRuleFamily,
+  getPreExistingBlockingLabel,
+  hasOnlyPreExistingBlockingRules,
   prioritizeDistinctCompatibilityRules,
   type BeginnerCompatibilityVerdict,
   type CompatibilityActionAuthorityLevel,
@@ -294,7 +296,7 @@ const specificActionFor = (
     : decision.stockingGuidance?.recommendedMin;
 
   if (family === 'group_size' && namedItem && min != null) {
-    return mode === 'current_tank'
+    return mode === 'current_tank' || namedItem.origin === 'existing'
       ? `把 ${namedItem.name} 当前数量从 ${namedItem.quantity} 调整到至少 ${min} 条/只，再观察群游和进食是否恢复稳定。`
       : `把 ${namedItem.name} 计划数量从 ${namedItem.quantity} 调整到至少 ${min} 条/只，再重新判断是否加入。`;
   }
@@ -741,8 +743,15 @@ const expectedOutcomeFor = (
   decision: CompatibilityDecision,
   verdict: BeginnerCompatibilityVerdict,
   sourceRules: TankCompatibilityRule[],
+  mode: CompatibilityAssessmentMode,
 ) => {
   const family = primaryFamilyFor(sourceRules);
+  if (mode === 'planned_addition' && hasOnlyPreExistingBlockingRules(decision)) {
+    const existingConflictLabel = getPreExistingBlockingLabel(decision);
+    return existingConflictLabel
+      ? `先解除当前缸里 ${existingConflictLabel} 的现有阻断并重新评估；之后再单独判断这次候选是否适合加入。`
+      : '先解除当前缸原有阻断并重新评估；之后再单独判断这次候选是否适合加入。';
+  }
   if (verdict === 'add') {
     return '当前无需为兼容性额外调整；维持现有条件并持续观察，结论应保持“可以养”。';
   }
@@ -817,6 +826,12 @@ const stopConditionForPlan = (
     if (mode === 'current_tank') return pair
       ? `${pair.pairLabel} 的明确冲突解除前保持分隔，不要恢复原组合。`
       : '明确冲突消除前保持分隔，不要按原组合继续维持。';
+    if (hasOnlyPreExistingBlockingRules(decision)) {
+      const existingConflictLabel = getPreExistingBlockingLabel(decision);
+      return existingConflictLabel
+        ? `${existingConflictLabel} 的现有冲突解除前，先暂停这次新增；解除后重新评估候选。`
+        : '当前缸原有冲突解除前，先暂停这次新增；解除后重新评估候选。';
+    }
     return pair
       ? `${pair.pairLabel} 的明确阻断风险解除前，不要执行当前混养计划。`
       : '明确阻断风险消除前，不要执行当前混养计划。';
@@ -850,9 +865,13 @@ export const buildCompatibilityDecisionPlan = (
   }
 
   const sourceRules = sourceRulesForPlan(decision);
-  const specificActions = sourceRules
-    .map(rule => specificActionFor(decision, rule, mode))
-    .filter((step): step is string => Boolean(step));
+  const preExistingOnlyBlock = mode === 'planned_addition'
+    && hasOnlyPreExistingBlockingRules(decision);
+  const specificActions = preExistingOnlyBlock
+    ? [action.immediateAction]
+    : sourceRules
+      .map(rule => specificActionFor(decision, rule, mode))
+      .filter((step): step is string => Boolean(step));
   const specificCoverageComplete = specificActions.length > 0 && specificActions.length >= sourceRules.length;
   const nextSteps = unique(specificCoverageComplete
     ? specificActions
@@ -869,7 +888,7 @@ export const buildCompatibilityDecisionPlan = (
     fullyInformed,
     riskSummary: unique(readable.why).slice(0, 3),
     nextSteps,
-    expectedAfterAdjustment: expectedOutcomeFor(decision, action.verdict, sourceRules),
+    expectedAfterAdjustment: expectedOutcomeFor(decision, action.verdict, sourceRules, mode),
     reviewCheckpoint: reviewCheckpointFor(decision, sourceRules, action.observeAfterAction),
     stopCondition: stopConditionForPlan(decision, mode, sourceRules, action.stopCondition),
     unknownReason: getCompatibilityUnknownReason(decision),

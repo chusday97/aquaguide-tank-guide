@@ -4,6 +4,8 @@ import {
   getCompatibilityRuleFamily,
   getExplicitCompatibilityGroupMinimum,
   getExplicitCompatibilitySpaceThreshold,
+  getPreExistingBlockingLabel,
+  hasOnlyPreExistingBlockingRules,
   prioritizeDistinctCompatibilityRules,
   type CompatibilityAssessmentMode,
 } from './compatibility-action.service';
@@ -418,15 +420,24 @@ export const buildCompatibilityReadableConclusion = (
 ): CompatibilityReadableConclusion => {
   const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
   const primaryRules = primaryRulesFor(decision);
+  const preExistingOnlyBlock = assessmentMode === 'planned_addition'
+    && hasOnlyPreExistingBlockingRules(decision);
+  const preExistingBlockingLabel = preExistingOnlyBlock
+    ? getPreExistingBlockingLabel(decision)
+    : null;
   const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(
     [...decision.blockingRules, ...decision.warningRules]
       .filter(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
   );
-  const deterministicWhy = primaryRules.map(rule => (
-    getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold
-      ? `当前空间不足；按成体需求至少需要 ${combinedSpaceThreshold}。`
-      : getCompatibilityReadableRuleText(rule, assessmentMode)
-  ));
+  const deterministicWhy = preExistingOnlyBlock
+    ? [preExistingBlockingLabel
+      ? `当前缸已有 ${preExistingBlockingLabel} 的明确冲突；这次硬阻断不是候选生物新触发的。`
+      : '当前硬阻断来自鱼缸原有组合，不是这次候选生物新触发的冲突。']
+    : primaryRules.map(rule => (
+      getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold
+        ? `当前空间不足；按成体需求至少需要 ${combinedSpaceThreshold}。`
+        : getCompatibilityReadableRuleText(rule, assessmentMode)
+    ));
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
   const whySeed = decision.status === 'compatible'
     ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision, assessmentMode), ...aiWhy]
@@ -438,7 +449,9 @@ export const buildCompatibilityReadableConclusion = (
   const aiActions = decision.status === 'compatible'
     ? []
     : (aiNarrative.adjustments || []).map(item => item.text);
-  const deterministicActions = deterministicActionsFor(decision, action.immediateAction, assessmentMode);
+  const deterministicActions = preExistingOnlyBlock
+    ? [action.immediateAction]
+    : deterministicActionsFor(decision, action.immediateAction, assessmentMode);
   const howTo = uniqueReadable([
     ...deterministicActions,
     ...aiActions,

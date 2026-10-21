@@ -1568,7 +1568,7 @@
             "order": 2,
             "state": "next",
             "riskFamily": "group_size",
-            "action": "把 樱桃灯 计划数量从 1 调整到至少 6 条/只，再重新判断是否加入。",
+            "action": "把 樱桃灯 当前数量从 1 调整到至少 6 条/只，再观察群游和进食是否恢复稳定。",
             "sourceRuleCode": "minimum_group_not_met",
             "resolutionTarget": {
               "riskFamily": "group_size",

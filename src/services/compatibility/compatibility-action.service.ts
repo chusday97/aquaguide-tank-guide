@@ -44,6 +44,45 @@ export type BeginnerCompatibilityAction = BeginnerCompatibilityActionCore & {
 
 export type CompatibilityAssessmentMode = 'planned_addition' | 'current_tank';
 
+export type CompatibilityRuleOriginScope = 'candidate_involved' | 'existing_only' | 'unknown';
+
+export const getCompatibilityRuleOriginScope = (
+  decision: CompatibilityDecision,
+  rule: TankCompatibilityRule,
+): CompatibilityRuleOriginScope => {
+  const originBySpeciesId = new Map(
+    (decision.assessmentItems || []).map(item => [item.speciesId, item.origin] as const),
+  );
+  const affectedOrigins = Array.from(new Set(rule.affectedSpeciesIds || []))
+    .map(speciesId => originBySpeciesId.get(speciesId))
+    .filter((origin): origin is 'candidate' | 'existing' | 'unknown' => Boolean(origin));
+
+  if (affectedOrigins.length === 0 || affectedOrigins.includes('unknown')) return 'unknown';
+  if (affectedOrigins.includes('candidate')) return 'candidate_involved';
+  return affectedOrigins.every(origin => origin === 'existing') ? 'existing_only' : 'unknown';
+};
+
+export const hasOnlyPreExistingBlockingRules = (decision: CompatibilityDecision) => (
+  decision.status === 'not_recommended'
+  && decision.blockingRules.length > 0
+  && decision.blockingRules.every(rule => getCompatibilityRuleOriginScope(decision, rule) === 'existing_only')
+);
+
+export const getPreExistingBlockingLabel = (decision: CompatibilityDecision): string | null => {
+  const rule = prioritizeDistinctCompatibilityRules(decision.blockingRules)
+    .find(candidate => getCompatibilityRuleOriginScope(decision, candidate) === 'existing_only');
+  if (!rule) return null;
+  const nameBySpeciesId = new Map(
+    (decision.assessmentItems || []).map(item => [item.speciesId, item.name] as const),
+  );
+  const names = Array.from(new Set(rule.affectedSpeciesIds || []))
+    .map(speciesId => nameBySpeciesId.get(speciesId))
+    .filter((name): name is string => Boolean(name));
+  if (names.length === 2) return `${names[0]} 与 ${names[1]}`;
+  if (names.length > 0) return names.join('、');
+  return null;
+};
+
 const HARD_BLOCK_CODES = new Set([
   'water_type_conflict',
   'species_water_type_conflict',
@@ -227,6 +266,21 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   const hasPredationEvidenceCeiling = codes.has('evidence_ceiling_predation');
 
   if (decision.status === 'not_recommended') {
+    if (hasOnlyPreExistingBlockingRules(decision)) {
+      const existingConflictLabel = getPreExistingBlockingLabel(decision);
+      return {
+        verdict: 'do_not_mix',
+        headline: '先处理当前缸已有冲突',
+        immediateAction: existingConflictLabel
+          ? `先处理并解除 ${existingConflictLabel} 的现有冲突；重新评估通过后，再决定是否继续这次新增。`
+          : '先处理并解除当前缸已有的明确冲突；重新评估通过后，再决定是否继续这次新增。',
+        primaryReason: existingConflictLabel
+          ? `当前缸已有 ${existingConflictLabel} 的明确冲突；这次硬阻断不是候选生物新触发的。`
+          : '当前硬阻断来自鱼缸原有组合，不是这次候选生物新触发的冲突。',
+        observeAfterAction: '现有阻断解除并重新评估后，再根据候选与当前物种的实际结果决定是否加入。',
+        detailsLabel: '为什么这次先暂停新增？',
+      };
+    }
     const fryPredation = codes.has('fry_predation_risk');
     return {
       verdict: 'do_not_mix',
