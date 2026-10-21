@@ -1,4 +1,4 @@
-export const AQUAGUIDE_LIVE_MIGRATION_BASELINE = '20260816160129';
+export const AQUAGUIDE_LIVE_MIGRATION_BASELINE = '20261021142700';
 
 export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609040001_product_care_publication_snapshots.sql',
@@ -46,20 +46,16 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '20261014143000_compatibility_fast_lane_wave2_authority_patch.sql',
   '20261014152500_compatibility_fast_lane_wave3_authority_patch.sql',
   '20261014163500_compatibility_fast_lane_wave4_authority_patch.sql',
+  '20261015211500_compatibility_identity_bridge_reconciliation.sql',
+  '20261016184500_compatibility_chrysiptera_cyanea_authority_reconciliation.sql',
+  '20261020193000_compatibility_reviewed_authority_reconciliation.sql',
+  '20261021142700_compatibility_materialized_authority_reconciliation.sql',
 ];
 
-export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
-  '202608270001_catalog_releases_and_species_water_type.sql',
-  '202608280001_species_seo_admin.sql',
-  '202608280002_species_seo_group_inheritance.sql',
-  '202608280003_species_seo_localized_name.sql',
-  '202608280004_species_seo_index_strategy.sql',
-  '202608280005_species_seo_revision_history.sql',
-  '202608280006_species_seo_release_gate_probe.sql',
-  '202608280007_species_seo_publish_readiness.sql',
-  '20260901064408_species_seo_server_export_boundary.sql',
-  ...BUSINESS_ADMIN_AUTHORITY_MIGRATIONS,
-];
+// Production already includes every committed migration through the live baseline.
+// A persistent staging clone taken from current Production therefore has no repository
+// migration delta today; the contract test fails closed as soon as a newer migration appears.
+export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [];
 
 export const BUSINESS_ADMIN_SCHEMA_GROUPS = {
   access: ['user_roles', 'idempotency_records'],

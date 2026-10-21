@@ -21,7 +21,12 @@ for (const migration of BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS) {
 assert.deepEqual([...BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS].sort(), BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS, 'Staging upgrade plan must remain chronological.');
 const expectedAfterLiveBaseline = migrationNames.filter(name => name.split('_', 1)[0] > AQUAGUIDE_LIVE_MIGRATION_BASELINE);
 assert.deepEqual(expectedAfterLiveBaseline, BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS, 'Staging upgrade plan must include every migration after the live AquaGuide baseline; no prerequisite migration may be skipped.');
-assert.deepEqual(BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS.slice(-BUSINESS_ADMIN_AUTHORITY_MIGRATIONS.length), BUSINESS_ADMIN_AUTHORITY_MIGRATIONS, 'Business Admin authority migrations must remain the tail of the staging upgrade plan.');
+const authorityAfterLiveBaseline = BUSINESS_ADMIN_AUTHORITY_MIGRATIONS.filter(name => name.split('_', 1)[0] > AQUAGUIDE_LIVE_MIGRATION_BASELINE);
+assert.deepEqual(
+  BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS.filter(name => BUSINESS_ADMIN_AUTHORITY_MIGRATIONS.includes(name)),
+  authorityAfterLiveBaseline,
+  'Only Business Admin authority migrations newer than the live Production baseline belong in the staging upgrade plan.',
+);
 assert.deepEqual(BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES.evidence_sources, ['source_key']);
 for (const table of ['species_compatibility_profile_revisions', 'species_pair_compatibility_rule_revisions']) {
   assert.deepEqual(BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES[table], ['impact_report', 'evidence_resolution', 'regression_report']);

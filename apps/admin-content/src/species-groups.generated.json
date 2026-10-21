@@ -6,10 +6,53 @@
     "batch_candidate_groups": 84,
     "explicit_variant_members": 223,
     "exact_duplicate_records": 28,
-    "category_conflict_groups": 5,
+    "category_conflict_groups": 0,
     "unresolved_members": 0
   },
   "groups": [
+    {
+      "group_key": "base:altolamprologus-calvus",
+      "base_scientific_name": "Altolamprologus calvus",
+      "primary_category": "慈鲷/斗鱼",
+      "categories": [
+        "慈鲷/斗鱼"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 1,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0057",
+          "catalog_key": "sp_0057",
+          "name": "珍珠虎",
+          "scientific_name": "Altolamprologus calvus",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:altolamprologus-calvus",
+          "base_scientific_name": "Altolamprologus calvus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0266",
+          "catalog_key": "sp_0266",
+          "name": "黄金珍珠虎 (改良)",
+          "scientific_name": "Altolamprologus calvus var. Gold",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:altolamprologus-calvus",
+          "base_scientific_name": "Altolamprologus calvus",
+          "variant_label": "Gold",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
     {
       "group_key": "base:amatitlania-nigrofasciata",
       "base_scientific_name": "Amatitlania nigrofasciata",
@@ -75,6 +118,62 @@
           "base_scientific_name": "Amatitlania nigrofasciata",
           "variant_label": "Jellybean",
           "relation_type": "variety",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:andinoacara-pulcher",
+      "base_scientific_name": "Andinoacara pulcher",
+      "primary_category": "慈鲷/斗鱼",
+      "categories": [
+        "慈鲷/斗鱼"
+      ],
+      "category_conflict": false,
+      "member_count": 3,
+      "variant_count": 2,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0372",
+          "catalog_key": "sp_0372",
+          "name": "球形蓝宝石鱼",
+          "scientific_name": "Andinoacara pulcher var. Balloon",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:andinoacara-pulcher",
+          "base_scientific_name": "Andinoacara pulcher",
+          "variant_label": "Balloon",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0416",
+          "catalog_key": "sp_0416",
+          "name": "球形蓝宝石鱼 (特级)",
+          "scientific_name": "Andinoacara pulcher var. Super Balloon",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:andinoacara-pulcher",
+          "base_scientific_name": "Andinoacara pulcher",
+          "variant_label": "Super Balloon",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0450",
+          "catalog_key": "sp_0450",
+          "name": "蓝宝石鱼",
+          "scientific_name": "Andinoacara pulcher",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:andinoacara-pulcher",
+          "base_scientific_name": "Andinoacara pulcher",
+          "variant_label": null,
+          "relation_type": "exact_species",
           "grouping_confidence": "high"
         }
       ]
@@ -463,6 +562,62 @@
       ]
     },
     {
+      "group_key": "base:hemichromis-bimaculatus",
+      "base_scientific_name": "Hemichromis bimaculatus",
+      "primary_category": "慈鲷/斗鱼",
+      "categories": [
+        "慈鲷/斗鱼"
+      ],
+      "category_conflict": false,
+      "member_count": 3,
+      "variant_count": 2,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0054",
+          "catalog_key": "sp_0054",
+          "name": "红宝石鱼",
+          "scientific_name": "Hemichromis bimaculatus",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:hemichromis-bimaculatus",
+          "base_scientific_name": "Hemichromis bimaculatus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0271",
+          "catalog_key": "sp_0271",
+          "name": "白子红宝石",
+          "scientific_name": "Hemichromis bimaculatus var. Albino",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:hemichromis-bimaculatus",
+          "base_scientific_name": "Hemichromis bimaculatus",
+          "variant_label": "Albino",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0373",
+          "catalog_key": "sp_0373",
+          "name": "球形红宝石鱼",
+          "scientific_name": "Hemichromis bimaculatus var. Balloon",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:hemichromis-bimaculatus",
+          "base_scientific_name": "Hemichromis bimaculatus",
+          "variant_label": "Balloon",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:heros-severus",
       "base_scientific_name": "Heros severus",
       "primary_category": "慈鲷/斗鱼",
@@ -617,10 +772,9 @@
       "base_scientific_name": "Mikrogeophagus ramirezi",
       "primary_category": "慈鲷/斗鱼",
       "categories": [
-        "慈鲷/斗鱼",
-        "硬景/底床"
+        "慈鲷/斗鱼"
       ],
-      "category_conflict": true,
+      "category_conflict": false,
       "member_count": 7,
       "variant_count": 6,
       "duplicate_count": 0,
@@ -659,7 +813,7 @@
           "catalog_key": "sp_0157",
           "name": "蓝宝石短鲷",
           "scientific_name": "Mikrogeophagus ramirezi var. Blue",
-          "category": "硬景/底床",
+          "category": "慈鲷/斗鱼",
           "status": "catalog",
           "base_species_key": "base:mikrogeophagus-ramirezi",
           "base_scientific_name": "Mikrogeophagus ramirezi",
@@ -715,6 +869,36 @@
           "status": "catalog",
           "base_species_key": "base:mikrogeophagus-ramirezi",
           "base_scientific_name": "Mikrogeophagus ramirezi",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:neolamprologus-multifasciatus",
+      "base_scientific_name": "Neolamprologus multifasciatus",
+      "primary_category": "慈鲷/斗鱼",
+      "categories": [
+        "慈鲷/斗鱼"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0058",
+          "catalog_key": "sp_0058",
+          "name": "九间贝",
+          "scientific_name": "Neolamprologus multifasciatus",
+          "category": "慈鲷/斗鱼",
+          "status": "catalog",
+          "base_species_key": "base:neolamprologus-multifasciatus",
+          "base_scientific_name": "Neolamprologus multifasciatus",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
@@ -849,10 +1033,9 @@
       "base_scientific_name": "Pterophyllum scalare",
       "primary_category": "慈鲷/斗鱼",
       "categories": [
-        "慈鲷/斗鱼",
-        "硬景/底床"
+        "慈鲷/斗鱼"
       ],
-      "category_conflict": true,
+      "category_conflict": false,
       "member_count": 10,
       "variant_count": 9,
       "duplicate_count": 0,
@@ -930,7 +1113,7 @@
           "catalog_key": "sp_0241",
           "name": "大理石神仙 (球形)",
           "scientific_name": "Pterophyllum scalare var. Marble Balloon",
-          "category": "硬景/底床",
+          "category": "慈鲷/斗鱼",
           "status": "catalog",
           "base_species_key": "base:pterophyllum-scalare",
           "base_scientific_name": "Pterophyllum scalare",
@@ -2381,49 +2564,6 @@
       ]
     },
     {
-      "group_key": "base:altolamprologus-calvus",
-      "base_scientific_name": "Altolamprologus calvus",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 1,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0057",
-          "catalog_key": "sp_0057",
-          "name": "珍珠虎",
-          "scientific_name": "Altolamprologus calvus",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:altolamprologus-calvus",
-          "base_scientific_name": "Altolamprologus calvus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0266",
-          "catalog_key": "sp_0266",
-          "name": "黄金珍珠虎 (改良)",
-          "scientific_name": "Altolamprologus calvus var. Gold",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:altolamprologus-calvus",
-          "base_scientific_name": "Altolamprologus calvus",
-          "variant_label": "Gold",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
       "group_key": "base:amphiprion-ocellaris",
       "base_scientific_name": "Amphiprion ocellaris",
       "primary_category": "海水鱼",
@@ -2447,36 +2587,6 @@
           "status": "catalog",
           "base_species_key": "base:amphiprion-ocellaris",
           "base_scientific_name": "Amphiprion ocellaris",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:astropecten-polyacanthus",
-      "base_scientific_name": "Astropecten polyacanthus",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0195",
-          "catalog_key": "sp_0195",
-          "name": "海星 (翻砂)",
-          "scientific_name": "Astropecten polyacanthus",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:astropecten-polyacanthus",
-          "base_scientific_name": "Astropecten polyacanthus",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
@@ -2587,66 +2697,6 @@
       ]
     },
     {
-      "group_key": "base:fromia-milleporella",
-      "base_scientific_name": "Fromia milleporella",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0328",
-          "catalog_key": "sp_0328",
-          "name": "红海星",
-          "scientific_name": "Fromia milleporella",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:fromia-milleporella",
-          "base_scientific_name": "Fromia milleporella",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:haliclona-sp-blue",
-      "base_scientific_name": "Haliclona sp. Blue",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0371",
-          "catalog_key": "sp_0371",
-          "name": "蓝海绵",
-          "scientific_name": "Haliclona sp. Blue",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:haliclona-sp-blue",
-          "base_scientific_name": "Haliclona sp. Blue",
-          "variant_label": null,
-          "relation_type": "open_species",
-          "grouping_confidence": "medium"
-        }
-      ]
-    },
-    {
       "group_key": "base:lutjanus-kasmira",
       "base_scientific_name": "Lutjanus kasmira",
       "primary_category": "海水鱼",
@@ -2699,156 +2749,6 @@
           "variant_label": "红利鱼 (长鳍型)",
           "relation_type": "variety",
           "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:lysmata-amboinensis",
-      "base_scientific_name": "Lysmata amboinensis",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0188",
-          "catalog_key": "sp_0188",
-          "name": "清洁虾 (医生虾)",
-          "scientific_name": "Lysmata amboinensis",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:lysmata-amboinensis",
-          "base_scientific_name": "Lysmata amboinensis",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:lysmata-boggesi",
-      "base_scientific_name": "Lysmata boggesi",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0190",
-          "catalog_key": "sp_0190",
-          "name": "薄荷虾",
-          "scientific_name": "Lysmata boggesi",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:lysmata-boggesi",
-          "base_scientific_name": "Lysmata boggesi",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:neolamprologus-multifasciatus",
-      "base_scientific_name": "Neolamprologus multifasciatus",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0058",
-          "catalog_key": "sp_0058",
-          "name": "九间贝",
-          "scientific_name": "Neolamprologus multifasciatus",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:neolamprologus-multifasciatus",
-          "base_scientific_name": "Neolamprologus multifasciatus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:paguristes-cadenati",
-      "base_scientific_name": "Paguristes cadenati",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0191",
-          "catalog_key": "sp_0191",
-          "name": "寄居蟹 (红脚)",
-          "scientific_name": "Paguristes cadenati",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:paguristes-cadenati",
-          "base_scientific_name": "Paguristes cadenati",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:palythoa-sp",
-      "base_scientific_name": "Palythoa sp.",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0332",
-          "catalog_key": "sp_0332",
-          "name": "幻彩纽扣",
-          "scientific_name": "Palythoa sp.",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:palythoa-sp",
-          "base_scientific_name": "Palythoa sp.",
-          "variant_label": null,
-          "relation_type": "open_species",
-          "grouping_confidence": "medium"
         }
       ]
     },
@@ -2906,36 +2806,6 @@
           "status": "catalog",
           "base_species_key": "base:pomacanthus-annularis",
           "base_scientific_name": "Pomacanthus annularis",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:protula-bispiralis",
-      "base_scientific_name": "Protula bispiralis",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0194",
-          "catalog_key": "sp_0194",
-          "name": "管虫 (硬管)",
-          "scientific_name": "Protula bispiralis",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:protula-bispiralis",
-          "base_scientific_name": "Protula bispiralis",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
@@ -3033,80 +2903,6 @@
       ]
     },
     {
-      "group_key": "base:sabellastarte-sp",
-      "base_scientific_name": "Sabellastarte sp.",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0327",
-          "catalog_key": "sp_0327",
-          "name": "管虫 (五彩)",
-          "scientific_name": "Sabellastarte sp.",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:sabellastarte-sp",
-          "base_scientific_name": "Sabellastarte sp.",
-          "variant_label": null,
-          "relation_type": "open_species",
-          "grouping_confidence": "medium"
-        }
-      ]
-    },
-    {
-      "group_key": "base:stichodactyla-gigantea",
-      "base_scientific_name": "Stichodactyla gigantea",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼",
-        "珊瑚/海水无脊椎"
-      ],
-      "category_conflict": true,
-      "member_count": 2,
-      "variant_count": 1,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0334",
-          "catalog_key": "sp_0334",
-          "name": "长须地毯",
-          "scientific_name": "Stichodactyla gigantea",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:stichodactyla-gigantea",
-          "base_scientific_name": "Stichodactyla gigantea",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0402",
-          "catalog_key": "sp_0402",
-          "name": "绿地毯海葵 (长须)",
-          "scientific_name": "Stichodactyla gigantea var. Green",
-          "category": "珊瑚/海水无脊椎",
-          "status": "catalog",
-          "base_species_key": "base:stichodactyla-gigantea",
-          "base_scientific_name": "Stichodactyla gigantea",
-          "variant_label": "Green",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
       "group_key": "base:synchiropus-splendidus",
       "base_scientific_name": "Synchiropus splendidus",
       "primary_category": "海水鱼",
@@ -3144,80 +2940,6 @@
           "base_species_key": "base:synchiropus-splendidus",
           "base_scientific_name": "Synchiropus splendidus",
           "variant_label": "XL",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:thor-amboinensis",
-      "base_scientific_name": "Thor amboinensis",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0189",
-          "catalog_key": "sp_0189",
-          "name": "性感虾",
-          "scientific_name": "Thor amboinensis",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:thor-amboinensis",
-          "base_scientific_name": "Thor amboinensis",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:tubastraea-coccinea",
-      "base_scientific_name": "Tubastraea coccinea",
-      "primary_category": "海水鱼",
-      "categories": [
-        "海水鱼",
-        "珊瑚/海水无脊椎"
-      ],
-      "category_conflict": true,
-      "member_count": 2,
-      "variant_count": 1,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0336",
-          "catalog_key": "sp_0336",
-          "name": "炮仗花",
-          "scientific_name": "Tubastraea coccinea",
-          "category": "海水鱼",
-          "status": "catalog",
-          "base_species_key": "base:tubastraea-coccinea",
-          "base_scientific_name": "Tubastraea coccinea",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0405",
-          "catalog_key": "sp_0405",
-          "name": "红炮仗花珊瑚",
-          "scientific_name": "Tubastraea coccinea var. Red",
-          "category": "珊瑚/海水无脊椎",
-          "status": "catalog",
-          "base_species_key": "base:tubastraea-coccinea",
-          "base_scientific_name": "Tubastraea coccinea",
-          "variant_label": "Red",
           "relation_type": "variety",
           "grouping_confidence": "high"
         }
@@ -4245,6 +3967,36 @@
       ]
     },
     {
+      "group_key": "base:astropecten-polyacanthus",
+      "base_scientific_name": "Astropecten polyacanthus",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0195",
+          "catalog_key": "sp_0195",
+          "name": "海星 (翻砂)",
+          "scientific_name": "Astropecten polyacanthus",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:astropecten-polyacanthus",
+          "base_scientific_name": "Astropecten polyacanthus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:catalaphyllia-jardinei",
       "base_scientific_name": "Catalaphyllia jardinei",
       "primary_category": "珊瑚/海水无脊椎",
@@ -4447,6 +4199,66 @@
       ]
     },
     {
+      "group_key": "base:fromia-milleporella",
+      "base_scientific_name": "Fromia milleporella",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0328",
+          "catalog_key": "sp_0328",
+          "name": "红海星",
+          "scientific_name": "Fromia milleporella",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:fromia-milleporella",
+          "base_scientific_name": "Fromia milleporella",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:haliclona-sp-blue",
+      "base_scientific_name": "Haliclona sp. Blue",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0371",
+          "catalog_key": "sp_0371",
+          "name": "蓝海绵",
+          "scientific_name": "Haliclona sp. Blue",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:haliclona-sp-blue",
+          "base_scientific_name": "Haliclona sp. Blue",
+          "variant_label": null,
+          "relation_type": "open_species",
+          "grouping_confidence": "medium"
+        }
+      ]
+    },
+    {
       "group_key": "base:heteractis-crispa",
       "base_scientific_name": "Heteractis crispa",
       "primary_category": "珊瑚/海水无脊椎",
@@ -4537,6 +4349,36 @@
       ]
     },
     {
+      "group_key": "base:palythoa-sp",
+      "base_scientific_name": "Palythoa sp.",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0332",
+          "catalog_key": "sp_0332",
+          "name": "幻彩纽扣",
+          "scientific_name": "Palythoa sp.",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:palythoa-sp",
+          "base_scientific_name": "Palythoa sp.",
+          "variant_label": null,
+          "relation_type": "open_species",
+          "grouping_confidence": "medium"
+        }
+      ]
+    },
+    {
       "group_key": "base:plerogyra-sinuosa",
       "base_scientific_name": "Plerogyra sinuosa",
       "primary_category": "珊瑚/海水无脊椎",
@@ -4567,6 +4409,66 @@
       ]
     },
     {
+      "group_key": "base:protula-bispiralis",
+      "base_scientific_name": "Protula bispiralis",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0194",
+          "catalog_key": "sp_0194",
+          "name": "管虫 (硬管)",
+          "scientific_name": "Protula bispiralis",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:protula-bispiralis",
+          "base_scientific_name": "Protula bispiralis",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:sabellastarte-sp",
+      "base_scientific_name": "Sabellastarte sp.",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0327",
+          "catalog_key": "sp_0327",
+          "name": "管虫 (五彩)",
+          "scientific_name": "Sabellastarte sp.",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:sabellastarte-sp",
+          "base_scientific_name": "Sabellastarte sp.",
+          "variant_label": null,
+          "relation_type": "open_species",
+          "grouping_confidence": "medium"
+        }
+      ]
+    },
+    {
       "group_key": "base:sarcophyton-sp",
       "base_scientific_name": "Sarcophyton sp.",
       "primary_category": "珊瑚/海水无脊椎",
@@ -4593,6 +4495,49 @@
           "variant_label": null,
           "relation_type": "open_species",
           "grouping_confidence": "medium"
+        }
+      ]
+    },
+    {
+      "group_key": "base:stichodactyla-gigantea",
+      "base_scientific_name": "Stichodactyla gigantea",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 1,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0334",
+          "catalog_key": "sp_0334",
+          "name": "长须地毯",
+          "scientific_name": "Stichodactyla gigantea",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:stichodactyla-gigantea",
+          "base_scientific_name": "Stichodactyla gigantea",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0402",
+          "catalog_key": "sp_0402",
+          "name": "绿地毯海葵 (长须)",
+          "scientific_name": "Stichodactyla gigantea var. Green",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:stichodactyla-gigantea",
+          "base_scientific_name": "Stichodactyla gigantea",
+          "variant_label": "Green",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
         }
       ]
     },
@@ -4694,6 +4639,49 @@
           "base_species_key": "base:trachyphyllia-geoffroyi",
           "base_scientific_name": "Trachyphyllia geoffroyi",
           "variant_label": "Purple",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:tubastraea-coccinea",
+      "base_scientific_name": "Tubastraea coccinea",
+      "primary_category": "珊瑚/海水无脊椎",
+      "categories": [
+        "珊瑚/海水无脊椎"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 1,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0336",
+          "catalog_key": "sp_0336",
+          "name": "炮仗花",
+          "scientific_name": "Tubastraea coccinea",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:tubastraea-coccinea",
+          "base_scientific_name": "Tubastraea coccinea",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0405",
+          "catalog_key": "sp_0405",
+          "name": "红炮仗花珊瑚",
+          "scientific_name": "Tubastraea coccinea var. Red",
+          "category": "珊瑚/海水无脊椎",
+          "status": "catalog",
+          "base_species_key": "base:tubastraea-coccinea",
+          "base_scientific_name": "Tubastraea coccinea",
+          "variant_label": "Red",
           "relation_type": "variety",
           "grouping_confidence": "high"
         }
@@ -5179,6 +5167,36 @@
       ]
     },
     {
+      "group_key": "base:cabomba-caroliniana",
+      "base_scientific_name": "Cabomba caroliniana",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0077",
+          "catalog_key": "sp_0077",
+          "name": "绿菊",
+          "scientific_name": "Cabomba caroliniana",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:cabomba-caroliniana",
+          "base_scientific_name": "Cabomba caroliniana",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:ceratopteris-thalictroides",
       "base_scientific_name": "Ceratopteris thalictroides",
       "primary_category": "水草",
@@ -5491,6 +5509,69 @@
       ]
     },
     {
+      "group_key": "base:eleocharis-acicularis",
+      "base_scientific_name": "Eleocharis acicularis",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 0,
+      "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
+          "name": "牛毛毡",
+          "scientific_name": "Eleocharis acicularis",
+          "member_ids": [
+            "sp_0072",
+            "sp_0299"
+          ]
+        }
+      ],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0072",
+          "catalog_key": "sp_0072",
+          "name": "牛毛毡",
+          "scientific_name": "Eleocharis acicularis",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:eleocharis-acicularis",
+          "base_scientific_name": "Eleocharis acicularis",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0299"
+          ]
+        },
+        {
+          "id": "sp_0299",
+          "catalog_key": "sp_0299",
+          "name": "牛毛毡",
+          "scientific_name": "Eleocharis acicularis",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:eleocharis-acicularis",
+          "base_scientific_name": "Eleocharis acicularis",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
+          "duplicate_of_catalog_key": "sp_0072",
+          "duplicate_peer_keys": [
+            "sp_0072"
+          ]
+        }
+      ]
+    },
+    {
       "group_key": "base:eleocharis-parvula",
       "base_scientific_name": "Eleocharis parvula",
       "primary_category": "水草",
@@ -5517,6 +5598,69 @@
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:fissidens-fontanus",
+      "base_scientific_name": "Fissidens fontanus",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 0,
+      "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
+          "name": "凤尾藓",
+          "scientific_name": "Fissidens fontanus",
+          "member_ids": [
+            "sp_0101",
+            "sp_0308"
+          ]
+        }
+      ],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0101",
+          "catalog_key": "sp_0101",
+          "name": "凤尾藓",
+          "scientific_name": "Fissidens fontanus",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:fissidens-fontanus",
+          "base_scientific_name": "Fissidens fontanus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0308"
+          ]
+        },
+        {
+          "id": "sp_0308",
+          "catalog_key": "sp_0308",
+          "name": "凤尾藓",
+          "scientific_name": "Fissidens fontanus",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:fissidens-fontanus",
+          "base_scientific_name": "Fissidens fontanus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
+          "duplicate_of_catalog_key": "sp_0101",
+          "duplicate_peer_keys": [
+            "sp_0101"
+          ]
         }
       ]
     },
@@ -5551,32 +5695,65 @@
       ]
     },
     {
-      "group_key": "base:hardscape-aqua-soil",
-      "base_scientific_name": "Hardscape - Aqua Soil",
+      "group_key": "base:hemianthus-callitrichoides",
+      "base_scientific_name": "Hemianthus callitrichoides",
       "primary_category": "水草",
       "categories": [
         "水草"
       ],
       "category_conflict": false,
-      "member_count": 1,
+      "member_count": 2,
       "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
+      "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
+          "name": "迷你矮珍珠",
+          "scientific_name": "Hemianthus callitrichoides",
+          "member_ids": [
+            "sp_0071",
+            "sp_0298"
+          ]
+        }
+      ],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
       "members": [
         {
-          "id": "sp_0352",
-          "catalog_key": "sp_0352",
-          "name": "水草泥 (底床)",
-          "scientific_name": "Hardscape - Aqua Soil",
+          "id": "sp_0071",
+          "catalog_key": "sp_0071",
+          "name": "迷你矮珍珠",
+          "scientific_name": "Hemianthus callitrichoides",
           "category": "水草",
           "status": "catalog",
-          "base_species_key": "base:hardscape-aqua-soil",
-          "base_scientific_name": "Hardscape - Aqua Soil",
+          "base_species_key": "base:hemianthus-callitrichoides",
+          "base_scientific_name": "Hemianthus callitrichoides",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0298"
+          ]
+        },
+        {
+          "id": "sp_0298",
+          "catalog_key": "sp_0298",
+          "name": "迷你矮珍珠",
+          "scientific_name": "Hemianthus callitrichoides",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:hemianthus-callitrichoides",
+          "base_scientific_name": "Hemianthus callitrichoides",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
+          "duplicate_of_catalog_key": "sp_0071",
+          "duplicate_peer_keys": [
+            "sp_0071"
+          ]
         }
       ]
     },
@@ -5704,6 +5881,109 @@
       ]
     },
     {
+      "group_key": "base:limnophila-aquatica",
+      "base_scientific_name": "Limnophila aquatica",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0089",
+          "catalog_key": "sp_0089",
+          "name": "大宝塔",
+          "scientific_name": "Limnophila aquatica",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:limnophila-aquatica",
+          "base_scientific_name": "Limnophila aquatica",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:ludwigia-glandulosa",
+      "base_scientific_name": "Ludwigia glandulosa",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0092",
+          "catalog_key": "sp_0092",
+          "name": "红玫瑰",
+          "scientific_name": "Ludwigia glandulosa",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:ludwigia-glandulosa",
+          "base_scientific_name": "Ludwigia glandulosa",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:ludwigia-inclinata",
+      "base_scientific_name": "Ludwigia inclinata",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 2,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0095",
+          "catalog_key": "sp_0095",
+          "name": "细叶太阳",
+          "scientific_name": "Ludwigia inclinata var. verticillata",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:ludwigia-inclinata",
+          "base_scientific_name": "Ludwigia inclinata",
+          "variant_label": "verticillata",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0315",
+          "catalog_key": "sp_0315",
+          "name": "红太阴",
+          "scientific_name": "Ludwigia inclinata var. verticillata",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:ludwigia-inclinata",
+          "base_scientific_name": "Ludwigia inclinata",
+          "variant_label": "verticillata",
+          "relation_type": "variety",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:ludwigia-repens",
       "base_scientific_name": "Ludwigia repens",
       "primary_category": "水草",
@@ -5727,6 +6007,218 @@
           "status": "catalog",
           "base_species_key": "base:ludwigia-repens",
           "base_scientific_name": "Ludwigia repens",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:micranthemum-umbrosum",
+      "base_scientific_name": "Micranthemum umbrosum",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0093",
+          "catalog_key": "sp_0093",
+          "name": "十字珍珠",
+          "scientific_name": "Micranthemum umbrosum",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:micranthemum-umbrosum",
+          "base_scientific_name": "Micranthemum umbrosum",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:microsorum-pteropus",
+      "base_scientific_name": "Microsorum pteropus",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 3,
+      "variant_count": 1,
+      "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
+          "name": "铁皇冠",
+          "scientific_name": "Microsorum pteropus",
+          "member_ids": [
+            "sp_0081",
+            "sp_0305"
+          ]
+        }
+      ],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0081",
+          "catalog_key": "sp_0081",
+          "name": "铁皇冠",
+          "scientific_name": "Microsorum pteropus",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:microsorum-pteropus",
+          "base_scientific_name": "Microsorum pteropus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0305"
+          ]
+        },
+        {
+          "id": "sp_0090",
+          "catalog_key": "sp_0090",
+          "name": "细叶铁皇冠",
+          "scientific_name": "Microsorum pteropus 'Narrow'",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:microsorum-pteropus",
+          "base_scientific_name": "Microsorum pteropus",
+          "variant_label": "Narrow",
+          "relation_type": "cultivar",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0305",
+          "catalog_key": "sp_0305",
+          "name": "铁皇冠",
+          "scientific_name": "Microsorum pteropus",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:microsorum-pteropus",
+          "base_scientific_name": "Microsorum pteropus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
+          "duplicate_of_catalog_key": "sp_0081",
+          "duplicate_peer_keys": [
+            "sp_0081"
+          ]
+        }
+      ]
+    },
+    {
+      "group_key": "base:myriophyllum-aquaticum",
+      "base_scientific_name": "Myriophyllum aquaticum",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 0,
+      "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
+          "name": "绿羽毛",
+          "scientific_name": "Myriophyllum aquaticum",
+          "member_ids": [
+            "sp_0097",
+            "sp_0316"
+          ]
+        }
+      ],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0097",
+          "catalog_key": "sp_0097",
+          "name": "绿羽毛",
+          "scientific_name": "Myriophyllum aquaticum",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:myriophyllum-aquaticum",
+          "base_scientific_name": "Myriophyllum aquaticum",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0316"
+          ]
+        },
+        {
+          "id": "sp_0316",
+          "catalog_key": "sp_0316",
+          "name": "绿羽毛",
+          "scientific_name": "Myriophyllum aquaticum",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:myriophyllum-aquaticum",
+          "base_scientific_name": "Myriophyllum aquaticum",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
+          "duplicate_of_catalog_key": "sp_0097",
+          "duplicate_peer_keys": [
+            "sp_0097"
+          ]
+        }
+      ]
+    },
+    {
+      "group_key": "base:nymphaea-lotus",
+      "base_scientific_name": "Nymphaea lotus",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0088",
+          "catalog_key": "sp_0088",
+          "name": "睡莲 (红荷根)",
+          "scientific_name": "Nymphaea lotus",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:nymphaea-lotus",
+          "base_scientific_name": "Nymphaea lotus",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0312",
+          "catalog_key": "sp_0312",
+          "name": "红荷根",
+          "scientific_name": "Nymphaea lotus",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:nymphaea-lotus",
+          "base_scientific_name": "Nymphaea lotus",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
@@ -5794,6 +6286,125 @@
       ]
     },
     {
+      "group_key": "base:riccia-fluitans",
+      "base_scientific_name": "Riccia fluitans",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0099",
+          "catalog_key": "sp_0099",
+          "name": "鹿角苔",
+          "scientific_name": "Riccia fluitans",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:riccia-fluitans",
+          "base_scientific_name": "Riccia fluitans",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:rotala-rotundifolia",
+      "base_scientific_name": "Rotala rotundifolia",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 4,
+      "variant_count": 4,
+      "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
+          "name": "红宫廷",
+          "scientific_name": "Rotala rotundifolia 'Red'",
+          "member_ids": [
+            "sp_0079",
+            "sp_0303"
+          ]
+        }
+      ],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0078",
+          "catalog_key": "sp_0078",
+          "name": "宫廷草",
+          "scientific_name": "Rotala rotundifolia 'Green'",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:rotala-rotundifolia",
+          "base_scientific_name": "Rotala rotundifolia",
+          "variant_label": "Green",
+          "relation_type": "cultivar",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0079",
+          "catalog_key": "sp_0079",
+          "name": "红宫廷",
+          "scientific_name": "Rotala rotundifolia 'Red'",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:rotala-rotundifolia",
+          "base_scientific_name": "Rotala rotundifolia",
+          "variant_label": "Red",
+          "relation_type": "cultivar",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0303"
+          ]
+        },
+        {
+          "id": "sp_0303",
+          "catalog_key": "sp_0303",
+          "name": "红宫廷",
+          "scientific_name": "Rotala rotundifolia 'Red'",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:rotala-rotundifolia",
+          "base_scientific_name": "Rotala rotundifolia",
+          "variant_label": "Red",
+          "relation_type": "cultivar",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
+          "duplicate_of_catalog_key": "sp_0079",
+          "duplicate_peer_keys": [
+            "sp_0079"
+          ]
+        },
+        {
+          "id": "sp_0304",
+          "catalog_key": "sp_0304",
+          "name": "绿宫廷",
+          "scientific_name": "Rotala rotundifolia 'Green'",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:rotala-rotundifolia",
+          "base_scientific_name": "Rotala rotundifolia",
+          "variant_label": "Green",
+          "relation_type": "cultivar",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:sagittaria-subulata",
       "base_scientific_name": "Sagittaria subulata",
       "primary_category": "水草",
@@ -5820,6 +6431,69 @@
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:staurogyne-repens",
+      "base_scientific_name": "Staurogyne repens",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 0,
+      "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
+          "name": "南美叉柱花",
+          "scientific_name": "Staurogyne repens",
+          "member_ids": [
+            "sp_0091",
+            "sp_0314"
+          ]
+        }
+      ],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0091",
+          "catalog_key": "sp_0091",
+          "name": "南美叉柱花",
+          "scientific_name": "Staurogyne repens",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:staurogyne-repens",
+          "base_scientific_name": "Staurogyne repens",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0314"
+          ]
+        },
+        {
+          "id": "sp_0314",
+          "catalog_key": "sp_0314",
+          "name": "南美叉柱花",
+          "scientific_name": "Staurogyne repens",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:staurogyne-repens",
+          "base_scientific_name": "Staurogyne repens",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
+          "duplicate_of_catalog_key": "sp_0091",
+          "duplicate_peer_keys": [
+            "sp_0091"
+          ]
         }
       ]
     },
@@ -5883,6 +6557,169 @@
           "duplicate_peer_keys": [
             "sp_0073"
           ]
+        }
+      ]
+    },
+    {
+      "group_key": "base:vallisneria-gigantea",
+      "base_scientific_name": "Vallisneria gigantea",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0356",
+          "catalog_key": "sp_0356",
+          "name": "大水兰",
+          "scientific_name": "Vallisneria gigantea",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:vallisneria-gigantea",
+          "base_scientific_name": "Vallisneria gigantea",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:vallisneria-nana",
+      "base_scientific_name": "Vallisneria nana",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0355",
+          "catalog_key": "sp_0355",
+          "name": "小水兰",
+          "scientific_name": "Vallisneria nana",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:vallisneria-nana",
+          "base_scientific_name": "Vallisneria nana",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:vesicularia-dubyana",
+      "base_scientific_name": "Vesicularia dubyana",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0080",
+          "catalog_key": "sp_0080",
+          "name": "莫斯 (三角莫斯)",
+          "scientific_name": "Vesicularia dubyana",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:vesicularia-dubyana",
+          "base_scientific_name": "Vesicularia dubyana",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0307",
+          "catalog_key": "sp_0307",
+          "name": "三角莫斯",
+          "scientific_name": "Vesicularia dubyana",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:vesicularia-dubyana",
+          "base_scientific_name": "Vesicularia dubyana",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:vesicularia-sp",
+      "base_scientific_name": "Vesicularia sp.",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0100",
+          "catalog_key": "sp_0100",
+          "name": "青丝绒莫斯",
+          "scientific_name": "Vesicularia sp.",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:vesicularia-sp",
+          "base_scientific_name": "Vesicularia sp.",
+          "variant_label": null,
+          "relation_type": "open_species",
+          "grouping_confidence": "medium"
+        }
+      ]
+    },
+    {
+      "group_key": "base:vesicularia-sp-giant",
+      "base_scientific_name": "Vesicularia sp. Giant",
+      "primary_category": "水草",
+      "categories": [
+        "水草"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0357",
+          "catalog_key": "sp_0357",
+          "name": "莫斯墙 (大三角)",
+          "scientific_name": "Vesicularia sp. Giant",
+          "category": "水草",
+          "status": "catalog",
+          "base_species_key": "base:vesicularia-sp-giant",
+          "base_scientific_name": "Vesicularia sp. Giant",
+          "variant_label": null,
+          "relation_type": "open_species",
+          "grouping_confidence": "medium"
         }
       ]
     },
@@ -6557,6 +7394,66 @@
       ]
     },
     {
+      "group_key": "base:lysmata-amboinensis",
+      "base_scientific_name": "Lysmata amboinensis",
+      "primary_category": "虾螺蟹",
+      "categories": [
+        "虾螺蟹"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0188",
+          "catalog_key": "sp_0188",
+          "name": "清洁虾 (医生虾)",
+          "scientific_name": "Lysmata amboinensis",
+          "category": "虾螺蟹",
+          "status": "catalog",
+          "base_species_key": "base:lysmata-amboinensis",
+          "base_scientific_name": "Lysmata amboinensis",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:lysmata-boggesi",
+      "base_scientific_name": "Lysmata boggesi",
+      "primary_category": "虾螺蟹",
+      "categories": [
+        "虾螺蟹"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0190",
+          "catalog_key": "sp_0190",
+          "name": "薄荷虾",
+          "scientific_name": "Lysmata boggesi",
+          "category": "虾螺蟹",
+          "status": "catalog",
+          "base_species_key": "base:lysmata-boggesi",
+          "base_scientific_name": "Lysmata boggesi",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:neocaridina-davidi",
       "base_scientific_name": "Neocaridina davidi",
       "primary_category": "虾螺蟹",
@@ -6895,6 +7792,36 @@
       ]
     },
     {
+      "group_key": "base:paguristes-cadenati",
+      "base_scientific_name": "Paguristes cadenati",
+      "primary_category": "虾螺蟹",
+      "categories": [
+        "虾螺蟹"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0191",
+          "catalog_key": "sp_0191",
+          "name": "寄居蟹 (红脚)",
+          "scientific_name": "Paguristes cadenati",
+          "category": "虾螺蟹",
+          "status": "catalog",
+          "base_species_key": "base:paguristes-cadenati",
+          "base_scientific_name": "Paguristes cadenati",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:pomacea-bridgesii",
       "base_scientific_name": "Pomacea bridgesii",
       "primary_category": "虾螺蟹",
@@ -7027,6 +7954,36 @@
       ]
     },
     {
+      "group_key": "base:thor-amboinensis",
+      "base_scientific_name": "Thor amboinensis",
+      "primary_category": "虾螺蟹",
+      "categories": [
+        "虾螺蟹"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0189",
+          "catalog_key": "sp_0189",
+          "name": "性感虾",
+          "scientific_name": "Thor amboinensis",
+          "category": "虾螺蟹",
+          "status": "catalog",
+          "base_species_key": "base:thor-amboinensis",
+          "base_scientific_name": "Thor amboinensis",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:tylomelania-sp",
       "base_scientific_name": "Tylomelania sp.",
       "primary_category": "虾螺蟹",
@@ -7120,64 +8077,8 @@
       ]
     },
     {
-      "group_key": "base:andinoacara-pulcher",
-      "base_scientific_name": "Andinoacara pulcher",
-      "primary_category": "硬景/底床",
-      "categories": [
-        "硬景/底床"
-      ],
-      "category_conflict": false,
-      "member_count": 3,
-      "variant_count": 2,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0372",
-          "catalog_key": "sp_0372",
-          "name": "球形蓝宝石鱼",
-          "scientific_name": "Andinoacara pulcher var. Balloon",
-          "category": "硬景/底床",
-          "status": "catalog",
-          "base_species_key": "base:andinoacara-pulcher",
-          "base_scientific_name": "Andinoacara pulcher",
-          "variant_label": "Balloon",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0416",
-          "catalog_key": "sp_0416",
-          "name": "球形蓝宝石鱼 (特级)",
-          "scientific_name": "Andinoacara pulcher var. Super Balloon",
-          "category": "硬景/底床",
-          "status": "catalog",
-          "base_species_key": "base:andinoacara-pulcher",
-          "base_scientific_name": "Andinoacara pulcher",
-          "variant_label": "Super Balloon",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0450",
-          "catalog_key": "sp_0450",
-          "name": "蓝宝石鱼",
-          "scientific_name": "Andinoacara pulcher",
-          "category": "硬景/底床",
-          "status": "catalog",
-          "base_species_key": "base:andinoacara-pulcher",
-          "base_scientific_name": "Andinoacara pulcher",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:channa-diplogramma",
-      "base_scientific_name": "Channa diplogramma",
+      "group_key": "base:hardscape-aqua-soil",
+      "base_scientific_name": "Hardscape - Aqua Soil",
       "primary_category": "硬景/底床",
       "categories": [
         "硬景/底床"
@@ -7191,14 +8092,14 @@
       "seo_strategy": "single_species",
       "members": [
         {
-          "id": "sp_0198",
-          "catalog_key": "sp_0198",
-          "name": "红宝石雷龙",
-          "scientific_name": "Channa diplogramma",
+          "id": "sp_0352",
+          "catalog_key": "sp_0352",
+          "name": "水草泥 (底床)",
+          "scientific_name": "Hardscape - Aqua Soil",
           "category": "硬景/底床",
           "status": "catalog",
-          "base_species_key": "base:channa-diplogramma",
-          "base_scientific_name": "Channa diplogramma",
+          "base_species_key": "base:hardscape-aqua-soil",
+          "base_scientific_name": "Hardscape - Aqua Soil",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
@@ -7206,44 +8107,31 @@
       ]
     },
     {
-      "group_key": "base:channa-stewartii",
-      "base_scientific_name": "Channa stewartii",
+      "group_key": "base:hardscape-azalea-root",
+      "base_scientific_name": "Hardscape - Azalea Root",
       "primary_category": "硬景/底床",
       "categories": [
         "硬景/底床"
       ],
       "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 1,
+      "member_count": 1,
+      "variant_count": 0,
       "duplicate_count": 0,
       "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
       "members": [
         {
-          "id": "sp_0197",
-          "catalog_key": "sp_0197",
-          "name": "蓝宝石雷龙",
-          "scientific_name": "Channa stewartii",
+          "id": "sp_0347",
+          "catalog_key": "sp_0347",
+          "name": "杜鹃根",
+          "scientific_name": "Hardscape - Azalea Root",
           "category": "硬景/底床",
           "status": "catalog",
-          "base_species_key": "base:channa-stewartii",
-          "base_scientific_name": "Channa stewartii",
+          "base_species_key": "base:hardscape-azalea-root",
+          "base_scientific_name": "Hardscape - Azalea Root",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0411",
-          "catalog_key": "sp_0411",
-          "name": "蓝宝石雷龙 (特级选育)",
-          "scientific_name": "Channa stewartii var. Karbi Anglong",
-          "category": "硬景/底床",
-          "status": "catalog",
-          "base_species_key": "base:channa-stewartii",
-          "base_scientific_name": "Channa stewartii",
-          "variant_label": "Karbi Anglong",
-          "relation_type": "variety",
           "grouping_confidence": "high"
         }
       ]
@@ -7519,62 +8407,6 @@
       ]
     },
     {
-      "group_key": "base:hemichromis-bimaculatus",
-      "base_scientific_name": "Hemichromis bimaculatus",
-      "primary_category": "硬景/底床",
-      "categories": [
-        "硬景/底床"
-      ],
-      "category_conflict": false,
-      "member_count": 3,
-      "variant_count": 2,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0054",
-          "catalog_key": "sp_0054",
-          "name": "红宝石鱼",
-          "scientific_name": "Hemichromis bimaculatus",
-          "category": "硬景/底床",
-          "status": "catalog",
-          "base_species_key": "base:hemichromis-bimaculatus",
-          "base_scientific_name": "Hemichromis bimaculatus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0271",
-          "catalog_key": "sp_0271",
-          "name": "白子红宝石",
-          "scientific_name": "Hemichromis bimaculatus var. Albino",
-          "category": "硬景/底床",
-          "status": "catalog",
-          "base_species_key": "base:hemichromis-bimaculatus",
-          "base_scientific_name": "Hemichromis bimaculatus",
-          "variant_label": "Albino",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0373",
-          "catalog_key": "sp_0373",
-          "name": "球形红宝石鱼",
-          "scientific_name": "Hemichromis bimaculatus var. Balloon",
-          "category": "硬景/底床",
-          "status": "catalog",
-          "base_species_key": "base:hemichromis-bimaculatus",
-          "base_scientific_name": "Hemichromis bimaculatus",
-          "variant_label": "Balloon",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
       "group_key": "base:abbottina-rivularis",
       "base_scientific_name": "Abbottina rivularis",
       "primary_category": "鱼类",
@@ -7748,36 +8580,6 @@
           "status": "catalog",
           "base_species_key": "base:beaufortia-kweichowensis",
           "base_scientific_name": "Beaufortia kweichowensis",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:cabomba-caroliniana",
-      "base_scientific_name": "Cabomba caroliniana",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0077",
-          "catalog_key": "sp_0077",
-          "name": "绿菊",
-          "scientific_name": "Cabomba caroliniana",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:cabomba-caroliniana",
-          "base_scientific_name": "Cabomba caroliniana",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
@@ -8255,6 +9057,36 @@
       ]
     },
     {
+      "group_key": "base:channa-diplogramma",
+      "base_scientific_name": "Channa diplogramma",
+      "primary_category": "鱼类",
+      "categories": [
+        "鱼类"
+      ],
+      "category_conflict": false,
+      "member_count": 1,
+      "variant_count": 0,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": false,
+      "seo_strategy": "single_species",
+      "members": [
+        {
+          "id": "sp_0198",
+          "catalog_key": "sp_0198",
+          "name": "红宝石雷龙",
+          "scientific_name": "Channa diplogramma",
+          "category": "鱼类",
+          "status": "catalog",
+          "base_species_key": "base:channa-diplogramma",
+          "base_scientific_name": "Channa diplogramma",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
       "group_key": "base:channa-lorti",
       "base_scientific_name": "Channa lorti",
       "primary_category": "鱼类",
@@ -8280,6 +9112,49 @@
           "base_scientific_name": "Channa lorti",
           "variant_label": null,
           "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        }
+      ]
+    },
+    {
+      "group_key": "base:channa-stewartii",
+      "base_scientific_name": "Channa stewartii",
+      "primary_category": "鱼类",
+      "categories": [
+        "鱼类"
+      ],
+      "category_conflict": false,
+      "member_count": 2,
+      "variant_count": 1,
+      "duplicate_count": 0,
+      "duplicate_sets": [],
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
+      "members": [
+        {
+          "id": "sp_0197",
+          "catalog_key": "sp_0197",
+          "name": "蓝宝石雷龙",
+          "scientific_name": "Channa stewartii",
+          "category": "鱼类",
+          "status": "catalog",
+          "base_species_key": "base:channa-stewartii",
+          "base_scientific_name": "Channa stewartii",
+          "variant_label": null,
+          "relation_type": "exact_species",
+          "grouping_confidence": "high"
+        },
+        {
+          "id": "sp_0411",
+          "catalog_key": "sp_0411",
+          "name": "蓝宝石雷龙 (特级选育)",
+          "scientific_name": "Channa stewartii var. Karbi Anglong",
+          "category": "鱼类",
+          "status": "catalog",
+          "base_species_key": "base:channa-stewartii",
+          "base_scientific_name": "Channa stewartii",
+          "variant_label": "Karbi Anglong",
+          "relation_type": "variety",
           "grouping_confidence": "high"
         }
       ]
@@ -8591,69 +9466,6 @@
       ]
     },
     {
-      "group_key": "base:eleocharis-acicularis",
-      "base_scientific_name": "Eleocharis acicularis",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 0,
-      "duplicate_count": 1,
-      "duplicate_sets": [
-        {
-          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
-          "name": "牛毛毡",
-          "scientific_name": "Eleocharis acicularis",
-          "member_ids": [
-            "sp_0072",
-            "sp_0299"
-          ]
-        }
-      ],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0072",
-          "catalog_key": "sp_0072",
-          "name": "牛毛毡",
-          "scientific_name": "Eleocharis acicularis",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:eleocharis-acicularis",
-          "base_scientific_name": "Eleocharis acicularis",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
-          "duplicate_of_catalog_key": null,
-          "duplicate_peer_keys": [
-            "sp_0299"
-          ]
-        },
-        {
-          "id": "sp_0299",
-          "catalog_key": "sp_0299",
-          "name": "牛毛毡",
-          "scientific_name": "Eleocharis acicularis",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:eleocharis-acicularis",
-          "base_scientific_name": "Eleocharis acicularis",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
-          "duplicate_of_catalog_key": "sp_0072",
-          "duplicate_peer_keys": [
-            "sp_0072"
-          ]
-        }
-      ]
-    },
-    {
       "group_key": "base:epiplatys-annulatus",
       "base_scientific_name": "Epiplatys annulatus",
       "primary_category": "鱼类",
@@ -8710,69 +9522,6 @@
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:fissidens-fontanus",
-      "base_scientific_name": "Fissidens fontanus",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 0,
-      "duplicate_count": 1,
-      "duplicate_sets": [
-        {
-          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
-          "name": "凤尾藓",
-          "scientific_name": "Fissidens fontanus",
-          "member_ids": [
-            "sp_0101",
-            "sp_0308"
-          ]
-        }
-      ],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0101",
-          "catalog_key": "sp_0101",
-          "name": "凤尾藓",
-          "scientific_name": "Fissidens fontanus",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:fissidens-fontanus",
-          "base_scientific_name": "Fissidens fontanus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
-          "duplicate_of_catalog_key": null,
-          "duplicate_peer_keys": [
-            "sp_0308"
-          ]
-        },
-        {
-          "id": "sp_0308",
-          "catalog_key": "sp_0308",
-          "name": "凤尾藓",
-          "scientific_name": "Fissidens fontanus",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:fissidens-fontanus",
-          "base_scientific_name": "Fissidens fontanus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
-          "duplicate_of_catalog_key": "sp_0101",
-          "duplicate_peer_keys": [
-            "sp_0101"
-          ]
         }
       ]
     },
@@ -8854,42 +9603,12 @@
         {
           "id": "sp_0120",
           "catalog_key": "sp_0120",
-          "name": "电鳗 (观赏型)",
+          "name": "圭亚那裸背电鳗",
           "scientific_name": "Gymnotus carapo",
           "category": "鱼类",
           "status": "catalog",
           "base_species_key": "base:gymnotus-carapo",
           "base_scientific_name": "Gymnotus carapo",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:hardscape-azalea-root",
-      "base_scientific_name": "Hardscape - Azalea Root",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0347",
-          "catalog_key": "sp_0347",
-          "name": "杜鹃根",
-          "scientific_name": "Hardscape - Azalea Root",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:hardscape-azalea-root",
-          "base_scientific_name": "Hardscape - Azalea Root",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
@@ -8923,69 +9642,6 @@
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:hemianthus-callitrichoides",
-      "base_scientific_name": "Hemianthus callitrichoides",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 0,
-      "duplicate_count": 1,
-      "duplicate_sets": [
-        {
-          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
-          "name": "迷你矮珍珠",
-          "scientific_name": "Hemianthus callitrichoides",
-          "member_ids": [
-            "sp_0071",
-            "sp_0298"
-          ]
-        }
-      ],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0071",
-          "catalog_key": "sp_0071",
-          "name": "迷你矮珍珠",
-          "scientific_name": "Hemianthus callitrichoides",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:hemianthus-callitrichoides",
-          "base_scientific_name": "Hemianthus callitrichoides",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
-          "duplicate_of_catalog_key": null,
-          "duplicate_peer_keys": [
-            "sp_0298"
-          ]
-        },
-        {
-          "id": "sp_0298",
-          "catalog_key": "sp_0298",
-          "name": "迷你矮珍珠",
-          "scientific_name": "Hemianthus callitrichoides",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:hemianthus-callitrichoides",
-          "base_scientific_name": "Hemianthus callitrichoides",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
-          "duplicate_of_catalog_key": "sp_0071",
-          "duplicate_peer_keys": [
-            "sp_0071"
-          ]
         }
       ]
     },
@@ -9075,109 +9731,6 @@
           "base_scientific_name": "Leporinus fasciatus",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:limnophila-aquatica",
-      "base_scientific_name": "Limnophila aquatica",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0089",
-          "catalog_key": "sp_0089",
-          "name": "大宝塔",
-          "scientific_name": "Limnophila aquatica",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:limnophila-aquatica",
-          "base_scientific_name": "Limnophila aquatica",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:ludwigia-glandulosa",
-      "base_scientific_name": "Ludwigia glandulosa",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0092",
-          "catalog_key": "sp_0092",
-          "name": "红玫瑰",
-          "scientific_name": "Ludwigia glandulosa",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:ludwigia-glandulosa",
-          "base_scientific_name": "Ludwigia glandulosa",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:ludwigia-inclinata",
-      "base_scientific_name": "Ludwigia inclinata",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 2,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0095",
-          "catalog_key": "sp_0095",
-          "name": "细叶太阳",
-          "scientific_name": "Ludwigia inclinata var. verticillata",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:ludwigia-inclinata",
-          "base_scientific_name": "Ludwigia inclinata",
-          "variant_label": "verticillata",
-          "relation_type": "variety",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0315",
-          "catalog_key": "sp_0315",
-          "name": "红太阴",
-          "scientific_name": "Ludwigia inclinata var. verticillata",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:ludwigia-inclinata",
-          "base_scientific_name": "Ludwigia inclinata",
-          "variant_label": "verticillata",
-          "relation_type": "variety",
           "grouping_confidence": "high"
         }
       ]
@@ -9281,218 +9834,6 @@
           "base_scientific_name": "Melanotaenia praecox",
           "variant_label": "Longfin",
           "relation_type": "variety",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:micranthemum-umbrosum",
-      "base_scientific_name": "Micranthemum umbrosum",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0093",
-          "catalog_key": "sp_0093",
-          "name": "十字珍珠",
-          "scientific_name": "Micranthemum umbrosum",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:micranthemum-umbrosum",
-          "base_scientific_name": "Micranthemum umbrosum",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:microsorum-pteropus",
-      "base_scientific_name": "Microsorum pteropus",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 3,
-      "variant_count": 1,
-      "duplicate_count": 1,
-      "duplicate_sets": [
-        {
-          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
-          "name": "铁皇冠",
-          "scientific_name": "Microsorum pteropus",
-          "member_ids": [
-            "sp_0081",
-            "sp_0305"
-          ]
-        }
-      ],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0081",
-          "catalog_key": "sp_0081",
-          "name": "铁皇冠",
-          "scientific_name": "Microsorum pteropus",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:microsorum-pteropus",
-          "base_scientific_name": "Microsorum pteropus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
-          "duplicate_of_catalog_key": null,
-          "duplicate_peer_keys": [
-            "sp_0305"
-          ]
-        },
-        {
-          "id": "sp_0090",
-          "catalog_key": "sp_0090",
-          "name": "细叶铁皇冠",
-          "scientific_name": "Microsorum pteropus 'Narrow'",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:microsorum-pteropus",
-          "base_scientific_name": "Microsorum pteropus",
-          "variant_label": "Narrow",
-          "relation_type": "cultivar",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0305",
-          "catalog_key": "sp_0305",
-          "name": "铁皇冠",
-          "scientific_name": "Microsorum pteropus",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:microsorum-pteropus",
-          "base_scientific_name": "Microsorum pteropus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
-          "duplicate_of_catalog_key": "sp_0081",
-          "duplicate_peer_keys": [
-            "sp_0081"
-          ]
-        }
-      ]
-    },
-    {
-      "group_key": "base:myriophyllum-aquaticum",
-      "base_scientific_name": "Myriophyllum aquaticum",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 0,
-      "duplicate_count": 1,
-      "duplicate_sets": [
-        {
-          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
-          "name": "绿羽毛",
-          "scientific_name": "Myriophyllum aquaticum",
-          "member_ids": [
-            "sp_0097",
-            "sp_0316"
-          ]
-        }
-      ],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0097",
-          "catalog_key": "sp_0097",
-          "name": "绿羽毛",
-          "scientific_name": "Myriophyllum aquaticum",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:myriophyllum-aquaticum",
-          "base_scientific_name": "Myriophyllum aquaticum",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
-          "duplicate_of_catalog_key": null,
-          "duplicate_peer_keys": [
-            "sp_0316"
-          ]
-        },
-        {
-          "id": "sp_0316",
-          "catalog_key": "sp_0316",
-          "name": "绿羽毛",
-          "scientific_name": "Myriophyllum aquaticum",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:myriophyllum-aquaticum",
-          "base_scientific_name": "Myriophyllum aquaticum",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
-          "duplicate_of_catalog_key": "sp_0097",
-          "duplicate_peer_keys": [
-            "sp_0097"
-          ]
-        }
-      ]
-    },
-    {
-      "group_key": "base:nymphaea-lotus",
-      "base_scientific_name": "Nymphaea lotus",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0088",
-          "catalog_key": "sp_0088",
-          "name": "睡莲 (红荷根)",
-          "scientific_name": "Nymphaea lotus",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:nymphaea-lotus",
-          "base_scientific_name": "Nymphaea lotus",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0312",
-          "catalog_key": "sp_0312",
-          "name": "红荷根",
-          "scientific_name": "Nymphaea lotus",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:nymphaea-lotus",
-          "base_scientific_name": "Nymphaea lotus",
-          "variant_label": null,
-          "relation_type": "exact_species",
           "grouping_confidence": "high"
         }
       ]
@@ -10382,126 +10723,6 @@
       ]
     },
     {
-      "group_key": "base:riccia-fluitans",
-      "base_scientific_name": "Riccia fluitans",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0099",
-          "catalog_key": "sp_0099",
-          "name": "鹿角苔",
-          "scientific_name": "Riccia fluitans",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:riccia-fluitans",
-          "base_scientific_name": "Riccia fluitans",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:rotala-rotundifolia",
-      "base_scientific_name": "Rotala rotundifolia",
-      "primary_category": "鱼类",
-      "categories": [
-        "水草",
-        "鱼类"
-      ],
-      "category_conflict": true,
-      "member_count": 4,
-      "variant_count": 4,
-      "duplicate_count": 1,
-      "duplicate_sets": [
-        {
-          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
-          "name": "红宫廷",
-          "scientific_name": "Rotala rotundifolia 'Red'",
-          "member_ids": [
-            "sp_0079",
-            "sp_0303"
-          ]
-        }
-      ],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0078",
-          "catalog_key": "sp_0078",
-          "name": "宫廷草",
-          "scientific_name": "Rotala rotundifolia 'Green'",
-          "category": "水草",
-          "status": "catalog",
-          "base_species_key": "base:rotala-rotundifolia",
-          "base_scientific_name": "Rotala rotundifolia",
-          "variant_label": "Green",
-          "relation_type": "cultivar",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0079",
-          "catalog_key": "sp_0079",
-          "name": "红宫廷",
-          "scientific_name": "Rotala rotundifolia 'Red'",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:rotala-rotundifolia",
-          "base_scientific_name": "Rotala rotundifolia",
-          "variant_label": "Red",
-          "relation_type": "cultivar",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
-          "duplicate_of_catalog_key": null,
-          "duplicate_peer_keys": [
-            "sp_0303"
-          ]
-        },
-        {
-          "id": "sp_0303",
-          "catalog_key": "sp_0303",
-          "name": "红宫廷",
-          "scientific_name": "Rotala rotundifolia 'Red'",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:rotala-rotundifolia",
-          "base_scientific_name": "Rotala rotundifolia",
-          "variant_label": "Red",
-          "relation_type": "cultivar",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
-          "duplicate_of_catalog_key": "sp_0079",
-          "duplicate_peer_keys": [
-            "sp_0079"
-          ]
-        },
-        {
-          "id": "sp_0304",
-          "catalog_key": "sp_0304",
-          "name": "绿宫廷",
-          "scientific_name": "Rotala rotundifolia 'Green'",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:rotala-rotundifolia",
-          "base_scientific_name": "Rotala rotundifolia",
-          "variant_label": "Green",
-          "relation_type": "cultivar",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
       "group_key": "base:sahyadria-denisonii",
       "base_scientific_name": "Sahyadria denisonii",
       "primary_category": "鱼类",
@@ -10938,69 +11159,6 @@
       ]
     },
     {
-      "group_key": "base:staurogyne-repens",
-      "base_scientific_name": "Staurogyne repens",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 0,
-      "duplicate_count": 1,
-      "duplicate_sets": [
-        {
-          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
-          "name": "南美叉柱花",
-          "scientific_name": "Staurogyne repens",
-          "member_ids": [
-            "sp_0091",
-            "sp_0314"
-          ]
-        }
-      ],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0091",
-          "catalog_key": "sp_0091",
-          "name": "南美叉柱花",
-          "scientific_name": "Staurogyne repens",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:staurogyne-repens",
-          "base_scientific_name": "Staurogyne repens",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
-          "duplicate_of_catalog_key": null,
-          "duplicate_peer_keys": [
-            "sp_0314"
-          ]
-        },
-        {
-          "id": "sp_0314",
-          "catalog_key": "sp_0314",
-          "name": "南美叉柱花",
-          "scientific_name": "Staurogyne repens",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:staurogyne-repens",
-          "base_scientific_name": "Staurogyne repens",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high",
-          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
-          "duplicate_of_catalog_key": "sp_0091",
-          "duplicate_peer_keys": [
-            "sp_0091"
-          ]
-        }
-      ]
-    },
-    {
       "group_key": "base:synodontis-nigriventris",
       "base_scientific_name": "Synodontis nigriventris",
       "primary_category": "鱼类",
@@ -11273,169 +11431,6 @@
           "variant_label": "蓝曼龙",
           "relation_type": "variety",
           "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:vallisneria-gigantea",
-      "base_scientific_name": "Vallisneria gigantea",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0356",
-          "catalog_key": "sp_0356",
-          "name": "大水兰",
-          "scientific_name": "Vallisneria gigantea",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:vallisneria-gigantea",
-          "base_scientific_name": "Vallisneria gigantea",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:vallisneria-nana",
-      "base_scientific_name": "Vallisneria nana",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0355",
-          "catalog_key": "sp_0355",
-          "name": "小水兰",
-          "scientific_name": "Vallisneria nana",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:vallisneria-nana",
-          "base_scientific_name": "Vallisneria nana",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:vesicularia-dubyana",
-      "base_scientific_name": "Vesicularia dubyana",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 2,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": true,
-      "seo_strategy": "shared_base_plus_variant_override",
-      "members": [
-        {
-          "id": "sp_0080",
-          "catalog_key": "sp_0080",
-          "name": "莫斯 (三角莫斯)",
-          "scientific_name": "Vesicularia dubyana",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:vesicularia-dubyana",
-          "base_scientific_name": "Vesicularia dubyana",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        },
-        {
-          "id": "sp_0307",
-          "catalog_key": "sp_0307",
-          "name": "三角莫斯",
-          "scientific_name": "Vesicularia dubyana",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:vesicularia-dubyana",
-          "base_scientific_name": "Vesicularia dubyana",
-          "variant_label": null,
-          "relation_type": "exact_species",
-          "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:vesicularia-sp",
-      "base_scientific_name": "Vesicularia sp.",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0100",
-          "catalog_key": "sp_0100",
-          "name": "青丝绒莫斯",
-          "scientific_name": "Vesicularia sp.",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:vesicularia-sp",
-          "base_scientific_name": "Vesicularia sp.",
-          "variant_label": null,
-          "relation_type": "open_species",
-          "grouping_confidence": "medium"
-        }
-      ]
-    },
-    {
-      "group_key": "base:vesicularia-sp-giant",
-      "base_scientific_name": "Vesicularia sp. Giant",
-      "primary_category": "鱼类",
-      "categories": [
-        "鱼类"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
-        {
-          "id": "sp_0357",
-          "catalog_key": "sp_0357",
-          "name": "莫斯墙 (大三角)",
-          "scientific_name": "Vesicularia sp. Giant",
-          "category": "鱼类",
-          "status": "catalog",
-          "base_species_key": "base:vesicularia-sp-giant",
-          "base_scientific_name": "Vesicularia sp. Giant",
-          "variant_label": null,
-          "relation_type": "open_species",
-          "grouping_confidence": "medium"
         }
       ]
     },

@@ -1,3 +1,18 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 full-project governance closure
+
+- Governance-only closure on `main`: **no UI changes, no deploy, no Production DB write, no Production alias/runtime promotion**.
+- The four audit drifts are closed:
+  1. Admin Content review debt is derived from current Product Truth instead of historical `5 category conflicts + 28 duplicates`; current generator truth is **486 catalog / 275 base groups / 84 batch candidates / 295 grouped members / 28 duplicate candidates / 0 category conflicts / 0 unresolved members**.
+  2. Compatibility Admin explicitly recognizes `20261021142700_compatibility_materialized_authority_reconciliation.sql` as migration owner for `sp_0171`, `sp_0196`, `sp_0289`, `sp_0290`, `sp_0291`, `sp_0363` without weakening evidence/source ownership checks.
+  3. Business Admin staging baseline is aligned to live Production migration `20261021142700`; a staging clone from current Production has **zero pending repository migrations today**, and the contract fails closed when a newer migration appears.
+  4. Compatibility authority gate now distinguishes compile-time `import type` from runtime legacy-engine imports; runtime legacy consumers remain narrowly allowlisted.
+- Regenerated Admin catalog/group artifacts are committed Product Truth, not temporary test output.
+- Validation is green: Admin Content contract, Compatibility Admin contract, Staging preflight, Compatibility authority, project/docs truth, Publish Center, SEO registry, Operations, Admin impact gates, `lint`, `check:api`, business bundle, main build, `git diff --check`, and the complete **`BACKEND_RELEASE_GATE=PASS`**.
+- Compatibility invariants remain **111 8/8 ready species / 6,105 fully-informed pairs / 0 insufficient_data**. Governance work did not reopen deferred research or change runtime decisions.
+- Production remains frozen at `release/production@1cff5be6108654003df5eb07afe8df58ceb7c3df` with DB truth **74 migrations / 137 reviewed Profiles / 21 Pair Rules / 1 Stage Risk / 281 Evidence Sources**.
+- Known non-governance debt remains separate: Production PostHog is not configured, feedback email delivery is not configured, reviewed Production species/care translation rows are still zero, large frontend/bundle + low-end 3D performance debt remains, and real-user validation is still needed.
+- NEXT: use real-user badcases/product evidence to drive work. Do not reopen terminal Compatibility research or mutate Production merely to mirror this governance checkpoint.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 Wave37 goldfish predation research closure
 
 - Source-only Compatibility closure on `main`; **no UI, deploy, Production DB migration, alias change or runtime promotion**. Production remains frozen at `release/production@1cff5be6`, DB `74 / 137 / 21 / 1 / 281`.

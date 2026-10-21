@@ -30,8 +30,9 @@ for (const path of files) {
   const source = readFileSync(path, 'utf8');
   if (!/tankCompatibilityEngine/.test(source)) continue;
   const relativePath = relative(root, path);
-  if (/from ['"][^'"]*tankCompatibilityEngine['"]/.test(source) && !allowedLegacyConsumers.has(relativePath)) {
-    violations.push(`${relativePath}: direct legacy engine import is not allowlisted`);
+  const hasRuntimeLegacyImport = /import\s+(?!type\b)[^;]*from ['"][^'"]*tankCompatibilityEngine['"]/.test(source);
+  if (hasRuntimeLegacyImport && !allowedLegacyConsumers.has(relativePath)) {
+    violations.push(`${relativePath}: direct runtime legacy engine import is not allowlisted`);
   }
 }
 

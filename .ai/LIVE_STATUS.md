@@ -1,3 +1,15 @@
+## TOP LIVE STATUS — 2026-10-21 governance closure
+
+- `main` governance/release/admin truth is aligned to current Product Truth; complete backend release gate passes.
+- Current Admin generator: **486 catalog / 275 base groups / 84 batch candidate groups / 295 grouped members / 28 exact duplicate review records / 0 category conflicts / 0 unresolved members**.
+- Compatibility Admin now owns the latest six materialized Profiles through migration `20261021142700`; source/evidence ownership remains fail-closed.
+- Staging migration baseline = `20261021142700`; no post-baseline repo migration delta exists at this checkpoint.
+- Compatibility authority checker blocks runtime legacy imports but does not misclassify type-only contracts.
+- Compatibility runtime remains **111 ready / 6,105 fully-informed pairs / 0 insufficient_data**; 47 visible predation debt fields remain deferred/terminal rather than active completion work.
+- Production is unchanged: `release/production@1cff5be6`; DB **74 / 137 / 21 / 1 / 281**.
+- Operational holds outside governance: PostHog Production key absent; feedback-email delivery env absent; reviewed English species/care translation rows absent; frontend size/performance and real-user evidence remain future work.
+- No UI, deploy, Production DB mutation, or Production branch move occurred in this closure.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 Wave37 predation stop-search closure
 
 - Seven reviewed goldfish variants have moved from active `predation` research to `terminal_unknown_hold`; exact-variant actionable queue is now **0**, audit ledger remains **41**.

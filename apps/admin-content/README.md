@@ -120,12 +120,12 @@ The flat 486-row catalog is now projected into a content-management hierarchy:
 Current deterministic scan:
 
 - 486 catalog rows
-- 276 Base Species groups
-- 83 groups contain 2+ records and can become batch SEO candidates
-- 293 records belong to those multi-member groups
+- 275 Base Species groups
+- 84 groups contain 2+ records and can become batch SEO candidates
+- 295 records belong to those multi-member groups
 - 223 records expose an explicit variant marker
 - 28 exact duplicate records need review
-- 5 Base Species groups contain category conflicts and are fail-closed for batch writes
+- 0 Base Species groups currently contain category conflicts; the contract derives this count from Product Truth and will fail closed again if conflicts reappear
 
 Grouping uses the existing scientific name plus explicit `var.`, cultivar quotes and `wild type` markers. It does not alter `fishData.ts` or infer new Product Truth.
 
@@ -138,7 +138,7 @@ SEO is no longer modeled as 486 independent copies. Multi-member groups use:
 - `species_seo_groups` stores shared Title/Description/H1 templates and shared editorial intro.
 - `species_seo` stores Variant-specific overrides/differences; blank override means inherit Base.
 - Batch selection creates Variant Draft shells only; it does not copy shared Base text into every Variant row.
-- Category-conflict groups remain blocked from publish/bulk write until the source catalog is reviewed.
+- Category-conflict groups are blocked from publish/bulk write whenever the source catalog reports one; the current catalog has zero such groups.
 - The group migration has only been applied to the isolated local Supabase test environment; Production remains unchanged.
 
 ## Chinese → English content workflow (current branch)
@@ -159,7 +159,7 @@ For UI-only work, `npm run dev -w @aquaguide/admin-content` is sufficient. The s
 
 The generated grouping layer now exposes the source-data problems found during deterministic catalog scanning:
 
-- 5 Base Species groups have category conflicts. The Admin shows the conflicting category members and keeps bulk/publish actions fail-closed.
+- Category-conflict review is data-driven. The current catalog has 0 conflicting Base Species groups; if a conflict reappears, Admin shows the conflicting members and keeps bulk/publish actions fail-closed.
 - 28 records are suspected exact duplicates. Duplicate sets and peer `catalog_key` values are displayed for review.
 - The first record in a duplicate set is only a review candidate; the Admin does not delete, merge, rewrite Product Truth, or silently choose a canonical record.
 

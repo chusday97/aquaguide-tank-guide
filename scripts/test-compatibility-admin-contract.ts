@@ -576,7 +576,19 @@ assert.match(unifiedWave16Migration, /expected 101 reviewed Compatibility profil
 assert.match(unifiedWave16Migration, /expected 177 reviewed evidence sources/);
 assert.match(unifiedWave16Migration, /expected 1 wave16 profile-source link/);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058','sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181','sp_0103','sp_0117','sp_0118','sp_0121','sp_0122','sp_0123','sp_0125','sp_0129','sp_0140','sp_0183','sp_0184','sp_0185','sp_0187','sp_0197','sp_0198','sp_0199','sp_0200','sp_0202','sp_0218','sp_0441','sp_0449','sp_0450','sp_0116','sp_0452','sp_0453','sp_0069','sp_0070','sp_0104','sp_0146','sp_0151','sp_0156','sp_0157','sp_0173','sp_0174','sp_0207','sp_0214','sp_0283','sp_0052']);
+const materializedAuthorityReconciliationMigration = readFileSync('supabase/migrations/20261021142700_compatibility_materialized_authority_reconciliation.sql', 'utf8');
+const materializedAuthorityReconciliationProfileIds = ['sp_0171','sp_0196','sp_0289','sp_0290','sp_0291','sp_0363'];
+for (const speciesId of materializedAuthorityReconciliationProfileIds) {
+  const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
+  assert.ok(profile, 'materialized authority reconciliation must own reviewed profile ' + speciesId);
+  assert.equal(materializedAuthorityReconciliationMigration.includes("'" + speciesId + "'"), true, 'materialized authority reconciliation must target ' + speciesId);
+  assertHistoricalProfileSourceOwnership(materializedAuthorityReconciliationMigration, profile, 'materialized authority reconciliation');
+}
+assert.match(materializedAuthorityReconciliationMigration, /expected 131 reviewed Compatibility profiles/, 'materialized reconciliation must lock its predecessor Profile authority.');
+assert.match(materializedAuthorityReconciliationMigration, /POSTCHECK: expected 137 reviewed Compatibility profiles/, 'materialized reconciliation must freeze its resulting Profile authority.');
+assert.match(materializedAuthorityReconciliationMigration, /POSTCHECK: expected 281 reviewed evidence sources/, 'materialized reconciliation must freeze its resulting evidence authority.');
+
+const expansionOwnedIds = new Set(['sp_0171','sp_0196','sp_0289','sp_0290','sp_0291','sp_0363','sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058','sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181','sp_0103','sp_0117','sp_0118','sp_0121','sp_0122','sp_0123','sp_0125','sp_0129','sp_0140','sp_0183','sp_0184','sp_0185','sp_0187','sp_0197','sp_0198','sp_0199','sp_0200','sp_0202','sp_0218','sp_0441','sp_0449','sp_0450','sp_0116','sp_0452','sp_0453','sp_0069','sp_0070','sp_0104','sp_0146','sp_0151','sp_0156','sp_0157','sp_0173','sp_0174','sp_0207','sp_0214','sp_0283','sp_0052']);
 const sourceControlledPendingProfileIds = new Set<string>(compatibilitySourceControlledPendingProfileIds);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => (
   !historicalProfileKeys.includes(profile.speciesId)

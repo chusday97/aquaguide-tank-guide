@@ -1,3 +1,12 @@
+## TOP BRANCH STATUS — 2026-10-21 governance closure
+
+- Canonical development branch: `main`.
+- Governance closure is intended to advance **main only**; `release/production` must remain pinned at `1cff5be6108654003df5eb07afe8df58ceb7c3df`.
+- Scope of this checkpoint: Admin Content generated truth/contracts, Compatibility Admin migration ownership, Business Admin staging baseline, Compatibility authority checker, and authority docs.
+- Explicitly out of scope: UI/visual changes, Vercel promotion, Production Supabase writes/migrations, Compatibility evidence expansion.
+- Release gate status before commit: **PASS**; build/typecheck/diff gates PASS.
+- After commit/push, verify `HEAD == origin/main`, worktree clean, and `origin/release/production` unchanged.
+
 ## TOP CURRENT BRANCH — 2026-10-21 Wave37 source-only closure
 
 - `main` carries the Wave37 goldfish predation evidence-ceiling closure; `release/production` remains intentionally pinned to verified runtime `1cff5be6`.

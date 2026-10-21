@@ -82,12 +82,14 @@ assert.equal(groupData.stats.catalog_count, catalog.length, 'Group stats must ma
 assert.equal(groupData.stats.base_group_count, groupData.groups.length, 'Group count stats must remain accurate');
 assert.ok(groupData.stats.batch_candidate_groups > 0, 'Batch candidate groups must be tracked');
 assert.ok(groupData.stats.explicit_variant_members > 0, 'Explicit variants must be tracked');
-assert.ok(groupData.stats.category_conflict_groups > 0, 'Category conflicts must remain visible for review');
+const actualCategoryConflictGroups = groupData.groups.filter((group) => group.category_conflict).length;
+assert.equal(groupData.stats.category_conflict_groups, actualCategoryConflictGroups, 'Category-conflict stats must mirror current Product Truth instead of a historical fixed count');
 assert.ok(groupData.stats.exact_duplicate_records > 0, 'Duplicate candidates must remain visible for review');
 assert.ok(groupData.groups.some((group) => group.duplicate_sets?.length), 'Duplicate review sets must include peer keys');
 const emptyWorkflowOverview = buildAdminWorkflowOverview({ species: catalog, groups: groupData.groups, seoRows: {}, groupSeoRows: {}, reviewRows: {} });
-assert.equal(emptyWorkflowOverview.dataReview.total, 33, 'Workflow overview must preserve 5 category + 28 duplicate review issues');
-assert.equal(emptyWorkflowOverview.dataReview.pending, 33, 'Unreviewed source issues must begin Pending');
+const expectedDataReviewTotal = groupData.stats.category_conflict_groups + groupData.stats.exact_duplicate_records;
+assert.equal(emptyWorkflowOverview.dataReview.total, expectedDataReviewTotal, 'Workflow overview must derive Data Review debt from current category conflicts + duplicate candidates');
+assert.equal(emptyWorkflowOverview.dataReview.pending, expectedDataReviewTotal, 'Unreviewed source issues must begin Pending');
 const initialSeoPageCandidates = catalog.length - groupData.stats.exact_duplicate_records;
 assert.equal(emptyWorkflowOverview.locales['zh-CN'].blocked, initialSeoPageCandidates, 'Missing Chinese editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');
 assert.equal(emptyWorkflowOverview.locales.en.blocked, initialSeoPageCandidates, 'Missing English editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');

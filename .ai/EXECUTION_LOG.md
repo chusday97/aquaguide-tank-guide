@@ -1,3 +1,17 @@
+## 2026-10-21 — Full-project governance closure
+
+- Started from a clean `main@8cbfc25f` after a whole-project read-only audit exposed four governance drifts while core user runtime remained healthy.
+- Admin Content: removed historical fixed assumptions for five category conflicts / 33 review issues. Review debt is now derived from generated Product Truth; regenerated artifacts report **486 catalog / 275 groups / 84 batch candidates / 295 grouped members / 28 duplicates / 0 category conflicts / 0 unresolved**.
+- Compatibility Admin: added explicit source-controlled migration ownership for the six Profiles materialized by `20261021142700_compatibility_materialized_authority_reconciliation.sql` (`sp_0171`, `sp_0196`, `sp_0289`, `sp_0290`, `sp_0291`, `sp_0363`) and froze predecessor/result evidence/profile assertions. The source audit currently reports 132 reviewed Profiles while live Production remains 137; this difference is not treated as a Production regression.
+- Business Admin staging: advanced live baseline to `20261021142700`, retained historical authority migrations, and made the upgrade delta empty at the current Production baseline. The contract still compares every post-baseline migration and therefore fails closed when future migrations appear; Production-refusal behavior remains intact.
+- Compatibility authority: diagnosed `compatibility-assessment-presentation.service.ts` as a type-only dependency on `TankCompatibilityRule`, not a runtime legacy-engine consumer. The checker now matches runtime imports only instead of broadening the legacy allowlist.
+- Targeted gates PASS: Admin Content contract, Compatibility Admin contract, Business Admin staging preflight, Compatibility authority, project truth, docs authority, experimental boundary, core user-state parity, Publish Center, SEO registry, Operations, Admin content/compatibility impact.
+- Build-quality gates PASS: `lint`, `check:api`, `build:business-api`, main `build`, `git diff --check`.
+- Complete `npm run test:backend-release-gate` finished normally with **`BACKEND_RELEASE_GATE=PASS`**. It revalidated Compatibility dynamic onboarding, whole-tank/readability, Wave36/37 ceilings, Repository/API boundaries, localization/diagnosis, catalog release, Vision fallbacks, typechecks and diff checks.
+- Compatibility invariants remain **111 ready / 6,105 fully-informed pairs / 0 insufficient_data**. No research debt was reopened.
+- Known non-governance debt intentionally left untouched: `VITE_POSTHOG_KEY` is not configured in Production; Resend feedback-email env is not configured; Production species/care translation tables have zero reviewed rows; large frontend files/bundle and low-end 3D performance evidence remain; real-user task validation is still needed.
+- **No UI change, no deploy, no Production DB mutation, no release/production movement.**
+
 ## 2026-10-21 — Wave37 goldfish predation evidence-ceiling closure
 
 - Started from seven actionable exact-variant goldfish `predation` slots: Ranchu, Panda, Telescope, Tigerhead, Calico Ranchu, Butterfly Tail and Black Moor.
