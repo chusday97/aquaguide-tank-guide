@@ -74,10 +74,10 @@ assert.deepEqual(
     .map(item => item.speciesId),
   stillHeldColorCandidates,
 );
-assert.equal(holdReport.summary.heldCatalogObjects, 47);
+assert.equal(holdReport.summary.heldCatalogObjects, 40);
 assert.equal(holdReport.summary.color_only_identity_candidate, 4);
-assert.equal(holdReport.summary.morphology_variant, 29);
-assert.equal(holdReport.summary.trade_or_lineage_label, 13);
+assert.equal(holdReport.summary.morphology_variant, 23);
+assert.equal(holdReport.summary.trade_or_lineage_label, 12);
 assert.equal(holdReport.summary.size_grade_or_trade_label, 1);
 
 assert.equal(

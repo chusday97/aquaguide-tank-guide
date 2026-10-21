@@ -83,7 +83,13 @@ for (const speciesId of ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0349', 
   );
   assert.ok(policy.fieldReviewRequirements.every(item => item.grantsRuntimeAuthority === false));
   assert.ok(policy.fieldReviewRequirements.filter(item => ['water', 'temperature', 'ph'].includes(item.field)).every(item => item.nextAction === 'deferred_reviewed_field_bridge'));
-  assert.equal(policy.fieldReviewRequirements.find(item => item.field === 'predation')?.nextAction, 'research_exact_object_evidence');
+  const predationRequirement = policy.fieldReviewRequirements.find(item => item.field === 'predation');
+  assert.equal(predationRequirement?.status, 'reviewed_unknown');
+  assert.equal(predationRequirement?.disposition, 'terminal_hold');
+  assert.equal(predationRequirement?.authoritySource, 'evidence_ceiling');
+  assert.equal(predationRequirement?.reasonCode, 'species_fish_predation_not_established');
+  assert.equal(predationRequirement?.nextAction, 'deferred_exact_object_evidence');
+  assert.ok(policy.terminalGapFields.includes('predation'));
 }
 
 const butterflyTailPolicy = audit.fieldScopedPolicies.find(item => item.speciesId === 'sp_0065');

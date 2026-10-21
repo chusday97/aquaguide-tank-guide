@@ -477,17 +477,17 @@ assert.ok(blueGouramiCoverage);
 assert.equal(blueGouramiCoverage.genericOnboardingReady, true);
 assert.equal(blueGouramiCoverage.authoritativeFieldCount, 8);
 const identityOnlyVariantIds = ['sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0155', 'sp_0361'];
-const identityResolvedPendingFieldReviewIds = ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0349', 'sp_0351', 'sp_0386'];
+const identityResolvedFieldCeilingIds = ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0349', 'sp_0351', 'sp_0386'];
 for (const speciesId of Object.keys(catalogCanonicalIdentities)) {
   const row = coverage.rows.find(item => item.speciesId === speciesId);
   assert.ok(row);
-  if (!['sp_0224', 'sp_0258', ...identityOnlyVariantIds, ...identityResolvedPendingFieldReviewIds].includes(speciesId)) {
+  if (!['sp_0224', 'sp_0258', ...identityOnlyVariantIds, ...identityResolvedFieldCeilingIds].includes(speciesId)) {
     assert.equal(row.genericOnboardingReady, true, 'reviewed canonical variant with complete authority must remain generic-ready: ' + speciesId);
   }
-  if (identityResolvedPendingFieldReviewIds.includes(speciesId)) {
-    assert.equal(row.authoritativeFieldCount, 0, 'newly identity-resolved morphology variants must not gain Compatibility facts automatically: ' + speciesId);
-    assert.equal(row.terminalGapCount, 7, 'existing exact-object evidence ceilings must remain intact after identity resolution: ' + speciesId);
-    assert.equal(row.actionableGapCount, 1, 'predation remains the only targeted research slot after identity resolution: ' + speciesId);
+  if (identityResolvedFieldCeilingIds.includes(speciesId)) {
+    assert.equal(row.authoritativeFieldCount, 0, 'identity-resolved morphology variants must not gain Compatibility facts automatically: ' + speciesId);
+    assert.equal(row.terminalGapCount, 8, 'Wave37 must preserve the seven prior exact-object ceilings and terminalize the exhausted predation slot: ' + speciesId);
+    assert.equal(row.actionableGapCount, 0, 'Wave37 goldfish predation research must not re-enter the actionable queue: ' + speciesId);
     assert.equal(row.genericOnboardingReady, false);
   }
   if (identityOnlyVariantIds.includes(speciesId)) {

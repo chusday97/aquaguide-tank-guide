@@ -14,12 +14,12 @@
   },
   "summary": {
     "fishDomainSpecies": 308,
-    "predationResearchBacklogFields": 54,
+    "predationResearchBacklogFields": 47,
     "hardDecisionResearchDebtFields": 0,
-    "softRiskDiscoveryResearchDebtFields": 54,
+    "softRiskDiscoveryResearchDebtFields": 47,
     "riskDiscoveryReadyCatalogObjects": 5,
     "riskDiscoveryReadyUniqueTaxa": 5,
-    "blockedByIdentityOrVariantCatalogObjects": 47,
+    "blockedByIdentityOrVariantCatalogObjects": 40,
     "blockedByOtherHardEvidenceCatalogObjects": 2,
     "currentPredationHardInsufficientDataBlockerFields": 0
   },
@@ -489,43 +489,6 @@
       ]
     },
     {
-      "speciesId": "sp_0063",
-      "name": "兰寿金鱼",
-      "scientificName": "Carassius auratus var. Ranchu",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
       "speciesId": "sp_0064",
       "name": "泰狮金鱼",
       "scientificName": "Carassius auratus var. Oranda",
@@ -553,43 +516,6 @@
           "disposition": "terminal_hold",
           "authoritySource": "variant_evidence_ceiling",
           "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0149",
-      "name": "熊猫金鱼",
-      "scientificName": "Carassius auratus var. Panda",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
         }
       ],
       "softTerminalFields": [
@@ -849,43 +775,6 @@
           "disposition": "terminal_hold",
           "authoritySource": "variant_evidence_ceiling",
           "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0180",
-      "name": "龙睛金鱼",
-      "scientificName": "Carassius auratus var. Telescopes",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
         }
       ],
       "softTerminalFields": [
@@ -1377,80 +1266,6 @@
       ]
     },
     {
-      "speciesId": "sp_0348",
-      "name": "红白虎头金鱼",
-      "scientificName": "Carassius auratus var. Tigerhead",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0349",
-      "name": "蓝寿 (五花)",
-      "scientificName": "Carassius auratus var. Calico Ranchu",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
       "speciesId": "sp_0350",
       "name": "黑狮头金鱼",
       "scientificName": "Carassius auratus var. Black Oranda",
@@ -1478,43 +1293,6 @@
           "disposition": "terminal_hold",
           "authoritySource": "variant_evidence_ceiling",
           "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0351",
-      "name": "红白蝶尾",
-      "scientificName": "Carassius auratus var. Butterfly Tail",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
         }
       ],
       "softTerminalFields": [
@@ -1589,43 +1367,6 @@
           "disposition": "terminal_hold",
           "authoritySource": "variant_evidence_ceiling",
           "reasonCode": "variant_identity_research_exhausted"
-        }
-      ],
-      "softTerminalFields": [
-        "ph",
-        "social_behavior",
-        "tank_size",
-        "territoriality"
-      ]
-    },
-    {
-      "speciesId": "sp_0386",
-      "name": "黑金刚龙睛",
-      "scientificName": "Carassius auratus var. Black Moor",
-      "classification": "blocked_by_identity_or_variant",
-      "authoritativeFieldCount": 0,
-      "reviewedProfile": "none",
-      "hardHolds": [
-        {
-          "field": "water",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "temperature",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
-        },
-        {
-          "field": "adult_size",
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
-          "authoritySource": "variant_evidence_ceiling",
-          "reasonCode": "variant_field_bridge_research_exhausted"
         }
       ],
       "softTerminalFields": [

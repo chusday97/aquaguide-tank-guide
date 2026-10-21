@@ -50,9 +50,9 @@ const row = coverage.rows.find(item => item.speciesId === speciesId);
 assert.ok(row);
 assert.equal(row.authoritativeFieldCount, 0);
 assert.equal(row.genericOnboardingReady, false);
-assert.equal(row.terminalGapCount, 7);
-assert.equal(row.actionableGapCount, 1);
-assert.equal(row.fields.predation.disposition, 'targeted_source_expansion');
+assert.equal(row.terminalGapCount, 8);
+assert.equal(row.actionableGapCount, 0);
+assert.equal(row.fields.predation.disposition, 'terminal_hold');
 
 for (const field of ['water', 'temperature', 'ph', 'adult_size', 'tank_size'] as const) {
   const ceiling = getCompatibilityVariantResearchCeiling(speciesId, field);
@@ -66,13 +66,7 @@ assert.equal(compatibilityVariantResearchCeilings.filter(item => item.status ===
 
 const hold = buildCompatibilityVariantHoldClassification();
 const item = hold.items.find(entry => entry.speciesId === speciesId);
-assert.ok(item);
-assert.equal(item.identityReviewState, 'reviewed_supported');
-assert.equal(item.identityEvidenceCeilingPresent, false);
-assert.equal(item.canonicalBridgePresent, true);
-assert.equal(item.researchPolicyPresent, true);
-assert.equal(item.pipelineStage, 'field_review_pending');
-assert.equal(item.candidateForAutomaticInheritance, false);
+assert.equal(item, undefined, 'Calico Ranchu must leave executable hold intake after Wave37 terminalizes its final predation research slot');
 
 for (const unresolvedId of ['sp_0064', 'sp_0150', 'sp_0350', 'sp_0385', 'sp_0387']) {
   assert.equal(getCatalogCanonicalIdentity(unresolvedId), undefined);
@@ -83,18 +77,18 @@ for (const unresolvedId of ['sp_0064', 'sp_0150', 'sp_0350', 'sp_0385', 'sp_0387
   assert.equal(unresolved.nextAction, 'keep_terminal_identity_hold_unless_new_exact_evidence');
 }
 
-assert.equal(hold.summary.heldCatalogObjects, 47);
+assert.equal(hold.summary.heldCatalogObjects, 40);
 assert.equal(hold.summary.missingIdentityReviewCatalogObjects, 40);
-assert.equal(hold.summary.reviewedSupportedIdentityCatalogObjects, 7);
-assert.equal(hold.summary.canonicalBridgeCatalogObjects, 7);
-assert.equal(hold.summary.fieldResearchPolicyCatalogObjects, 7);
+assert.equal(hold.summary.reviewedSupportedIdentityCatalogObjects, 0);
+assert.equal(hold.summary.canonicalBridgeCatalogObjects, 0);
+assert.equal(hold.summary.fieldResearchPolicyCatalogObjects, 0);
 assert.deepEqual(hold.summary.pipelineStages, {
   identity_review_pending: 0,
   identity_evidence_ceiling: 40,
   canonical_bridge_pending: 0,
   field_policy_pending: 0,
-  field_review_pending: 7,
+  field_review_pending: 0,
 });
 assert.equal(getCompatibilityEvidenceAudit().reviewedPairRules.length, 21);
 
-console.log('Calico Ranchu identity bridge PASS: sp_0349 moves from durable identity ceiling to zero-inheritance field review; five unresolved goldfish remain terminal identity ceilings.');
+console.log('Calico Ranchu identity bridge PASS: sp_0349 keeps reviewed zero-inheritance identity and exits field-review execution after Wave37; five unresolved goldfish remain terminal identity ceilings.');

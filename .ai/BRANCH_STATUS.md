@@ -1,3 +1,11 @@
+## TOP CURRENT BRANCH — 2026-10-21 Wave37 source-only closure
+
+- `main` carries the Wave37 goldfish predation evidence-ceiling closure; `release/production` remains intentionally pinned to verified runtime `1cff5be6`.
+- Scope is research authority, generated audits and regression baselines only. No UI, migration, Production DB or Vercel alias mutation.
+- Actionable exact-variant queue: **0**; unresolved audit ledger: **41**; variant field-review pending: **0**; identity-evidence ceilings: **40**.
+- Compatibility fully-informed matrix remains **111 / 6,105 / 0 insufficient_data**.
+- Full backend gate semantics were covered in original order; the monolithic wrapper timed out only on cumulative duration, and ordered A/B/C1/C2 remainder chunks all passed.
+
 ## TOP CURRENT BRANCH — 2026-10-21 Production runtime/DB convergence
 
 - Runtime release anchor: `release/production@1cff5be6108654003df5eb07afe8df58ceb7c3df`; it was a strict fast-forward from the prior production branch, with no force push or merge divergence.

@@ -62,9 +62,9 @@ for (const [speciesId, variantKey] of bridged) {
   assert.ok(coverageRow);
   assert.equal(coverageRow.authoritativeFieldCount, 0);
   assert.equal(coverageRow.genericOnboardingReady, false);
-  assert.equal(coverageRow.terminalGapCount, 7);
-  assert.equal(coverageRow.actionableGapCount, 1);
-  assert.equal(coverageRow.fields.predation.disposition, 'targeted_source_expansion');
+  assert.equal(coverageRow.terminalGapCount, 8);
+  assert.equal(coverageRow.actionableGapCount, 0);
+  assert.equal(coverageRow.fields.predation.disposition, 'terminal_hold');
 
   const researchPolicy = getCompatibilityVariantFieldResearchPolicy(speciesId);
   assert.ok(researchPolicy, speciesId + ' must enter the reviewed field-research pipeline after identity resolution');
@@ -80,16 +80,13 @@ for (const [speciesId, variantKey] of bridged) {
   assert.equal(getCompatibilityVariantResearchCeiling(speciesId, 'predation'), undefined);
 
   const holdItem = hold.items.find(item => item.speciesId === speciesId);
-  assert.ok(holdItem, speciesId + ' must remain in held intake until fields are reviewed');
-  assert.equal(holdItem.identityReviewState, 'reviewed_supported');
-  assert.equal(holdItem.canonicalBridgePresent, true);
-  assert.equal(holdItem.candidateForAutomaticInheritance, false);
+  assert.equal(holdItem, undefined, speciesId + ' must leave executable hold intake after Wave37 terminalizes predation while retaining reviewed identity and zero inheritance');
 }
 
-assert.equal(hold.summary.heldCatalogObjects, 47);
+assert.equal(hold.summary.heldCatalogObjects, 40);
 assert.equal(hold.summary.missingIdentityReviewCatalogObjects, 40);
-assert.equal(hold.summary.reviewedSupportedIdentityCatalogObjects, 7);
-assert.equal(hold.summary.canonicalBridgeCatalogObjects, 7);
+assert.equal(hold.summary.reviewedSupportedIdentityCatalogObjects, 0);
+assert.equal(hold.summary.canonicalBridgeCatalogObjects, 0);
 
 assert.equal(
   compatibilityVariantResearchCeilings.length,
@@ -118,4 +115,4 @@ assert.equal(
   'goldfish identity resolution must not add pair-specific rules',
 );
 
-console.log('Goldfish exact variant identity bridge PASS: the original six evidence-backed forms remain zero-inheritance field-review objects; later reviewed identity evidence can resolve additional forms monotonically while weaker compound/trade forms stay held.');
+console.log('Goldfish exact variant identity bridge PASS: reviewed exact-form identities remain zero-inheritance; Wave37 terminalizes exhausted predation research while weaker compound/trade forms stay identity-held.');

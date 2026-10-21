@@ -13,21 +13,21 @@
     "pairPrecomputationRequired": false
   },
   "summary": {
-    "heldCatalogObjects": 47,
+    "heldCatalogObjects": 40,
     "color_only_identity_candidate": 4,
-    "morphology_variant": 29,
-    "trade_or_lineage_label": 13,
+    "morphology_variant": 23,
+    "trade_or_lineage_label": 12,
     "size_grade_or_trade_label": 1,
     "missingIdentityReviewCatalogObjects": 40,
-    "reviewedSupportedIdentityCatalogObjects": 7,
-    "canonicalBridgeCatalogObjects": 7,
-    "fieldResearchPolicyCatalogObjects": 7,
+    "reviewedSupportedIdentityCatalogObjects": 0,
+    "canonicalBridgeCatalogObjects": 0,
+    "fieldResearchPolicyCatalogObjects": 0,
     "pipelineStages": {
       "identity_review_pending": 0,
       "identity_evidence_ceiling": 40,
       "canonical_bridge_pending": 0,
       "field_policy_pending": 0,
-      "field_review_pending": 7
+      "field_review_pending": 0
     },
     "candidateBaseTaxonClusters": 14,
     "multiObjectCandidateBaseTaxonClusters": 10
@@ -86,19 +86,6 @@
       ],
       "parentTaxonBatches": [
         {
-          "candidateBaseScientificName": "Carassius auratus",
-          "catalogObjectCount": 5,
-          "reviewedSupportedIdentityContext": 7,
-          "canonicalBridgeContext": 7,
-          "speciesIds": [
-            "sp_0064",
-            "sp_0150",
-            "sp_0350",
-            "sp_0385",
-            "sp_0387"
-          ]
-        },
-        {
           "candidateBaseScientificName": "Betta splendens",
           "catalogObjectCount": 7,
           "reviewedSupportedIdentityContext": 0,
@@ -111,6 +98,19 @@
             "sp_0389",
             "sp_0390",
             "sp_0391"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Carassius auratus",
+          "catalogObjectCount": 5,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0064",
+            "sp_0150",
+            "sp_0350",
+            "sp_0385",
+            "sp_0387"
           ]
         },
         {
@@ -238,74 +238,9 @@
           ]
         }
       ]
-    },
-    {
-      "stage": "field_review_pending",
-      "catalogObjectCount": 7,
-      "speciesIds": [
-        "sp_0063",
-        "sp_0149",
-        "sp_0180",
-        "sp_0348",
-        "sp_0349",
-        "sp_0351",
-        "sp_0386"
-      ],
-      "parentTaxonBatches": [
-        {
-          "candidateBaseScientificName": "Carassius auratus",
-          "catalogObjectCount": 7,
-          "reviewedSupportedIdentityContext": 7,
-          "canonicalBridgeContext": 7,
-          "speciesIds": [
-            "sp_0063",
-            "sp_0149",
-            "sp_0180",
-            "sp_0348",
-            "sp_0349",
-            "sp_0351",
-            "sp_0386"
-          ]
-        }
-      ]
     }
   ],
   "taxonClusters": [
-    {
-      "candidateBaseScientificName": "Carassius auratus",
-      "catalogObjectCount": 12,
-      "speciesIds": [
-        "sp_0063",
-        "sp_0064",
-        "sp_0149",
-        "sp_0150",
-        "sp_0180",
-        "sp_0348",
-        "sp_0349",
-        "sp_0350",
-        "sp_0351",
-        "sp_0385",
-        "sp_0386",
-        "sp_0387"
-      ],
-      "classifications": {
-        "color_only_identity_candidate": 0,
-        "morphology_variant": 10,
-        "trade_or_lineage_label": 2,
-        "size_grade_or_trade_label": 0
-      },
-      "missingIdentityReviewCatalogObjects": 5,
-      "reviewedSupportedIdentityCatalogObjects": 7,
-      "canonicalBridgeCatalogObjects": 7,
-      "pipelineStages": {
-        "identity_review_pending": 0,
-        "identity_evidence_ceiling": 5,
-        "canonical_bridge_pending": 0,
-        "field_policy_pending": 0,
-        "field_review_pending": 7
-      },
-      "nextAction": "keep_terminal_identity_hold_unless_new_exact_evidence"
-    },
     {
       "candidateBaseScientificName": "Betta splendens",
       "catalogObjectCount": 7,
@@ -330,6 +265,34 @@
       "pipelineStages": {
         "identity_review_pending": 0,
         "identity_evidence_ceiling": 7,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "keep_terminal_identity_hold_unless_new_exact_evidence"
+    },
+    {
+      "candidateBaseScientificName": "Carassius auratus",
+      "catalogObjectCount": 5,
+      "speciesIds": [
+        "sp_0064",
+        "sp_0150",
+        "sp_0350",
+        "sp_0385",
+        "sp_0387"
+      ],
+      "classifications": {
+        "color_only_identity_candidate": 0,
+        "morphology_variant": 4,
+        "trade_or_lineage_label": 1,
+        "size_grade_or_trade_label": 0
+      },
+      "missingIdentityReviewCatalogObjects": 5,
+      "reviewedSupportedIdentityCatalogObjects": 0,
+      "canonicalBridgeCatalogObjects": 0,
+      "pipelineStages": {
+        "identity_review_pending": 0,
+        "identity_evidence_ceiling": 5,
         "canonical_bridge_pending": 0,
         "field_policy_pending": 0,
         "field_review_pending": 0
@@ -643,38 +606,6 @@
   ],
   "items": [
     {
-      "speciesId": "sp_0063",
-      "name": "兰寿金鱼",
-      "scientificName": "Carassius auratus var. Ranchu",
-      "variantSuffix": "Ranchu",
-      "candidateBaseScientificName": "Carassius auratus",
-      "classification": "morphology_variant",
-      "morphologySignals": [
-        "body_shape",
-        "head_or_eye_structure"
-      ],
-      "compoundVariantLabel": true,
-      "identityReviewState": "reviewed_supported",
-      "identityEvidenceCeilingPresent": false,
-      "canonicalBridgePresent": true,
-      "researchPolicyPresent": true,
-      "pipelineStage": "field_review_pending",
-      "activeFieldReviewFields": [
-        "predation"
-      ],
-      "deferredFieldReviewFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
-    },
-    {
       "speciesId": "sp_0064",
       "name": "泰狮金鱼",
       "scientificName": "Carassius auratus var. Oranda",
@@ -733,35 +664,6 @@
       "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "keep_terminal_identity_hold_unless_new_exact_evidence"
-    },
-    {
-      "speciesId": "sp_0149",
-      "name": "熊猫金鱼",
-      "scientificName": "Carassius auratus var. Panda",
-      "variantSuffix": "Panda",
-      "candidateBaseScientificName": "Carassius auratus",
-      "classification": "trade_or_lineage_label",
-      "morphologySignals": [],
-      "compoundVariantLabel": false,
-      "identityReviewState": "reviewed_supported",
-      "identityEvidenceCeilingPresent": false,
-      "canonicalBridgePresent": true,
-      "researchPolicyPresent": true,
-      "pipelineStage": "field_review_pending",
-      "activeFieldReviewFields": [
-        "predation"
-      ],
-      "deferredFieldReviewFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0150",
@@ -904,38 +806,6 @@
       "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "keep_terminal_identity_hold_unless_new_exact_evidence"
-    },
-    {
-      "speciesId": "sp_0180",
-      "name": "龙睛金鱼",
-      "scientificName": "Carassius auratus var. Telescopes",
-      "variantSuffix": "Telescopes",
-      "candidateBaseScientificName": "Carassius auratus",
-      "classification": "morphology_variant",
-      "morphologySignals": [
-        "body_shape",
-        "head_or_eye_structure"
-      ],
-      "compoundVariantLabel": true,
-      "identityReviewState": "reviewed_supported",
-      "identityEvidenceCeilingPresent": false,
-      "canonicalBridgePresent": true,
-      "researchPolicyPresent": true,
-      "pipelineStage": "field_review_pending",
-      "activeFieldReviewFields": [
-        "predation"
-      ],
-      "deferredFieldReviewFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0203",
@@ -1302,70 +1172,6 @@
       "nextAction": "keep_terminal_identity_hold_unless_new_exact_evidence"
     },
     {
-      "speciesId": "sp_0348",
-      "name": "红白虎头金鱼",
-      "scientificName": "Carassius auratus var. Tigerhead",
-      "variantSuffix": "Tigerhead",
-      "candidateBaseScientificName": "Carassius auratus",
-      "classification": "morphology_variant",
-      "morphologySignals": [
-        "body_shape",
-        "head_or_eye_structure"
-      ],
-      "compoundVariantLabel": true,
-      "identityReviewState": "reviewed_supported",
-      "identityEvidenceCeilingPresent": false,
-      "canonicalBridgePresent": true,
-      "researchPolicyPresent": true,
-      "pipelineStage": "field_review_pending",
-      "activeFieldReviewFields": [
-        "predation"
-      ],
-      "deferredFieldReviewFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
-    },
-    {
-      "speciesId": "sp_0349",
-      "name": "蓝寿 (五花)",
-      "scientificName": "Carassius auratus var. Calico Ranchu",
-      "variantSuffix": "Calico Ranchu",
-      "candidateBaseScientificName": "Carassius auratus",
-      "classification": "morphology_variant",
-      "morphologySignals": [
-        "body_shape",
-        "head_or_eye_structure"
-      ],
-      "compoundVariantLabel": true,
-      "identityReviewState": "reviewed_supported",
-      "identityEvidenceCeilingPresent": false,
-      "canonicalBridgePresent": true,
-      "researchPolicyPresent": true,
-      "pipelineStage": "field_review_pending",
-      "activeFieldReviewFields": [
-        "predation"
-      ],
-      "deferredFieldReviewFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
-    },
-    {
       "speciesId": "sp_0350",
       "name": "黑狮头金鱼",
       "scientificName": "Carassius auratus var. Black Oranda",
@@ -1386,37 +1192,6 @@
       "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "keep_terminal_identity_hold_unless_new_exact_evidence"
-    },
-    {
-      "speciesId": "sp_0351",
-      "name": "红白蝶尾",
-      "scientificName": "Carassius auratus var. Butterfly Tail",
-      "variantSuffix": "Butterfly Tail",
-      "candidateBaseScientificName": "Carassius auratus",
-      "classification": "morphology_variant",
-      "morphologySignals": [
-        "fin_shape"
-      ],
-      "compoundVariantLabel": true,
-      "identityReviewState": "reviewed_supported",
-      "identityEvidenceCeilingPresent": false,
-      "canonicalBridgePresent": true,
-      "researchPolicyPresent": true,
-      "pipelineStage": "field_review_pending",
-      "activeFieldReviewFields": [
-        "predation"
-      ],
-      "deferredFieldReviewFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0364",
@@ -1455,38 +1230,6 @@
       "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "keep_terminal_identity_hold_unless_new_exact_evidence"
-    },
-    {
-      "speciesId": "sp_0386",
-      "name": "黑金刚龙睛",
-      "scientificName": "Carassius auratus var. Black Moor",
-      "variantSuffix": "Black Moor",
-      "candidateBaseScientificName": "Carassius auratus",
-      "classification": "morphology_variant",
-      "morphologySignals": [
-        "body_shape",
-        "head_or_eye_structure"
-      ],
-      "compoundVariantLabel": true,
-      "identityReviewState": "reviewed_supported",
-      "identityEvidenceCeilingPresent": false,
-      "canonicalBridgePresent": true,
-      "researchPolicyPresent": true,
-      "pipelineStage": "field_review_pending",
-      "activeFieldReviewFields": [
-        "predation"
-      ],
-      "deferredFieldReviewFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality"
-      ],
-      "candidateForAutomaticInheritance": false,
-      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0387",

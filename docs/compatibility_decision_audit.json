@@ -85,12 +85,11 @@
         "name": "兰寿金鱼",
         "scientificName": "Carassius auratus var. Ranchu",
         "unknownPairs": 239,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "variant_field_bridge_research_exhausted",
-          "variant_social_not_established"
+          "variant_social_not_established",
+          "species_fish_predation_not_established"
         ],
         "exposureSharePct": 77.85,
         "impactBand": "medium"
@@ -139,12 +138,11 @@
         "name": "熊猫金鱼",
         "scientificName": "Carassius auratus var. Panda",
         "unknownPairs": 239,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "variant_field_bridge_research_exhausted",
-          "variant_social_not_established"
+          "variant_social_not_established",
+          "species_fish_predation_not_established"
         ],
         "exposureSharePct": 77.85,
         "impactBand": "medium"
@@ -286,12 +284,11 @@
         "name": "龙睛金鱼",
         "scientificName": "Carassius auratus var. Telescopes",
         "unknownPairs": 239,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "variant_field_bridge_research_exhausted",
-          "variant_social_not_established"
+          "variant_social_not_established",
+          "species_fish_predation_not_established"
         ],
         "exposureSharePct": 77.85,
         "impactBand": "medium"
@@ -697,12 +694,11 @@
         "name": "红白虎头金鱼",
         "scientificName": "Carassius auratus var. Tigerhead",
         "unknownPairs": 239,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "variant_field_bridge_research_exhausted",
-          "variant_social_not_established"
+          "variant_social_not_established",
+          "species_fish_predation_not_established"
         ],
         "exposureSharePct": 77.85,
         "impactBand": "medium"
@@ -712,12 +708,11 @@
         "name": "蓝寿 (五花)",
         "scientificName": "Carassius auratus var. Calico Ranchu",
         "unknownPairs": 239,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "variant_field_bridge_research_exhausted",
-          "variant_social_not_established"
+          "variant_social_not_established",
+          "species_fish_predation_not_established"
         ],
         "exposureSharePct": 77.85,
         "impactBand": "medium"
@@ -742,12 +737,11 @@
         "name": "红白蝶尾",
         "scientificName": "Carassius auratus var. Butterfly Tail",
         "unknownPairs": 239,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "variant_field_bridge_research_exhausted",
-          "variant_social_not_established"
+          "variant_social_not_established",
+          "species_fish_predation_not_established"
         ],
         "exposureSharePct": 77.85,
         "impactBand": "medium"
@@ -844,12 +838,11 @@
         "name": "黑金刚龙睛",
         "scientificName": "Carassius auratus var. Black Moor",
         "unknownPairs": 239,
-        "actionableFields": [
-          "predation"
-        ],
+        "actionableFields": [],
         "terminalReasons": [
           "variant_field_bridge_research_exhausted",
-          "variant_social_not_established"
+          "variant_social_not_established",
+          "species_fish_predation_not_established"
         ],
         "exposureSharePct": 77.85,
         "impactBand": "medium"
@@ -2016,6 +2009,10 @@
         "speciesCount": 31
       },
       {
+        "reason": "species_fish_predation_not_established",
+        "speciesCount": 16
+      },
+      {
         "reason": "species_social_not_established",
         "speciesCount": 16
       },
@@ -2026,10 +2023,6 @@
       {
         "reason": "catalog_scientific_name_unresolved",
         "speciesCount": 11
-      },
-      {
-        "reason": "species_fish_predation_not_established",
-        "speciesCount": 9
       },
       {
         "reason": "variant_field_bridge_research_exhausted",
@@ -2076,11 +2069,11 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 54,
+    "actionableGaps": 47,
     "fieldActionableGaps": [
       {
         "field": "predation",
-        "count": 54
+        "count": 47
       },
       {
         "field": "water",

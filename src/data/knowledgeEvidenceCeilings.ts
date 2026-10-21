@@ -96,6 +96,72 @@ export const compatibilityPredationEvidenceCeilingsWave36: KnowledgeEvidenceCeil
   },
 ];
 
+export const compatibilityGoldfishVariantPredationEvidenceCeilingsWave37: KnowledgeEvidenceCeiling[] = [
+  {
+    speciesId: 'sp_0063',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch26-fishbase-carassius-auratus-ranchu'],
+    note: 'Reviewed Ranchu variant identity/object provenance is retained, but a fresh exact-variant research pass returned discovery_empty and a materially different breed-specialist husbandry review found tankmate and feeding guidance without any direct statement that Ranchu prey on fish fry or small fish. Diet, constant hunger, and advice to keep Ranchu with similarly slow fancy goldfish are not negative predation proof and must not be converted to targets: []; keep fish-prey scope terminal-unknown until direct exact-variant prey evidence appears.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0149',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch27-fishbase-carassius-auratus-panda'],
+    note: 'Reviewed Panda goldfish variant provenance exists, but exact-variant discovery plus a separate fancy-goldfish breed/association source strategy did not establish direct Panda predation on fish fry or small fish, nor explicit absence of such predation. Do not inherit a generic Carassius auratus diet or peaceful wording into a prey-scope conclusion; keep predation terminal-unknown until direct variant evidence appears.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0180',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch28-fishbase-carassius-auratus-telescope'],
+    note: 'Reviewed Telescope goldfish variant provenance exists, but the exact-variant search and the independent breed-specialist/association route found no direct fish-fry or small-fish prey statement for Telescope goldfish. Visual impairment, slow swimming, community guidance, or a generic omnivorous diet cannot prove either predation risk or safety; keep prey scope terminal-unknown.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0348',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch30-fishbase-carassius-auratus-tigerhead'],
+    note: 'Reviewed Tigerhead variant provenance is available, but materially different exact-variant and fancy-goldfish specialist discovery routes did not produce direct evidence defining Tigerhead fish-fry or small-fish prey scope. Base-species diet evidence is not field-safe inheritance for predation, so this remains a terminal unknown rather than a fabricated safe value.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0349',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch30-fishbase-carassius-auratus-calico-ranchu'],
+    note: 'Reviewed Calico Ranchu variant provenance is retained, but the exact-variant search and separate breed-specialist source strategy did not establish direct predation on fish fry or small fish or direct evidence that none occurs. Ranchu-family husbandry and generic goldfish diet statements cannot be widened into Calico Ranchu prey scope; keep predation terminal-unknown.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0351',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch30-fishbase-carassius-auratus-butterfly-tail'],
+    note: 'Reviewed Butterfly Tail goldfish variant provenance is available, while exact-variant and breed-association/specialist discovery did not establish direct fish-fry or small-fish predation for this morph. Morphology and community compatibility are not prey-scope evidence; retain a terminal unknown instead of inferring targets: [] from missing reports.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+  {
+    speciesId: 'sp_0386',
+    field: 'predation',
+    code: 'species_fish_predation_not_established',
+    sourceIds: ['batch30-fishbase-carassius-auratus-black-moor'],
+    note: 'Reviewed Black Moor variant provenance is retained, but a fresh exact-variant research pass and an independent fancy-goldfish specialist/association route did not find direct evidence defining fish-fry or small-fish prey scope. Slow swimming, telescope-eye morphology, or generic goldfish diet must not be treated as proof of no opportunistic predation; keep the field terminal-unknown.',
+    reviewedAt: '2026-10-21',
+    researchDisposition: 'terminal_unknown_hold',
+  },
+];
+
 export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[]> = {
   ...Object.fromEntries(nextWaveUnified08EvidenceCeilings.map(outcome => [outcome.speciesId, [{
     ...outcome,
@@ -361,6 +427,13 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
 };
 
 for (const ceiling of compatibilityPredationEvidenceCeilingsWave36) {
+  knowledgeEvidenceCeilings[ceiling.speciesId] = [
+    ...(knowledgeEvidenceCeilings[ceiling.speciesId] ?? []),
+    ceiling,
+  ];
+}
+
+for (const ceiling of compatibilityGoldfishVariantPredationEvidenceCeilingsWave37) {
   knowledgeEvidenceCeilings[ceiling.speciesId] = [
     ...(knowledgeEvidenceCeilings[ceiling.speciesId] ?? []),
     ceiling,

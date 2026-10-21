@@ -1,3 +1,15 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 Wave37 goldfish predation research closure
+
+- Source-only Compatibility closure on `main`; **no UI, deploy, Production DB migration, alias change or runtime promotion**. Production remains frozen at `release/production@1cff5be6`, DB `74 / 137 / 21 / 1 / 281`.
+- Seven reviewed goldfish exact variants (`sp_0063`, `sp_0149`, `sp_0180`, `sp_0348`, `sp_0349`, `sp_0351`, `sp_0386`) exhausted two materially different predation evidence routes: strict exact-variant trusted discovery and breed-association/variant-specialist verification. Neither route established direct fish-fry/small-fish prey scope.
+- These seven `predation` slots are now explicit `species_fish_predation_not_established` / `terminal_unknown_hold` ceilings. **Missing reports do not mean safe**; generic `Carassius auratus` diet, peaceful wording, morphology or tankmate advice cannot become `targets: []`.
+- Active exact-variant research is now **7 -> 0** while the **41-slot unresolved audit ledger remains intact**. `field_review_pending` is **7 -> 0**; the remaining variant intake is **40 identity-evidence ceilings**.
+- Visible predation research debt is **54 -> 47**, but all 47 are deferred behind identity/terminal boundaries; `activeCompletionResearchDebtFields=0`. Do not automatically expand another research wave from these deferred slots.
+- Runtime invariants remain **111 8/8 ready species / 6,105 fully-informed pairs / 0 insufficient_data**. Wave37 mixed-tank badcases explicitly preserve `public_evidence_insufficient` rather than returning reviewed-safe conclusions.
+- Research rationale is retained in `evaluation/product/compatibility-goldfish-variant-predation-research-closure.v1.json`; it grants no inheritance and writes no reviewed field authority.
+- Backend release gate was verified in original order through wrapper execution plus ordered A/B/C1/C2 chunks because the monolithic wrapper exceeded the WebCodex wall-time. Every executed gate passed after current artifacts/baselines were refreshed.
+- NEXT: do not reopen these seven slots unless materially new direct exact-variant prey evidence appears. Continue only from genuinely new user badcases or new authority evidence.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility Production materialized-authority release CLOSED
 
 - **FINAL RELEASE STATE:** `origin/main` and `origin/release/production` converged at runtime SHA `1cff5be6108654003df5eb07afe8df58ceb7c3df` before the DB cutover.

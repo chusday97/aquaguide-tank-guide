@@ -25,17 +25,17 @@
     "reptile": 10
   },
   "domainOrIdentityHeldSpecies": 258,
-  "visibleResearchDebtFields": 54,
+  "visibleResearchDebtFields": 47,
   "completionEligibleResearchDebtFields": 0,
-  "deferredResearchDebtFields": 54,
+  "deferredResearchDebtFields": 47,
   "activeCompletionResearchDebtFields": 0,
-  "deferredResearchOpportunityFields": 54,
-  "deferredResearchOpportunitySpecies": 54,
+  "deferredResearchOpportunityFields": 47,
+  "deferredResearchOpportunitySpecies": 47,
   "hardDecisionResearchDebtFields": 0,
-  "softRiskDiscoveryResearchDebtFields": 54,
-  "predationRiskDiscoveryFields": 54,
+  "softRiskDiscoveryResearchDebtFields": 47,
+  "predationRiskDiscoveryFields": 47,
   "predationRiskDiscoveryHardReadySpecies": 5,
-  "predationRiskDiscoveryVariantIdentityHeldSpecies": 47,
+  "predationRiskDiscoveryVariantIdentityHeldSpecies": 40,
   "predationRiskDiscoveryOtherHardHeldSpecies": 2,
   "fieldCounts": {
     "water": {
@@ -97,8 +97,8 @@
     "predation": {
       "reviewed_supported": 106,
       "reviewed_neutral_or_negative": 40,
-      "reviewed_unknown": 17,
-      "needs_research": 54,
+      "reviewed_unknown": 24,
+      "needs_research": 47,
       "missing_identity_or_domain": 258,
       "not_applicable": 11
     }
@@ -106,7 +106,7 @@
   "fieldActionableGaps": [
     {
       "field": "predation",
-      "count": 54
+      "count": 47
     },
     {
       "field": "water",
@@ -5456,8 +5456,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
@@ -5513,11 +5513,13 @@
           "reasonCode": "variant_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch26-fishbase-carassius-auratus-ranchu"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },
@@ -12379,8 +12381,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
@@ -12436,11 +12438,13 @@
           "reasonCode": "variant_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch27-fishbase-carassius-auratus-panda"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },
@@ -15059,8 +15063,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
@@ -15116,11 +15120,13 @@
           "reasonCode": "variant_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch28-fishbase-carassius-auratus-telescope"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },
@@ -29047,8 +29053,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
@@ -29104,11 +29110,13 @@
           "reasonCode": "variant_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch30-fishbase-carassius-auratus-tigerhead"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },
@@ -29120,8 +29128,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
@@ -29177,11 +29185,13 @@
           "reasonCode": "variant_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch30-fishbase-carassius-auratus-calico-ranchu"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },
@@ -29266,8 +29276,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
@@ -29323,11 +29333,13 @@
           "reasonCode": "variant_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch30-fishbase-carassius-auratus-butterfly-tail"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },
@@ -32108,8 +32120,8 @@
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 0,
-      "actionableGapCount": 1,
-      "terminalGapCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 8,
       "fields": {
         "water": {
           "status": "reviewed_unknown",
@@ -32165,11 +32177,13 @@
           "reasonCode": "variant_social_not_established"
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "evidenceIds": [
+            "batch30-fishbase-carassius-auratus-black-moor"
+          ],
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },

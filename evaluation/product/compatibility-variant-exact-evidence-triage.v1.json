@@ -15,120 +15,14 @@
     "discoveryEvidenceCeilingMeaning": "Current trusted-source discovery route produced no eligible URLs in two independent rounds; do not repeat the same route without changing source strategy."
   },
   "summary": {
-    "variantObjects": 7,
-    "totalResearchSlots": 7,
+    "variantObjects": 0,
+    "totalResearchSlots": 0,
     "draftEvidenceFoundObjects": 0,
     "discoveryRetryRequiredObjects": 0,
     "discoveryEvidenceCeilingObjects": 0,
-    "notRunObjects": 7,
+    "notRunObjects": 0,
     "supportedSlots": 0,
-    "unresolvedSlots": 7
+    "unresolvedSlots": 0
   },
-  "objects": [
-    {
-      "speciesId": "sp_0063",
-      "variantKey": "Ranchu",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "predation"
-      ],
-      "researchRuns": [],
-      "status": "not_run",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0149",
-      "variantKey": "Panda",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "predation"
-      ],
-      "researchRuns": [],
-      "status": "not_run",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0180",
-      "variantKey": "Telescope",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "predation"
-      ],
-      "researchRuns": [],
-      "status": "not_run",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0348",
-      "variantKey": "Tigerhead",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "predation"
-      ],
-      "researchRuns": [],
-      "status": "not_run",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0349",
-      "variantKey": "Calico Ranchu",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "predation"
-      ],
-      "researchRuns": [],
-      "status": "not_run",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0351",
-      "variantKey": "Butterfly Tail",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "predation"
-      ],
-      "researchRuns": [],
-      "status": "not_run",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    },
-    {
-      "speciesId": "sp_0386",
-      "variantKey": "Black Moor",
-      "canonicalScientificName": "Carassius auratus",
-      "totalSlots": 1,
-      "supportedFields": [],
-      "unresolvedFields": [
-        "predation"
-      ],
-      "researchRuns": [],
-      "status": "not_run",
-      "promotionAllowed": false,
-      "writesAuthority": false,
-      "grantsInheritance": false
-    }
-  ]
+  "objects": []
 }

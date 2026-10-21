@@ -1,3 +1,15 @@
+## 2026-10-21 — Wave37 goldfish predation evidence-ceiling closure
+
+- Started from seven actionable exact-variant goldfish `predation` slots: Ranchu, Panda, Telescope, Tigerhead, Calico Ranchu, Butterfly Tail and Black Moor.
+- Strict exact-variant provider round returned **7/7 discovery_empty**, 0 supported, 0 failed. A materially different specialist/association route reviewed Ranchu specialist husbandry and Bristol Aquarists' breed context; neither supplied direct fish-fry/small-fish prey scope.
+- Added seven `species_fish_predation_not_established` terminal ceilings with zero inheritance/promotion. Absence of a report is not treated as safe and no synthetic `targets: []` is created.
+- Refreshed core-field, predation-impact, decision, hold-classification, inheritance, exact-evidence queue/triage artifacts. Result: active exact-variant slots **7 -> 0**, audit ledger stays **41**, field-review pending **7 -> 0**, predation visible debt **54 -> 47**, active completion debt **0**.
+- Added mixed-tank regression coverage proving each exact variant preserves public-evidence limitation provenance and cannot become `reviewed + compatible` from missing predation evidence.
+- Fully-informed invariant remains **111 ready species / 6,105 pairs / 0 insufficient_data**.
+- The monolithic backend gate exceeded WebCodex wall-time after all reached gates passed. Remaining gates were replayed in original order as A/B/C1/C2 chunks; all passed, including API/typecheck/business bundle/lint/diff checks.
+- Standalone `check:compatibility-authority` still has the pre-existing clean-main failure on `compatibility-assessment-presentation.service.ts` legacy-engine import; reproduced on `c727ac4a` and not introduced or changed by Wave37.
+- No Production mutation or UI change.
+
 ## 2026-10-21 — Compatibility materialized-authority Production release closure
 
 - Preflight reached `READY_TO_PROMOTE` with zero blockers after backend release gate 148/148, Golden Path, Vision fallback, core user-state parity and Supabase health checks passed.

@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "kind": "compatibility_goldfish_variant_predation_research_closure",
+  "reviewedAt": "2026-10-21",
+  "speciesIds": ["sp_0063", "sp_0149", "sp_0180", "sp_0348", "sp_0349", "sp_0351", "sp_0386"],
+  "field": "predation",
+  "rounds": [
+    {
+      "round": 1,
+      "strategy": "strict_exact_variant_trusted_source_discovery",
+      "jobs": 7,
+      "supportedSlots": 0,
+      "unresolvedSlots": 7,
+      "failedJobs": 0,
+      "discoveryEmptyObjects": 7,
+      "note": "The existing exact-variant provider searched independent institutional-husbandry and academic-variant routes. All seven objects returned discovery_empty; no candidate URL reached source verification."
+    },
+    {
+      "round": 2,
+      "strategy": "breed_association_and_variant_specialist_verification",
+      "sourcesReviewed": [
+        {
+          "url": "https://ranchu.net/care/",
+          "scope": ["Ranchu"],
+          "finding": "Variant-specific husbandry and tankmate guidance exists, but no direct fish-fry or small-fish prey scope was found.",
+          "authorityUse": "research_context_only"
+        },
+        {
+          "url": "https://www.bristol-aquarists.org.uk/goldfish/goldfish.htm",
+          "scope": ["Ranchu", "Butterfly", "fancy goldfish varieties"],
+          "finding": "Breed-association variety context exists, but the reviewed page does not define fish-fry or small-fish prey scope.",
+          "authorityUse": "research_context_only"
+        }
+      ],
+      "supportedSlots": 0,
+      "note": "The materially different specialist/association route did not produce direct exact-variant fish-prey evidence. No commerce/forum/SEO source was promoted."
+    }
+  ],
+  "policy": {
+    "promotionAllowed": false,
+    "writesAuthority": false,
+    "grantsInheritance": false,
+    "baseSpeciesDietDoesNotCloseVariantPredation": true,
+    "peacefulOrTankmateLanguageDoesNotProveNoPredation": true,
+    "missingPredationReportDoesNotMeanSafe": true,
+    "directFishPreyScopeRequiredToReopen": true
+  },
+  "outcome": {
+    "researchDisposition": "terminal_unknown_hold",
+    "activeResearchSlotsAfterClosure": 0,
+    "auditLedgerSlotsRetained": 41,
+    "meaning": "Current reviewed public evidence does not establish fish-fry/small-fish prey scope for these exact variants. This is a stop-search boundary, not a biological claim of safety or impossibility."
+  }
+}

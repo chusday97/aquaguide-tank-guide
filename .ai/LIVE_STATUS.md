@@ -1,3 +1,12 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 Wave37 predation stop-search closure
+
+- Seven reviewed goldfish variants have moved from active `predation` research to `terminal_unknown_hold`; exact-variant actionable queue is now **0**, audit ledger remains **41**.
+- Variant execution intake is now **40 identity-evidence ceilings / 0 field-review pending**. No automatic inheritance was granted.
+- Predation visible debt is **47**, all deferred; active completion research debt is **0**.
+- Fully-informed Compatibility remains **111 ready / 6,105 pairs / 0 insufficient_data**. New badcase coverage proves these seven variants cannot become reviewed-compatible merely because prey evidence is absent.
+- Current stop condition is explicit: reopen only on materially new direct exact-variant fish-prey evidence; missing reports, generic diet and peaceful/tankmate language are not negative predation evidence.
+- Backend gate coverage is green via ordered chunks after the monolithic wrapper exceeded tool wall-time. Production remains unchanged at runtime `1cff5be6`, DB `74 / 137 / 21 / 1 / 281`.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 Compatibility Production release closed
 
 - Production runtime SHA: `1cff5be6108654003df5eb07afe8df58ceb7c3df`; Vercel deployment `dpl_5SQzZ5mEFEqqPg67Kz9dfRHzfBoW` is READY / production and owns `aqua-tank-guide.vercel.app`.
