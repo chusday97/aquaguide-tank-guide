@@ -42,12 +42,16 @@ import {
   START as REVIEWED_AUTHORITY_RECONCILIATION_START,
   TARGET as REVIEWED_AUTHORITY_RECONCILIATION_TARGET,
 } from './compatibility-reviewed-authority-production-reconciliation-guard.mjs';
+import {
+  START as MATERIALIZED_AUTHORITY_RECONCILIATION_START,
+  TARGET as MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET,
+} from './compatibility-materialized-authority-production-reconciliation-guard.mjs';
 
 const root = resolve(import.meta.dirname, '..');
-export const CURRENT_PRODUCTION_LATEST_VERSION = REVIEWED_AUTHORITY_RECONCILIATION_START.latestVersion;
-export const CURRENT_PRODUCTION_MIGRATION_COUNT = REVIEWED_AUTHORITY_RECONCILIATION_START.migrationCount;
-export const TARGET_PRODUCTION_LATEST_VERSION = REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion;
-export const TARGET_PRODUCTION_MIGRATION_COUNT = REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount;
+export const CURRENT_PRODUCTION_LATEST_VERSION = MATERIALIZED_AUTHORITY_RECONCILIATION_START.latestVersion;
+export const CURRENT_PRODUCTION_MIGRATION_COUNT = MATERIALIZED_AUTHORITY_RECONCILIATION_START.migrationCount;
+export const TARGET_PRODUCTION_LATEST_VERSION = MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.latestVersion;
+export const TARGET_PRODUCTION_MIGRATION_COUNT = MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.migrationCount;
 
 const run = (cmd, args) => {
   const result = spawnSync(cmd, args, { cwd: root, encoding: 'utf8' });
@@ -137,12 +141,21 @@ export const classifyState = state => {
     && schemaReady;
   if (reviewedAuthorityStart) return 'READY_FOR_REVIEWED_AUTHORITY_RECONCILIATION';
 
-  const target = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
-    && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
-    && state.profiles === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.profiles
-    && state.pair_rules === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.pairRules
-    && state.evidence === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence
-    && state.stage_risks === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.stageRisks
+  const materializedAuthorityStart = state.migration_count === MATERIALIZED_AUTHORITY_RECONCILIATION_START.migrationCount
+    && state.latest_version === MATERIALIZED_AUTHORITY_RECONCILIATION_START.latestVersion
+    && state.profiles === MATERIALIZED_AUTHORITY_RECONCILIATION_START.profiles
+    && state.pair_rules === MATERIALIZED_AUTHORITY_RECONCILIATION_START.pairRules
+    && state.evidence === MATERIALIZED_AUTHORITY_RECONCILIATION_START.evidence
+    && state.stage_risks === MATERIALIZED_AUTHORITY_RECONCILIATION_START.stageRisks
+    && schemaReady;
+  if (materializedAuthorityStart) return 'READY_FOR_MATERIALIZED_AUTHORITY_RECONCILIATION';
+
+  const target = state.migration_count === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
+    && state.latest_version === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
+    && state.profiles === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.profiles
+    && state.pair_rules === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.pairRules
+    && state.evidence === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.evidence
+    && state.stage_risks === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.stageRisks
     && schemaReady;
   return target ? 'VERIFY_CURRENT_PRODUCTION' : 'BLOCKED_STATE_DRIFT';
 };
@@ -150,13 +163,16 @@ export const classifyState = state => {
 export const validateDetailedState = (state, detail) => {
   const baselineKeys = getAuthorityKeys();
   const materialized = getCompatibilityProductionMaterializedAuthority();
-  const expected = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
-    && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
+  const isMaterializedTarget = state.migration_count === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
+    && state.latest_version === MATERIALIZED_AUTHORITY_RECONCILIATION_TARGET.latestVersion;
+  const expectedEvidenceKeys = isMaterializedTarget
+    ? materialized.evidenceSources.map(item => item.id).sort()
+    : null;
+  const expected = isMaterializedTarget
     ? { ...baselineKeys, profiles: materialized.profiles.map(item => item.speciesId).sort() }
     : baselineKeys;
-  const expectedEvidence = state.migration_count === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.migrationCount
-    && state.latest_version === REVIEWED_AUTHORITY_RECONCILIATION_TARGET.latestVersion
-    ? REVIEWED_AUTHORITY_RECONCILIATION_TARGET.evidence
+  const expectedEvidence = isMaterializedTarget
+    ? materialized.evidenceSources.length
     : FULL_CHAIN_TARGET_REVIEWED_EVIDENCE;
   const blockers = [];
   if (state.species !== 486) blockers.push(`species:${state.species}/486`);
@@ -170,6 +186,7 @@ export const validateDetailedState = (state, detail) => {
   if (JSON.stringify(detail.pair_keys) !== JSON.stringify(expected.pairRules)) blockers.push('pair_key_set_mismatch');
   if (JSON.stringify(detail.stage_risk_keys) !== JSON.stringify(expected.stageRisks)) blockers.push('stage_risk_key_set_mismatch');
   if (detail.reviewed_evidence !== expectedEvidence) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${expectedEvidence}`);
+  if (expectedEvidenceKeys && JSON.stringify(detail.evidence_keys) !== JSON.stringify(expectedEvidenceKeys)) blockers.push('evidence_key_set_mismatch');
   if (detail.authority_singleton !== 1) blockers.push(`authority_singleton:${detail.authority_singleton}/1`);
 
   const pair = detail.tiger_guppy;
@@ -230,6 +247,7 @@ export const readDetailedState = () => {
   const profileKeys = query(`select s.catalog_key from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where p.review_status='reviewed' and p.deleted_at is null order by s.catalog_key;`).map(row => row.catalog_key);
   const pairKeys = query(`select least(a.catalog_key,b.catalog_key)||'__'||greatest(a.catalog_key,b.catalog_key) pair_key from public.species_pair_compatibility_rules r join public.species a on a.id=r.species_a_id join public.species b on b.id=r.species_b_id where r.review_status='reviewed' and r.deleted_at is null order by pair_key;`).map(row => row.pair_key);
   const stageKeys = query(`select s.catalog_key||':'||r.risk_type stage_risk_key from public.species_compatibility_profile_stage_risks r join public.species_compatibility_profiles p on p.id=r.profile_id join public.species s on s.id=p.species_id where r.review_status='reviewed' and r.deleted_at is null order by stage_risk_key;`).map(row => row.stage_risk_key);
+  const evidenceKeys = query(`select source_key from public.evidence_sources where review_status='reviewed' and deleted_at is null order by source_key;`).map(row => row.source_key);
   const metrics = query(`select (select count(*) from public.evidence_sources where review_status='reviewed' and deleted_at is null)::int reviewed_evidence,(select count(*) from public.compatibility_authority_state where singleton=true)::int authority_singleton;`)[0];
   const pairRows = query(`select r.verdict,r.risk_type,r.reason,r.basis,r.confidence,coalesce(array_agg(e.source_key order by e.source_key) filter (where e.source_key is not null),'{}'::text[]) source_keys from public.species_pair_compatibility_rules r join public.species a on a.id=r.species_a_id join public.species b on b.id=r.species_b_id left join public.species_pair_compatibility_rule_sources l on l.pair_rule_id=r.id left join public.evidence_sources e on e.id=l.source_id where least(a.catalog_key,b.catalog_key)='sp_0436' and greatest(a.catalog_key,b.catalog_key)='sp_0439' and r.review_status='reviewed' and r.deleted_at is null group by r.id,r.verdict,r.risk_type,r.reason,r.basis,r.confidence;`);
   const stageRows = query(`select r.rule_key,r.verdict,r.risk_type,r.younger_stages,r.older_stages,r.reason,coalesce(array_agg(e.source_key order by e.source_key) filter (where e.source_key is not null),'{}'::text[]) source_keys from public.species_compatibility_profile_stage_risks r join public.species_compatibility_profiles p on p.id=r.profile_id join public.species s on s.id=p.species_id left join public.species_compatibility_profile_stage_risk_sources l on l.stage_risk_id=r.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0436' and r.rule_key='sp_0436:conspecific_fry_predation' and r.review_status='reviewed' and r.deleted_at is null group by r.id,r.rule_key,r.verdict,r.risk_type,r.younger_stages,r.older_stages,r.reason;`);
@@ -237,6 +255,7 @@ export const readDetailedState = () => {
     profile_keys: profileKeys,
     pair_keys: pairKeys,
     stage_risk_keys: stageKeys,
+    evidence_keys: evidenceKeys,
     ...metrics,
     tiger_guppy: pairRows[0] || null,
     guppy_stage_risk: stageRows[0] || null,

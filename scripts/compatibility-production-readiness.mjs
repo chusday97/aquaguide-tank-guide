@@ -1,24 +1,19 @@
-import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence.ts';
 import { getCompatibilityProductionMaterializedAuthority } from './compatibility-production-materialized-authority.ts';
 import {
   PRODUCTION_PROJECT_REF,
   readLinkedProjectRef,
 } from './compatibility-production-migration-guard.mjs';
 import {
-  TARGET as CURRENT_PRODUCTION_TARGET,
-} from './compatibility-reviewed-authority-production-reconciliation-guard.mjs';
-import {
   readState,
   readDetailedState,
 } from './compatibility-production-post-migration-verifier.mjs';
 
-const audit = getCompatibilityEvidenceAudit();
 const materialized = getCompatibilityProductionMaterializedAuthority();
 const expected = {
   profiles: materialized.profiles.length,
-  pairRules: audit.reviewedPairRules.length,
-  stageRisks: audit.reviewedStageRiskProfiles.length,
-  evidenceSources: CURRENT_PRODUCTION_TARGET.evidence,
+  pairRules: materialized.pairRules.length,
+  stageRisks: materialized.stageRisks.length,
+  evidenceSources: materialized.evidenceSources.length,
 };
 
 const envInt = (name, fallback = 0) => {

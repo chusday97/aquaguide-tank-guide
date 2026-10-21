@@ -465,7 +465,10 @@
     "test:compatibility-research-direct-wave25": "node --import tsx scripts/test-compatibility-research-direct-wave25.ts",
     "test:compatibility-predation-negative-wave26": "node --import tsx scripts/test-compatibility-predation-negative-wave26.ts",
     "test:compatibility-water-wave27": "node --import tsx scripts/test-compatibility-water-wave27.ts",
-    "test:compatibility-environment-wave28": "node --import tsx scripts/test-compatibility-environment-wave28.ts"
+    "test:compatibility-environment-wave28": "node --import tsx scripts/test-compatibility-environment-wave28.ts",
+    "plan:compatibility-materialized-authority-reconciliation": "node --import tsx scripts/compatibility-materialized-authority-production-reconciliation-guard.mjs",
+    "simulate:compatibility-materialized-authority-reconciliation": "node --import tsx scripts/compatibility-materialized-authority-production-reconciliation-guard.mjs --simulate",
+    "test:compatibility-materialized-authority-reconciliation-guard": "node scripts/test-compatibility-materialized-authority-production-reconciliation-guard.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

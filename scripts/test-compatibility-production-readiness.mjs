@@ -32,8 +32,8 @@ if (blocked.phase !== 'BLOCKED_COMPATIBILITY_DB'
   || blocked.live.source !== 'env') {
   throw new Error('blocked readiness mismatch');
 }
-if (blocked.expected.evidenceSources !== 279) {
-  throw new Error(`readiness must track reviewed-authority reconciliation evidence target 279, got ${blocked.expected.evidenceSources}`);
+if (blocked.expected.profiles !== 137 || blocked.expected.evidenceSources !== 281) {
+  throw new Error(`readiness must track materialized authority 137 profiles / 281 evidence sources, got ${blocked.expected.profiles}/${blocked.expected.evidenceSources}`);
 }
 
 const ready = run({
