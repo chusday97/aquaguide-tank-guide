@@ -12,7 +12,7 @@ const report = buildCompatibilityVariantHoldClassification();
 const disk = JSON.parse(readFileSync(resolve(process.cwd(), 'docs/compatibility_variant_hold_classification.json'), 'utf8'));
 assert.deepEqual(disk, report, 'variant hold classification artifact must stay generated from current coverage');
 
-assert.equal(report.version, 2);
+assert.equal(report.version, 3);
 assert.equal(report.summary.heldCatalogObjects, 47);
 assert.equal(report.summary.color_only_identity_candidate, 4);
 assert.equal(report.summary.morphology_variant, 29);
@@ -21,6 +21,14 @@ assert.equal(report.summary.size_grade_or_trade_label, 1);
 assert.equal(report.summary.missingIdentityReviewCatalogObjects, 41);
 assert.equal(report.summary.reviewedSupportedIdentityCatalogObjects, 6);
 assert.equal(report.summary.canonicalBridgeCatalogObjects, 6);
+assert.equal(report.summary.fieldResearchPolicyCatalogObjects, 6);
+assert.deepEqual(report.summary.pipelineStages, {
+  identity_review_pending: 41,
+  identity_evidence_ceiling: 0,
+  canonical_bridge_pending: 0,
+  field_policy_pending: 0,
+  field_review_pending: 6,
+});
 assert.equal(report.summary.candidateBaseTaxonClusters, 14);
 assert.equal(report.summary.multiObjectCandidateBaseTaxonClusters, 10);
 assert.equal(report.items.every(item => item.candidateForAutomaticInheritance === false), true);
@@ -29,10 +37,19 @@ const reviewedGoldfishItems = report.items.filter(item => reviewedGoldfishIdenti
 assert.equal(reviewedGoldfishItems.length, 6);
 assert.equal(reviewedGoldfishItems.every(item => item.identityReviewState === 'reviewed_supported'), true);
 assert.equal(reviewedGoldfishItems.every(item => item.canonicalBridgePresent === true), true);
+assert.equal(reviewedGoldfishItems.every(item => item.researchPolicyPresent === true), true);
+assert.equal(reviewedGoldfishItems.every(item => item.pipelineStage === 'field_review_pending'), true);
+assert.equal(reviewedGoldfishItems.every(item => item.nextAction === 'execute_reviewed_field_research_policy_without_granting_inheritance'), true);
+assert.equal(reviewedGoldfishItems.every(item => item.activeFieldReviewFields.length === 1 && item.activeFieldReviewFields[0] === 'predation'), true);
+assert.equal(reviewedGoldfishItems.every(item => item.deferredFieldReviewFields.length === 7), true);
 const stillMissingIdentityItems = report.items.filter(item => !reviewedGoldfishIdentityIds.includes(item.speciesId));
 assert.equal(stillMissingIdentityItems.length, 41);
 assert.equal(stillMissingIdentityItems.every(item => item.identityReviewState === 'missing'), true);
 assert.equal(stillMissingIdentityItems.every(item => item.canonicalBridgePresent === false), true);
+assert.equal(stillMissingIdentityItems.every(item => item.researchPolicyPresent === false), true);
+assert.equal(stillMissingIdentityItems.every(item => item.pipelineStage === 'identity_review_pending'), true);
+assert.equal(stillMissingIdentityItems.every(item => item.activeFieldReviewFields.length === 0), true);
+assert.equal(stillMissingIdentityItems.every(item => item.deferredFieldReviewFields.length === 0), true);
 assert.equal(stillMissingIdentityItems.every(item => item.nextAction === 'review_exact_variant_identity_before_field_research'), true);
 assert.equal(report.policy.parsedBaseTaxonIsCandidateOnly, true);
 assert.equal(report.policy.morphologySignalsAreTriageOnly, true);
@@ -78,10 +95,42 @@ assert.equal(goldfishCluster?.catalogObjectCount, 12);
 assert.equal(goldfishCluster?.missingIdentityReviewCatalogObjects, 6);
 assert.equal(goldfishCluster?.reviewedSupportedIdentityCatalogObjects, 6);
 assert.equal(goldfishCluster?.canonicalBridgeCatalogObjects, 6);
-assert.equal(goldfishCluster?.nextAction, 'batch_research_parent_taxon_context_but_require_exact_object_identity_evidence');
+assert.deepEqual(goldfishCluster?.pipelineStages, {
+  identity_review_pending: 6,
+  identity_evidence_ceiling: 0,
+  canonical_bridge_pending: 0,
+  field_policy_pending: 0,
+  field_review_pending: 6,
+});
+assert.equal(goldfishCluster?.nextAction, 'batch_exact_object_identity_review_with_parent_taxon_context');
 
 const bettaCluster = report.taxonClusters.find(cluster => cluster.candidateBaseScientificName === 'Betta splendens');
 assert.equal(bettaCluster?.catalogObjectCount, 7);
 assert.deepEqual(bettaCluster?.speciesIds, ['sp_0259','sp_0260','sp_0261','sp_0262','sp_0389','sp_0390','sp_0391']);
+assert.deepEqual(bettaCluster?.pipelineStages, {
+  identity_review_pending: 7,
+  identity_evidence_ceiling: 0,
+  canonical_bridge_pending: 0,
+  field_policy_pending: 0,
+  field_review_pending: 0,
+});
 
-console.log('Compatibility variant intake v2 PASS: 47 held objects remain fail-closed; six exact goldfish identities now have reviewed zero-inheritance canonical bridges, 41 objects still require identity review, and cluster triage grants no shared identity or Compatibility inheritance.');
+assert.deepEqual(report.stageQueue.map(stage => [stage.stage, stage.catalogObjectCount]), [
+  ['identity_review_pending', 41],
+  ['field_review_pending', 6],
+]);
+const identityQueue = report.stageQueue.find(stage => stage.stage === 'identity_review_pending');
+assert.equal(identityQueue?.parentTaxonBatches[0]?.candidateBaseScientificName, 'Carassius auratus');
+assert.equal(identityQueue?.parentTaxonBatches[0]?.catalogObjectCount, 6);
+assert.equal(identityQueue?.parentTaxonBatches[1]?.candidateBaseScientificName, 'Betta splendens');
+assert.equal(identityQueue?.parentTaxonBatches[1]?.catalogObjectCount, 7);
+const fieldQueue = report.stageQueue.find(stage => stage.stage === 'field_review_pending');
+assert.deepEqual(fieldQueue?.parentTaxonBatches, [{
+  candidateBaseScientificName: 'Carassius auratus',
+  catalogObjectCount: 6,
+  reviewedSupportedIdentityContext: 6,
+  canonicalBridgeContext: 6,
+  speciesIds: reviewedGoldfishIdentityIds,
+}]);
+
+console.log('Compatibility variant intake v3 PASS: 47 held objects remain fail-closed and are now staged into 41 identity-review pending plus 6 field-review pending objects; stage queues batch work by parent taxon without granting shared identity, field authority, or pair rules.');

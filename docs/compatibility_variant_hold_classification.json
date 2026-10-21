@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "invariant": "Variant intake may batch research by candidate parent taxon and morphology signal, but parsed labels never grant canonical identity, field inheritance, or safety authority.",
   "policy": {
     "colorOnlyRequiresReviewedIdentityBridge": true,
@@ -21,6 +21,14 @@
     "missingIdentityReviewCatalogObjects": 41,
     "reviewedSupportedIdentityCatalogObjects": 6,
     "canonicalBridgeCatalogObjects": 6,
+    "fieldResearchPolicyCatalogObjects": 6,
+    "pipelineStages": {
+      "identity_review_pending": 41,
+      "identity_evidence_ceiling": 0,
+      "canonical_bridge_pending": 0,
+      "field_policy_pending": 0,
+      "field_review_pending": 6
+    },
     "candidateBaseTaxonClusters": 14,
     "multiObjectCandidateBaseTaxonClusters": 10
   },
@@ -29,6 +37,238 @@
     "trade_or_lineage_label",
     "morphology_variant",
     "size_grade_or_trade_label"
+  ],
+  "stageQueue": [
+    {
+      "stage": "identity_review_pending",
+      "catalogObjectCount": 41,
+      "speciesIds": [
+        "sp_0064",
+        "sp_0147",
+        "sp_0148",
+        "sp_0150",
+        "sp_0152",
+        "sp_0153",
+        "sp_0161",
+        "sp_0168",
+        "sp_0169",
+        "sp_0172",
+        "sp_0203",
+        "sp_0209",
+        "sp_0213",
+        "sp_0215",
+        "sp_0222",
+        "sp_0233",
+        "sp_0237",
+        "sp_0252",
+        "sp_0253",
+        "sp_0254",
+        "sp_0259",
+        "sp_0260",
+        "sp_0261",
+        "sp_0262",
+        "sp_0267",
+        "sp_0292",
+        "sp_0293",
+        "sp_0295",
+        "sp_0349",
+        "sp_0350",
+        "sp_0364",
+        "sp_0385",
+        "sp_0387",
+        "sp_0389",
+        "sp_0390",
+        "sp_0391",
+        "sp_0395",
+        "sp_0406",
+        "sp_0413",
+        "sp_0419",
+        "sp_0426"
+      ],
+      "parentTaxonBatches": [
+        {
+          "candidateBaseScientificName": "Carassius auratus",
+          "catalogObjectCount": 6,
+          "reviewedSupportedIdentityContext": 6,
+          "canonicalBridgeContext": 6,
+          "speciesIds": [
+            "sp_0064",
+            "sp_0150",
+            "sp_0349",
+            "sp_0350",
+            "sp_0385",
+            "sp_0387"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Betta splendens",
+          "catalogObjectCount": 7,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0259",
+            "sp_0260",
+            "sp_0261",
+            "sp_0262",
+            "sp_0389",
+            "sp_0390",
+            "sp_0391"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Poecilia latipinna",
+          "catalogObjectCount": 5,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0168",
+            "sp_0169",
+            "sp_0209",
+            "sp_0237",
+            "sp_0292"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Amatitlania nigrofasciata",
+          "catalogObjectCount": 3,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0147",
+            "sp_0148",
+            "sp_0222"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Crossocheilus langei",
+          "catalogObjectCount": 3,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0213",
+            "sp_0254",
+            "sp_0395"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Danio rerio",
+          "catalogObjectCount": 3,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0152",
+            "sp_0364",
+            "sp_0419"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Poecilia sphenops",
+          "catalogObjectCount": 3,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0161",
+            "sp_0203",
+            "sp_0293"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Trichopodus leerii",
+          "catalogObjectCount": 3,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0153",
+            "sp_0233",
+            "sp_0267"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Sahyadria denisonii",
+          "catalogObjectCount": 2,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0215",
+            "sp_0253"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Tanichthys albonubes",
+          "catalogObjectCount": 2,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0172",
+            "sp_0426"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Melanotaenia praecox",
+          "catalogObjectCount": 1,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0295"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Pangio kuhlii",
+          "catalogObjectCount": 1,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0413"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Synchiropus splendidus",
+          "catalogObjectCount": 1,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0406"
+          ]
+        },
+        {
+          "candidateBaseScientificName": "Synodontis nigriventris",
+          "catalogObjectCount": 1,
+          "reviewedSupportedIdentityContext": 0,
+          "canonicalBridgeContext": 0,
+          "speciesIds": [
+            "sp_0252"
+          ]
+        }
+      ]
+    },
+    {
+      "stage": "field_review_pending",
+      "catalogObjectCount": 6,
+      "speciesIds": [
+        "sp_0063",
+        "sp_0149",
+        "sp_0180",
+        "sp_0348",
+        "sp_0351",
+        "sp_0386"
+      ],
+      "parentTaxonBatches": [
+        {
+          "candidateBaseScientificName": "Carassius auratus",
+          "catalogObjectCount": 6,
+          "reviewedSupportedIdentityContext": 6,
+          "canonicalBridgeContext": 6,
+          "speciesIds": [
+            "sp_0063",
+            "sp_0149",
+            "sp_0180",
+            "sp_0348",
+            "sp_0351",
+            "sp_0386"
+          ]
+        }
+      ]
+    }
   ],
   "taxonClusters": [
     {
@@ -57,7 +297,14 @@
       "missingIdentityReviewCatalogObjects": 6,
       "reviewedSupportedIdentityCatalogObjects": 6,
       "canonicalBridgeCatalogObjects": 6,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 6,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 6
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Betta splendens",
@@ -80,7 +327,14 @@
       "missingIdentityReviewCatalogObjects": 7,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 7,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Poecilia latipinna",
@@ -101,7 +355,14 @@
       "missingIdentityReviewCatalogObjects": 5,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 5,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Amatitlania nigrofasciata",
@@ -120,7 +381,14 @@
       "missingIdentityReviewCatalogObjects": 3,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 3,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Crossocheilus langei",
@@ -139,7 +407,14 @@
       "missingIdentityReviewCatalogObjects": 3,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 3,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Danio rerio",
@@ -158,7 +433,14 @@
       "missingIdentityReviewCatalogObjects": 3,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 3,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Poecilia sphenops",
@@ -177,7 +459,14 @@
       "missingIdentityReviewCatalogObjects": 3,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 3,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Trichopodus leerii",
@@ -196,7 +485,14 @@
       "missingIdentityReviewCatalogObjects": 3,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 3,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Sahyadria denisonii",
@@ -214,7 +510,14 @@
       "missingIdentityReviewCatalogObjects": 2,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 2,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Tanichthys albonubes",
@@ -232,7 +535,14 @@
       "missingIdentityReviewCatalogObjects": 2,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 2,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Melanotaenia praecox",
@@ -249,7 +559,14 @@
       "missingIdentityReviewCatalogObjects": 1,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 1,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Pangio kuhlii",
@@ -266,7 +583,14 @@
       "missingIdentityReviewCatalogObjects": 1,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 1,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Synchiropus splendidus",
@@ -283,7 +607,14 @@
       "missingIdentityReviewCatalogObjects": 1,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 1,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     },
     {
       "candidateBaseScientificName": "Synodontis nigriventris",
@@ -300,7 +631,14 @@
       "missingIdentityReviewCatalogObjects": 1,
       "reviewedSupportedIdentityCatalogObjects": 0,
       "canonicalBridgeCatalogObjects": 0,
-      "nextAction": "batch_research_parent_taxon_context_but_require_exact_object_identity_evidence"
+      "pipelineStages": {
+        "identity_review_pending": 1,
+        "identity_evidence_ceiling": 0,
+        "canonical_bridge_pending": 0,
+        "field_policy_pending": 0,
+        "field_review_pending": 0
+      },
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
     }
   ],
   "items": [
@@ -318,8 +656,22 @@
       "compoundVariantLabel": true,
       "identityReviewState": "reviewed_supported",
       "canonicalBridgePresent": true,
+      "researchPolicyPresent": true,
+      "pipelineStage": "field_review_pending",
+      "activeFieldReviewFields": [
+        "predation"
+      ],
+      "deferredFieldReviewFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_field_scoped_authority_after_identity_bridge"
+      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0064",
@@ -335,6 +687,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -349,6 +705,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -363,6 +723,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -377,8 +741,22 @@
       "compoundVariantLabel": false,
       "identityReviewState": "reviewed_supported",
       "canonicalBridgePresent": true,
+      "researchPolicyPresent": true,
+      "pipelineStage": "field_review_pending",
+      "activeFieldReviewFields": [
+        "predation"
+      ],
+      "deferredFieldReviewFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_trade_or_lineage_field_authority_after_identity_bridge"
+      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0150",
@@ -394,6 +772,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -408,6 +790,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -424,6 +810,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -440,6 +830,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -454,6 +848,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -468,6 +866,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -484,6 +886,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -501,8 +907,22 @@
       "compoundVariantLabel": true,
       "identityReviewState": "reviewed_supported",
       "canonicalBridgePresent": true,
+      "researchPolicyPresent": true,
+      "pipelineStage": "field_review_pending",
+      "activeFieldReviewFields": [
+        "predation"
+      ],
+      "deferredFieldReviewFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_field_scoped_authority_after_identity_bridge"
+      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0203",
@@ -517,6 +937,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -531,6 +955,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -545,6 +973,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -561,6 +993,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -577,6 +1013,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -593,6 +1033,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -609,6 +1053,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -623,6 +1071,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -637,6 +1089,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -651,6 +1107,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -667,6 +1127,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -683,6 +1147,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -699,6 +1167,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -713,6 +1185,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -727,6 +1203,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -743,6 +1223,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -759,6 +1243,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -775,6 +1263,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -792,8 +1284,22 @@
       "compoundVariantLabel": true,
       "identityReviewState": "reviewed_supported",
       "canonicalBridgePresent": true,
+      "researchPolicyPresent": true,
+      "pipelineStage": "field_review_pending",
+      "activeFieldReviewFields": [
+        "predation"
+      ],
+      "deferredFieldReviewFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_field_scoped_authority_after_identity_bridge"
+      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0349",
@@ -809,6 +1315,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -826,6 +1336,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -842,8 +1356,22 @@
       "compoundVariantLabel": true,
       "identityReviewState": "reviewed_supported",
       "canonicalBridgePresent": true,
+      "researchPolicyPresent": true,
+      "pipelineStage": "field_review_pending",
+      "activeFieldReviewFields": [
+        "predation"
+      ],
+      "deferredFieldReviewFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_field_scoped_authority_after_identity_bridge"
+      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0364",
@@ -856,6 +1384,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -870,6 +1402,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -887,8 +1423,22 @@
       "compoundVariantLabel": true,
       "identityReviewState": "reviewed_supported",
       "canonicalBridgePresent": true,
+      "researchPolicyPresent": true,
+      "pipelineStage": "field_review_pending",
+      "activeFieldReviewFields": [
+        "predation"
+      ],
+      "deferredFieldReviewFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ],
       "candidateForAutomaticInheritance": false,
-      "nextAction": "review_field_scoped_authority_after_identity_bridge"
+      "nextAction": "execute_reviewed_field_research_policy_without_granting_inheritance"
     },
     {
       "speciesId": "sp_0387",
@@ -903,6 +1453,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -919,6 +1473,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -937,6 +1495,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -951,6 +1513,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -967,6 +1533,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -981,6 +1551,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -997,6 +1571,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -1013,6 +1591,10 @@
       "compoundVariantLabel": true,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     },
@@ -1027,6 +1609,10 @@
       "compoundVariantLabel": false,
       "identityReviewState": "missing",
       "canonicalBridgePresent": false,
+      "researchPolicyPresent": false,
+      "pipelineStage": "identity_review_pending",
+      "activeFieldReviewFields": [],
+      "deferredFieldReviewFields": [],
       "candidateForAutomaticInheritance": false,
       "nextAction": "review_exact_variant_identity_before_field_research"
     }
