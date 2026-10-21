@@ -124,6 +124,12 @@ const reviewedVariantFieldPolicyConfigs: Record<string, ReviewedVariantFieldPoli
     expectedVariantKey: 'Tigerhead',
     inheritedFacts: [],
   },
+  sp_0349: {
+    canonicalScientificName: 'Carassius auratus',
+    relationshipType: 'selectively_bred_variant',
+    expectedVariantKey: 'Calico Ranchu',
+    inheritedFacts: [],
+  },
   sp_0351: {
     canonicalScientificName: 'Carassius auratus',
     relationshipType: 'selectively_bred_variant',

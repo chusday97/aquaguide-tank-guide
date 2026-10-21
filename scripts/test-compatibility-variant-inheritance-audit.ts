@@ -11,11 +11,11 @@ assert.equal(audit.summary.fishDomainSpecies, 308);
 assert.equal(audit.summary.explicitReviewedCanonicalBridges, 21);
 assert.equal(audit.summary.reviewedColorPolicyCanonicalRecords, 20);
 assert.equal(audit.summary.reviewedColorTaxonRootRecords, 5);
-assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 15);
-assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 14);
-assert.equal(audit.summary.baseTaxonCandidateFactSlots, 42);
-assert.equal(audit.summary.exactObjectEvidenceFactSlots, 70);
-assert.equal(audit.summary.totalCanonicalIdentityRecords, 56);
+assert.equal(audit.summary.reviewedVariantFieldPolicyRecords, 16);
+assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 15);
+assert.equal(audit.summary.baseTaxonCandidateFactSlots, 45);
+assert.equal(audit.summary.exactObjectEvidenceFactSlots, 75);
+assert.equal(audit.summary.totalCanonicalIdentityRecords, 57);
 assert.equal(audit.summary.genericOnboardingReadySpecies, 111);
 assert.equal(audit.summary.policyPromotedReadySpecies, 19);
 assert.equal(audit.summary.fieldPolicyReadySpecies, 3);
@@ -57,8 +57,8 @@ assert.equal(blueGourami.variantKey, 'Blue');
 assert.equal(blueGourami.genericOnboardingReady, true);
 assert.equal(blueGourami.authoritativeFieldCount, 8);
 
-assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0063', 'sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0149', 'sp_0155', 'sp_0180', 'sp_0258', 'sp_0348', 'sp_0351', 'sp_0361', 'sp_0386']);
-for (const speciesId of ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0351', 'sp_0386']) {
+assert.deepEqual(audit.fieldScopedPolicies.map(item => item.speciesId), ['sp_0063', 'sp_0065', 'sp_0066', 'sp_0067', 'sp_0068', 'sp_0143', 'sp_0144', 'sp_0149', 'sp_0155', 'sp_0180', 'sp_0258', 'sp_0348', 'sp_0349', 'sp_0351', 'sp_0361', 'sp_0386']);
+for (const speciesId of ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0349', 'sp_0351', 'sp_0386']) {
   const policy = audit.fieldScopedPolicies.find(item => item.speciesId === speciesId);
   assert.ok(policy);
   assert.equal(policy.registrySource, 'reviewed_variant_field_policy');

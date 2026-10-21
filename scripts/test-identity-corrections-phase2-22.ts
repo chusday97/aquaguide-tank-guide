@@ -87,9 +87,9 @@ for (const [speciesId, variantKey] of bridged) {
 }
 
 assert.equal(hold.summary.heldCatalogObjects, 47);
-assert.equal(hold.summary.missingIdentityReviewCatalogObjects, 41);
-assert.equal(hold.summary.reviewedSupportedIdentityCatalogObjects, 6);
-assert.equal(hold.summary.canonicalBridgeCatalogObjects, 6);
+assert.equal(hold.summary.missingIdentityReviewCatalogObjects, 40);
+assert.equal(hold.summary.reviewedSupportedIdentityCatalogObjects, 7);
+assert.equal(hold.summary.canonicalBridgeCatalogObjects, 7);
 
 assert.equal(
   compatibilityVariantResearchCeilings.length,
@@ -98,8 +98,8 @@ assert.equal(
 );
 assert.equal(
   compatibilityVariantResearchCeilings.filter(item => item.status === 'field_bridge_evidence_ceiling').length,
-  7,
-  'six newly identity-resolved goldfish plus the existing field-bridge record must remain field-stage ceilings',
+  8,
+  'later reviewed identity evidence may monotonically migrate another durable ceiling into field stage',
 );
 assert.equal(
   compatibilityVariantResearchCeilings.find(item => item.speciesId === 'sp_0419')?.status,
@@ -107,7 +107,7 @@ assert.equal(
   'unresolved control variants must not be migrated merely because other variants gained reviewed identity',
 );
 
-for (const speciesId of ['sp_0064', 'sp_0150', 'sp_0349', 'sp_0350', 'sp_0385', 'sp_0387']) {
+for (const speciesId of ['sp_0064', 'sp_0150', 'sp_0350', 'sp_0385', 'sp_0387']) {
   assert.equal(getCatalogCanonicalIdentity(speciesId), undefined, speciesId + ' lacks sufficient exact-form evidence and must stay identity-held');
   assert.equal(row(speciesId)?.genericOnboardingReady, false);
 }
@@ -118,4 +118,4 @@ assert.equal(
   'goldfish identity resolution must not add pair-specific rules',
 );
 
-console.log('Goldfish exact variant identity bridge PASS: six evidence-backed Carassius auratus forms retain zero runtime inheritance, move from identity-stage ceilings into reviewed field-bridge research policy, and leave weaker compound/trade forms identity-held.');
+console.log('Goldfish exact variant identity bridge PASS: the original six evidence-backed forms remain zero-inheritance field-review objects; later reviewed identity evidence can resolve additional forms monotonically while weaker compound/trade forms stay held.');

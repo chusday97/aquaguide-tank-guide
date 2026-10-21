@@ -2,6 +2,7 @@ import { fishData } from '../../data/fishData';
 import { getApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
 import { getCatalogCanonicalIdentity, isReviewedColorOnlyVariantKey } from '../../data/catalogCanonicalIdentity';
 import { getCompatibilityVariantFieldResearchPolicy } from '../../data/compatibilityVariantFieldResearchPolicy';
+import { compatibilityVariantResearchCeilings } from '../../data/compatibilityVariantResearchCeilings';
 import {
   COMPATIBILITY_HARD_DECISION_FIELDS,
   buildCompatibilityCoreFieldCoverage,
@@ -139,15 +140,18 @@ export const buildCompatibilityVariantHoldClassification = () => {
       const identityReviewState = getVariantIdentityReviewState(species.id);
       const canonicalIdentity = getCatalogCanonicalIdentity(species.id);
       const researchPolicy = getCompatibilityVariantFieldResearchPolicy(species.id);
-      const pipelineStage: VariantIntakePipelineStage = identityReviewState === 'missing'
-        ? 'identity_review_pending'
-        : identityReviewState === 'reviewed_unknown'
+      const identityEvidenceCeilingPresent = compatibilityVariantResearchCeilings.some(item => (
+        item.speciesId === species.id && item.status === 'identity_evidence_ceiling'
+      ));
+      const pipelineStage: VariantIntakePipelineStage = identityReviewState === 'reviewed_supported'
+        ? !canonicalIdentity
+          ? 'canonical_bridge_pending'
+          : !researchPolicy
+            ? 'field_policy_pending'
+            : 'field_review_pending'
+        : identityReviewState === 'reviewed_unknown' || identityEvidenceCeilingPresent
           ? 'identity_evidence_ceiling'
-          : !canonicalIdentity
-            ? 'canonical_bridge_pending'
-            : !researchPolicy
-              ? 'field_policy_pending'
-              : 'field_review_pending';
+          : 'identity_review_pending';
       const morphologySignals = classification === 'morphology_variant'
         ? detectVariantMorphologySignals(species.scientificName, species.name)
         : [];
@@ -164,6 +168,7 @@ export const buildCompatibilityVariantHoldClassification = () => {
         morphologySignals,
         compoundVariantLabel,
         identityReviewState,
+        identityEvidenceCeilingPresent,
         canonicalBridgePresent: Boolean(canonicalIdentity),
         researchPolicyPresent: Boolean(researchPolicy),
         pipelineStage,
@@ -181,7 +186,7 @@ export const buildCompatibilityVariantHoldClassification = () => {
         nextAction: pipelineStage === 'identity_review_pending'
           ? 'review_exact_variant_identity_before_field_research'
           : pipelineStage === 'identity_evidence_ceiling'
-            ? 'resolve_identity_evidence_conflict_or_keep_terminal_hold'
+            ? 'keep_terminal_identity_hold_unless_new_exact_evidence'
             : pipelineStage === 'canonical_bridge_pending'
               ? 'wire_supported_identity_into_reviewed_canonical_bridge'
               : pipelineStage === 'field_policy_pending'
@@ -248,7 +253,7 @@ export const buildCompatibilityVariantHoldClassification = () => {
       nextAction: items.some(item => item.pipelineStage === 'identity_review_pending')
         ? 'batch_exact_object_identity_review_with_parent_taxon_context'
         : items.some(item => item.pipelineStage === 'identity_evidence_ceiling')
-          ? 'review_identity_evidence_ceiling_before_any_field_work'
+          ? 'keep_terminal_identity_hold_unless_new_exact_evidence'
           : items.some(item => item.pipelineStage === 'canonical_bridge_pending')
             ? 'wire_reviewed_identity_bridges_before_field_work'
             : items.some(item => item.pipelineStage === 'field_policy_pending')

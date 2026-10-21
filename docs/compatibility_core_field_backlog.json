@@ -28,8 +28,8 @@
     "blockingTerminalReasons": {
       "compatibility_field_source_strategy_exhausted": 3,
       "species_social_not_established": 7,
-      "variant_field_bridge_research_exhausted": 6,
-      "variant_identity_research_exhausted": 41,
+      "variant_field_bridge_research_exhausted": 7,
+      "variant_identity_research_exhausted": 40,
       "variant_social_not_established": 40
     },
     "blockingTerminalAuthoritySources": {
@@ -1288,7 +1288,7 @@
         "territoriality"
       ],
       "blockingTerminalReasons": [
-        "variant_identity_research_exhausted",
+        "variant_field_bridge_research_exhausted",
         "variant_social_not_established"
       ],
       "blockingTerminalAuthoritySources": [

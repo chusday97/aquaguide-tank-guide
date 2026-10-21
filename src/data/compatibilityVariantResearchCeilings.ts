@@ -558,7 +558,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
   },
   {
     "speciesId": "sp_0349",
-    "status": "identity_evidence_ceiling",
+    "status": "field_bridge_evidence_ceiling",
     "baseScientificName": "Carassius auratus",
     "fields": [
       "adult_size",
@@ -567,7 +567,7 @@ export const compatibilityVariantResearchCeilings: CompatibilityVariantResearchC
       "temperature",
       "water"
     ],
-    "reasonCode": "variant_identity_research_exhausted",
+    "reasonCode": "variant_field_bridge_research_exhausted",
     "sourceArtifact": "evaluation/product/compatibility-variant-bridge-review.v1.json"
   },
   {

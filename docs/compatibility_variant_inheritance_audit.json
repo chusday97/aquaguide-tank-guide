@@ -31,11 +31,11 @@
     "explicitReviewedCanonicalBridges": 21,
     "reviewedColorPolicyCanonicalRecords": 20,
     "reviewedColorTaxonRootRecords": 5,
-    "reviewedVariantFieldPolicyRecords": 15,
-    "reviewedVariantFieldResearchPolicies": 14,
-    "baseTaxonCandidateFactSlots": 42,
-    "exactObjectEvidenceFactSlots": 70,
-    "totalCanonicalIdentityRecords": 56,
+    "reviewedVariantFieldPolicyRecords": 16,
+    "reviewedVariantFieldResearchPolicies": 15,
+    "baseTaxonCandidateFactSlots": 45,
+    "exactObjectEvidenceFactSlots": 75,
+    "totalCanonicalIdentityRecords": 57,
     "policyPromotedReadySpecies": 19,
     "fieldPolicyReadySpecies": 3,
     "directReviewedVariantObjects": 2,
@@ -1957,6 +1957,136 @@
       "registrySource": "reviewed_variant_field_policy",
       "evidenceIds": [
         "phase2-22-dalian-red-white-tigerhead-butterfly"
+      ],
+      "inheritedFacts": [],
+      "blockedFacts": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyPresent": true,
+      "baseTaxonCandidateFacts": [
+        "water",
+        "temperature",
+        "ph"
+      ],
+      "exactObjectEvidenceFacts": [
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality",
+        "predation"
+      ],
+      "researchPolicyGrantsInheritance": false,
+      "fieldReviewRequirements": [
+        {
+          "field": "water",
+          "evidenceScope": "base_taxon_candidate",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_field_bridge_research_exhausted",
+          "nextAction": "deferred_reviewed_field_bridge",
+          "grantsRuntimeAuthority": false
+        },
+        {
+          "field": "temperature",
+          "evidenceScope": "base_taxon_candidate",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_field_bridge_research_exhausted",
+          "nextAction": "deferred_reviewed_field_bridge",
+          "grantsRuntimeAuthority": false
+        },
+        {
+          "field": "ph",
+          "evidenceScope": "base_taxon_candidate",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_field_bridge_research_exhausted",
+          "nextAction": "deferred_reviewed_field_bridge",
+          "grantsRuntimeAuthority": false
+        },
+        {
+          "field": "adult_size",
+          "evidenceScope": "exact_object_required",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_field_bridge_research_exhausted",
+          "nextAction": "deferred_exact_object_evidence",
+          "grantsRuntimeAuthority": false
+        },
+        {
+          "field": "tank_size",
+          "evidenceScope": "exact_object_required",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "variant_evidence_ceiling",
+          "reasonCode": "variant_field_bridge_research_exhausted",
+          "nextAction": "deferred_exact_object_evidence",
+          "grantsRuntimeAuthority": false
+        },
+        {
+          "field": "social_behavior",
+          "evidenceScope": "exact_object_required",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "variant_social_not_established",
+          "nextAction": "deferred_exact_object_evidence",
+          "grantsRuntimeAuthority": false
+        },
+        {
+          "field": "territoriality",
+          "evidenceScope": "exact_object_required",
+          "status": "reviewed_unknown",
+          "disposition": "terminal_hold",
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "variant_social_not_established",
+          "nextAction": "deferred_exact_object_evidence",
+          "grantsRuntimeAuthority": false
+        },
+        {
+          "field": "predation",
+          "evidenceScope": "exact_object_required",
+          "status": "needs_research",
+          "disposition": "targeted_source_expansion",
+          "authoritySource": "none",
+          "reasonCode": "missing_reviewed_field_authority",
+          "nextAction": "research_exact_object_evidence",
+          "grantsRuntimeAuthority": false
+        }
+      ],
+      "genericOnboardingReady": false,
+      "authoritativeFieldCount": 0,
+      "terminalGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size",
+        "social_behavior",
+        "territoriality"
+      ]
+    },
+    {
+      "speciesId": "sp_0349",
+      "name": "蓝寿 (五花)",
+      "scientificName": "Carassius auratus var. Calico Ranchu",
+      "canonicalScientificName": "Carassius auratus",
+      "relationshipType": "selectively_bred_variant",
+      "variantKey": "Calico Ranchu",
+      "registrySource": "reviewed_variant_field_policy",
+      "evidenceIds": [
+        "phase2-23-aquaculture-reports-calico-ranchu"
       ],
       "inheritedFacts": [],
       "blockedFacts": [

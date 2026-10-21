@@ -936,6 +936,7 @@ const identityResolvedGoldfishExactObjectKeys = [
   'sp_0149',
   'sp_0180',
   'sp_0348',
+  'sp_0349',
   'sp_0351',
   'sp_0386',
 ].flatMap(speciesId => [

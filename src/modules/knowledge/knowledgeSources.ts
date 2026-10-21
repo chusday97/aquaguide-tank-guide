@@ -12,6 +12,7 @@ import { behaviorEvidencePhase2_05Sources } from '../../data/catalogReviewBatche
 import { identityCorrectionsPhase2_15Sources } from '../../data/catalogReviewBatches/identity-corrections-phase2-15';
 import { identityCorrectionsPhase2_21Sources } from '../../data/catalogReviewBatches/identity-corrections-phase2-21';
 import { identityCorrectionsPhase2_22Sources } from '../../data/catalogReviewBatches/identity-corrections-phase2-22';
+import { identityCorrectionsPhase2_23Sources } from '../../data/catalogReviewBatches/identity-corrections-phase2-23';
 
 const nextWaveUnified02KnowledgeSources = Object.fromEntries([
   nextWaveUnified02Sources.macropodusSeriouslyFish,
@@ -40,6 +41,7 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
   ...Object.fromEntries(Object.values(identityCorrectionsPhase2_15Sources).map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(identityCorrectionsPhase2_21Sources).map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(identityCorrectionsPhase2_22Sources).map(source => [source.id, source])),
+  ...Object.fromEntries(Object.values(identityCorrectionsPhase2_23Sources).map(source => [source.id, source])),
   'fws-tachysurus-fulvidraco-erss': { id: 'fws-tachysurus-fulvidraco-erss', title: 'Ecological Risk Screening Summary: Yellow Catfish (Tachysurus fulvidraco)', publisher: 'U.S. Fish and Wildlife Service', url: 'https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Yellow-Catfish.pdf', sourceType: 'government', reviewStatus: 'reviewed' },
   'seriouslyfish-mastacembelus-armatus': { id: 'seriouslyfish-mastacembelus-armatus', title: 'Mastacembelus armatus (Tyre-Track Eel)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/mastacembelus-armatus', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'seriouslyfish-channa-barca': { id: 'seriouslyfish-channa-barca', title: 'Channa barca', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/channa-barca', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },

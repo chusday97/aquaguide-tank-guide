@@ -18,23 +18,23 @@ assert.equal(report.summary.color_only_identity_candidate, 4);
 assert.equal(report.summary.morphology_variant, 29);
 assert.equal(report.summary.trade_or_lineage_label, 13);
 assert.equal(report.summary.size_grade_or_trade_label, 1);
-assert.equal(report.summary.missingIdentityReviewCatalogObjects, 41);
-assert.equal(report.summary.reviewedSupportedIdentityCatalogObjects, 6);
-assert.equal(report.summary.canonicalBridgeCatalogObjects, 6);
-assert.equal(report.summary.fieldResearchPolicyCatalogObjects, 6);
+assert.equal(report.summary.missingIdentityReviewCatalogObjects, 40);
+assert.equal(report.summary.reviewedSupportedIdentityCatalogObjects, 7);
+assert.equal(report.summary.canonicalBridgeCatalogObjects, 7);
+assert.equal(report.summary.fieldResearchPolicyCatalogObjects, 7);
 assert.deepEqual(report.summary.pipelineStages, {
-  identity_review_pending: 41,
-  identity_evidence_ceiling: 0,
+  identity_review_pending: 0,
+  identity_evidence_ceiling: 40,
   canonical_bridge_pending: 0,
   field_policy_pending: 0,
-  field_review_pending: 6,
+  field_review_pending: 7,
 });
 assert.equal(report.summary.candidateBaseTaxonClusters, 14);
 assert.equal(report.summary.multiObjectCandidateBaseTaxonClusters, 10);
 assert.equal(report.items.every(item => item.candidateForAutomaticInheritance === false), true);
-const reviewedGoldfishIdentityIds = ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0351', 'sp_0386'];
+const reviewedGoldfishIdentityIds = ['sp_0063', 'sp_0149', 'sp_0180', 'sp_0348', 'sp_0349', 'sp_0351', 'sp_0386'];
 const reviewedGoldfishItems = report.items.filter(item => reviewedGoldfishIdentityIds.includes(item.speciesId));
-assert.equal(reviewedGoldfishItems.length, 6);
+assert.equal(reviewedGoldfishItems.length, 7);
 assert.equal(reviewedGoldfishItems.every(item => item.identityReviewState === 'reviewed_supported'), true);
 assert.equal(reviewedGoldfishItems.every(item => item.canonicalBridgePresent === true), true);
 assert.equal(reviewedGoldfishItems.every(item => item.researchPolicyPresent === true), true);
@@ -43,14 +43,15 @@ assert.equal(reviewedGoldfishItems.every(item => item.nextAction === 'execute_re
 assert.equal(reviewedGoldfishItems.every(item => item.activeFieldReviewFields.length === 1 && item.activeFieldReviewFields[0] === 'predation'), true);
 assert.equal(reviewedGoldfishItems.every(item => item.deferredFieldReviewFields.length === 7), true);
 const stillMissingIdentityItems = report.items.filter(item => !reviewedGoldfishIdentityIds.includes(item.speciesId));
-assert.equal(stillMissingIdentityItems.length, 41);
+assert.equal(stillMissingIdentityItems.length, 40);
 assert.equal(stillMissingIdentityItems.every(item => item.identityReviewState === 'missing'), true);
+assert.equal(stillMissingIdentityItems.every(item => item.identityEvidenceCeilingPresent === true), true);
 assert.equal(stillMissingIdentityItems.every(item => item.canonicalBridgePresent === false), true);
 assert.equal(stillMissingIdentityItems.every(item => item.researchPolicyPresent === false), true);
-assert.equal(stillMissingIdentityItems.every(item => item.pipelineStage === 'identity_review_pending'), true);
+assert.equal(stillMissingIdentityItems.every(item => item.pipelineStage === 'identity_evidence_ceiling'), true);
 assert.equal(stillMissingIdentityItems.every(item => item.activeFieldReviewFields.length === 0), true);
 assert.equal(stillMissingIdentityItems.every(item => item.deferredFieldReviewFields.length === 0), true);
-assert.equal(stillMissingIdentityItems.every(item => item.nextAction === 'review_exact_variant_identity_before_field_research'), true);
+assert.equal(stillMissingIdentityItems.every(item => item.nextAction === 'keep_terminal_identity_hold_unless_new_exact_evidence'), true);
 assert.equal(report.policy.parsedBaseTaxonIsCandidateOnly, true);
 assert.equal(report.policy.morphologySignalsAreTriageOnly, true);
 assert.equal(report.policy.exactObjectIdentityEvidenceRequired, true);
@@ -92,45 +93,46 @@ assert.equal(whitePlatinumHalfmoon?.candidateBaseScientificName, 'Betta splenden
 
 const goldfishCluster = report.taxonClusters.find(cluster => cluster.candidateBaseScientificName === 'Carassius auratus');
 assert.equal(goldfishCluster?.catalogObjectCount, 12);
-assert.equal(goldfishCluster?.missingIdentityReviewCatalogObjects, 6);
-assert.equal(goldfishCluster?.reviewedSupportedIdentityCatalogObjects, 6);
-assert.equal(goldfishCluster?.canonicalBridgeCatalogObjects, 6);
+assert.equal(goldfishCluster?.missingIdentityReviewCatalogObjects, 5);
+assert.equal(goldfishCluster?.reviewedSupportedIdentityCatalogObjects, 7);
+assert.equal(goldfishCluster?.canonicalBridgeCatalogObjects, 7);
 assert.deepEqual(goldfishCluster?.pipelineStages, {
-  identity_review_pending: 6,
-  identity_evidence_ceiling: 0,
+  identity_review_pending: 0,
+  identity_evidence_ceiling: 5,
   canonical_bridge_pending: 0,
   field_policy_pending: 0,
-  field_review_pending: 6,
+  field_review_pending: 7,
 });
-assert.equal(goldfishCluster?.nextAction, 'batch_exact_object_identity_review_with_parent_taxon_context');
+assert.equal(goldfishCluster?.nextAction, 'keep_terminal_identity_hold_unless_new_exact_evidence');
 
 const bettaCluster = report.taxonClusters.find(cluster => cluster.candidateBaseScientificName === 'Betta splendens');
 assert.equal(bettaCluster?.catalogObjectCount, 7);
 assert.deepEqual(bettaCluster?.speciesIds, ['sp_0259','sp_0260','sp_0261','sp_0262','sp_0389','sp_0390','sp_0391']);
 assert.deepEqual(bettaCluster?.pipelineStages, {
-  identity_review_pending: 7,
-  identity_evidence_ceiling: 0,
+  identity_review_pending: 0,
+  identity_evidence_ceiling: 7,
   canonical_bridge_pending: 0,
   field_policy_pending: 0,
   field_review_pending: 0,
 });
+assert.equal(bettaCluster?.nextAction, 'keep_terminal_identity_hold_unless_new_exact_evidence');
 
 assert.deepEqual(report.stageQueue.map(stage => [stage.stage, stage.catalogObjectCount]), [
-  ['identity_review_pending', 41],
-  ['field_review_pending', 6],
+  ['identity_evidence_ceiling', 40],
+  ['field_review_pending', 7],
 ]);
-const identityQueue = report.stageQueue.find(stage => stage.stage === 'identity_review_pending');
-assert.equal(identityQueue?.parentTaxonBatches[0]?.candidateBaseScientificName, 'Carassius auratus');
-assert.equal(identityQueue?.parentTaxonBatches[0]?.catalogObjectCount, 6);
-assert.equal(identityQueue?.parentTaxonBatches[1]?.candidateBaseScientificName, 'Betta splendens');
-assert.equal(identityQueue?.parentTaxonBatches[1]?.catalogObjectCount, 7);
+const ceilingQueue = report.stageQueue.find(stage => stage.stage === 'identity_evidence_ceiling');
+assert.equal(ceilingQueue?.parentTaxonBatches[0]?.candidateBaseScientificName, 'Carassius auratus');
+assert.equal(ceilingQueue?.parentTaxonBatches[0]?.catalogObjectCount, 5);
+assert.equal(ceilingQueue?.parentTaxonBatches[1]?.candidateBaseScientificName, 'Betta splendens');
+assert.equal(ceilingQueue?.parentTaxonBatches[1]?.catalogObjectCount, 7);
 const fieldQueue = report.stageQueue.find(stage => stage.stage === 'field_review_pending');
 assert.deepEqual(fieldQueue?.parentTaxonBatches, [{
   candidateBaseScientificName: 'Carassius auratus',
-  catalogObjectCount: 6,
-  reviewedSupportedIdentityContext: 6,
-  canonicalBridgeContext: 6,
+  catalogObjectCount: 7,
+  reviewedSupportedIdentityContext: 7,
+  canonicalBridgeContext: 7,
   speciesIds: reviewedGoldfishIdentityIds,
 }]);
 
-console.log('Compatibility variant intake v3 PASS: 47 held objects remain fail-closed and are now staged into 41 identity-review pending plus 6 field-review pending objects; stage queues batch work by parent taxon without granting shared identity, field authority, or pair rules.');
+console.log('Compatibility variant intake v3 PASS: durable stop-search authority is explicit: 40 held objects are identity-evidence ceilings and 7 reviewed identities are field-review pending, with no automatic inheritance or pair precomputation.');
