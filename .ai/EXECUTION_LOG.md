@@ -1,3 +1,17 @@
+## 2026-10-21 — Real-user Compatibility pressure + First Divergence closure
+
+- Started from clean main@cb799eda after full-project governance closure. Existing Compatibility badcases were strong but distributed; they did not provide one persistent real-user pipeline report with explicit First Divergence stages.
+- Created scripts/test-compatibility-real-user-pressure.ts and evaluation/product/compatibility-real-user-pressure.v1.json. The suite records input_normalization, identity_resolution, reviewed_facts, pair_domain_stage_evaluation, whole_tank_aggregation, action_plan, and presentation probes.
+- Added 8 user-like cases: duplicate-row normalization; unresolved variant identity; terminal public-evidence ceiling; five-species competing risks; fry predation; breeding territory activation; missing tank input; and post-adjustment bioload recovery.
+- Concrete failure found before closure: in the five-species case, user-facing single-housing copy correctly named the snakehead, but machine resolutionTargets incorrectly included an unrelated tetra because pair context was always unioned into every action target.
+- Fixed compatibility-decision-plan target scoping: housing/group_size use direct affected IDs only; bioload has an empty speciesId target to represent whole-tank resolution; true pair-scoped risk families retain pair context. Regression proves single-housing targets only sp_0049 while predation correctly targets sp_0049 + sp_0431.
+- All pressure actions remain grounded in deterministic sourceRuleCodes/evidenceIds and carry recheck + stop-condition semantics. No AI authority change.
+- Targeted regressions PASS: release badcases, action specificity, post-action resolution, complex whole tank, full user canary, and 8/8 pressure suite.
+- First backend release-gate run reached final Project Typecheck and exposed only a pressure-test fixture omission: candidateContext specified lifeStage=adult without required reproductiveState. Added reproductiveState=normal; lint and pressure suite passed.
+- Clean rerun of the complete backend release gate ended BACKEND_RELEASE_GATE=PASS. Fully-informed matrix remains 111 / 6,105 / 0 insufficient_data. Main production build also passes.
+- Build continues to report existing large-chunk warnings (including the large app/react-three-fiber bundles); this phase did not alter UI/performance scope.
+- No UI change, no deployment, no Production DB write, no research reopening, and no release/production movement.
+
 ## 2026-10-21 — Full-project governance closure
 
 - Started from a clean `main@8cbfc25f` after a whole-project read-only audit exposed four governance drifts while core user runtime remained healthy.

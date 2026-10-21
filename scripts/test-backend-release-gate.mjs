@@ -92,6 +92,7 @@ const gates = [
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Fully Informed Matrix', 'npm', ['run', 'test:compatibility-fully-informed-matrix']],
   ['Compatibility Release Badcases', 'npm', ['run', 'test:compatibility-release-badcases']],
+  ['Compatibility Real User Pressure', 'npm', ['run', 'test:compatibility-real-user-pressure']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
   ['Unified Compatibility Next Wave', 'npm', ['run', 'test:compatibility-next-wave']],

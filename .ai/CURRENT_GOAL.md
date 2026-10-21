@@ -1,3 +1,16 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 real-user Compatibility pressure closure
+
+- Scope: Compatibility real-user pressure testing and First Divergence hardening on main. No UI changes, deploy, Production DB write, release/production move, or speculative species-research expansion.
+- Added one durable pressure suite/report covering 8 user-like cases across the pipeline: duplicate input normalization; unresolved variant identity; terminal public-evidence ceiling; five-species competing predation/territory/aggression risks; fry predation; breeding territory; missing user tank inputs; and post-adjustment outcome improvement.
+- Pipeline audit stages are explicit: input_normalization -> identity_resolution -> reviewed_facts -> pair_domain_stage_evaluation -> whole_tank_aggregation -> action_plan -> presentation. After the fix, all 8 cases have firstDivergence=null.
+- Real First Divergence found at action_plan: a single-housing machine resolution target inherited an unrelated counterpart species from pair context. Fixed target scoping so housing/group_size target only the directly affected species, bioload is whole-tank with no species IDs, and pair-scoped risk families retain pair scope.
+- Five-species regression now proves single_housing_required targets only sp_0049 while predation correctly retains sp_0049 + sp_0431.
+- Every pressure case checks direct judgment/reason/action where applicable; deterministic source rule provenance, evidence provenance, recheck point, and stop condition remain required. AI does not gain decision authority.
+- Initial full gate found one test-fixture TypeScript contract omission (adult candidateContext lacked reproductiveState); fixture was corrected to reproductiveState=normal. Final full backend release gate PASS, main build PASS, targeted user-canary/badcase/action regressions PASS.
+- Runtime invariant remains 111 8/8 ready species / 6,105 fully-informed pairs / 0 insufficient_data. No deferred/terminal Compatibility research debt was reopened.
+- Production remains frozen at release/production@1cff5be6108654003df5eb07afe8df58ceb7c3df.
+- NEXT: expand this pressure suite only from genuine user failures, telemetry, or newly observed badcases; use First Divergence to localize fixes instead of returning to broad pair/species precomputation.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 full-project governance closure
 
 - Governance-only closure on `main`: **no UI changes, no deploy, no Production DB write, no Production alias/runtime promotion**.

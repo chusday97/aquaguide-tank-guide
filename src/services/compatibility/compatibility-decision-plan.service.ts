@@ -315,10 +315,23 @@ const targetSpeciesIdsFor = (
   const family = getCompatibilityRuleFamily(rule.code);
   const pair = pairContextFor(decision, family, mode);
   const namedItem = namedItemForFamily(decision, family);
-  return uniqueSpeciesIds([
-    ...(pair?.speciesIds || []),
+  const directSpeciesIds = uniqueSpeciesIds([
     ...(rule.affectedSpeciesIds || []),
     namedItem?.speciesId,
+  ]);
+
+  // Housing and group-size rules describe a single species requirement.
+  // Pair context is useful for the user-facing sentence, but adding the
+  // counterpart species to a machine-readable resolution target makes
+  // downstream rechecks act on the wrong subject.
+  if (family === 'housing' || family === 'group_size') return directSpeciesIds;
+
+  // Bioload is a whole-tank condition rather than a species-scoped target.
+  if (family === 'bioload') return [];
+
+  return uniqueSpeciesIds([
+    ...(pair?.speciesIds || []),
+    ...directSpeciesIds,
   ]);
 };
 

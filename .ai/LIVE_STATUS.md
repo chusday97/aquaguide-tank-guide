@@ -1,3 +1,14 @@
+## TOP LIVE STATUS — 2026-10-21 real-user pressure gate
+
+- Real-user Compatibility pressure suite is now part of both test:compatibility-user-canary and the formal backend release gate.
+- 8/8 current pressure cases pass with firstDivergence=null after one concrete action-plan target-scope fix.
+- Machine resolution targeting contract: housing/group_size = directly affected species only; bioload = whole-tank target; predation/aggression/territory and other pair-scoped families keep pair context.
+- Pressure coverage includes normalization, unresolved identity, public-evidence ceiling, five-species competing risks, fry, breeding state, missing tank input, and adjustment -> re-evaluation improvement.
+- User-facing/action contract remains deterministic and sourced: judgment + reason + action, rule/evidence provenance, recheck point, stop condition.
+- Fully informed matrix remains 111 ready / 6,105 pairs / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Final backend release gate PASS and main build PASS. No UI/deploy/Production mutation.
+- Production remains release/production@1cff5be6.
+
 ## TOP LIVE STATUS — 2026-10-21 governance closure
 
 - `main` governance/release/admin truth is aligned to current Product Truth; complete backend release gate passes.

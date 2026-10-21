@@ -1,0 +1,450 @@
+{
+  "schemaVersion": 1,
+  "pipelineStages": [
+    "input_normalization",
+    "identity_resolution",
+    "reviewed_facts",
+    "pair_domain_stage_evaluation",
+    "whole_tank_aggregation",
+    "action_plan",
+    "presentation"
+  ],
+  "summary": {
+    "caseCount": 8,
+    "passedCases": 8,
+    "failedCases": 0,
+    "firstDivergenceCounts": {
+      "input_normalization": 0,
+      "identity_resolution": 0,
+      "reviewed_facts": 0,
+      "pair_domain_stage_evaluation": 0,
+      "whole_tank_aggregation": 0,
+      "action_plan": 0,
+      "presentation": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "duplicate-row-normalization",
+      "title": "同一物种被用户拆成多行时先合并，再做生物学判断",
+      "expectedBoundaryStage": null,
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "input_normalization",
+          "check": "duplicate species are merged with summed quantity",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "normalization does not change pair decision",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "judgment + next action are present and bounded",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "source rules remain grounded in deterministic authority",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "evidence provenance is retained",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "recheck point and stop condition are executable",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "compatible",
+        "normalizedItems": [
+          {
+            "speciesId": "sp_0431",
+            "quantity": 8,
+            "origin": "candidate"
+          },
+          {
+            "speciesId": "sp_0443",
+            "quantity": 6,
+            "origin": "candidate"
+          }
+        ],
+        "pairCount": 1
+      }
+    },
+    {
+      "id": "unresolved-variant-identity",
+      "title": "未确认具体品系身份时，不把近似物种资料套成安全结论",
+      "expectedBoundaryStage": "identity_resolution",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "input_normalization",
+          "check": "input reaches the decision engine intact",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "identity_resolution",
+          "check": "identity boundary is explicit and dominant",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "unknown cause remains identity, not generic system gap",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "insufficient_data",
+        "unknownReason": "unresolved_identity",
+        "ruleCodes": [
+          "species_identity_unresolved",
+          "identity_water_unresolved"
+        ]
+      }
+    },
+    {
+      "id": "terminal-public-evidence-ceiling",
+      "title": "公开证据不足时保留证据边界，不误报“可以养”",
+      "expectedBoundaryStage": "reviewed_facts",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "identity_resolution",
+          "check": "identity is not misclassified as the blocker",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "reviewed_facts",
+          "check": "public-evidence ceiling is explicit",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "evidence ceiling never turns into a safe action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "insufficient_data",
+        "unknownReason": "public_evidence_insufficient",
+        "ruleCodes": [
+          "species_public_evidence_insufficient"
+        ]
+      }
+    },
+    {
+      "id": "five-species-competing-risks",
+      "title": "五物种同时触发捕食、领地、追鳍等风险时给统一整缸结论",
+      "expectedBoundaryStage": null,
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "independent risk families survive pair evaluation",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "all ten unordered pairs are evaluated and hard block dominates",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "judgment + next action are present and bounded",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "source rules remain grounded in deterministic authority",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "evidence provenance is retained",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "recheck point and stop condition are executable",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "single-housing resolution target only names the species that requires single housing",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "hard-block plan does not emit contradictory add advice",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "not_recommended",
+        "pairCount": 10,
+        "riskFamilies": [
+          "aggression",
+          "housing",
+          "ph",
+          "predation",
+          "reviewed_pair_rule",
+          "space",
+          "territory"
+        ],
+        "resolutionTargets": [
+          {
+            "riskFamily": "predation",
+            "resolutionMode": "deterministic_clearance",
+            "criterion": "珍珠赤雷龙 与 红绿灯 不再直接接触（分隔、分缸或替换组合），重新评估后不再出现该捕食阻断。",
+            "sourceRuleCode": "predation_risk",
+            "speciesIds": [
+              "sp_0049",
+              "sp_0431"
+            ]
+          },
+          {
+            "riskFamily": "housing",
+            "resolutionMode": "deterministic_clearance",
+            "criterion": "珍珠赤雷龙 已从普通混养组合中移除并按单养要求处理，重新评估后不再出现 housing 阻断。",
+            "sourceRuleCode": "single_housing_required",
+            "speciesIds": [
+              "sp_0049"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "fry-life-stage-predation",
+      "title": "鱼苗场景必须按生命阶段提升到阻断，不能沿用成鱼结论",
+      "expectedBoundaryStage": "pair_domain_stage_evaluation",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "adult context does not invent fry predation",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "fry context activates explicit fry predation block",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "fry action requires isolation + later recheck",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "adultStatus": "caution",
+        "fryStatus": "not_recommended"
+      }
+    },
+    {
+      "id": "breeding-territory-context",
+      "title": "繁殖护卵状态才触发繁殖领地风险，普通成鱼不误触发",
+      "expectedBoundaryStage": "pair_domain_stage_evaluation",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "ordinary adult does not invent breeding territory",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "pair_domain_stage_evaluation",
+          "check": "explicit spawning/guarding activates breeding territory",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "breeding warning produces observable intervention",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "ordinaryStatus": "compatible",
+        "breedingStatus": "caution"
+      }
+    },
+    {
+      "id": "missing-user-tank-input",
+      "title": "用户没填鱼缸参数时明确要求补输入，不把它伪装成物种资料缺失",
+      "expectedBoundaryStage": "input_normalization",
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "input_normalization",
+          "check": "missing tank input is explicit",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "reviewed_facts",
+          "check": "reviewed species facts are not blamed for user input gap",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "plan asks for tank input before predicting safety",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "insufficient_data",
+        "unknownReason": "missing_user_input"
+      }
+    },
+    {
+      "id": "adjustment-recheck-improves-outcome",
+      "title": "降低总负荷后必须能重新计算出更好的结果，而不是只给静态建议",
+      "expectedBoundaryStage": null,
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "overload is detected at whole-tank level",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "whole_tank_aggregation",
+          "check": "reduced quantities clear overload and improve verdict",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "adjustment has recheck and whole-tank target semantics",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "before": "caution",
+        "after": "compatible",
+        "clearedRisk": "bioload"
+      }
+    }
+  ]
+}

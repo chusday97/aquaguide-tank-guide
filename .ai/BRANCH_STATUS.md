@@ -1,3 +1,12 @@
+## TOP BRANCH STATUS — 2026-10-21 real-user pressure closure
+
+- Development branch: main, based on governance checkpoint cb799edac00a00ae8455596e8aa215ad1031f4d8 before this pressure checkpoint.
+- Intended checkpoint scope: Compatibility decision-plan target scoping + real-user pressure suite/report + release-gate wiring + authority docs.
+- No UI, Vercel deploy, Production DB mutation, migration, research expansion, or release/production movement.
+- Validation before commit: targeted Compatibility badcases/canary PASS; 8/8 pressure PASS; final full BACKEND_RELEASE_GATE=PASS; lint/check:api/build:business-api are covered by the full gate; main build PASS; git diff check PASS.
+- release/production must remain pinned at 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+- After commit/push, verify worktree clean and HEAD == origin/main independently.
+
 ## TOP BRANCH STATUS — 2026-10-21 governance closure
 
 - Canonical development branch: `main`.
