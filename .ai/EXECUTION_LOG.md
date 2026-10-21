@@ -1,3 +1,15 @@
+## 2026-10-21 — Multi-cause ordered action sequence closure
+
+- Implemented CompatibilityActionSequenceStep with order, state(current/next/deferred), riskFamily, action, sourceRuleCode, resolutionTarget and blockedByHardStop.
+- Sequence generation uses existing deterministic rule priority and distinct risk families. Caution/insufficient cases retain ordered active steps; not_recommended cases keep blocking families active first and mark nonblocking followers deferred.
+- The primary result card remains one reason + one immediate action. Aquarium details gained a bounded 处理顺序 / Action order view showing at most three non-deferred steps. This is a small details-layer extension, not a visual redesign.
+- Added four durable real-user pressure cases: 3+ adjustable risks ordered into a sequence; first-step completion advancing the next risk; hard-stop deferring soft actions; emergent candidate-to-candidate hard block leading the sequence with exact candidate targets. Pressure suite grew 15 -> 19 and all cases pass with firstDivergence=null.
+- Sequence probing found two real copy/severity mismatches. Adjustable aggression/fin-nipping was overstated as 不要加入 and is now conditional mitigation + re-evaluation. Hard territorial conflict was understated as add-cover-and-observe and now requires separation/change of combination; hard territory resolutionMode is deterministic_clearance. Hard pH no-overlap also explicitly requires separation/change instead of compromise.
+- First complete backend gate found a backward-compatibility failure in Add Fish Compatibility i18n because legacy assessment fixtures had no actionSequence. Presentation projection now treats absent actionSequence as an empty sequence in both Chinese and English paths. Targeted backward-compat tests then passed.
+- Re-ran the full backend release gate: BACKEND_RELEASE_GATE=PASS. Fully-informed matrix remains 111 / 6,105 / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Main build + git diff check PASS. Existing large chunk warnings remain unrelated performance debt.
+- No Production deployment/DB write/migration, broad species research, evidence promotion or release branch movement.
+
 ## 2026-10-21 — Sequential-action and emergent-conflict real-user pressure closure
 
 - Expanded the durable real-user Compatibility pressure suite from 12 to 15 cases.

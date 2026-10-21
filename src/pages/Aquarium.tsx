@@ -6756,6 +6756,24 @@ export default function AquariumManager() {
                     <div className="mt-3 grid gap-3 border-t border-ink/8 pt-3">
                       {addFishAssessmentPresentation?.plan && addFishCompatibilityReview.status !== 'compatible' && (
                         <div className="grid gap-2 rounded-[12px] bg-bg/70 px-3 py-3" data-compatibility-secondary-plan>
+                          {addFishAssessmentPresentation.plan.actionSequence.filter(step => step.state !== 'deferred').length > 1 && (
+                            <div className="grid gap-1.5" data-compatibility-action-sequence>
+                              <div className="text-[10px] font-black text-ink/58">{isEn ? 'Action order' : '处理顺序'}</div>
+                              {addFishAssessmentPresentation.plan.actionSequence
+                                .filter(step => step.state !== 'deferred')
+                                .slice(0, 3)
+                                .map((step, index) => (
+                                  <div key={`${step.sourceRuleCode}-${index}`} className="grid grid-cols-[56px_1fr] gap-2 text-[11px] leading-5">
+                                    <span className="font-black text-ink/48">
+                                      {index === 0
+                                        ? (isEn ? 'Do now' : '现在先做')
+                                        : (isEn ? 'Then' : '接下来')}
+                                    </span>
+                                    <span className="font-bold text-ink/68">{step.action}</span>
+                                  </div>
+                                ))}
+                            </div>
+                          )}
                           <p className="text-[11px] font-bold leading-5 text-ink/65">{addFishAssessmentPresentation.plan.expectedAfterAdjustment}</p>
                           <p className="text-[11px] font-bold leading-5 text-ink/55">{addFishAssessmentPresentation.plan.reviewCheckpoint}</p>
                           <p className="text-[11px] font-bold leading-5 text-ink/55">{addFishAssessmentPresentation.plan.stopCondition}</p>

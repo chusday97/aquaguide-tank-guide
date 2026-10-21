@@ -1,3 +1,15 @@
+## TOP LIVE STATUS — 2026-10-21 multi-risk handling
+
+- Primary Compatibility UI still shows one conclusion + one reason + one immediate action.
+- Multi-cause decisions now expose an ordered actionSequence internally; expanded details show at most three non-deferred active steps labeled 现在先做 / 接下来.
+- Hard block => active hard-stop action first; soft risks are deferred internally and excluded from the active visible sequence.
+- Re-evaluation advances the chain automatically because resolved source rules disappear; completed steps are not persisted as active warnings.
+- Caution aggression language and hard territory/pH language were tightened to match deterministic severity.
+- Old assessment/i18n fixtures without actionSequence safely degrade to an empty list.
+- Real-user pressure 19/19 PASS; full backend release gate PASS; main build PASS.
+- Fully-informed matrix remains 111 / 6,105 / 427 / 2,353 / 3,325 / 0 insufficient_data.
+- Production remains frozen at 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP LIVE STATUS — 2026-10-21 sequential-action pressure closure
 
 - Real-user pressure = 15/15 PASS.

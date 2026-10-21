@@ -15,6 +15,13 @@ export type CompatibilityAssessmentPresentation = {
     expectedAfterAdjustment: string;
     reviewCheckpoint: string;
     stopCondition: string;
+    actionSequence: Array<{
+      state: 'current' | 'next' | 'deferred';
+      riskFamily: string;
+      action: string;
+      sourceRuleCode: string;
+      blockedByHardStop: boolean;
+    }>;
   };
   details: {
     label: string;
@@ -151,6 +158,13 @@ export const projectCompatibilityAssessmentForLocale = ({
         expectedAfterAdjustment: model.decisionPlan.expectedAfterAdjustment,
         reviewCheckpoint: model.decisionPlan.reviewCheckpoint,
         stopCondition: model.decisionPlan.stopCondition,
+        actionSequence: (model.decisionPlan.actionSequence || []).map(step => ({
+          state: step.state,
+          riskFamily: step.riskFamily,
+          action: step.action,
+          sourceRuleCode: step.sourceRuleCode,
+          blockedByHardStop: step.blockedByHardStop,
+        })),
       },
       details: {
         label: model.details.label,
@@ -181,6 +195,16 @@ export const projectCompatibilityAssessmentForLocale = ({
       expectedAfterAdjustment: expectedFor(decision.status),
       reviewCheckpoint: checkpointFor(decision.status),
       stopCondition: stopFor(decision.status),
+      actionSequence: (model.decisionPlan.actionSequence || []).map(step => ({
+        state: step.state,
+        riskFamily: step.riskFamily,
+        action: familyAction(
+          step.riskFamily,
+          step.state === 'deferred' ? 'caution' : decision.status,
+        ),
+        sourceRuleCode: step.sourceRuleCode,
+        blockedByHardStop: step.blockedByHardStop,
+      })),
     },
     details: {
       label: 'View evidence',

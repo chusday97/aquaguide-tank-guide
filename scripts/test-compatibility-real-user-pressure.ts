@@ -791,6 +791,133 @@ cases.push(makeCase(
   },
 ));
 
+const orderedAdjustableDecision = evaluateCompatibilityDecision({
+  tank: tank(100, 40, 40, 24),
+  items: [
+    { species: byId('sp_0436'), quantity: 5, origin: 'existing' },
+    { species: byId('sp_0431'), quantity: 10, origin: 'candidate' },
+    { species: byId('sp_0443'), quantity: 6, origin: 'candidate' },
+    { species: byId('sp_0012'), quantity: 6, origin: 'candidate' },
+    { species: byId('sp_0010'), quantity: 6, origin: 'candidate' },
+  ],
+});
+const orderedAdjustablePlan = buildCompatibilityDecisionPlan(orderedAdjustableDecision);
+cases.push(makeCase(
+  'multi-cause-ordered-action-sequence',
+  '三个以上可调风险同时存在时，机器层保留完整处理顺序而主层只推进当前一步',
+  'action_plan',
+  [
+    probe('whole_tank_aggregation', 'the tank is caution-only with at least three distinct adjustable families', () => {
+      const families = new Set(orderedAdjustableDecision.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)));
+      assert.equal(orderedAdjustableDecision.status, 'caution');
+      assert.ok(families.size >= 3);
+      assert.equal(orderedAdjustableDecision.blockingRules.length, 0);
+    }),
+    probe('action_plan', 'actionSequence keeps at least three ordered pending actions with exactly one current step', () => {
+      assert.ok(orderedAdjustablePlan.actionSequence.length >= 3);
+      assert.equal(orderedAdjustablePlan.actionSequence.filter(step => step.state === 'current').length, 1);
+      assert.equal(orderedAdjustablePlan.actionSequence[0]?.state, 'current');
+      assert.ok(orderedAdjustablePlan.actionSequence.slice(1, 3).every(step => step.state === 'next'));
+      assert.ok(orderedAdjustablePlan.actionSequence.every((step, index) => step.order === index + 1));
+      assert.ok(orderedAdjustablePlan.actionSequence.every(step => step.sourceRuleCode && step.resolutionTarget.criterion));
+    }),
+    probe('action_plan', 'adjustable aggression uses conditional mitigation language rather than falsely becoming a hard stop', () => {
+      const first = orderedAdjustablePlan.actionSequence[0];
+      assert.equal(first?.riskFamily, 'aggression');
+      assert.match(first?.action || '', /加入.*前|遮挡|退让/);
+      assert.doesNotMatch(first?.action || '', /^不要加入/);
+      assert.equal(first?.resolutionTarget.resolutionMode, 'behavioral_recheck');
+    }),
+    ...presentationProbes(orderedAdjustableDecision),
+  ],
+  {
+    status: orderedAdjustableDecision.status,
+    warningFamilies: [...new Set(orderedAdjustableDecision.warningRules.map(rule => getCompatibilityRuleFamily(rule.code)))].sort(),
+    actionSequence: orderedAdjustablePlan.actionSequence,
+  },
+));
+
+cases.push(makeCase(
+  'action-sequence-advances-after-first-step',
+  '第一步完成并重新评估后，旧步骤退出 active sequence，第二风险自动成为 current',
+  'action_plan',
+  [
+    probe('action_plan', 'before adjustment the explicit length rule is the current action', () => {
+      assert.equal(partialSpaceBeforePlan.actionSequence[0]?.state, 'current');
+      assert.equal(partialSpaceBeforePlan.actionSequence[0]?.riskFamily, 'space');
+      assert.equal(partialSpaceBeforePlan.actionSequence[0]?.sourceRuleCode, 'length_too_short');
+    }),
+    probe('action_plan', 'after the 100cm threshold is met the completed length rule disappears and territory becomes current', () => {
+      assert.equal(partialSpaceAfterPlan.actionSequence.some(step => step.sourceRuleCode === 'length_too_short'), false);
+      assert.equal(partialSpaceAfterPlan.actionSequence[0]?.state, 'current');
+      assert.equal(partialSpaceAfterPlan.actionSequence[0]?.riskFamily, 'territory');
+    }),
+    ...presentationProbes(partialSpaceAfter),
+  ],
+  {
+    beforeSequence: partialSpaceBeforePlan.actionSequence,
+    afterSequence: partialSpaceAfterPlan.actionSequence,
+  },
+));
+
+cases.push(makeCase(
+  'hard-stop-defers-soft-actions',
+  '硬阻断与多个软风险共存时，硬阻断先处理，软风险保留但延期，避免制造“优化后就能混养”的错觉',
+  'action_plan',
+  [
+    probe('action_plan', 'hard-block steps occupy the active front of the sequence', () => {
+      assert.equal(sixSpeciesMixedRiskDecision.status, 'not_recommended');
+      assert.equal(sixSpeciesMixedRiskPlan.actionSequence[0]?.state, 'current');
+      assert.equal(sixSpeciesMixedRiskPlan.actionSequence[0]?.blockedByHardStop, false);
+      assert.equal(sixSpeciesMixedRiskPlan.actionSequence[0]?.resolutionTarget.resolutionMode, 'deterministic_clearance');
+    }),
+    probe('action_plan', 'soft warnings remain internally available but are explicitly deferred behind the hard stop', () => {
+      const deferred = sixSpeciesMixedRiskPlan.actionSequence.filter(step => step.state === 'deferred');
+      assert.ok(deferred.length >= 1);
+      assert.ok(deferred.every(step => step.blockedByHardStop));
+      assert.ok(deferred.some(step => ['group_size', 'ph', 'reviewed_pair_rule'].includes(step.riskFamily)));
+    }),
+    probe('presentation', 'primary user layer remains one reason and one action despite the larger internal sequence', () => {
+      const model = buildLocalCompatibilityAssessment(sixSpeciesMixedRiskDecision);
+      const presentation = projectCompatibilityAssessmentForLocale({ model, decision: sixSpeciesMixedRiskDecision, isEnglish: false });
+      assert.ok(presentation);
+      assert.equal(presentation.why.length, 1);
+      assert.equal(presentation.howTo.length, 1);
+      assert.ok(presentation.plan.actionSequence.filter(step => step.state !== 'deferred').length >= 1);
+    }),
+  ],
+  {
+    status: sixSpeciesMixedRiskDecision.status,
+    actionSequence: sixSpeciesMixedRiskPlan.actionSequence,
+  },
+));
+
+cases.push(makeCase(
+  'emergent-candidate-hard-block-leads-sequence',
+  '两个候选之间新出现硬阻断时，处理链第一步必须精确指向冲突候选 pair',
+  'action_plan',
+  [
+    probe('action_plan', 'candidate-to-candidate predation is the current sequence step', () => {
+      const first = combinedCandidatesPlan.actionSequence[0];
+      assert.equal(first?.state, 'current');
+      assert.equal(first?.riskFamily, 'predation');
+      assert.equal(first?.resolutionTarget.resolutionMode, 'deterministic_clearance');
+      assert.deepEqual([...first!.resolutionTarget.speciesIds].sort(), ['sp_0011', 'sp_0118']);
+    }),
+    probe('action_plan', 'secondary risks cannot outrank the emergent hard block', () => {
+      assert.equal(combinedCandidatesPlan.actionSequence[0]?.blockedByHardStop, false);
+      assert.ok(combinedCandidatesPlan.actionSequence
+        .filter(step => step.state === 'deferred')
+        .every(step => step.blockedByHardStop));
+    }),
+    ...presentationProbes(combinedCandidatesDecision),
+  ],
+  {
+    status: combinedCandidatesDecision.status,
+    actionSequence: combinedCandidatesPlan.actionSequence,
+  },
+));
+
 const report = {
   schemaVersion: 1,
   pipelineStages: stages,

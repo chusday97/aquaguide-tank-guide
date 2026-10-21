@@ -1,3 +1,15 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 multi-cause Compatibility action sequence
+
+- Compatibility now has a machine-readable actionSequence for multi-cause decisions. The main user result remains intentionally compact: one verdict, one highest-priority reason, one current action.
+- Adjustable multi-risk cases preserve an ordered chain internally: current -> next -> next. The details layer may show up to three active steps as 现在先做 / 接下来; it does not flatten every rule into equal-weight warnings.
+- Re-evaluation removes cleared rules from the active sequence. Example: after the explicit 100cm length requirement is satisfied, length_too_short disappears and the next remaining territory risk becomes current.
+- Hard-stop semantics are explicit: blocking risks lead the sequence; nonblocking warning/missing families remain traceable internally as deferred + blockedByHardStop and are hidden from the active user-visible order so they cannot imply that a hard incompatibility is fixable by minor adjustments.
+- Real wording divergences found while building the sequence were fixed narrowly: caution aggression/fin-nipping now uses mitigation + recheck language rather than a false hard stop; hard territorial conflict now requires separation/change of combination rather than merely more cover; hard pH no-overlap explicitly requires separate tanks/change of combination.
+- Backward compatibility is preserved: older assessment payloads without actionSequence project safely as an empty sequence rather than failing presentation/i18n.
+- Real-user pressure suite = 19/19 PASS. Fully-informed matrix remains 111 ready / 6,105 pairs / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Full BACKEND_RELEASE_GATE=PASS after the compatibility fallback fix; main build PASS.
+- No Production deploy, DB write, migration, species research, evidence promotion or release/production movement. Production remains release/production@1cff5be6.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 sequential-action Compatibility validation
 
 - Real-user Compatibility pressure suite now covers 15 distinct scenarios, up from 12.

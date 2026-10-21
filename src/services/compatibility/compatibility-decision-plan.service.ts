@@ -33,6 +33,18 @@ export type CompatibilityResolutionTarget = {
   speciesIds: string[];
 };
 
+export type CompatibilityActionSequenceState = 'current' | 'next' | 'deferred';
+
+export type CompatibilityActionSequenceStep = {
+  order: number;
+  state: CompatibilityActionSequenceState;
+  riskFamily: string;
+  action: string;
+  sourceRuleCode: string;
+  resolutionTarget: CompatibilityResolutionTarget;
+  blockedByHardStop: boolean;
+};
+
 export type CompatibilityDecisionPlan = {
   judgment: '可以养' | '有条件可以' | '不建议' | '暂时无法判断';
   verdict: BeginnerCompatibilityVerdict;
@@ -49,6 +61,7 @@ export type CompatibilityDecisionPlan = {
    * This is advisory metadata only and never changes deterministic authority.
    */
   resolutionTargets: CompatibilityResolutionTarget[];
+  actionSequence: CompatibilityActionSequenceStep[];
   evidence: {
     authorityLevel: CompatibilityActionAuthorityLevel;
     sourceRuleCodes: string[];
@@ -284,6 +297,32 @@ const specificActionFor = (
       : '先按成体需求核对最低缸长或水体要求；当前空间达不到要求时不要加入。';
   }
 
+  if (family === 'territory' && decision.status === 'not_recommended') {
+    if (mode === 'planned_addition') {
+      return pair?.candidate
+        ? `不要加入 ${pair.candidate.name}；它与 ${pair.otherName} 存在明确领地冲突，应分隔或更换组合后再重新评估。`
+        : '当前存在明确领地冲突；不要继续执行这组混养计划，应先分隔或更换冲突组合后再重新评估。';
+    }
+    return pair
+      ? `${pair.pairLabel} 存在明确领地冲突；先分隔冲突个体或调整组合，再重新评估，不要只靠增加遮挡继续观察。`
+      : '当前存在明确领地冲突；先分隔冲突个体或调整组合，再重新评估。';
+  }
+
+  if (family === 'ph' && decision.status === 'not_recommended' && rule.code === 'ph_range_conflict') {
+    return pair
+      ? `${pair.pairLabel} 没有可长期维持的共同 pH 区间；应分缸或更换组合，不要用折中 pH 强行混养。`
+      : '当前组合没有可长期维持的共同 pH 区间；应分缸或更换组合。';
+  }
+
+  if (family === 'aggression' && decision.status === 'caution') {
+    if (mode === 'planned_addition' && pair?.candidate) {
+      return `加入 ${pair.candidate.name} 前，先为它与 ${pair.otherName} 增加遮挡和退让路线，并准备可立即分隔的方案；重新评估后再决定是否加入。`;
+    }
+    if (mode === 'current_tank' && pair) {
+      return `先为 ${pair.pairLabel} 增加遮挡和退让路线，并复查追逐、破鳍、躲藏和进食；出现持续异常就分隔。`;
+    }
+  }
+
   if (!pair) return null;
 
   if (family === 'predation' && decision.status === 'caution') {
@@ -483,6 +522,14 @@ const resolutionTargetFor = (
   }
 
   if (family === 'territory') {
+    if (decision.status === 'not_recommended') {
+      return target(
+        'deterministic_clearance',
+        pair
+          ? `${pair.pairLabel} 已通过分隔或更换组合消除明确领地冲突，重新评估后不再出现 territory 阻断。`
+          : '明确领地冲突已通过分隔或更换组合消除，重新评估后不再出现 territory 阻断。',
+      );
+    }
     return target(
       'behavioral_recheck',
       pair
@@ -519,6 +566,93 @@ export const buildCompatibilityResolutionTargets = (
   return sourceRulesForPlan(decision)
     .map(rule => resolutionTargetFor(decision, rule, mode))
     .slice(0, 2);
+};
+
+const orderedDistinctRules = (rules: TankCompatibilityRule[]) => {
+  const seen = new Set<string>();
+  return prioritizeDistinctCompatibilityRules(rules).filter(rule => {
+    const family = getCompatibilityRuleFamily(rule.code);
+    if (seen.has(family)) return false;
+    seen.add(family);
+    return true;
+  });
+};
+
+type CompatibilityActionSequenceRule = {
+  rule: TankCompatibilityRule;
+  kind: 'blocking' | 'warning' | 'missing';
+};
+
+const actionSequenceRulesFor = (decision: CompatibilityDecision): CompatibilityActionSequenceRule[] => {
+  if (decision.status === 'compatible') return [];
+
+  const blocking = orderedDistinctRules(decision.blockingRules).map(rule => ({ rule, kind: 'blocking' as const }));
+  const usedFamilies = new Set(blocking.map(item => getCompatibilityRuleFamily(item.rule.code)));
+  const warning = orderedDistinctRules(decision.warningRules)
+    .filter(rule => !usedFamilies.has(getCompatibilityRuleFamily(rule.code)))
+    .map(rule => ({ rule, kind: 'warning' as const }));
+  warning.forEach(item => usedFamilies.add(getCompatibilityRuleFamily(item.rule.code)));
+  const missing = orderedDistinctRules(decision.missingData)
+    .filter(rule => !usedFamilies.has(getCompatibilityRuleFamily(rule.code)))
+    .map(rule => ({ rule, kind: 'missing' as const }));
+
+  if (decision.status === 'not_recommended') return [...blocking, ...warning, ...missing].slice(0, 6);
+  if (decision.status === 'caution') return [...warning, ...missing].slice(0, 6);
+  if (decision.status === 'insufficient_data') return [...missing].slice(0, 6);
+  return [];
+};
+
+const sequenceResolutionTargetFor = (
+  decision: CompatibilityDecision,
+  entry: CompatibilityActionSequenceRule,
+  mode: CompatibilityAssessmentMode,
+) => {
+  if (entry.kind === 'blocking') return resolutionTargetFor(decision, entry.rule, mode);
+  if (entry.kind === 'warning') {
+    return resolutionTargetFor({
+      ...decision,
+      status: 'caution',
+      blockingRules: [],
+    }, entry.rule, mode);
+  }
+  return resolutionTargetFor({
+    ...decision,
+    status: 'insufficient_data',
+    blockingRules: [],
+    warningRules: [],
+  }, entry.rule, mode);
+};
+
+export const buildCompatibilityActionSequence = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode = 'planned_addition',
+): CompatibilityActionSequenceStep[] => {
+  const entries = actionSequenceRulesFor(decision);
+  const hasHardStop = decision.status === 'not_recommended' && entries.some(entry => entry.kind === 'blocking');
+
+  return entries.map((entry, index) => {
+    const resolutionTarget = sequenceResolutionTargetFor(decision, entry, mode);
+    const deferred = hasHardStop && entry.kind !== 'blocking';
+    return {
+      order: index + 1,
+      state: deferred ? 'deferred' : index === 0 ? 'current' : 'next',
+      riskFamily: getCompatibilityRuleFamily(entry.rule.code),
+      action: specificActionFor(
+        entry.kind === 'blocking'
+          ? decision
+          : {
+            ...decision,
+            status: entry.kind === 'warning' ? 'caution' : 'insufficient_data',
+            blockingRules: [],
+          },
+        entry.rule,
+        mode,
+      ) || resolutionTarget.criterion,
+      sourceRuleCode: entry.rule.code,
+      resolutionTarget,
+      blockedByHardStop: deferred,
+    };
+  });
 };
 
 const primaryFamilyFor = (sourceRules: TankCompatibilityRule[]) => (
@@ -649,6 +783,7 @@ export const buildCompatibilityDecisionPlan = (
       ...readable.howTo.filter(step => step !== action.observeAfterAction),
       action.immediateAction,
     ]).slice(0, 2);
+  const actionSequence = buildCompatibilityActionSequence(decision, mode);
 
   return {
     judgment: readable.judgment,
@@ -661,6 +796,7 @@ export const buildCompatibilityDecisionPlan = (
     stopCondition: stopConditionForPlan(decision, mode, sourceRules, action.stopCondition),
     unknownReason: getCompatibilityUnknownReason(decision),
     resolutionTargets: buildCompatibilityResolutionTargets(decision, mode),
+    actionSequence,
     evidence: {
       authorityLevel: action.authorityLevel,
       sourceRuleCodes: action.sourceRuleCodes,

@@ -170,6 +170,10 @@ assert.doesNotMatch(defaultResultSource, /plan\.nextSteps|现在先做|必须停
 const detailsResultSource = cardSource.slice(defaultResultEnd);
 assert.match(detailsResultSource, /data-compatibility-secondary-plan/);
 assert.match(detailsResultSource, /expectedAfterAdjustment|reviewCheckpoint|stopCondition/);
+assert.match(detailsResultSource, /data-compatibility-action-sequence/);
+assert.match(detailsResultSource, /处理顺序/);
+assert.match(detailsResultSource, /step\.state !== 'deferred'/, 'hard-stop deferred soft risks must stay out of the user-visible action order');
+assert.match(detailsResultSource, /\.slice\(0, 3\)/, 'expanded action order must remain bounded');
 
 const riskFooterStart = aquariumSource.indexOf("addFishCompatibilityReview?.status === 'not_recommended'");
 const riskFooterEnd = aquariumSource.indexOf("!addFishSuccess && addFishCompatibilityReview?.status !== 'not_recommended'", riskFooterStart);

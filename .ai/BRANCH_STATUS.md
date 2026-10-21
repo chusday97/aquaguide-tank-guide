@@ -1,3 +1,13 @@
+## TOP BRANCH STATUS — 2026-10-21 action-sequence closure
+
+- Development branch main started from pushed e4898b2563f5d8cc52ba5f3c7880bb02e8dc5f0f.
+- Current scope: machine-readable multi-risk actionSequence, bounded details presentation, severity-correct action wording, pressure/report expansion 15 -> 19, and backward-compatible presentation projection.
+- Validation PASS: lint, action-specificity, result-card, user-conclusion, add-fish i18n, real-user pressure 19/19, complete backend release gate and main build/diff check.
+- The first full backend gate exposed one old-payload compatibility bug: presentation assumed actionSequence always existed. This was fixed with empty-sequence fallback and the complete gate then passed.
+- Core matrix unchanged at 111 ready / 6,105 pairs / 0 insufficient_data.
+- No Production mutation, deploy, migration, research/evidence expansion or release/production movement.
+- Before commit verify origin/main has not moved from e4898b2563f5d8cc52ba5f3c7880bb02e8dc5f0f; after push run independent read-only closeout and confirm Production pin remains 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+
 ## TOP BRANCH STATUS — 2026-10-21 sequential-action validation closure
 
 - Development branch main started from pushed 0e23dc8dad6aaa742256986d824ef0736c13f9f9.
