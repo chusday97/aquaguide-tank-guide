@@ -6716,7 +6716,7 @@ export default function AquariumManager() {
                           : (addFishCompatibilityReview.status === 'compatible' ? '为什么可以' : addFishCompatibilityReview.status === 'insufficient_data' ? '还缺什么' : '主要风险')}
                       </div>
                       <div className="mt-2 grid gap-2">
-                        {(addFishAssessmentPresentation?.why || []).map((text, index) => (
+                        {(addFishAssessmentPresentation?.why || []).slice(0, 1).map((text, index) => (
                           <div key={`compatibility-why-${index}`} className="grid grid-cols-[8px_1fr] items-start gap-2.5">
                             <span className={`mt-[8px] h-2 w-2 rounded-full ${
                               addFishCompatibilityReview.status === 'not_recommended'
@@ -6733,94 +6733,34 @@ export default function AquariumManager() {
                       </div>
                     </div>
 
-                    {addFishCompatibilityReview.status === 'compatible' ? (
-                      <div className="border-t border-ink/8 pt-3">
-                        <div className="text-[11px] font-black text-emerald-800">{isEn ? 'Keep it stable' : '保持稳定'}</div>
-                        <div className="mt-2 grid gap-1.5">
-                          {(addFishAssessmentPresentation?.howTo || []).map((text, index) => (
-                            <p key={`compatibility-how-${index}`} className="text-[13px] font-black leading-6 text-ink">{text}</p>
-                          ))}
-                        </div>
-                      </div>
-                    ) : addFishAssessmentPresentation?.plan.nextSteps?.length ? (
-                      <div className="border-t border-ink/8 pt-3" data-compatibility-next-steps>
-                        <div className={`text-[11px] font-black ${
-                          addFishCompatibilityReview.status === 'not_recommended'
-                            ? 'text-red-800'
-                            : addFishCompatibilityReview.status === 'caution'
-                              ? 'text-amber-800'
-                              : 'text-slate-700'
-                        }`}>{isEn ? 'Do this first' : '现在先做'}</div>
-                        <div className="mt-2 grid gap-2">
-                          {addFishAssessmentPresentation.plan.nextSteps.slice(0, 2).map((text, index) => (
-                            <div key={`compatibility-next-step-${index}`} className="grid grid-cols-[24px_1fr] items-start gap-2.5 rounded-[12px] bg-bg/70 px-3 py-2.5">
-                              <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-black text-white ${
-                                addFishCompatibilityReview.status === 'not_recommended'
-                                  ? 'bg-red-700'
-                                  : addFishCompatibilityReview.status === 'caution'
-                                    ? 'bg-amber-600'
-                                    : 'bg-slate-600'
-                              }`}>{index + 1}</span>
-                              <p className="text-[13px] font-black leading-6 text-ink">{text}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="border-t border-ink/8 pt-3">
-                        <div className="text-[11px] font-black text-ink/48">{isEn ? 'What to do' : '怎么做'}</div>
-                        <div className="mt-2 grid gap-1.5">
-                          {(addFishAssessmentPresentation?.howTo || []).map((text, index) => (
-                            <p key={`compatibility-how-${index}`} className="text-[13px] font-black leading-6 text-ink">{text}</p>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {addFishAssessmentPresentation?.plan && addFishCompatibilityReview.status !== 'compatible' && (
-                    <div className="rounded-[16px] bg-white/72 px-4 py-3" data-compatibility-decision-plan>
-                      <div className="text-[11px] font-black text-ink/48">{isEn ? 'After the first action' : '做完以后'}</div>
-                      <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                        <div className="rounded-[12px] bg-bg/70 px-3 py-2.5">
-                          <div className="text-[10px] font-black text-ink/45">{isEn ? 'Expected next state' : '调整后'}</div>
-                          <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentPresentation.plan.expectedAfterAdjustment}</p>
-                        </div>
-                        <div className="rounded-[12px] bg-bg/70 px-3 py-2.5">
-                          <div className="text-[10px] font-black text-ink/45">{isEn ? 'Review checkpoint' : '复查点'}</div>
-                          <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentPresentation.plan.reviewCheckpoint}</p>
-                        </div>
-                      </div>
-                      <div className={`mt-2 rounded-[12px] border px-3 py-2.5 ${
+                    <div className="border-t border-ink/8 pt-3" data-compatibility-primary-action>
+                      <div className={`text-[11px] font-black ${
                         addFishCompatibilityReview.status === 'not_recommended'
-                          ? 'border-red-200 bg-red-100/80'
+                          ? 'text-red-800'
                           : addFishCompatibilityReview.status === 'caution'
-                            ? 'border-amber-200 bg-amber-100/80'
-                            : 'border-slate-200 bg-slate-100/80'
-                      }`}>
-                        <div className={`text-[10px] font-black ${
-                          addFishCompatibilityReview.status === 'not_recommended'
-                            ? 'text-red-800'
-                            : addFishCompatibilityReview.status === 'caution'
-                              ? 'text-amber-800'
+                            ? 'text-amber-800'
+                            : addFishCompatibilityReview.status === 'compatible'
+                              ? 'text-emerald-800'
                               : 'text-slate-700'
-                        }`}>{isEn ? 'Stop condition' : '必须停止 / 分隔的情况'}</div>
-                        <p className={`mt-1 text-[12px] font-bold leading-5 ${
-                          addFishCompatibilityReview.status === 'not_recommended'
-                            ? 'text-red-950/80'
-                            : addFishCompatibilityReview.status === 'caution'
-                              ? 'text-amber-950/80'
-                              : 'text-slate-800/80'
-                        }`}>{addFishAssessmentPresentation.plan.stopCondition}</p>
-                      </div>
+                      }`}>{isEn ? 'What to do' : '怎么做'}</div>
+                      {(addFishAssessmentPresentation?.howTo || []).slice(0, 1).map((text, index) => (
+                        <p key={`compatibility-how-${index}`} className="mt-2 text-[13px] font-black leading-6 text-ink">{text}</p>
+                      ))}
                     </div>
-                  )}
+                  </div>
 
                   <details className="rounded-[16px] bg-white/72 px-4 py-3">
                     <summary className="cursor-pointer text-[12px] font-black text-ink/65">
                       {addFishAssessmentPresentation?.details.label || (isEn ? 'View evidence' : '查看依据')}
                     </summary>
                     <div className="mt-3 grid gap-3 border-t border-ink/8 pt-3">
+                      {addFishAssessmentPresentation?.plan && addFishCompatibilityReview.status !== 'compatible' && (
+                        <div className="grid gap-2 rounded-[12px] bg-bg/70 px-3 py-3" data-compatibility-secondary-plan>
+                          <p className="text-[11px] font-bold leading-5 text-ink/65">{addFishAssessmentPresentation.plan.expectedAfterAdjustment}</p>
+                          <p className="text-[11px] font-bold leading-5 text-ink/55">{addFishAssessmentPresentation.plan.reviewCheckpoint}</p>
+                          <p className="text-[11px] font-bold leading-5 text-ink/55">{addFishAssessmentPresentation.plan.stopCondition}</p>
+                        </div>
+                      )}
                       <div className="grid gap-2">
                         {addFishCompatibilityReview.evaluations.map(evaluation => (
                           <div key={evaluation.fish.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[12px] bg-bg/70 px-3 py-2">

@@ -1,3 +1,12 @@
+## TOP BRANCH STATUS — 2026-10-21 minimal-input conclusion closure
+
+- Development branch: main, based on pushed checkpoint 717683048a2876be31b6097303c9ba0c05f66b36 before this checkpoint.
+- Current scope: Domain Rules minimal-input semantics; explicit reviewed threshold actions; primary Compatibility presentation compression; result-card detail boundary; corresponding regressions.
+- Validation: targeted engine/domain/action/result-card/user-conclusion/AI-grounding tests PASS; real-user pressure 9/9 PASS; complete BACKEND_RELEASE_GATE=PASS; main build PASS; diff check PASS.
+- Preserve deterministic authority and complete internal provenance. Do not promote confidence/probabilities to the main user layer.
+- No Vercel deployment, Production DB write, migration, species research expansion, or release/production movement. Production stays 1cff5be6108654003df5eb07afe8df58ceb7c3df.
+- Before commit, verify origin/main has not moved; after push, independently verify clean HEAD == origin/main and Production pin unchanged.
+
 ## TOP BRANCH STATUS — 2026-10-21 real-user pressure closure
 
 - Development branch: main, based on governance checkpoint cb799edac00a00ae8455596e8aa215ad1031f4d8 before this pressure checkpoint.

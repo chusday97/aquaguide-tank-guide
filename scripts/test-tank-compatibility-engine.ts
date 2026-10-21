@@ -130,15 +130,22 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'unknown tank water type is insufficient instead of freshwater',
+    name: 'unreported tank water type uses species authority instead of defaulting freshwater',
     run: () => {
       const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ waterType: undefined }),
-        candidateSpecies: makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼' }),
+        candidateSpecies: makeFish({
+          id: 'saltwater-fish',
+          name: '测试海水鱼',
+          category: '海水观赏鱼',
+          waterType: 'saltwater',
+        }),
       });
-      return result.status === 'insufficient_data'
+      return result.status !== 'insufficient_data'
+        && result.metadata.domainRuleCodes.includes('tank_water_type_unreported_species_overlap')
         && result.blockingRules.every(rule => rule.code !== 'water_type_mismatch')
-        && result.missingData.some(rule => rule.code === 'missing_tank_water_type');
+        && result.blockingRules.every(rule => rule.code !== 'candidate_tank_water_type_conflict')
+        && result.missingData.every(rule => rule.code !== 'missing_tank_water_type');
     },
   },
   {

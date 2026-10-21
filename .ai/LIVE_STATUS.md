@@ -1,3 +1,13 @@
+## TOP LIVE STATUS — 2026-10-21 concise minimal-input Compatibility
+
+- Primary user result: exactly one decision + one primary reason + one primary action; technical depth stays under 查看依据/internal contracts.
+- Ordinary missing pH/temperature no longer blocks an otherwise grounded result. Missing water type can use reviewed participant water-type overlap without inventing a measured value; missing volume can remain non-blocking when useful tank length exists.
+- Decision-critical environmental gaps still fail closed. A pH-sensitive shrimp regression remains insufficient_data until pH is measured, proving the system does not simply ignore important unknowns.
+- Conditional actions now surface reviewed numeric thresholds when available, e.g. 至少 100cm 缸长再考虑加入; no guessed numeric recommendation.
+- Real-user pressure = 9/9 PASS; complete backend release gate PASS; main build PASS.
+- Fully-informed matrix remains 111 ready / 6,105 pairs / 427 compatible / 2,353 caution / 3,325 not_recommended / 0 insufficient_data.
+- Production remains frozen at release/production@1cff5be6; no deploy/DB write/migration/research expansion.
+
 ## TOP LIVE STATUS — 2026-10-21 real-user pressure gate
 
 - Real-user Compatibility pressure suite is now part of both test:compatibility-user-canary and the formal backend release gate.

@@ -58,6 +58,7 @@ const SOFT_CAPACITY_CODES = new Set([
 const SPACE_CODES = new Set([
   'tank_volume_below_species_minimum',
   'tank_length_below_species_minimum',
+  'length_too_short',
 ]);
 
 const BIOLOAD_CODES = new Set([
@@ -118,6 +119,7 @@ const RULE_PRIORITY: Record<string, number> = {
   observed_intervention: 40,
   predation_vulnerability_context: 50,
   fin_nipping_target_vulnerability: 60,
+  length_too_short: 65,
   territorial_pressure_context: 70,
   territorial_conflict: 72,
   breeding_territory_active: 74,
@@ -192,6 +194,17 @@ const firstText = (rules: Array<{ title?: string; evidence?: string }>, fallback
   || rules.find(rule => rule.evidence || rule.title)?.title
   || fallback
 );
+
+const explicitSpaceThreshold = (rules: Array<{ title?: string; evidence?: string }>) => {
+  for (const rule of rules) {
+    const text = `${rule.evidence || ''} ${rule.title || ''}`;
+    const length = text.match(/至少\s*(\d+(?:\.\d+)?)\s*cm\s*缸长/i);
+    if (length) return `${length[1]}cm 缸长`;
+    const volume = text.match(/至少\s*(\d+(?:\.\d+)?)\s*(?:升|L)\b/i);
+    if (volume) return `${volume[1]}L 水体`;
+  }
+  return null;
+};
 
 const codesOf = (decision: CompatibilityDecision) => new Set([
   ...(decision.metadata.domainRuleCodes || []),
@@ -337,6 +350,23 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         detailsLabel: '为什么这组风险更高？',
       };
     }
+    if (hasSpaceConcern) {
+      const spaceRules = decision.warningRules.filter(rule => SPACE_CODES.has(rule.code));
+      const threshold = explicitSpaceThreshold(spaceRules);
+      return {
+        verdict: 'add_with_conditions',
+        headline: '当前鱼缸空间不够',
+        immediateAction: threshold
+          ? `至少需要 ${threshold}再考虑加入。`
+          : '先按成体需求核对最低缸长或水体要求；当前空间达不到要求时不要加入。',
+        primaryReason: firstText(
+          prioritizeCompatibilityRules(spaceRules),
+          '当前空间或缸长低于该物种的参考建议。',
+        ),
+        observeAfterAction: '达到最低空间条件后再重新评估；加入后仍要观察游动受限、抢位、躲藏和进食。',
+        detailsLabel: '为什么当前空间不够？',
+      };
+    }
     if (hasTerritorialPressure) {
       return {
         verdict: 'add_with_conditions',
@@ -378,16 +408,6 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         primaryReason: firstText(warningRules.filter(rule => PH_CODES.has(rule.code)), '当前组合的 pH 适宜区间需要先确认。'),
         observeAfterAction: '确认实际水质稳定后再加入；加入后继续观察进食、体色、呼吸和应激表现。',
         detailsLabel: '为什么先确认水质？',
-      };
-    }
-    if (hasSpaceConcern) {
-      return {
-        verdict: 'add_with_conditions',
-        headline: '先解决空间余量',
-        immediateAction: '先按成体需求核对缸长和可用空间，再决定数量；空间明显偏紧时优先减少数量或调整方案，不要把短期稳定当作长期可行。',
-        primaryReason: firstText(warningRules.filter(rule => SPACE_CODES.has(rule.code)), '当前空间或缸长低于该物种的参考建议。'),
-        observeAfterAction: '空间方案调整后再加入，并观察游动受限、抢位、躲藏和进食是否正常。',
-        detailsLabel: '为什么先看空间？',
       };
     }
     if (hasBioloadConcern || hasSoftCapacityConcern) {

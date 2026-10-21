@@ -144,8 +144,8 @@ export const projectCompatibilityAssessmentForLocale = ({
   if (!isEnglish) {
     return {
       judgment: model.main.judgment,
-      why: model.main.why,
-      howTo: model.main.howTo,
+      why: model.main.why.slice(0, 1),
+      howTo: model.main.howTo.slice(0, 1),
       plan: {
         nextSteps: model.decisionPlan.nextSteps,
         expectedAfterAdjustment: model.decisionPlan.expectedAfterAdjustment,
@@ -163,10 +163,10 @@ export const projectCompatibilityAssessmentForLocale = ({
   const families = unique(rules.map(rule => getCompatibilityRuleFamily(rule.code)));
   const why = unique((families.length ? families : ['missing_information'])
     .map(family => familyReason(family, decision.status)))
-    .slice(0, 3);
+    .slice(0, 1);
   const howTo = unique((families.length ? families : ['missing_information'])
     .map(family => familyAction(family, decision.status)))
-    .slice(0, 2);
+    .slice(0, 1);
 
   const englishAiReasons = model.details.reasons
     .filter(item => item.text && !hasCjk(item.text))

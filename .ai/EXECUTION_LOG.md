@@ -1,3 +1,16 @@
+## 2026-10-21 — Minimal-input, concise Compatibility decision closure
+
+- Audited an existing 11-file candidate worktree aligned with the user's requested behavior rather than overwriting it.
+- Domain Rules moved to minimal-user-input semantics: missing exact temperature is informational; missing volume is non-blocking when tank length is available; unreported water type may rely only on reviewed overlap across participant species and never fabricates an actual measurement; measured pH is evaluated when supplied.
+- Verified the critical-unknown exception independently in the engine suite: an ordinary fish can proceed without pH, while a pH-sensitive Caridina fixture remains insufficient_data and asks for a measurement.
+- Compatibility action planning now extracts concrete space thresholds only from existing rule/evidence text. The minimal-input regression produces an explicit 100cm requirement rather than 换大一点.
+- Main presentation was compressed to one why and one howTo; Aquarium primary result card no longer displays a stack of secondary plans. Expected-after-adjustment, recheck and stop-condition remain under 查看依据, so safety/provenance data is retained rather than deleted.
+- Real-user pressure suite expanded from 8 to 9 cases; all 9 have firstDivergence=null. The new 60cm case remains a grounded caution/add_with_conditions, exposes 100cm in both primary reason/action, and does not surface pH/accurate-temperature/confidence noise.
+- Targeted tests PASS: pressure, result-card, user-conclusion, tank compatibility engine, AI-resolution grounding, domain compatibility, complex whole-tank and action specificity. One attempted npm alias did not exist; the exact test file was then run directly and passed.
+- Complete backend release gate finished BACKEND_RELEASE_GATE=PASS. Main production build and git diff check PASS.
+- Existing bundle-size warnings remain technical debt and were not expanded into this product-decision scope.
+- No Production deploy, DB write, migration, research expansion or release branch movement.
+
 ## 2026-10-21 — Real-user Compatibility pressure + First Divergence closure
 
 - Started from clean main@cb799eda after full-project governance closure. Existing Compatibility badcases were strong but distributed; they did not provide one persistent real-user pipeline report with explicit First Divergence stages.

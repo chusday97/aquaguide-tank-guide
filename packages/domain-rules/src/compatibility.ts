@@ -118,7 +118,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v14-measured-water-parameters';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v15-minimal-user-input';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -492,14 +492,30 @@ export const evaluateCompatibility = ({
   if (activeBreedingDefense) raise('caution', 'breeding_territory_active');
 
   if (candidateSpecies && tank) {
-    if (!tank.waterType || tank.waterType === 'unknown') raise('insufficient_data', 'tank_water_type_missing');
-    const candidateTankWaterFit = supportsTankWaterType(candidateSpecies, tank.waterType);
-    if (candidateTankWaterFit === null && tank.waterType && tank.waterType !== 'unknown') raiseFactGap([candidateSpecies], 'water', 'candidate_water_type_missing');
+    const reportedTankWaterType = Boolean(tank.waterType && tank.waterType !== 'unknown');
+    if (!reportedTankWaterType) {
+      const waterTypeSets = participatingSpecies.map(supportedWaterTypes);
+      const commonWaterTypes = waterTypeSets.length > 0 && waterTypeSets.every(types => types.length > 0)
+        ? waterTypeSets.slice(1).reduce(
+          (common, types) => common.filter(type => types.includes(type)),
+          [...waterTypeSets[0]],
+        )
+        : [];
+      if (commonWaterTypes.length > 0) ruleCodes.push('tank_water_type_unreported_species_overlap');
+      else raise('insufficient_data', 'tank_water_type_missing');
+    }
+    const candidateTankWaterFit = reportedTankWaterType
+      ? supportsTankWaterType(candidateSpecies, tank.waterType)
+      : null;
+    if (candidateTankWaterFit === null && reportedTankWaterType) raiseFactGap([candidateSpecies], 'water', 'candidate_water_type_missing');
     if (candidateTankWaterFit === false) {
       raise('not_recommended', 'candidate_tank_water_type_conflict');
     }
-    if (tank.volumeLiters == null || tank.volumeLiters <= 0) raise('insufficient_data', 'tank_volume_missing');
-    if (tank.targetTemperatureC == null) raise('insufficient_data', 'tank_temperature_missing');
+    const hasTankVolume = tank.volumeLiters != null && tank.volumeLiters > 0;
+    const hasTankLength = tank.lengthCm != null && tank.lengthCm > 0;
+    if (!hasTankVolume && !hasTankLength) raise('insufficient_data', 'tank_volume_missing');
+    else if (!hasTankVolume && hasTankLength) ruleCodes.push('tank_volume_unreported_length_available');
+    if (tank.targetTemperatureC == null) ruleCodes.push('tank_temperature_unreported');
     const candidateTankTemperatureFit = rangeContains(
       tank.targetTemperatureC,
       candidateSpecies.temperatureMinC,
@@ -616,9 +632,14 @@ export const evaluateCompatibility = ({
   const finalStatus: CompatibilityDecisionStatus = status;
   const hasHardPairEvidenceBoundary = pairEvidenceBoundaries.some(boundary => boundary.status === 'insufficient_data');
   const hasDecisionCriticalResearchGap = ruleCodes.some(code => code === 'species_review_pending' || code === 'species_evidence_ceiling' || code.startsWith('review_pending_') || code.startsWith('evidence_ceiling_') || code.startsWith('pair_'));
+  const hasOptionalTankInputGap = ruleCodes.some(code => (
+    code === 'tank_temperature_unreported'
+    || code === 'tank_volume_unreported_length_available'
+    || code === 'tank_water_type_unreported_species_overlap'
+  ));
   const decisionReadiness: CompatibilityDecisionReadiness = hasIdentityUnresolved || hasUnreviewedHardEvidenceCeiling || hasLegacyUnreviewedSpecies || hasHardPairEvidenceBoundary
     ? 'unknown'
-    : hasDecisionCriticalResearchGap || !allSpeciesReviewed || !allRequiredTraitsReady || isInsufficientData(finalStatus)
+    : hasDecisionCriticalResearchGap || hasOptionalTankInputGap || !allSpeciesReviewed || !allRequiredTraitsReady || isInsufficientData(finalStatus)
       ? 'partial'
       : 'reviewed';
 

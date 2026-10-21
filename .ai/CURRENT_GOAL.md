@@ -1,3 +1,14 @@
+## TOP CURRENT OVERRIDE — 2026-10-21 minimal-input Compatibility decisions
+
+- User-facing Compatibility now optimizes for ordinary hobbyist input: tank size + current livestock + candidate livestock is enough whenever deterministic reviewed authority already establishes the decision.
+- Default primary output is deliberately narrow: one conclusion, one highest-priority reason, one concrete next action. Confidence/probability distributions, secondary risks, evidence, recheck and stop conditions stay out of the primary layer and remain available in detail/internal structures.
+- Missing exact temperature, pH or volume is not automatically insufficient_data. Optional missing fields become informational/partial readiness when existing reviewed facts still support a decision. Only genuinely decision-critical unknowns that can change the verdict remain need-information boundaries.
+- Conditional space advice must use an explicit reviewed threshold when authority provides one, for example 至少 100cm 缸长, rather than vague 换大一点/改善空间 wording. No numeric threshold may be invented.
+- The real-user pressure suite is now 9/9 PASS and includes a 60cm minimal-input case whose primary result is 有条件可以 + one 100cm reason/action while unreported temperature stays off the primary card.
+- Full BACKEND_RELEASE_GATE=PASS and main build PASS. Fully-informed matrix remains 111 ready / 6,105 pairs / 0 insufficient_data.
+- No broad UI redesign, species-research expansion, deployment or Production mutation is part of this checkpoint. Production remains release/production@1cff5be6.
+- NEXT: add further minimal-input/decision-critical cases only from real user failures; do not require professional measurements by default.
+
 ## TOP CURRENT OVERRIDE — 2026-10-21 real-user Compatibility pressure closure
 
 - Scope: Compatibility real-user pressure testing and First Divergence hardening on main. No UI changes, deploy, Production DB write, release/production move, or speculative species-research expansion.

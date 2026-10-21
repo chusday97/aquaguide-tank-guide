@@ -87,6 +87,15 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   tank_temperature_missing: {
     code: 'tank_temperature_missing', title: '缺少目标水温', evidence: '当前鱼缸目标水温尚未记录，暂时无法可靠判断。', severity: 'medium', basis: 'tank_condition', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
+  tank_temperature_unreported: {
+    code: 'tank_temperature_unreported', title: '未记录准确水温', evidence: '用户没有提供准确水温；物种之间的已审核适温区间仍用于本次混养判断，实际水温留作后续核对。', severity: 'info', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  tank_volume_unreported_length_available: {
+    code: 'tank_volume_unreported_length_available', title: '已用缸长判断空间', evidence: '没有提供准确水体升数，但已提供鱼缸长度；本次先按缸长与物种最低空间要求判断。', severity: 'info', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  tank_water_type_unreported_species_overlap: {
+    code: 'tank_water_type_unreported_species_overlap', title: '水体类型由物种共同需求确认', evidence: '用户未单独填写水体类型，但参与物种的已审核水体需求存在明确共同类型，因此不阻断本次判断。', severity: 'info', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   species_evidence_unreviewed: {
     code: 'species_evidence_unreviewed', title: '物种资料尚未审核', evidence: '至少一个物种的关键行为资料尚未审核，不能据此给出安全结论。', severity: 'medium', basis: 'species_trait', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
@@ -218,7 +227,7 @@ export const applyCanonicalCompatibilityDecision = (
   const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_ph_conflict', 'ph_range_edge_overlap', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'predation_scope_uncertain', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
-  const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context']);
+  const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context', 'tank_temperature_unreported', 'tank_volume_unreported_length_available', 'tank_water_type_unreported_species_overlap']);
   const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code) && !informationalCodes.has(rule.code));
   const domainInformationalRules = domainRules.filter(rule => informationalCodes.has(rule.code));
 

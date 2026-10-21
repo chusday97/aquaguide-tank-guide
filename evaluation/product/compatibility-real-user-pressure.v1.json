@@ -10,8 +10,8 @@
     "presentation"
   ],
   "summary": {
-    "caseCount": 8,
-    "passedCases": 8,
+    "caseCount": 9,
+    "passedCases": 9,
     "failedCases": 0,
     "firstDivergenceCounts": {
       "input_normalization": 0,
@@ -389,6 +389,54 @@
       "snapshot": {
         "status": "insufficient_data",
         "unknownReason": "missing_user_input"
+      }
+    },
+    {
+      "id": "minimal-user-input-specific-condition",
+      "title": "只知道缸大小和鱼种时也应给单一结论，并优先给可执行的最低条件",
+      "expectedBoundaryStage": null,
+      "firstDivergence": null,
+      "probes": [
+        {
+          "stage": "input_normalization",
+          "check": "unreported exact temperature does not erase a usable decision",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
+          "check": "space threshold outranks generic territorial advice",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary copy is one conclusion + one reason + one action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary user output is judgment + reason + action",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "presentation",
+          "check": "primary layer stays concise",
+          "pass": true,
+          "detail": null
+        }
+      ],
+      "snapshot": {
+        "status": "caution",
+        "readiness": "partial",
+        "judgment": "有条件可以",
+        "reason": "该物种建议至少 100cm 缸长，当前缸长未满足。",
+        "action": "至少需要 100cm 缸长再考虑加入。",
+        "optionalInputSignals": [
+          "tank_temperature_unreported"
+        ]
       }
     },
     {

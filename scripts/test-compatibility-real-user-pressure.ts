@@ -11,6 +11,8 @@ import {
   getCompatibilityDataLimitationReason,
 } from '../src/services/compatibility/compatibility-decision-plan.service';
 import { getCompatibilityPresentation } from '../src/services/compatibility/compatibility-presentation.service';
+import { buildLocalCompatibilityAssessment } from '../src/services/compatibility/compatibility-assessment.service';
+import { projectCompatibilityAssessmentForLocale } from '../src/services/compatibility/compatibility-assessment-presentation.service';
 import { evaluateTankCompatibility } from '../src/services/compatibility/compatibility.service';
 import type { Aquarium } from '../src/types';
 
@@ -376,6 +378,61 @@ cases.push(makeCase(
     ...presentationProbes(missingTank),
   ],
   { status: missingTank.status, unknownReason: missingTankPlan.unknownReason },
+));
+
+const minimalInputTank: Aquarium = {
+  ...tank(60, 30, 35, 24),
+  targetTemperature: '',
+  equipment: { heater: false, oxygen: true },
+};
+const minimalInputDecision = evaluateCompatibilityDecision({
+  tank: minimalInputTank,
+  items: [
+    { species: byId('sp_0431'), quantity: 10, origin: 'existing' },
+    { species: byId('sp_0446'), quantity: 2, origin: 'candidate' },
+  ],
+});
+const minimalInputAction = buildBeginnerCompatibilityAction(minimalInputDecision);
+const minimalInputModel = buildLocalCompatibilityAssessment(minimalInputDecision);
+const minimalInputPresentation = projectCompatibilityAssessmentForLocale({
+  model: minimalInputModel,
+  decision: minimalInputDecision,
+  isEnglish: false,
+});
+assert.ok(minimalInputPresentation);
+cases.push(makeCase(
+  'minimal-user-input-specific-condition',
+  '只知道缸大小和鱼种时也应给单一结论，并优先给可执行的最低条件',
+  null,
+  [
+    probe('input_normalization', 'unreported exact temperature does not erase a usable decision', () => {
+      assert.equal(minimalInputDecision.status, 'caution');
+      assert.ok(minimalInputDecision.metadata.domainRuleCodes.includes('tank_temperature_unreported'));
+      assert.equal(minimalInputDecision.missingData.some(rule => /temperature|filter|ph/i.test(rule.code)), false);
+    }),
+    probe('action_plan', 'space threshold outranks generic territorial advice', () => {
+      assert.equal(minimalInputAction.verdict, 'add_with_conditions');
+      assert.match(minimalInputAction.immediateAction, /100cm/);
+      assert.doesNotMatch(minimalInputAction.immediateAction, /换大|改善环境|补齐|测.*pH|水温/);
+    }),
+    probe('presentation', 'primary copy is one conclusion + one reason + one action', () => {
+      assert.equal(minimalInputPresentation.judgment, '有条件可以');
+      assert.equal(minimalInputPresentation.why.length, 1);
+      assert.equal(minimalInputPresentation.howTo.length, 1);
+      assert.match(minimalInputPresentation.why[0], /100cm/);
+      assert.match(minimalInputPresentation.howTo[0], /100cm/);
+      assert.doesNotMatch(minimalInputPresentation.why[0] + minimalInputPresentation.howTo[0], /pH|准确水温|过滤|判断把握|置信/);
+    }),
+    ...presentationProbes(minimalInputDecision),
+  ],
+  {
+    status: minimalInputDecision.status,
+    readiness: minimalInputDecision.metadata.decisionReadiness,
+    judgment: minimalInputPresentation.judgment,
+    reason: minimalInputPresentation.why[0],
+    action: minimalInputPresentation.howTo[0],
+    optionalInputSignals: minimalInputDecision.metadata.domainRuleCodes.filter(code => code.endsWith('_unreported')),
+  },
 ));
 
 const loadIds = ['sp_0012', 'sp_0431', 'sp_0443'];

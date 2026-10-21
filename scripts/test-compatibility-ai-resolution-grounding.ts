@@ -204,10 +204,11 @@ assert.equal(forgedBehaviorProduct.details.explanation.narrativeAccepted, false)
 assert.doesNotMatch(forgedBehaviorProduct.main.why.join(' '), /风险已解除|安全混养/);
 
 // Information-required decisions stay fail-closed before the provider can narrate a guess.
-// Keep this fixture tied to explicit missing user tank context so future species-coverage
-// improvements cannot silently turn the intended insufficient-data case into a caution verdict.
+// Missing exact water type/temperature can be non-critical when reviewed species facts overlap,
+// so this fixture uses a genuinely decision-critical gap: no usable tank size at all.
 const insufficientTank: Aquarium = {
   ...tankAt('23'),
+  dimensions: { length: '', width: '', height: '' },
   waterType: undefined,
   equipment: { filter: '桶滤', heater: true, oxygen: true, light: '普通灯' },
 };

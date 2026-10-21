@@ -103,6 +103,7 @@ export const getCompatibilityReadableRuleText = (
   if (code === 'tank_ph_conflict') {
     return '你记录的 pH 不在至少一种生物的已审核长期适宜范围内，先复测确认稳定值。';
   }
+  if (code === 'length_too_short') return cleanText(rule.evidence || '当前缸长低于该物种的最低建议。');
   if (code === 'tank_length_below_species_minimum' || code === 'tank_volume_below_species_minimum') {
     return '按成体需求看，当前鱼缸的活动空间偏紧。';
   }
