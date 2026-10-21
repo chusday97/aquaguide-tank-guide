@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 
-import { buildCompatibilityVariantExactEvidenceQueue } from '../src/services/compatibility/variant-exact-evidence-queue.service';
+import { buildCompatibilityVariantActionableResearchQueue } from '../src/services/compatibility/variant-exact-evidence-queue.service';
 
 const arg = (name: string) => {
   const prefix = `--${name}=`;
@@ -37,7 +37,7 @@ const reports = reportPaths.map(path => ({
   path,
   report: JSON.parse(readFileSync(path, 'utf8')) as ResearchReport,
 }));
-const queue = buildCompatibilityVariantExactEvidenceQueue();
+const queue = buildCompatibilityVariantActionableResearchQueue();
 const bySpecies = new Map<string, Array<{
   reportPath: string;
   round: number;

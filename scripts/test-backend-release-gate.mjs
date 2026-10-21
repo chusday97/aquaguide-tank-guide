@@ -106,6 +106,8 @@ const gates = [
   ['Calico Ranchu Exact Identity Bridge', 'npm', ['run', 'test:identity-corrections-phase2-23']],
   ['Compatibility Variant Inheritance Audit', 'npm', ['run', 'test:compatibility-variant-inheritance-audit']],
   ['Compatibility Variant Hold Classification', 'npm', ['run', 'test:compatibility-variant-hold-classification']],
+  ['Compatibility Variant Exact Evidence Queue', 'npm', ['run', 'test:compatibility-variant-exact-evidence-queue']],
+  ['Compatibility Variant Exact Evidence Triage', 'npm', ['run', 'test:compatibility-variant-exact-evidence-triage']],
   ['Catalog Identity Boundaries', 'npm', ['run', 'test:catalog-identity-boundaries']],
   ['Compatibility Domain Boundaries', 'npm', ['run', 'test:compatibility-domain-boundaries']],
   ['Knowledge Evidence Ceilings', 'npm', ['run', 'test:knowledge-evidence-ceilings']],

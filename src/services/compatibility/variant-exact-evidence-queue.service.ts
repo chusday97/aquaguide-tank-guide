@@ -2,6 +2,7 @@ import { catalogCanonicalIdentities } from '../../data/catalogCanonicalIdentity'
 import { getApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
 import { compatibilityVariantFieldResearchPolicies, getCompatibilityVariantFieldResearchPolicy } from '../../data/compatibilityVariantFieldResearchPolicy';
 import { fishData } from '../../data/fishData';
+import { buildCompatibilityCoreFieldCoverage } from './compatibility-field-coverage.service';
 import { buildCompatibilityVariantEnvironmentBridgeReview } from './variant-bridge-review.service';
 
 const fieldOrder = [
@@ -32,8 +33,9 @@ export type CompatibilityVariantExactEvidenceQueueItem = {
 export const buildCompatibilityVariantExactEvidenceQueue = () => {
   const bridge = buildCompatibilityVariantEnvironmentBridgeReview();
   const items: CompatibilityVariantExactEvidenceQueueItem[] = [];
-  // The queue is policy-driven, not bridge-decision-driven. A variant can close its
-  // environmental bridge while still needing exact-object behavioral evidence.
+  // This queue is the unresolved exact-evidence audit ledger. It intentionally
+  // retains terminal holds as well as actionable gaps; execution must use the
+  // actionable research queue below so stop conditions remain authoritative.
   const speciesIds = Object.keys(compatibilityVariantFieldResearchPolicies).sort();
 
   for (const speciesId of speciesIds) {
@@ -123,5 +125,35 @@ export const buildCompatibilityVariantExactEvidenceQueue = () => {
     },
     items,
     blockedCandidateContracts,
+  };
+};
+
+export const buildCompatibilityVariantActionableResearchQueue = () => {
+  const ledger = buildCompatibilityVariantExactEvidenceQueue();
+  const coverage = buildCompatibilityCoreFieldCoverage();
+  const coverageRowById = new Map(coverage.rows.map(row => [row.speciesId, row]));
+  const items = ledger.items.filter(item => {
+    const row = coverageRowById.get(item.speciesId);
+    return row?.fields[item.field as keyof typeof row.fields]?.disposition === 'targeted_source_expansion';
+  });
+
+  return {
+    ...ledger,
+    kind: 'compatibility_variant_exact_evidence_actionable_research_queue',
+    policy: {
+      ...ledger.policy,
+      coverageDispositionRequired: 'targeted_source_expansion' as const,
+      terminalHoldsExcluded: true,
+    },
+    summary: {
+      ...ledger.summary,
+      variantObjects: new Set(items.map(item => item.speciesId)).size,
+      totalResearchSlots: items.length,
+      environmentVariantSpecificSlots: items.filter(item => item.sourceLane === 'environment_bridge_hold').length,
+      exactObjectCoreSlots: items.filter(item => item.sourceLane === 'exact_object_policy').length,
+      auditLedgerSlots: ledger.items.length,
+      excludedNonActionableSlots: ledger.items.length - items.length,
+    },
+    items,
   };
 };

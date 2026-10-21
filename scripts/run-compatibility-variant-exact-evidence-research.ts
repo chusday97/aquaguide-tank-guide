@@ -6,7 +6,7 @@ import {
   researchCompatibilityVariantFields,
   type CompatibilityVariantFieldResearchResult,
 } from '../apps/api/src/compatibility-species-research-provider';
-import { buildCompatibilityVariantExactEvidenceQueue } from '../src/services/compatibility/variant-exact-evidence-queue.service';
+import { buildCompatibilityVariantActionableResearchQueue } from '../src/services/compatibility/variant-exact-evidence-queue.service';
 import type { CompatibilityOnboardingCoreField } from '../src/services/compatibility/species-onboarding-research.service';
 
 const arg = (name: string) => {
@@ -19,7 +19,7 @@ const maxJobs = Math.max(1, Number(arg('max-jobs') || 999));
 const offset = Math.max(0, Number(arg('offset') || 0));
 const round = Math.max(1, Number(arg('round') || 1));
 
-const queue = buildCompatibilityVariantExactEvidenceQueue();
+const queue = buildCompatibilityVariantActionableResearchQueue();
 const bySpecies = new Map<string, typeof queue.items>();
 for (const item of queue.items) {
   const bucket = bySpecies.get(item.speciesId) || [];
