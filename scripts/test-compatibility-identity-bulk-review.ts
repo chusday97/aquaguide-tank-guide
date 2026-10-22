@@ -79,6 +79,9 @@ assert.equal(base.summary.totalAutomatedItems, automated.length);
 assert.equal(base.items.length, automated.length);
 assert.equal(review.summary.total, automated.length);
 assert.equal(review.items.length, automated.length);
+assert.equal(review.summary.researchRetryRequired, 40, 'provider transport outages must remain retryable research state');
+assert.equal(review.summary.exactObjectEvidenceNotFoundThisPass, 0, 'transport outages must not be mislabeled as negative evidence discovery');
+assert.equal(review.summary.parentOrTaxonomyUnresolved, 3);
 assert.equal(new Set(base.items.map((item: any) => item.speciesId)).size, automated.length);
 assert.equal(new Set(review.items.map((item: any) => item.speciesId)).size, automated.length);
 assert.deepEqual(

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 
 import {
   acquireVerifiedCompatibilitySourcesDetailed,
+  buildCompatibilityResearchExtractionConfig,
   buildCompatibilityResearchProviderConfig,
   buildCompatibilityResearchModelPool,
   createBailianCompatibilitySpeciesResearchProvider,
@@ -63,6 +64,19 @@ assert.equal(maxSearchConfig.searchStrategy, 'max');
 assert.equal(maxSearchConfig.searchTimeoutMs, 30_000);
 assert.deepEqual(buildCompatibilityResearchModelPool('qwen3.7-flash-2026-07-15', ['qwen3.8-27b', 'deepseek-v4.1-flash', 'qwen3.8-27b']), ['qwen3.7-flash-2026-07-15', 'qwen3.8-27b', 'deepseek-v4.1-flash']);
 assert.equal(getCompatibilitySpeciesResearchProviderReadiness(dedicatedConfig).configured, true, 'Compatibility research must be able to use Bailian independently from the app-wide DeepSeek provider');
+
+const localExtractor = buildCompatibilityResearchExtractionConfig({
+  COMPATIBILITY_RESEARCH_AI_API_KEY: 'bailian-key',
+  COMPATIBILITY_RESEARCH_AI_BASE_URL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+  COMPATIBILITY_RESEARCH_AI_MODEL: 'qwen-discovery',
+  COMPATIBILITY_RESEARCH_EXTRACTOR_BASE_URL: 'http://127.0.0.1:11434/v1',
+  COMPATIBILITY_RESEARCH_EXTRACTOR_MODEL: 'qwen3.5:9b',
+});
+assert.equal(localExtractor.baseUrl, 'http://127.0.0.1:11434/v1');
+assert.equal(localExtractor.model, 'qwen3.5:9b');
+assert.equal(localExtractor.apiKey, 'local-extractor', 'loopback Ollama extractors may run without a real API key');
+assert.equal(localExtractor.transport, 'ollama_native', 'loopback extractor defaults to Ollama native transport so Qwen thinking can be disabled explicitly');
+assert.equal(getCompatibilitySpeciesResearchProviderReadiness(localExtractor).configured, false, 'a local extractor must never be reclassified as Bailian web discovery');
 
 const fallbackModelsSeen: string[] = [];
 const quotaFallbackPreflight = await probeCompatibilityResearchProvider({

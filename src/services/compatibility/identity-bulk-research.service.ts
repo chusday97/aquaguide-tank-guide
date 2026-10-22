@@ -165,7 +165,7 @@ export const buildVariantResearchGroups = (items: IdentityBulkBaseItem[]) => {
 export type VariantIdentityResearchReportLike = {
   groups?: Array<{
     baseScientificName: string;
-    status?: 'completed' | 'failed';
+    status?: 'completed' | 'retry_required' | 'failed';
     errorCode?: string | null;
     sources?: Array<{ id: string; url?: string; title?: string; publisher?: string; sourceType?: string; contentSha256?: string }>;
     candidates?: Array<{
@@ -216,7 +216,7 @@ export const buildIdentityBulkReview = (
       status = 'partial_inheritance_candidate_ready_for_review';
     } else if (identityCandidate) {
       status = 'identity_candidate_ready_for_review';
-    } else if (providerGroup?.status === 'failed') {
+    } else if (providerGroup?.status === 'failed' || providerGroup?.status === 'retry_required') {
       status = 'research_retry_required';
     } else if (item.stage === 'variant_identity_research' && !providerGroup) {
       status = 'research_retry_required';
