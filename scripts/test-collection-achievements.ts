@@ -19,8 +19,8 @@ const state: LocalAppState = {
     id: 'tank-1',
     name: '成就测试缸',
     fishes: [
-      { id: 'resident-1', fishId: 'sp_0001', quantity: 6, entryDate: '2026-06-01', lastWaterChangeDate: '2026-07-03' },
-      { id: 'resident-2', fishId: 'sp_0428', quantity: 1, entryDate: '2026-06-01', lastWaterChangeDate: '2026-07-03' },
+      { id: 'resident-1', fishId: 'sp_0011', quantity: 6, entryDate: '2026-06-01', lastWaterChangeDate: '2026-07-03' },
+      { id: 'resident-2', fishId: 'sp_0012', quantity: 6, entryDate: '2026-06-01', lastWaterChangeDate: '2026-07-03' },
     ],
     dimensions: { length: '60', width: '35', height: '35' },
     waterType: 'Freshwater',
@@ -39,7 +39,7 @@ const state: LocalAppState = {
   updatedAt: new Date().toISOString(),
 };
 
-const memorials = [{ id: 'm-1', fishId: 'sp_0001', date: '2026-06-30', reason: '换水后应激，已复盘温差' }];
+const memorials = [{ id: 'm-1', fishId: 'sp_0011', date: '2026-06-30', reason: '换水后应激，已复盘温差' }];
 const achievements = evaluateAchievements(state, 5, 3, memorials);
 assert.equal(achievements.length, 8);
 assert.equal(achievements.every(item => item.unlocked), true, achievements.filter(item => !item.unlocked).map(item => item.id).join(','));

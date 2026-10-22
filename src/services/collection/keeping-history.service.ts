@@ -248,6 +248,9 @@ export const loadKeepingHistoryFromRepository = async (repository: AquaGuideRepo
     updatedAt: '1970-01-01T00:00:00.000Z',
   };
   return {
+    aquariums,
+    currentAquariumId: appState.currentAquariumId,
+    diagnosisRecords,
     memorials,
     history: buildKeepingHistory({ appState, memorials, reminders, speciesCatalog: [] }),
   };

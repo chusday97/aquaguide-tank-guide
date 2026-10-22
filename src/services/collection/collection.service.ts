@@ -215,7 +215,20 @@ export const loadCurrentKeepingHistory = async () => {
   const mode = await resolveRepositoryMode();
   if (mode === 'local') {
     const snapshot = getCollectionSnapshot();
-    return { source: 'local' as const, memorials: snapshot.memorials, history: snapshot.history };
+    return {
+      source: 'local' as const,
+      aquariums: snapshot.appState.aquariums,
+      currentAquariumId: snapshot.appState.currentAquariumId,
+      diagnosisRecords: snapshot.appState.diagnosisRecords.filter((value): value is DiagnosisRecord => {
+        if (!value || typeof value !== 'object') return false;
+        const record = value as Partial<DiagnosisRecord>;
+        return typeof record.aquariumId === 'string'
+          && typeof record.problemType === 'string'
+          && typeof record.createdAt === 'string';
+      }),
+      memorials: snapshot.memorials,
+      history: snapshot.history,
+    };
   }
   const result = await loadKeepingHistoryFromRepository(getAquaGuideRepository(mode));
   return { source: 'cloud' as const, ...result };

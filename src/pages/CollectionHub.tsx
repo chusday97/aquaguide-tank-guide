@@ -1,16 +1,20 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Activity,
   BookHeart,
   BookOpenCheck,
   Check,
   ChevronRight,
+  Clock3,
   Heart,
   History as HistoryIcon,
   Medal,
+  Plus,
   ShieldCheck,
   Skull,
   Sparkles,
+  Users,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ResilientImage } from '../components/common/ResilientImage';
@@ -19,8 +23,10 @@ import { fishData } from '../data/fishData';
 import { getCareVisualSources } from '../lib/careVisual';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
+import { buildCollectionHomeModel } from '../services/collection/collection-home.service';
 import { getCollectionSnapshot, loadCurrentFavorites, loadCurrentKeepingHistory, subscribeToCollection } from '../services/collection/collection.service';
 import type { CareFavoriteMap } from '../services/favorites/favorites.service';
+import { taskRoutes } from '../services/navigation/task-routes';
 
 const moduleRoutes: Record<CollectionModule, string> = {
   wishlist: '/collection/wishlist',
@@ -80,6 +86,8 @@ export default function CollectionHub() {
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [careFavorites, setCareFavorites] = useState<CareFavoriteMap>({});
   const [historySummary, setHistorySummary] = useState({ current: 0, ever: 0, events: 0 });
+  const [homeData, setHomeData] = useState<Awaited<ReturnType<typeof loadCurrentKeepingHistory>> | null>(null);
+  const [homeLoadState, setHomeLoadState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [activeModule, setActiveModule] = useState<CollectionModule>('wishlist');
   const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
 
@@ -102,6 +110,8 @@ export default function CollectionHub() {
       try {
         const keeping = await loadCurrentKeepingHistory();
         if (!cancelled) {
+          setHomeData(keeping);
+          setHomeLoadState('ready');
           setHistorySummary({
             current: keeping.history.currentSpeciesIds.length,
             ever: keeping.history.speciesEverKeptIds.length,
@@ -109,7 +119,11 @@ export default function CollectionHub() {
           });
         }
       } catch {
-        if (!cancelled) setHistorySummary({ current: 0, ever: 0, events: 0 });
+        if (!cancelled) {
+          setHomeData(null);
+          setHomeLoadState('error');
+          setHistorySummary({ current: 0, ever: 0, events: 0 });
+        }
       }
     };
     const onFocus = () => void refresh();
@@ -134,6 +148,25 @@ export default function CollectionHub() {
     .map(favorite => careTopicsData.find(topic => topic.id === favorite.id))
     .filter((topic): topic is (typeof careTopicsData)[number] => Boolean(topic))
     .slice(0, 4), [careFavorites]);
+
+  const homeModel = useMemo(() => buildCollectionHomeModel({
+    aquariums: homeData?.aquariums ?? [],
+    currentAquariumId: homeData?.currentAquariumId,
+    diagnosisRecords: homeData?.diagnosisRecords ?? [],
+    history: homeData?.history ?? {
+      events: [],
+      activeCohorts: [],
+      speciesEverKeptIds: [],
+      currentSpeciesIds: [],
+      aquariumIds: [],
+    },
+  }), [homeData]);
+
+  const residentPreviews = useMemo(() => (homeModel.aquarium?.fishes || [])
+    .filter(record => record.quantity > 0)
+    .map(record => ({ record, fish: fishData.find(fish => fish.id === record.fishId) }))
+    .filter(item => Boolean(item.fish))
+    .slice(0, 4), [homeModel.aquarium]);
 
   const recentMemorials = snapshot.memorials.slice(0, 4);
   const achievementPreviews = useMemo(() => {
@@ -372,35 +405,161 @@ export default function CollectionHub() {
 
   const activeMeta = moduleMeta[activeModule];
 
+  const homePriority = (() => {
+    switch (homeModel.priority.kind) {
+      case 'setup_aquarium':
+        return {
+          eyebrow: isEn ? 'Start here' : '先从这里开始',
+          title: isEn ? 'Create your aquarium' : '先建立你的鱼缸',
+          description: isEn ? 'Add only the tank basics first. You can fill in professional parameters later.' : '先记录缸大小和基础信息即可，专业参数可以以后再补。',
+          action: isEn ? 'Create aquarium' : '建立鱼缸',
+          route: taskRoutes.aquarium.create('collection-home'),
+          attention: false,
+        };
+      case 'add_resident':
+        return {
+          eyebrow: isEn ? 'Next step' : '下一步',
+          title: isEn ? 'Add the residents already in this tank' : '把现在养的成员记录进来',
+          description: isEn ? 'Species and quantity are enough to unlock tank-specific compatibility and care context.' : '只要记录物种和数量，就能开始使用针对这个缸的混养与养护判断。',
+          action: isEn ? 'Add residents' : '记录现有成员',
+          route: taskRoutes.aquarium.addSpecies(undefined, 'collection-home'),
+          attention: false,
+        };
+      case 'daily_check_attention':
+        return {
+          eyebrow: isEn ? 'Needs attention' : '现在最值得关注',
+          title: isEn ? 'Today’s check found something to review' : '今天的巡检有需要关注的地方',
+          description: homeModel.priority.summary || (isEn ? 'Review the latest check before making changes to the tank.' : '先查看最新巡检结果，再决定是否调整鱼缸。'),
+          action: isEn ? 'Review check' : '查看巡检',
+          route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
+          attention: true,
+        };
+      case 'daily_check_recorded':
+        return {
+          eyebrow: isEn ? 'Today' : '今天',
+          title: isEn ? 'Today’s check is recorded' : '今天已经检查过了',
+          description: homeModel.priority.summary || (isEn ? 'Your latest check is saved.' : '最新巡检已经记录，这里只展示已有结果，不额外推断鱼缸状态。'),
+          action: isEn ? 'Open check' : '查看检查',
+          route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
+          attention: false,
+        };
+      default:
+        return {
+          eyebrow: isEn ? 'Today' : '今天',
+          title: isEn ? 'One-minute tank check' : '今天还没检查',
+          description: isEn ? 'A quick check keeps the aquarium record useful without asking for lots of parameters.' : '花一分钟确认鱼的状态和水体变化，不需要每天填写一堆参数。',
+          action: isEn ? 'Start check' : '开始检查',
+          route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
+          attention: false,
+        };
+    }
+  })();
+
   return (
     <div data-workspace-layout="immersive" className="collection-hub page-frame-wide mx-auto flex w-full min-w-0 flex-col gap-4 pb-24">
       <header className="px-1 py-1">
-        <div className="flex items-center gap-2 text-[11px] font-black tracking-[0.14em] text-emerald-700 uppercase"><BookHeart className="h-4 w-4" />{isEn ? 'Aqua Collection' : '自然水族册'}</div>
-        <h1 className="mt-2 text-[30px] font-bold text-ink md:text-[42px]">{isEn ? 'My Collection' : '我的水族册'}</h1>
-        <p className="mt-2 max-w-[680px] text-[13px] font-semibold leading-6 text-ink/56">{isEn ? 'Hover over a creature to preview its collection, then bring that collection into the center.' : '把鼠标移到海洋生物上查看细分内容，点击后把对应收藏拉到中央。'}</p>
+        <div className="flex items-center gap-2 text-[11px] font-black tracking-[0.14em] text-emerald-700 uppercase"><BookHeart className="h-4 w-4" />{isEn ? 'My Aquarium' : '我的鱼缸'}</div>
+        <h1 className="mt-2 text-[30px] font-bold text-ink md:text-[42px]">{isEn ? 'My Aquarium Book' : '我的水族册'}</h1>
+        <p className="mt-2 max-w-[720px] text-[13px] font-semibold leading-6 text-ink/56">{isEn ? 'See what is happening in your aquarium, what matters today, and keep its story over time.' : '先看这个缸现在怎么样、今天该做什么；收藏与记录会在养缸过程中自然沉淀下来。'}</p>
       </header>
 
-      <button
-        type="button"
-        data-collection-history-entry
-        onClick={() => navigate('/collection/history')}
-        className="group flex w-full items-center justify-between gap-4 rounded-[26px] border border-emerald-100 bg-white px-5 py-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-      >
-        <span className="flex min-w-0 items-center gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><HistoryIcon className="h-5 w-5" /></span>
-          <span className="min-w-0">
-            <span className="block text-[14px] font-black text-ink">{isEn ? 'My keeping history' : '我的养鱼履历'}</span>
-            <span className="mt-1 block text-[11px] font-semibold leading-5 text-ink/48">
-              {isEn
-                ? `${historySummary.current} species now · ${historySummary.ever} kept over time · ${historySummary.events} events`
-                : `当前在养 ${historySummary.current} 种 · 曾经养过 ${historySummary.ever} 种 · ${historySummary.events} 条历史事件`}
-            </span>
-          </span>
-        </span>
-        <span className="flex shrink-0 items-center gap-1 text-[11px] font-black text-emerald-700">
-          {isEn ? 'Open' : '查看'}<ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </span>
-      </button>
+      <section data-collection-home className="grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.7fr)]">
+        <div className="rounded-[30px] border border-emerald-100 bg-white p-5 shadow-sm md:p-6">
+          {homeLoadState === 'loading' ? (
+            <div className="flex min-h-[260px] flex-col justify-center">
+              <div className="h-3 w-24 animate-pulse rounded-full bg-emerald-100" />
+              <div className="mt-4 h-7 w-48 animate-pulse rounded-xl bg-ink/5" />
+              <div className="mt-3 h-4 w-64 max-w-full animate-pulse rounded-full bg-ink/5" />
+              <p className="mt-5 text-[11px] font-bold text-ink/42">{isEn ? 'Loading your aquarium…' : '正在读取你的鱼缸…'}</p>
+            </div>
+          ) : homeLoadState === 'error' ? (
+            <div className="flex min-h-[260px] flex-col justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stone-100 text-stone-600"><Activity className="h-5 w-5" /></div>
+              <h2 className="mt-5 text-[22px] font-black text-ink">{isEn ? 'Aquarium data is temporarily unavailable' : '暂时无法读取鱼缸数据'}</h2>
+              <p className="mt-2 max-w-[520px] text-[12px] font-semibold leading-6 text-ink/52">{isEn ? 'Your existing aquarium has not been replaced or cleared. Reopen this page later to try again.' : '你的原有鱼缸没有被清空或替换，稍后重新进入这个页面即可再次读取。'}</p>
+            </div>
+          ) : homeModel.aquarium ? (
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                <div className="min-w-0">
+                  <div className="text-[10px] font-black tracking-[0.14em] text-emerald-700 uppercase">{isEn ? 'Current aquarium' : '当前鱼缸'}</div>
+                  <h2 className="mt-1 truncate text-[24px] font-black text-ink">{homeModel.aquarium.name || (isEn ? 'My aquarium' : '我的鱼缸')}</h2>
+                  <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-bold text-ink/55">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5"><Users className="h-3.5 w-3.5 text-emerald-700" />{isEn ? homeModel.speciesCount + ' species · ' + homeModel.residentCount + ' residents' : homeModel.speciesCount + ' 种 · ' + homeModel.residentCount + ' 个成员'}</span>
+                    {homeModel.volumeLiters !== null && <span className="rounded-full bg-sky-50 px-3 py-1.5 text-sky-800">{homeModel.volumeLiters}L</span>}
+                    {homeModel.daysRunning !== null && <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-50 px-3 py-1.5"><Clock3 className="h-3.5 w-3.5" />{homeModel.daysRunning === 0 ? (isEn ? 'Started today' : '今天建立') : (isEn ? homeModel.daysRunning + ' days' : '已记录 ' + homeModel.daysRunning + ' 天')}</span>}
+                  </div>
+                </div>
+                <button type="button" onClick={() => navigate(taskRoutes.aquarium.livestockFrom('collection-home'))} className="shrink-0 rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-[11px] font-black text-emerald-800 transition hover:bg-emerald-100">{isEn ? 'Manage residents' : '管理当前成员'}</button>
+              </div>
+
+              {residentPreviews.length > 0 ? (
+                <div>
+                  <div className="mb-2 text-[11px] font-black text-ink/48">{isEn ? 'Living here now' : '现在生活在这里'}</div>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    {residentPreviews.map(({ record, fish }) => fish && (
+                      <button key={record.id} type="button" onClick={() => navigate(taskRoutes.encyclopedia.species(fish.id, 'collection-home'))} className="flex min-w-0 items-center gap-2 rounded-[18px] border border-ink/5 bg-[#fafbf8] p-2.5 text-left transition hover:border-emerald-100 hover:bg-emerald-50/50">
+                        <span className="flex h-10 w-12 shrink-0 items-center justify-center"><ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt="" className={['h-full w-full object-contain', getSpeciesImageClass(fish)].join(' ')} loading="lazy" decoding="async" /></span>
+                        <span className="min-w-0"><span className="block truncate text-[11px] font-black text-ink">{fish.name}</span><span className="mt-0.5 block text-[9px] font-bold text-ink/42">× {record.quantity}</span></span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : <div className="rounded-[20px] bg-emerald-50/70 px-4 py-3 text-[12px] font-semibold leading-5 text-emerald-950/65">{isEn ? 'No current residents have been recorded yet.' : '鱼缸已经建立，但还没有记录当前成员。'}</div>}
+
+              <button type="button" onClick={() => navigate(taskRoutes.compatibility.with({ aquariumId: homeModel.aquarium?.id, source: 'collection-home' }))} className="flex w-full items-center justify-between rounded-[22px] bg-[#0b634d] px-4 py-3.5 text-left text-white transition hover:bg-[#095743]">
+                <span><span className="flex items-center gap-2 text-[13px] font-black"><Plus className="h-4 w-4" />{isEn ? 'I want to add a new resident' : '我想加一个新成员'}</span><span className="mt-1 block text-[10px] font-semibold text-white/68">{isEn ? 'Check it against this aquarium before adding it.' : '直接基于这个鱼缸判断是否适合加入。'}</span></span>
+                <ChevronRight className="h-5 w-5 shrink-0" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex min-h-[260px] flex-col justify-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><Sparkles className="h-5 w-5" /></div>
+              <h2 className="mt-5 text-[24px] font-black text-ink">{isEn ? 'Give this aquarium book a real tank' : '先让水族册认识你的鱼缸'}</h2>
+              <p className="mt-2 max-w-[520px] text-[12px] font-semibold leading-6 text-ink/52">{isEn ? 'Tank size and current residents are enough to start. Professional measurements stay optional.' : '先告诉我缸有多大、现在养了什么就够了。pH、硬度等专业测量都可以后补。'}</p>
+              <button type="button" onClick={() => navigate(taskRoutes.aquarium.create('collection-home'))} className="mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-[#0b634d] px-5 py-3 text-[12px] font-black text-white"><Plus className="h-4 w-4" />{isEn ? 'Create my aquarium' : '建立我的鱼缸'}</button>
+            </div>
+          )}
+        </div>
+
+        <div className={homeLoadState === 'ready' && homePriority.attention ? 'rounded-[30px] border border-amber-200 bg-amber-50/80 p-5 shadow-sm md:p-6' : 'rounded-[30px] border border-emerald-100 bg-[#f8fbf8] p-5 shadow-sm md:p-6'}>
+          {homeLoadState === 'loading' ? (
+            <div className="flex h-full min-h-[220px] flex-col justify-center">
+              <div className="h-11 w-11 animate-pulse rounded-full bg-emerald-100" />
+              <div className="mt-5 h-3 w-20 animate-pulse rounded-full bg-ink/5" />
+              <div className="mt-3 h-6 w-44 animate-pulse rounded-lg bg-ink/5" />
+            </div>
+          ) : homeLoadState === 'error' ? (
+            <div className="flex h-full min-h-[220px] flex-col justify-center">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-stone-100 text-stone-600"><Activity className="h-5 w-5" /></div>
+              <div className="mt-5 text-[10px] font-black tracking-[0.14em] text-stone-500 uppercase">{isEn ? 'Unavailable' : '暂不可用'}</div>
+              <h2 className="mt-2 text-[21px] font-black leading-tight text-ink">{isEn ? 'Today’s task could not be loaded' : '今天的事项暂时没有读出来'}</h2>
+              <p className="mt-3 text-[12px] font-semibold leading-6 text-ink/56">{isEn ? 'We will not guess a task from stale local data.' : '这里不会拿旧的本地数据替你猜一个任务。'}</p>
+            </div>
+          ) : (
+            <>
+              <div className={homePriority.attention ? 'flex h-11 w-11 items-center justify-center rounded-full bg-amber-100 text-amber-800' : 'flex h-11 w-11 items-center justify-center rounded-full bg-emerald-100 text-emerald-800'}><Activity className="h-5 w-5" /></div>
+              <div className={homePriority.attention ? 'mt-5 text-[10px] font-black tracking-[0.14em] text-amber-800 uppercase' : 'mt-5 text-[10px] font-black tracking-[0.14em] text-emerald-700 uppercase'}>{homePriority.eyebrow}</div>
+              <h2 className="mt-2 text-[21px] font-black leading-tight text-ink">{homePriority.title}</h2>
+              <p className="mt-3 text-[12px] font-semibold leading-6 text-ink/56">{homePriority.description}</p>
+              <button type="button" onClick={() => navigate(homePriority.route)} className={homePriority.attention ? 'mt-5 inline-flex items-center gap-1.5 rounded-full bg-amber-800 px-4 py-2.5 text-[11px] font-black text-white' : 'mt-5 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-[11px] font-black text-emerald-800 shadow-sm ring-1 ring-emerald-100'}>{homePriority.action}<ChevronRight className="h-4 w-4" /></button>
+            </>
+          )}
+        </div>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.42fr)]">
+        <div className="rounded-[26px] border border-ink/5 bg-white px-5 py-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3"><div><div className="flex items-center gap-2 text-[12px] font-black text-ink"><HistoryIcon className="h-4 w-4 text-emerald-700" />{isEn ? 'Recent tank story' : '这个缸最近发生了什么'}</div><div className="mt-1 text-[10px] font-semibold text-ink/42">{isEn ? 'Built automatically from real aquarium events.' : '从真实养护、成员变化和判断记录中自动形成。'}</div></div><button type="button" data-collection-history-entry onClick={() => navigate('/collection/history')} className="shrink-0 text-[11px] font-black text-emerald-700">{isEn ? 'Full history' : '完整履历'}</button></div>
+          {homeLoadState === 'loading' ? <p className="mt-4 rounded-[18px] bg-[#fafbf8] px-4 py-3 text-[11px] font-semibold leading-5 text-ink/44">{isEn ? 'Loading aquarium history…' : '正在读取鱼缸记录…'}</p> : homeLoadState === 'error' ? <p className="mt-4 rounded-[18px] bg-[#fafbf8] px-4 py-3 text-[11px] font-semibold leading-5 text-ink/44">{isEn ? 'Aquarium history is temporarily unavailable.' : '鱼缸记录暂时没有加载出来。'}</p> : homeModel.recentEvents.length > 0 ? <div className="mt-4 grid gap-2 sm:grid-cols-2">{homeModel.recentEvents.map(event => <button key={event.id} type="button" onClick={() => homeModel.aquarium && navigate(taskRoutes.aquarium.timeline(homeModel.aquarium.id, 'collection-home'))} className="flex items-start justify-between gap-3 rounded-[18px] bg-[#fafbf8] px-3.5 py-3 text-left transition hover:bg-emerald-50"><span className="min-w-0"><span className="block truncate text-[11px] font-black text-ink">{event.title}</span>{event.label && <span className="mt-1 block line-clamp-1 text-[9px] font-semibold text-ink/44">{event.label}</span>}</span><span className="shrink-0 text-[9px] font-bold text-ink/35">{formatDate(event.occurredAt)}</span></button>)}</div> : <p className="mt-4 rounded-[18px] bg-[#fafbf8] px-4 py-3 text-[11px] font-semibold leading-5 text-ink/44">{isEn ? 'Care checks and resident changes will gradually become this aquarium’s timeline.' : '之后的巡检、成员变化和混养判断，会自动沉淀成这个缸的时间线。'}</p>}
+        </div>
+        <button type="button" onClick={() => navigate('/collection/history')} className="group flex items-center justify-between gap-4 rounded-[26px] border border-emerald-100 bg-white px-5 py-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"><span><span className="block text-[12px] font-black text-ink">{isEn ? 'My keeping history' : '我的养鱼履历'}</span><span className="mt-1 block text-[10px] font-semibold leading-5 text-ink/45">{homeLoadState === 'loading' ? (isEn ? 'Loading keeping history…' : '正在读取养鱼履历…') : homeLoadState === 'error' ? (isEn ? 'Keeping history is temporarily unavailable' : '养鱼履历暂时没有加载出来') : (isEn ? historySummary.current + ' species now · ' + historySummary.ever + ' ever · ' + historySummary.events + ' events' : '当前 ' + historySummary.current + ' 种 · 曾养 ' + historySummary.ever + ' 种 · ' + historySummary.events + ' 条记录')}</span></span><ChevronRight className="h-4 w-4 shrink-0 text-emerald-700 transition-transform group-hover:translate-x-1" /></button>
+      </section>
+
+      <div className="px-1 pt-2">
+        <div className="text-[10px] font-black tracking-[0.14em] text-ink/35 uppercase">{isEn ? 'Saved & remembered' : '收藏与回顾'}</div>
+        <h2 className="mt-1 text-[20px] font-black text-ink">{isEn ? 'Things you want to revisit' : '以后还会回来看的东西'}</h2>
+      </div>
 
       <section className="relative min-h-[720px] overflow-hidden rounded-[36px] border border-emerald-100/80 bg-[linear-gradient(180deg,#dff6f0_0%,#bfe7dc_53%,#9fcdbf_72%,#7f9f84_100%)] shadow-[0_26px_70px_rgba(18,83,66,0.13)] md:min-h-[760px]" aria-label={isEn ? 'Interactive collection aquarium' : '互动水族册'}>
         <span aria-hidden="true" className="absolute inset-x-0 top-[22%] h-px bg-white/70 shadow-[0_0_30px_white]" />

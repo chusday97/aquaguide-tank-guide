@@ -59,6 +59,7 @@
     "test:onboarding-goal-paths": "tsx scripts/test-onboarding-goal-paths.ts",
     "test:onboarding-activation": "tsx scripts/test-onboarding-activation.ts",
     "test:collection": "tsx scripts/test-collection-achievements.ts",
+    "test:collection-home": "node --import tsx scripts/test-collection-home.ts",
     "test:collection-keeping-history": "node --import tsx scripts/test-collection-keeping-history.ts",
     "test:collection-cloud-history": "node --import tsx scripts/test-collection-cloud-history.ts",
     "test:collection-favorite-boundary": "node --import tsx scripts/test-collection-favorite-boundary.ts",
