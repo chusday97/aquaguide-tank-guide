@@ -3,6 +3,7 @@ import { dirname } from 'node:path';
 import {
   buildCompatibilityResearchExtractionConfig,
   buildCompatibilityResearchProviderConfig,
+  discoverCompatibilityVariantIdentityAcademicCandidates,
   probeCompatibilityResearchSearchProvider,
   researchCompatibilityVariantIdentities,
   type CompatibilityVariantIdentityResearchResult,
@@ -86,8 +87,10 @@ const isNetworkFailure = (group: GroupResult | undefined) => Boolean(
   )
 );
 
-let consecutiveNetworkFailures = [...resultByBase.values()].filter(isNetworkFailure).length;
-let providerCircuitOpen = !forceRetry && consecutiveNetworkFailures >= networkFailureThreshold;
+let consecutiveNetworkFailures = discoveryReady
+  ? [...resultByBase.values()].filter(isNetworkFailure).length
+  : 0;
+let providerCircuitOpen = discoveryReady && !forceRetry && consecutiveNetworkFailures >= networkFailureThreshold;
 
 const writeReport = () => {
   const groups = input.groups
@@ -128,7 +131,7 @@ for (let index = 0; index < input.groups.length; index += 1) {
     continue;
   }
 
-  if (providerCircuitOpen && !forceRetry) {
+  if (discoveryReady && providerCircuitOpen && !forceRetry) {
     resultByBase.set(group.baseScientificName, {
       baseScientificName: group.baseScientificName,
       model: null,
@@ -147,7 +150,23 @@ for (let index = 0; index < input.groups.length; index += 1) {
     continue;
   }
 
-  if (!discoveryReady && !(previousGroup?.attemptedUrls?.length)) {
+  const groupResearchInput = {
+    baseScientificName: group.baseScientificName,
+    variants: group.objects.map(object => ({
+      speciesId: object.speciesId,
+      scientificName: object.scientificName,
+      commonName: object.name,
+    })),
+  };
+  const academicFallback = !discoveryReady
+    ? await discoverCompatibilityVariantIdentityAcademicCandidates(groupResearchInput)
+    : { status: 'no_results' as const, candidateUrls: [], attemptedQueries: 0, successfulQueries: 0 };
+  const resumableCandidateUrls = [...new Set([
+    ...(previousGroup?.attemptedUrls || []),
+    ...academicFallback.candidateUrls,
+  ])];
+
+  if (!discoveryReady && resumableCandidateUrls.length === 0) {
     resultByBase.set(group.baseScientificName, {
       baseScientificName: group.baseScientificName,
       model: null,
@@ -162,31 +181,31 @@ for (let index = 0; index < input.groups.length; index += 1) {
       errorCode: 'discovery_preflight_unavailable:'
         + (providerPreflight.phase || 'unknown')
         + ':'
-        + (providerPreflight.reasonCode || providerPreflight.status),
+        + (providerPreflight.reasonCode || providerPreflight.status)
+        + ';academic_fallback:' + academicFallback.status,
     });
-    console.log('IDENTITY_BULK_VARIANT_RETRY_REQUIRED', index + 1, '/', input.groups.length, group.baseScientificName, 'reason=discovery_unavailable_no_urls');
+    console.log('IDENTITY_BULK_VARIANT_RETRY_REQUIRED', index + 1, '/', input.groups.length, group.baseScientificName, 'reason=discovery_unavailable_no_verified_candidate_urls', 'academic=' + academicFallback.status);
     writeReport();
     continue;
   }
 
-  console.log('IDENTITY_BULK_VARIANT_START', index + 1, '/', input.groups.length, group.baseScientificName, 'objects=' + group.objects.length);
+  console.log('IDENTITY_BULK_VARIANT_START', index + 1, '/', input.groups.length, group.baseScientificName, 'objects=' + group.objects.length, 'academicUrls=' + academicFallback.candidateUrls.length);
   try {
-    const result = await researchCompatibilityVariantIdentities({
-      baseScientificName: group.baseScientificName,
-      variants: group.objects.map(object => ({
-        speciesId: object.speciesId,
-        scientificName: object.scientificName,
-        commonName: object.name,
-      })),
-    }, discoveryConfig, fetch, {
-      candidateUrls: previousGroup?.attemptedUrls || [],
+    const result = await researchCompatibilityVariantIdentities(groupResearchInput, discoveryConfig, fetch, {
+      candidateUrls: resumableCandidateUrls,
       skipDiscovery: !discoveryReady,
       extractionConfig,
     });
+    const needsBroadDiscoveryRetry = !discoveryReady && result.unresolvedSpeciesIds.length > 0;
+    const needsExtractionRetry = result.extractionStatus === 'unavailable' && result.unresolvedSpeciesIds.length > 0;
+    const retryReasons = [
+      ...(needsBroadDiscoveryRetry ? ['broad_discovery_unavailable_with_unresolved_objects;academic_fallback:' + academicFallback.status] : []),
+      ...(needsExtractionRetry ? ['identity_extractor_unavailable:' + (result.extractionErrorCode || 'unknown')] : []),
+    ];
     resultByBase.set(group.baseScientificName, {
       ...result,
-      status: 'completed',
-      errorCode: null,
+      status: retryReasons.length > 0 ? 'retry_required' : 'completed',
+      errorCode: retryReasons.length > 0 ? retryReasons.join(';') : null,
     });
     consecutiveNetworkFailures = 0;
     console.log(

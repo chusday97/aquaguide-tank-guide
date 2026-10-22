@@ -76,7 +76,18 @@ assert.equal(localExtractor.baseUrl, 'http://127.0.0.1:11434/v1');
 assert.equal(localExtractor.model, 'qwen3.5:9b');
 assert.equal(localExtractor.apiKey, 'local-extractor', 'loopback Ollama extractors may run without a real API key');
 assert.equal(localExtractor.transport, 'ollama_native', 'loopback extractor defaults to Ollama native transport so Qwen thinking can be disabled explicitly');
+assert.deepEqual(localExtractor.fallbackModels, [], 'local Ollama extraction must not inherit cloud discovery fallback models');
 assert.equal(getCompatibilitySpeciesResearchProviderReadiness(localExtractor).configured, false, 'a local extractor must never be reclassified as Bailian web discovery');
+const localExtractorWithExplicitFallback = buildCompatibilityResearchExtractionConfig({
+  COMPATIBILITY_RESEARCH_AI_API_KEY: 'bailian-key',
+  COMPATIBILITY_RESEARCH_AI_BASE_URL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+  COMPATIBILITY_RESEARCH_AI_MODEL: 'qwen-discovery',
+  COMPATIBILITY_RESEARCH_AI_FALLBACK_MODELS: 'cloud-only-model',
+  COMPATIBILITY_RESEARCH_EXTRACTOR_BASE_URL: 'http://127.0.0.1:11434/v1',
+  COMPATIBILITY_RESEARCH_EXTRACTOR_MODEL: 'qwen3.5:9b',
+  COMPATIBILITY_RESEARCH_EXTRACTOR_FALLBACK_MODELS: 'qwen3:8b,qwen2.5:7b',
+});
+assert.deepEqual(localExtractorWithExplicitFallback.fallbackModels, ['qwen3:8b', 'qwen2.5:7b'], 'local fallback is allowed only when explicitly configured for the extractor');
 
 const fallbackModelsSeen: string[] = [];
 const quotaFallbackPreflight = await probeCompatibilityResearchProvider({
