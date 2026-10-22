@@ -85,6 +85,7 @@ const authority: ReviewedCompatibilityAuthority = {
         territoriality: 'research_pending',
         predation: 'research_pending',
       },
+      compatibilityReviewedFacts: ['water', 'temperature', 'adult_size'],
       adultLengthMinCm: 4,
       adultLengthMaxCm: 7,
       evidenceIds: [citation.id],

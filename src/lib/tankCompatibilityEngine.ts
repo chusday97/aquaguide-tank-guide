@@ -951,6 +951,9 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     return [field, disposition];
   })) as Partial<Record<CompatibilityRequiredFact, CompatibilityFactDisposition>>;
   const coverageEvidenceIds = Object.values(coverage.fields).flatMap(cell => cell.evidenceIds);
+  const compatibilityReviewedFacts = Object.entries(coverage.fields)
+    .filter(([, cell]) => cell.disposition === 'ready')
+    .map(([field]) => field as CompatibilityRequiredFact);
   const staticReviewed = getReviewedCompatibilityProfileForFish(fish);
   const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
   const reviewedEnvironment = reviewedKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
@@ -1050,6 +1053,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     reviewed: Boolean(reviewed) || coverage.genericOnboardingReady,
     compatibilityRequiredFacts: reviewed?.requiredFacts ?? (coverage.genericOnboardingReady ? [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] : undefined),
     compatibilityFactDispositions,
+    compatibilityReviewedFacts,
     minimumGroupSize: reviewedSocial?.minimumGroupSize
       ?? canonicalSocialBehavior?.minimumGroupSize
       ?? taxonPatch.minimumGroupSize

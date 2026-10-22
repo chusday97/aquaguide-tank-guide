@@ -59,6 +59,8 @@ export type DomainSpeciesFact = {
   reviewed: boolean;
   compatibilityRequiredFacts?: CompatibilityRequiredFact[];
   compatibilityFactDispositions?: Partial<Record<CompatibilityRequiredFact, CompatibilityFactDisposition>>;
+  /** Field-level facts that have passed reviewed authority, even when the full species profile is not 8/8 reviewed. */
+  compatibilityReviewedFacts?: CompatibilityRequiredFact[];
   adultLengthMinCm?: number | null;
   adultLengthMaxCm?: number | null;
   socialMode?: 'solitary' | 'pair' | 'harem' | 'shoal' | 'school' | 'group' | 'colony' | 'variable' | 'unknown';
@@ -118,7 +120,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v18-field-authority-onboarding';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v19-reviewed-field-authority';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -293,11 +295,12 @@ const hasCoverageMetadata = (species: DomainSpeciesFact) => Boolean(
   species.compatibilityFactDispositions && Object.keys(species.compatibilityFactDispositions).length > 0,
 );
 const hasDecisionAuthority = (species: DomainSpeciesFact) => {
-  if (!hasCoverageMetadata(species)) return species.reviewed;
-  const decisionDispositions = DECISION_CRITICAL_FACTS.map(fact => factDispositionFor(species, fact));
-  if (decisionDispositions.every(disposition => disposition === undefined)) return species.reviewed;
+  if (species.reviewed) return true;
+  if (!hasCoverageMetadata(species)) return false;
+  const reviewedFacts = new Set(species.compatibilityReviewedFacts || []);
   return DECISION_CRITICAL_FACTS.every(fact => (
-    factDispositionFor(species, fact) === 'ready'
+    reviewedFacts.has(fact)
+    && factDispositionFor(species, fact) === 'ready'
     && requiredFactAvailable(species, fact)
   ));
 };

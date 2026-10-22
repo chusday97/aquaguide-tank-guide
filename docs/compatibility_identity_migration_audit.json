@@ -36,22 +36,22 @@
   },
   "migrationPathCounts": {
     "hybrid_object_specific_hold": 3,
-    "base_authority_or_parent_resolution": 54,
+    "base_authority_or_parent_resolution": 38,
     "trade_name_disambiguation": 8,
     "catalog_structure_correction": 11,
     "exact_variant_label_disambiguation": 1,
-    "partial_inheritance_review": 10,
-    "identity_only_after_exact_evidence": 5,
+    "partial_inheritance_review": 17,
+    "identity_only_after_exact_evidence": 14,
     "taxonomic_review": 1
   },
   "migrationPathSoleBoundaryImpact": {
     "hybrid_object_specific_hold": 461,
-    "base_authority_or_parent_resolution": 7695,
+    "base_authority_or_parent_resolution": 5599,
     "trade_name_disambiguation": 809,
     "catalog_structure_correction": 1602,
     "exact_variant_label_disambiguation": 154,
-    "partial_inheritance_review": 1078,
-    "identity_only_after_exact_evidence": 593,
+    "partial_inheritance_review": 1995,
+    "identity_only_after_exact_evidence": 1772,
     "taxonomic_review": 0
   },
   "catalogStructureSubtypeCounts": {
@@ -70,8 +70,8 @@
   },
   "researchedHighImpactHoldCount": 15,
   "terminalIdentityHoldCount": 93,
-  "identityOnlyAfterExactEvidenceCount": 5,
-  "partialInheritanceReviewCount": 10,
+  "identityOnlyAfterExactEvidenceCount": 14,
+  "partialInheritanceReviewCount": 17,
   "topPriority": [
     {
       "speciesId": "sp_0055",
@@ -4430,12 +4430,20 @@
           "speciesId": "sp_0437",
           "name": "玛丽鱼",
           "scientificName": "Poecilia sphenops",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0437",
+          "name": "玛丽鱼",
+          "scientificName": "Poecilia sphenops",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -4464,8 +4472,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -4482,12 +4490,20 @@
           "speciesId": "sp_0436",
           "name": "孔雀鱼",
           "scientificName": "Poecilia reticulata",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0436",
+          "name": "孔雀鱼",
+          "scientificName": "Poecilia reticulata",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -4609,8 +4625,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -4627,12 +4643,20 @@
           "speciesId": "sp_0436",
           "name": "孔雀鱼",
           "scientificName": "Poecilia reticulata",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0436",
+          "name": "孔雀鱼",
+          "scientificName": "Poecilia reticulata",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -4786,8 +4810,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -4804,12 +4828,20 @@
           "speciesId": "sp_0431",
           "name": "红绿灯",
           "scientificName": "Paracheirodon innesi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0431",
+          "name": "红绿灯",
+          "scientificName": "Paracheirodon innesi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5033,8 +5065,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "partial_inheritance_review",
+      "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5051,12 +5083,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5085,8 +5125,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "partial_inheritance_review",
+      "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5103,12 +5143,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5137,8 +5185,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5155,12 +5203,20 @@
           "speciesId": "sp_0014",
           "name": "咖啡鼠",
           "scientificName": "Corydoras aeneus",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0014",
+          "name": "咖啡鼠",
+          "scientificName": "Corydoras aeneus",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5233,8 +5289,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5251,12 +5307,20 @@
           "speciesId": "sp_0436",
           "name": "孔雀鱼",
           "scientificName": "Poecilia reticulata",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0436",
+          "name": "孔雀鱼",
+          "scientificName": "Poecilia reticulata",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5285,8 +5349,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5303,12 +5367,20 @@
           "speciesId": "sp_0436",
           "name": "孔雀鱼",
           "scientificName": "Poecilia reticulata",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0436",
+          "name": "孔雀鱼",
+          "scientificName": "Poecilia reticulata",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5337,8 +5409,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5355,12 +5427,20 @@
           "speciesId": "sp_0436",
           "name": "孔雀鱼",
           "scientificName": "Poecilia reticulata",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0436",
+          "name": "孔雀鱼",
+          "scientificName": "Poecilia reticulata",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5433,8 +5513,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5451,12 +5531,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5529,8 +5617,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "partial_inheritance_review",
+      "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5547,12 +5635,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5581,8 +5677,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "partial_inheritance_review",
+      "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5599,12 +5695,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -5781,8 +5885,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "partial_inheritance_review",
+      "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -5799,12 +5903,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -6073,8 +6185,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "partial_inheritance_review",
+      "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -6091,12 +6203,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -6125,8 +6245,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "identity_only_after_exact_evidence",
+      "nextAction": "Find exact-object identity evidence tying the named ornamental form to the ready canonical base; if confirmed, use canonical inheritance rather than copying base facts.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -6143,12 +6263,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,
@@ -6177,8 +6305,8 @@
       "reviewedAt": "2026-10-12",
       "researchDisposition": "terminal_unknown_hold",
       "blockingRequirement": "Provide exact-object evidence for the named ornamental variant/lineage and an explicit field-level inheritance policy; base-species naming alone is insufficient.",
-      "migrationPath": "base_authority_or_parent_resolution",
-      "nextAction": "Resolve one exact parent or base taxon and ensure its Compatibility authority is ready before inheritance can be considered.",
+      "migrationPath": "partial_inheritance_review",
+      "nextAction": "Verify exact object identity, then review a partial inheritance allowlist because morphology-changing forms must not inherit all Compatibility facts by default.",
       "identityEvidenceStatus": "no_object_identity_review",
       "identityResearchDebt": null,
       "researchDebtStatus": null,
@@ -6195,12 +6323,20 @@
           "speciesId": "sp_0010",
           "name": "黑裙鱼",
           "scientificName": "Gymnocorymbus ternetzi",
-          "genericOnboardingReady": false,
+          "genericOnboardingReady": true,
           "authoritativeFieldCount": 8
         }
       ],
-      "readyBaseCandidates": [],
-      "readyBaseCandidateCount": 0,
+      "readyBaseCandidates": [
+        {
+          "speciesId": "sp_0010",
+          "name": "黑裙鱼",
+          "scientificName": "Gymnocorymbus ternetzi",
+          "genericOnboardingReady": true,
+          "authoritativeFieldCount": 8
+        }
+      ],
+      "readyBaseCandidateCount": 1,
       "genericOnboardingReady": false,
       "canonicalIdentityPresent": false,
       "affectedIdentityUnknownPairs": 216,

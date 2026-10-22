@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-20T18:51:16.509Z",
+  "generatedAt": "2026-10-22T11:40:01.450Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
   "sourceSchemaVersion": 4,
   "promotionAllowed": false,
@@ -23,9 +23,9 @@
       "generic_improvement_modifier_requires_lineage": 3,
       "named_trade_label_requires_lineage": 4
     },
-    "readyBaseIdentityBoundaries": 20,
-    "readyBaseMorphologySafeBoundaries": 9,
-    "readyBaseMorphologyRiskBoundaries": 11,
+    "readyBaseIdentityBoundaries": 37,
+    "readyBaseMorphologySafeBoundaries": 18,
+    "readyBaseMorphologyRiskBoundaries": 19,
     "sourceActiveIdentityBoundaries": 93,
     "sourceIdentityUnknownPairs": 16047,
     "automatedResearchEligible": 0,
@@ -2087,8 +2087,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0437"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0437"
       ],
@@ -2118,7 +2120,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Dumbo lineage"
@@ -2131,8 +2133,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0436"
       ],
@@ -2238,7 +2242,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Full Black lineage"
@@ -2251,8 +2255,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0436"
       ],
@@ -2362,7 +2368,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Paracheirodon innesi ornamental Diamond lineage"
@@ -2375,8 +2381,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0431"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0431"
       ],
@@ -2560,7 +2568,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "partial_inheritance_review",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental longfin lineage"
@@ -2573,8 +2581,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -2600,7 +2610,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "partial_inheritance_review",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental balloon lineage"
@@ -2613,8 +2623,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -2640,7 +2652,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Corydoras aeneus ornamental Platinum lineage"
@@ -2653,8 +2665,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0014"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0014"
       ],
@@ -2718,7 +2732,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Yellow Grass lineage"
@@ -2731,8 +2745,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0436"
       ],
@@ -2758,7 +2774,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Kohaku lineage"
@@ -2771,8 +2787,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0436"
       ],
@@ -2798,7 +2816,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Poecilia reticulata ornamental Albino Kohaku lineage"
@@ -2811,8 +2829,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0436"
       ],
@@ -2876,7 +2896,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Albino Red Eye lineage"
@@ -2889,8 +2909,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -2954,7 +2976,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "partial_inheritance_review",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
@@ -2967,8 +2989,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -2994,7 +3018,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "partial_inheritance_review",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Albino Balloon lineage"
@@ -3007,8 +3031,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -3152,7 +3178,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "partial_inheritance_review",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Longfin White lineage"
@@ -3165,8 +3191,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -3353,7 +3381,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "partial_inheritance_review",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Platinum Longfin lineage"
@@ -3366,8 +3394,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -3393,7 +3423,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "identity_only_after_exact_evidence",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Glo Orange lineage"
@@ -3406,8 +3436,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": false,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],
@@ -3433,7 +3465,7 @@
       "lifeType": "fish",
       "blankVariantSuffix": false,
       "boundaryCode": "catalog_variant_identity_unresolved",
-      "migrationPath": "base_authority_or_parent_resolution",
+      "migrationPath": "partial_inheritance_review",
       "catalogStructureSubtype": null,
       "candidateTaxa": [
         "Gymnocorymbus ternetzi ornamental Platinum Balloon Longfin lineage"
@@ -3446,8 +3478,10 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "morphologyRisk": true,
-      "readyBaseCandidateCount": 0,
-      "readyBaseSpeciesIds": [],
+      "readyBaseCandidateCount": 1,
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
       "baseCandidateSpeciesIds": [
         "sp_0010"
       ],

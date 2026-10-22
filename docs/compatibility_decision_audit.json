@@ -13,8 +13,8 @@
     "coral": 43
   },
   "fishDomainSpecies": 308,
-  "genericOnboardingReadySpecies": 111,
-  "genericReadyUniquePairs": 6105,
+  "genericOnboardingReadySpecies": 122,
+  "genericReadyUniquePairs": 7381,
   "fishPairs": 47278,
   "statuses": {
     "compatible": 905,
@@ -2058,14 +2058,6 @@
     {
       "code": "behavior_evidence_unreviewed",
       "count": 41236
-    },
-    {
-      "code": "missing_ph",
-      "count": 31333
-    },
-    {
-      "code": "missing_hardness",
-      "count": 7137
     }
   ],
   "coreFieldBacklog": {

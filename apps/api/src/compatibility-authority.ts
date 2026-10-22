@@ -194,6 +194,7 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
       reviewed: compatibilityFields.every(field => approvedFields.includes(field)),
       compatibilityRequiredFacts: approvedFields,
       compatibilityFactDispositions: dispositions,
+      compatibilityReviewedFacts: [...approvedFields],
       minimumGroupSize: social?.minimumGroupSize ?? null,
       adultLengthMinCm: adult?.min ?? null,
       adultLengthMaxCm: adult?.max ?? null,

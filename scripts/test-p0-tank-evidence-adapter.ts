@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import type { Aquarium } from '../src/types';
 import type { DiagnosisRecord } from '../src/modules/diagnosis/diagnosis.types';
+import type { CompatibilityEvidenceProvider } from '../src/services/compatibility/compatibility.service';
 import {
   buildTankObservationsFromDiagnosisRecords,
   deriveCurrentTankState,
@@ -147,6 +148,45 @@ const baseTank = (overrides: Partial<Aquarium> = {}): Aquarium => ({
 {
   const freshwater = { ...miniParrot, id: 'fresh-test', name: '淡水测试鱼', category: '淡水观赏鱼', waterType: 'freshwater' as const };
   const marine = { ...tigerBarb, id: 'marine-test', name: '海水测试鱼', category: '海水观赏鱼', description: '海水鱼', waterType: 'saltwater' as const };
+  const reviewedHard3 = ['water', 'temperature', 'adult_size'] as const;
+  const evidenceProvider: CompatibilityEvidenceProvider = {
+    getProfile: () => undefined,
+    getPairRule: () => undefined,
+    getStageRisks: () => [],
+    getReviewedSpeciesFact: speciesItem => {
+      const waterType = speciesItem.id === marine.id ? 'saltwater' : 'freshwater';
+      return {
+        id: speciesItem.id,
+        waterType,
+        waterTypes: [waterType],
+        temperatureMinC: 22,
+        temperatureMaxC: 28,
+        phMin: null,
+        phMax: null,
+        minTankLiters: null,
+        minTankLengthCm: null,
+        reviewed: false,
+        compatibilityRequiredFacts: [...reviewedHard3],
+        compatibilityFactDispositions: {
+          water: 'ready',
+          temperature: 'ready',
+          ph: 'research_pending',
+          adult_size: 'ready',
+          tank_size: 'research_pending',
+          social_behavior: 'research_pending',
+          territoriality: 'research_pending',
+          predation: 'research_pending',
+        },
+        compatibilityReviewedFacts: [...reviewedHard3],
+        adultLengthMinCm: 5,
+        adultLengthMaxCm: 10,
+        evidenceIds: ['tank-evidence-reviewed-water-fixture'],
+        lifeType: 'fish',
+        size: 'Medium',
+      };
+    },
+    authorityVersion: 'tank-evidence-reviewed-fixture-v1',
+  };
   const tank = baseTank({
     fishes: [
       { id: 'fresh', fishId: freshwater.id, quantity: 1, entryDate: '2026-08-01T12:00:00.000Z' },
@@ -157,9 +197,10 @@ const baseTank = (overrides: Partial<Aquarium> = {}): Aquarium => ({
     aquarium: tank,
     speciesCatalog: [freshwater, marine],
     diagnosisRecords: [record({ answers: { breathing: '正常', behavior: '正常游动和进食' } })],
+    evidenceProvider,
     now: NOW,
   });
-  assert.ok(state.hardConstraints.some(item => item.code === 'species_water_type_conflict' || item.code === 'water_type_mismatch'));
+  assert.ok(state.hardConstraints.some(item => item.code === 'water_type_conflict' || item.code === 'species_water_type_conflict' || item.code === 'water_type_mismatch' || item.code === 'candidate_tank_water_type_conflict'));
   assert.equal(state.result.state, 'urgent');
   console.log('PASS true freshwater/marine conflict remains urgent despite normal behavior observation');
 }

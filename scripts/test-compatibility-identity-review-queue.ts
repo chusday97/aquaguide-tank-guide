@@ -253,9 +253,9 @@ assert.deepEqual(current.summary.catalogStructureSubtypeCounts, {
   generic_improvement_modifier_requires_lineage: 3,
   named_trade_label_requires_lineage: 4,
 });
-assert.equal(current.summary.readyBaseIdentityBoundaries, 20);
-assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 9);
-assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 11);
+assert.equal(current.summary.readyBaseIdentityBoundaries, 37);
+assert.equal(current.summary.readyBaseMorphologySafeBoundaries, 18);
+assert.equal(current.summary.readyBaseMorphologyRiskBoundaries, 19);
 assert.equal(current.summary.evidenceCeilingHolds, 68);
 assert.equal(current.summary.partialInheritanceReview, 0);
 assert.equal(current.summary.byQueue.exact_object_identity_research, 0);

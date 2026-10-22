@@ -1,6 +1,7 @@
 import type { Aquarium, Fish } from '../../types';
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import { evaluateCompatibilityDecision, type CompatibilityItem } from '../../modules/knowledge/compatibilityKnowledge';
+import type { CompatibilityEvidenceProvider } from '../compatibility/compatibility.service';
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
 import {
   evaluateTankState,
@@ -12,7 +13,7 @@ import {
   type TankStateResult,
 } from '../../../packages/domain-rules/src';
 
-const HARD_CONSTRAINT_CODES = new Set(['water_type_mismatch', 'species_water_type_conflict']);
+const HARD_CONSTRAINT_CODES = new Set(['water_type_conflict', 'water_type_mismatch', 'species_water_type_conflict', 'candidate_tank_water_type_conflict']);
 
 const riskKindMap: Partial<Record<CompatibilityRiskType, TankPriorRiskKind>> = {
   water_type: 'water_type',
@@ -218,11 +219,13 @@ export const deriveCurrentTankState = ({
   aquarium,
   speciesCatalog,
   diagnosisRecords,
+  evidenceProvider,
   now = new Date(),
 }: {
   aquarium: Aquarium;
   speciesCatalog: Fish[];
   diagnosisRecords: DiagnosisRecord[];
+  evidenceProvider?: CompatibilityEvidenceProvider;
   now?: Date;
 }): CurrentTankStateEvidence => {
   const items: CompatibilityItem[] = aquarium.fishes
@@ -233,7 +236,7 @@ export const deriveCurrentTankState = ({
     .filter((item): item is { species: Fish; quantity: number; origin: 'existing' } => Boolean(item));
 
   const compatibilityDecision = items.length > 0
-    ? evaluateCompatibilityDecision({ tank: aquarium, items })
+    ? evaluateCompatibilityDecision({ tank: aquarium, items, evidenceProvider })
     : null;
   const priors = compatibilityDecision ? buildTankPriorsFromCompatibilityDecision(compatibilityDecision) : [];
   const hardConstraints = compatibilityDecision ? buildTankHardConstraintsFromCompatibilityDecision(compatibilityDecision) : [];

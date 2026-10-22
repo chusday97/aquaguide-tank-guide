@@ -100,6 +100,10 @@ const reviewedCaution = evaluateTankCompatibility({
 });
 assert.equal(reviewedCaution.metadata.domainStatus, 'caution');
 assert.equal(reviewedCaution.metadata.decisionReadiness, 'reviewed');
+const reviewedPairNarrativeRule = reviewedCaution.warningRules.find(rule => rule.code === 'pair_rule_group_size_and_shared_water_window');
+const reviewedGroupNarrativeRule = reviewedCaution.warningRules.find(rule => rule.code === 'minimum_group_not_met');
+assert.ok(reviewedPairNarrativeRule, 'reviewed caution fixture must expose the concrete pair-rule narrative code');
+assert.ok(reviewedGroupNarrativeRule, 'reviewed caution fixture must expose the concrete group-gap narrative code');
 
 let capturedSystem = '';
 let capturedUser = '';
@@ -110,8 +114,8 @@ const acceptedProvider: CompatibilityAiReasoningProvider = async ({ system, user
     model: 'fixture-model',
     output: {
       suggestedVerdict: 'not_recommended',
-      reasons: [{ text: 'AI 可以提出更保守的 shadow 风险判断，但不能覆盖确定性 caution 结论。', ruleCodes: ['reviewed_pair_rule'] }],
-      adjustments: [{ text: '先把候选鱼的群体数量调整到至少 8 条，再重新评估。', ruleCodes: ['group_requirement_gap'] }],
+      reasons: [{ text: 'AI 可以提出更保守的 shadow 风险判断，但不能覆盖确定性 caution 结论。', ruleCodes: [reviewedPairNarrativeRule.code] }],
+      adjustments: [{ text: '先把候选鱼的群体数量调整到至少 8 条，再重新评估。', ruleCodes: [reviewedGroupNarrativeRule.code] }],
       uncertainties: [],
       confidence: 'medium',
       evidenceIds: reviewedCaution.evidenceIds || [],
@@ -135,7 +139,8 @@ assert.equal(accepted.provenance.promptVersion, COMPATIBILITY_AI_PROMPT_VERSION)
 assert.equal(accepted.provenance.repairCount, 0);
 assert.match(capturedSystem, /Use ONLY facts, rules, evidence IDs and tank context included in INPUT/);
 assert.match(capturedUser, /sp_0431/);
-assert.match(capturedUser, /reviewed_pair_rule/);
+assert.match(capturedUser, new RegExp(reviewedPairNarrativeRule.code));
+assert.match(capturedUser, new RegExp(reviewedGroupNarrativeRule.code));
 
 const blocked = evaluateTankCompatibility({
   tank,
@@ -202,10 +207,10 @@ const missingAdjustmentProvider: CompatibilityAiReasoningProvider = async () => 
     model: 'fixture-model',
     output: {
       suggestedVerdict: 'caution',
-      reasons: [{ text: '有风险，需要保持保守结论。', ruleCodes: ['reviewed_pair_rule'] }],
+      reasons: [{ text: '有风险，需要保持保守结论。', ruleCodes: [reviewedPairNarrativeRule.code] }],
       adjustments: adjustmentRepairCalls === 1
         ? []
-        : [{ text: '按已审核规则调整混养计划。', ruleCodes: ['reviewed_pair_rule'] }],
+        : [{ text: '按已审核规则调整混养计划。', ruleCodes: [reviewedPairNarrativeRule.code] }],
       uncertainties: [],
       confidence: 'medium',
       evidenceIds: reviewedCaution.evidenceIds || [],

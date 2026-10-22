@@ -21,11 +21,11 @@
 
 ## Migration paths
 
-- base_authority_or_parent_resolution: 54 objects / 7695 sole-boundary pairs
+- base_authority_or_parent_resolution: 38 objects / 5599 sole-boundary pairs
+- partial_inheritance_review: 17 objects / 1995 sole-boundary pairs
+- identity_only_after_exact_evidence: 14 objects / 1772 sole-boundary pairs
 - catalog_structure_correction: 11 objects / 1602 sole-boundary pairs
-- partial_inheritance_review: 10 objects / 1078 sole-boundary pairs
 - trade_name_disambiguation: 8 objects / 809 sole-boundary pairs
-- identity_only_after_exact_evidence: 5 objects / 593 sole-boundary pairs
 - hybrid_object_specific_hold: 3 objects / 461 sole-boundary pairs
 - exact_variant_label_disambiguation: 1 objects / 154 sole-boundary pairs
 - taxonomic_review: 1 objects / 0 sole-boundary pairs
@@ -37,8 +37,8 @@
 - generic_improvement_modifier_requires_lineage: 3
 - morphology_modifier_requires_lineage: 1
 
-- Identity-only after exact evidence: **5**
-- Partial inheritance review: **10**
+- Identity-only after exact evidence: **14**
+- Partial inheritance review: **17**
 - Reviewed research-debt holds: **15**
 - Source-controlled terminal identity holds: **93**
 

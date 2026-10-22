@@ -16,7 +16,7 @@ assert.equal(audit.summary.reviewedVariantFieldResearchPolicies, 15);
 assert.equal(audit.summary.baseTaxonCandidateFactSlots, 45);
 assert.equal(audit.summary.exactObjectEvidenceFactSlots, 75);
 assert.equal(audit.summary.totalCanonicalIdentityRecords, 57);
-assert.equal(audit.summary.genericOnboardingReadySpecies, 111);
+assert.equal(audit.summary.genericOnboardingReadySpecies, 122);
 assert.equal(audit.summary.policyPromotedReadySpecies, 19);
 assert.equal(audit.summary.fieldPolicyReadySpecies, 3);
 assert.equal(audit.summary.directReviewedVariantObjects, 2);

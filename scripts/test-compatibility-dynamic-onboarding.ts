@@ -59,6 +59,7 @@ const syntheticFact: DomainSpeciesFact = {
   reviewed: false,
   compatibilityRequiredFacts: [...decisionFacts],
   compatibilityFactDispositions: partialRiskDispositions,
+  compatibilityReviewedFacts: [...decisionFacts],
   adultLengthMinCm: 3,
   adultLengthMaxCm: 5,
   evidenceIds: ['dynamic-reviewed-source'],

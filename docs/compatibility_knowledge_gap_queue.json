@@ -358,7 +358,6 @@
       "warning_codes": [
         "minimum_group_not_met",
         "ph_range_conflict",
-        "ph_range_gap",
         "predation_vulnerability_context"
       ],
       "score": 28,
@@ -481,7 +480,6 @@
         "fin_nipping_target_vulnerability",
         "minimum_group_not_met",
         "ph_range_conflict",
-        "ph_range_gap",
         "predation_vulnerability_context"
       ],
       "score": 28,
@@ -532,8 +530,7 @@
       ],
       "warning_codes": [
         "minimum_group_not_met",
-        "ph_range_conflict",
-        "ph_range_gap"
+        "ph_range_conflict"
       ],
       "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
@@ -680,7 +677,6 @@
       "warning_codes": [
         "minimum_group_not_met",
         "ph_range_conflict",
-        "ph_range_gap",
         "predation_vulnerability_context"
       ],
       "score": 28,
@@ -706,7 +702,6 @@
       "warning_codes": [
         "minimum_group_not_met",
         "ph_range_conflict",
-        "ph_range_gap",
         "predation_vulnerability_context"
       ],
       "score": 28,
@@ -732,7 +727,6 @@
       "warning_codes": [
         "minimum_group_not_met",
         "ph_range_conflict",
-        "ph_range_gap",
         "predation_vulnerability_context"
       ],
       "score": 28,
@@ -927,7 +921,6 @@
       "warning_codes": [
         "minimum_group_not_met",
         "ph_range_conflict",
-        "ph_range_gap",
         "predation_vulnerability_context"
       ],
       "score": 28,
@@ -1160,8 +1153,7 @@
       ],
       "warning_codes": [
         "minimum_group_not_met",
-        "ph_range_conflict",
-        "ph_range_gap"
+        "ph_range_conflict"
       ],
       "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
@@ -1724,7 +1716,6 @@
       "warning_codes": [
         "minimum_group_not_met",
         "ph_range_conflict",
-        "ph_range_gap",
         "territorial_pressure_context"
       ],
       "score": 27,
