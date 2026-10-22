@@ -7,6 +7,7 @@ import type { Aquarium, Fish } from '../src/types';
 
 const migration = readFileSync('supabase/migrations/20261022111410_compatibility_field_authority.sql', 'utf8');
 const aclMigration = readFileSync('supabase/migrations/20261022111709_compatibility_function_acl_hardening.sql', 'utf8');
+const publicReadMigration = readFileSync('supabase/migrations/20261022123151_compatibility_field_authority_public_read.sql', 'utf8');
 const adminRoute = readFileSync('apps/api/src/routes/admin-compatibility.ts', 'utf8');
 const authorityLoader = readFileSync('apps/api/src/compatibility-authority.ts', 'utf8');
 
@@ -32,6 +33,14 @@ assert.match(aclMigration, /revoke all on function public\.bump_compatibility_fo
 assert.match(aclMigration, /revoke all on function public\.bump_compatibility_for_species_publication\(\)[\s\S]*from public, anon, authenticated/i);
 assert.match(aclMigration, /publish_compatibility_profile_revision\(uuid,integer\)[\s\S]*to authenticated, service_role/i);
 assert.match(aclMigration, /publish_compatibility_pair_rule_revision\(uuid,integer\)[\s\S]*to authenticated, service_role/i);
+
+assert.match(publicReadMigration, /grant select on table public\.species_compatibility_field_reviews to anon, authenticated/i);
+assert.match(publicReadMigration, /grant select on table public\.species_compatibility_field_review_sources to anon, authenticated/i);
+assert.match(publicReadMigration, /review_status = 'reviewed'/i);
+assert.match(publicReadMigration, /resolution = 'supported'/i);
+assert.match(publicReadMigration, /s\.status = 'published'/i);
+assert.match(publicReadMigration, /s\.deleted_at is null/i);
+assert.equal(/grant\s+(insert|update|delete|truncate|references|trigger)[\s\S]*to\s+(anon|authenticated)/i.test(publicReadMigration), false, 'public field-authority migration must grant read-only access only');
 
 assert.match(adminRoute, /post\('\/onboarding\/approve-fields'/);
 assert.match(adminRoute, /createGbifSpeciesIdentityResolver\(\)\.resolve\(species\.scientificName\)/);
