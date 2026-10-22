@@ -50,6 +50,18 @@ export const compatibilityRequiredFactSchema = z.enum([
 ]);
 
 /**
+ * Minimum reviewed biological facts required to make a useful Compatibility
+ * decision without guessing. Missing pH/space/behavior families can lower
+ * readiness or add a caution, but they must not be confused with a hard
+ * inability to judge water/temperature/body-size compatibility.
+ */
+export const COMPATIBILITY_DECISION_REQUIRED_FACTS = [
+  'water',
+  'temperature',
+  'adult_size',
+] as const;
+
+/**
  * Minimum reviewed fact families required before a brand-new species can join
  * the generic Compatibility authority without any hand-authored Pair Rule.
  * Breeding behavior remains an optional stage-specific extension; when it is

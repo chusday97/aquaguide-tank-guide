@@ -1,4 +1,5 @@
 import {
+  COMPATIBILITY_DECISION_REQUIRED_FACTS,
   GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS,
   type CompatibilityRequiredFact,
 } from '../../../packages/contracts/src';
@@ -11,11 +12,17 @@ import type { Fish } from '../../types';
 import { isCompatibilitySupportedLifeType } from './compatibility-domain-scope.service';
 
 export type CompatibilityOnboardingGateResult = {
+  /** Strict 8/8 generic authority readiness. */
   ready: boolean;
+  /** Enough reviewed hard facts to return a useful compatibility decision. */
+  decisionReady: boolean;
   identityReadiness: CatalogIdentityReadiness;
   missingDeclaredFacts: CompatibilityRequiredFact[];
   missingAuthoritativeFacts: CompatibilityRequiredFact[];
+  missingDecisionFacts: CompatibilityRequiredFact[];
+  missingRiskCoverageFacts: CompatibilityRequiredFact[];
   reasons: string[];
+  decisionReasons: string[];
 };
 
 export const assessCompatibilityOnboardingGate = (
@@ -39,19 +46,36 @@ export const assessCompatibilityOnboardingGate = (
   });
   const missingDeclaredFacts = required.filter(field => !declared.has(field));
   const missingAuthoritativeFacts = required.filter(field => !authoritative.has(field));
+  const decisionRequired = [...COMPATIBILITY_DECISION_REQUIRED_FACTS] as CompatibilityRequiredFact[];
+  const missingDecisionFacts = decisionRequired.filter(field => !authoritative.has(field));
+  const missingRiskCoverageFacts = required.filter(field => (
+    !decisionRequired.includes(field) && !authoritative.has(field)
+  ));
   const reasons: string[] = [];
+  const decisionReasons: string[] = [];
 
-  if (!isCompatibilitySupportedLifeType(input.lifeType)) reasons.push('unsupported_compatibility_domain');
-  if (!isCompatibilityIdentityReady(identityReadiness)) reasons.push(identityReadiness);
+  if (!isCompatibilitySupportedLifeType(input.lifeType)) {
+    reasons.push('unsupported_compatibility_domain');
+    decisionReasons.push('unsupported_compatibility_domain');
+  }
+  if (!isCompatibilityIdentityReady(identityReadiness)) {
+    reasons.push(identityReadiness);
+    decisionReasons.push(identityReadiness);
+  }
   if (!input.hasReviewedCompatibilityProfile) reasons.push('reviewed_compatibility_profile_missing');
   if (missingDeclaredFacts.length) reasons.push('required_fact_contract_incomplete');
   if (missingAuthoritativeFacts.length) reasons.push('authoritative_core_facts_incomplete');
+  if (missingDecisionFacts.length) decisionReasons.push('authoritative_decision_facts_incomplete');
 
   return {
     ready: reasons.length === 0,
+    decisionReady: decisionReasons.length === 0,
     identityReadiness,
     missingDeclaredFacts,
     missingAuthoritativeFacts,
+    missingDecisionFacts,
+    missingRiskCoverageFacts,
     reasons,
+    decisionReasons,
   };
 };

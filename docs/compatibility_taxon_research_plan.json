@@ -1,6 +1,6 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
-  "policy": "active completion research only: include completionEligible field gaps, defer evidence debt on objects with companion terminal holds; deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging",
+  "policy": "active completion research only: prioritize hard-decision gaps unless another hard-decision terminal hold remains; soft risk-discovery gaps still defer behind companion terminal holds. Deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging",
   "catalogObjects": 0,
   "totalResearchJobs": 0,
   "variantBridgeJobs": 0,

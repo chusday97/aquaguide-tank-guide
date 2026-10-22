@@ -1,4 +1,7 @@
-import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../../packages/contracts/src';
+import {
+  COMPATIBILITY_DECISION_REQUIRED_FACTS,
+  GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS,
+} from '../../../packages/contracts/src';
 import { fishData } from '../../data/fishData';
 import { catalogContentVerifiedSourceIds, getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
 import { getCatalogReviewSourceCandidates } from '../../data/catalogReviewSourceCandidates';
@@ -40,6 +43,7 @@ export type CompatibilityFieldCoverageRow = {
   lifeType: ReturnType<typeof getLifeType>;
   reviewedProfile: 'direct' | 'field_review_derived' | 'inherited' | 'none';
   genericOnboardingReady: boolean;
+  decisionReady: boolean;
   authoritativeFieldCount: number;
   actionableGapCount: number;
   terminalGapCount: number;
@@ -49,6 +53,9 @@ export type CompatibilityFieldCoverageSummary = {
   speciesCount: number;
   coreFields: CompatibilityCoreField[];
   genericOnboardingReadySpecies: number;
+  decisionReadySpecies: number;
+  decisionReadyButRiskIncompleteSpecies: number;
+  hardDecisionHeldSpecies: number;
   coreFieldCompleteSpecies: number;
   oneFieldGapSpecies: number;
   runtimeReviewedProfileSpecies: number;
@@ -138,10 +145,19 @@ export type CompatibilityFastLaneResearchPacket = {
 };
 
 const coreFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityCoreField[];
-export const COMPATIBILITY_HARD_DECISION_FIELDS = ['water', 'temperature', 'adult_size'] as const satisfies readonly CompatibilityCoreField[];
+export const COMPATIBILITY_HARD_DECISION_FIELDS = [...COMPATIBILITY_DECISION_REQUIRED_FACTS] as const satisfies readonly CompatibilityCoreField[];
 const hardDecisionFieldSet = new Set<CompatibilityCoreField>(COMPATIBILITY_HARD_DECISION_FIELDS);
 export const getCompatibilityResearchDecisionImpact = (field: CompatibilityCoreField): CompatibilityResearchDecisionImpact => (
   hardDecisionFieldSet.has(field) ? 'hard_decision_blocker' : 'soft_risk_discovery'
+);
+
+export const isCompatibilityResearchGapCompletionEligible = (
+  field: CompatibilityCoreField,
+  terminalFields: readonly CompatibilityCoreField[],
+) => (
+  getCompatibilityResearchDecisionImpact(field) === 'hard_decision_blocker'
+    ? !terminalFields.some(blockerField => hardDecisionFieldSet.has(blockerField))
+    : terminalFields.length === 0
 );
 
 const reviewedScientificNameForResearch = (speciesId: string, fallback: string) => {
@@ -424,7 +440,8 @@ export const getCompatibilityCoreFieldCoverageRow = (fish: Fish): CompatibilityF
     catalogPersisted: true,
   });
   const genericOnboardingReady = onboarding.ready;
-  return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : fieldReviewDerivedProfile ? 'field_review_derived' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
+  const decisionReady = onboarding.decisionReady;
+  return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : fieldReviewDerivedProfile ? 'field_review_derived' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, decisionReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
 };
 
 export const buildCompatibilityCoreFieldCoverage = () => {
@@ -483,6 +500,13 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     speciesCount: rows.length,
     coreFields,
     genericOnboardingReadySpecies: rows.filter(row => row.genericOnboardingReady).length,
+    decisionReadySpecies: rows.filter(row => row.lifeType === 'fish' && row.decisionReady).length,
+    decisionReadyButRiskIncompleteSpecies: rows.filter(row => (
+      row.lifeType === 'fish'
+      && row.decisionReady
+      && row.authoritativeFieldCount < coreFields.length
+    )).length,
+    hardDecisionHeldSpecies: rows.filter(row => row.lifeType === 'fish' && !row.decisionReady).length,
     coreFieldCompleteSpecies: rows.filter(row => row.lifeType === 'fish' && row.authoritativeFieldCount === coreFields.length).length,
     oneFieldGapSpecies: rows.filter(row => row.lifeType === 'fish' && row.authoritativeFieldCount === coreFields.length - 1).length,
     runtimeReviewedProfileSpecies: rows.filter(row => row.reviewedProfile !== 'none').length,
@@ -515,7 +539,10 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     const terminalBlockers = coreFields
       .filter(blockerField => ['terminal_hold', 'domain_extension_required'].includes(row.fields[blockerField].disposition))
       .map(blockerField => ({ field: blockerField, cell: row.fields[blockerField] }));
-    const completionEligible = terminalBlockers.length === 0;
+    const completionEligible = isCompatibilityResearchGapCompletionEligible(
+      field,
+      terminalBlockers.map(item => item.field),
+    );
     return [{
       speciesId: row.speciesId,
       name: row.name,

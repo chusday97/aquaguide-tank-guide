@@ -395,6 +395,7 @@ const unresolvedGate = assessCompatibilityOnboardingGate(unresolved, {
   catalogPersisted: true,
 });
 assert.equal(unresolvedGate.ready, false);
+assert.equal(unresolvedGate.decisionReady, false);
 assert.equal(unresolvedGate.identityReadiness, 'unresolved_identity');
 assert.ok(unresolvedGate.reasons.includes('unresolved_identity'));
 
@@ -419,6 +420,7 @@ const unreviewedNewObject = assessCompatibilityOnboardingGate(synthetic, {
   catalogPersisted: false,
 });
 assert.equal(unreviewedNewObject.ready, false);
+assert.equal(unreviewedNewObject.decisionReady, false);
 assert.equal(unreviewedNewObject.identityReadiness, 'unreviewed_new_object');
 
 const reviewedNewObject = assessCompatibilityOnboardingGate(synthetic, {
@@ -430,6 +432,7 @@ const reviewedNewObject = assessCompatibilityOnboardingGate(synthetic, {
   reviewedDirectIdentity: true,
 });
 assert.equal(reviewedNewObject.ready, true);
+assert.equal(reviewedNewObject.decisionReady, true);
 assert.equal(reviewedNewObject.identityReadiness, 'reviewed_direct_identity');
 
 const angelfishBase = getReviewedCompatibilityProfile('sp_0446');
@@ -466,11 +469,36 @@ assert.ok(partialGate.missingDeclaredFacts.includes('adult_size'));
 assert.ok(partialGate.missingDeclaredFacts.includes('tank_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('adult_size'));
 assert.ok(partialGate.missingAuthoritativeFacts.includes('tank_size'));
+assert.equal(partialGate.decisionReady, false, 'missing adult_size remains a hard decision hold');
+assert.ok(partialGate.missingDecisionFacts.includes('adult_size'));
+assert.ok(!partialGate.missingDecisionFacts.includes('tank_size'));
+assert.ok(partialGate.missingRiskCoverageFacts.includes('tank_size'));
+
+const softGapGate = assessCompatibilityOnboardingGate(
+  { id: 'sp_soft_gap_fixture', scientificName: 'Fixtureus partialis' },
+  {
+    lifeType: 'fish',
+    hasReviewedCompatibilityProfile: false,
+    declaredRequiredFacts: ['water', 'temperature', 'adult_size'],
+    authoritativeFacts: ['water', 'temperature', 'adult_size'],
+    catalogPersisted: false,
+    reviewedDirectIdentity: true,
+  },
+);
+assert.equal(softGapGate.ready, false, '8/8 generic authority remains strict');
+assert.equal(softGapGate.decisionReady, true, 'reviewed hard facts are enough to enter decision mode without inventing soft risks');
+assert.deepEqual(softGapGate.missingDecisionFacts, []);
+assert.ok(softGapGate.missingRiskCoverageFacts.includes('predation'));
 
 assert.equal(
   coverage.summary.genericOnboardingReadySpecies,
   coverage.rows.filter(row => row.genericOnboardingReady).length,
   'core-field readiness summary must equal the row-level readiness count',
+);
+assert.equal(
+  coverage.summary.decisionReadySpecies,
+  coverage.rows.filter(row => row.lifeType === 'fish' && row.decisionReady).length,
+  'decision readiness summary must equal the row-level decision-ready count',
 );
 const blueGouramiCoverage = coverage.rows.find(item => item.speciesId === 'sp_0445');
 assert.ok(blueGouramiCoverage);

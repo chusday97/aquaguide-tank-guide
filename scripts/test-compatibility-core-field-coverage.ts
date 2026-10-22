@@ -7,7 +7,12 @@ import { getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews'
 import { getKnowledgeEvidenceCeilings } from '../src/data/knowledgeEvidenceCeilings';
 import { getLifeType } from '../src/modules/species/species.service';
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
-import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets, buildCompatibilityTaxonResearchPlan } from '../src/services/compatibility/compatibility-field-coverage.service';
+import {
+  buildCompatibilityCoreFieldCoverage,
+  buildCompatibilityFastLaneResearchPackets,
+  buildCompatibilityTaxonResearchPlan,
+  isCompatibilityResearchGapCompletionEligible,
+} from '../src/services/compatibility/compatibility-field-coverage.service';
 import { buildCompatibilityVariantExactEvidenceQueue } from '../src/services/compatibility/variant-exact-evidence-queue.service';
 
 const { rows, summary, backlog } = buildCompatibilityCoreFieldCoverage();
@@ -22,6 +27,10 @@ assert.ok(summary.runtimeReviewedProfileSpecies >= 101);
 assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpecies);
 assert.ok(summary.oneFieldGapSpecies > 0);
 assert.ok(summary.genericOnboardingReadySpecies >= 43, 'High-yield source-first coverage should preserve at least 43 fully sourced generic-ready profiles');
+assert.equal(summary.decisionReadySpecies, 143, 'decision readiness must require reviewed identity plus the hard-fact floor, rather than 8/8 risk completeness');
+assert.equal(summary.decisionReadyButRiskIncompleteSpecies, 21, '21 identity-ready fish can already be judged while retaining explicit soft-risk gaps');
+assert.equal(summary.hardDecisionHeldSpecies, 165, 'remaining fish-domain objects stay held by identity/domain or hard-fact authority');
+assert.ok(summary.decisionReadySpecies > summary.genericOnboardingReadySpecies, 'decision-ready coverage must exceed strict generic 8/8 readiness');
 assert.equal(summary.fishCompatibilityDomainSpecies, 308, 'fish Compatibility scope should contain only fish-domain catalog objects');
 assert.equal(summary.fishIdentityHeldSpecies, 91, 'fish identity holds track missing_identity_or_domain only; variant evidence ceilings are accounted separately');
 assert.equal(summary.unsupportedDomainSpecies, 167, 'unsupported-domain objects must not inflate fish identity debt');
@@ -51,6 +60,27 @@ assert.equal(summary.predationRiskDiscoveryVariantIdentityHeldSpecies, 40, 'wave
 assert.equal(summary.predationRiskDiscoveryOtherHardHeldSpecies, 2, 'only two predation gaps remain behind non-variant hard evidence ceilings');
 assert.equal(backlog.filter(item => item.decisionImpact === 'hard_decision_blocker').length, 0);
 assert.equal(backlog.filter(item => item.decisionImpact === 'soft_risk_discovery').length, 47);
+
+assert.equal(
+  isCompatibilityResearchGapCompletionEligible('temperature', ['predation']),
+  true,
+  'a soft terminal predation ceiling must not defer future hard temperature research',
+);
+assert.equal(
+  isCompatibilityResearchGapCompletionEligible('adult_size', ['territoriality', 'tank_size']),
+  true,
+  'soft terminal behavior/space ceilings must not block hard adult-size completion',
+);
+assert.equal(
+  isCompatibilityResearchGapCompletionEligible('temperature', ['water']),
+  false,
+  'another hard terminal field must still hold hard-decision completion',
+);
+assert.equal(
+  isCompatibilityResearchGapCompletionEligible('predation', ['territoriality']),
+  false,
+  'soft risk-discovery completion remains conservative when companion soft fields are terminal',
+);
 
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0445','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);

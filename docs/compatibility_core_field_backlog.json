@@ -1,6 +1,6 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
-  "policy": "field-oriented evidence ledger; decisionImpact separates hard decision blockers from soft risk-discovery gaps. Completion-blocked opportunities remain visible with explicit blocker fields/reasons/authority; predation research debt is a safety-risk discovery surface, not a current insufficient_data blocker; no ordinary Pair Rule generation",
+  "policy": "field-oriented evidence ledger; decisionImpact separates hard decision blockers from soft risk-discovery gaps. Hard-decision research is deferred only by companion hard-decision terminal holds; soft risk-discovery work remains conservative and defers behind any companion terminal hold. All deferred opportunities stay visible with explicit blocker fields/reasons/authority; no ordinary Pair Rule generation",
   "totalItems": 47,
   "activeCompletionItems": 0,
   "deferredOpportunityItems": 47,

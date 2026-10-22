@@ -3,6 +3,7 @@ import { fishData } from '../src/data/fishData';
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
+import { isCompatibilitySupportedLifeType } from '../src/services/compatibility/compatibility-domain-scope.service';
 import type { Aquarium } from '../src/types';
 
 const baseline = {
@@ -13,7 +14,7 @@ const baseline = {
 } as const;
 
 const priorityNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼', '水晶虾'];
-const eligibleSpecies = fishData.filter(species => !['plant', 'hardscape'].includes(getLifeType(species)));
+const eligibleSpecies = fishData.filter(species => isCompatibilitySupportedLifeType(getLifeType(species)));
 const reviewedIds = getCompatibilityEvidenceAudit().reviewedSpeciesIds;
 const runtimeEffectiveProfileIds = eligibleSpecies.filter(species => Boolean(getReviewedCompatibilityProfileForFish(species))).map(species => species.id);
 const inheritedProfileCount = runtimeEffectiveProfileIds.filter(id => !reviewedIds.includes(id)).length;

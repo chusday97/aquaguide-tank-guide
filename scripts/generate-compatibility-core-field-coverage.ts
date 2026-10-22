@@ -23,7 +23,7 @@ const deferredBlockerSummary = {
 writeFileSync(`${outputDir}/compatibility_core_field_coverage.json`, JSON.stringify({ generatedFrom: 'source-controlled reviewed authority', ...report.summary, rows: report.rows }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_core_field_backlog.json`, JSON.stringify({
   generatedFrom: 'compatibility_core_field_coverage.json',
-  policy: 'field-oriented evidence ledger; decisionImpact separates hard decision blockers from soft risk-discovery gaps. Completion-blocked opportunities remain visible with explicit blocker fields/reasons/authority; predation research debt is a safety-risk discovery surface, not a current insufficient_data blocker; no ordinary Pair Rule generation',
+  policy: 'field-oriented evidence ledger; decisionImpact separates hard decision blockers from soft risk-discovery gaps. Hard-decision research is deferred only by companion hard-decision terminal holds; soft risk-discovery work remains conservative and defers behind any companion terminal hold. All deferred opportunities stay visible with explicit blocker fields/reasons/authority; no ordinary Pair Rule generation',
   totalItems: report.backlog.length,
   activeCompletionItems: report.backlog.filter(item => item.completionEligible).length,
   deferredOpportunityItems: deferredBacklog.length,
@@ -44,17 +44,17 @@ writeFileSync(`${outputDir}/compatibility_fast_lane_research_packets.json`, JSON
 }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_taxon_research_plan.json`, JSON.stringify({
   generatedFrom: 'compatibility_core_field_backlog.json',
-  policy: 'active completion research only: include completionEligible field gaps, defer evidence debt on objects with companion terminal holds; deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging',
+  policy: 'active completion research only: prioritize hard-decision gaps unless another hard-decision terminal hold remains; soft risk-discovery gaps still defer behind companion terminal holds. Deduplicate source discovery by biological base taxon; variant evidence never auto-promotes without reviewed field-scoped bridging',
   catalogObjects: new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId))).size,
   totalResearchJobs: taxonResearchPlan.length,
   variantBridgeJobs: taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length,
   items: taxonResearchPlan,
 }, null, 2) + '\n');
 
-const header = ['species_id','name','scientific_name','life_type','reviewed_profile','generic_onboarding_ready','authoritative_field_count','actionable_gap_count','terminal_gap_count',...report.summary.coreFields];
+const header = ['species_id','name','scientific_name','life_type','reviewed_profile','generic_onboarding_ready','decision_ready','authoritative_field_count','actionable_gap_count','terminal_gap_count',...report.summary.coreFields];
 const quote = (value: unknown) => { const text = String(value ?? ''); return /[,"\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text; };
 const lines = [header.join(','), ...report.rows.map(row => [
-  row.speciesId,row.name,row.scientificName,row.lifeType,row.reviewedProfile,row.genericOnboardingReady ? 'yes' : 'no',
+  row.speciesId,row.name,row.scientificName,row.lifeType,row.reviewedProfile,row.genericOnboardingReady ? 'yes' : 'no',row.decisionReady ? 'yes' : 'no',
   row.authoritativeFieldCount,row.actionableGapCount,row.terminalGapCount,
   ...report.summary.coreFields.map(field => row.fields[field].status),
 ].map(quote).join(','))];
@@ -63,6 +63,9 @@ writeFileSync(`${outputDir}/compatibility_core_field_coverage.csv`, lines.join('
 console.log(JSON.stringify({
   species: report.summary.speciesCount,
   ready: report.summary.genericOnboardingReadySpecies,
+  decisionReady: report.summary.decisionReadySpecies,
+  decisionReadyButRiskIncomplete: report.summary.decisionReadyButRiskIncompleteSpecies,
+  hardDecisionHeld: report.summary.hardDecisionHeldSpecies,
   coreFieldComplete: report.summary.coreFieldCompleteSpecies,
   oneFieldGap: report.summary.oneFieldGapSpecies,
   fastLaneResearchPackets: fastLanePackets.length,
