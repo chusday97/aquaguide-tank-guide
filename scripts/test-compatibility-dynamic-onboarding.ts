@@ -7,7 +7,6 @@ import {
   getReviewedCompatibilityProfile,
   getReviewedPairRule,
   getReviewedStageRiskProfile,
-  type ReviewedCompatibilityProfile,
 } from '../src/data/compatibilityEvidence';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { buildCompatibilityDecisionPlan, isCompatibilityDecisionFullyInformed } from '../src/services/compatibility/compatibility-decision-plan.service';
@@ -45,69 +44,32 @@ const syntheticFish: Fish = {
   housingMode: '适合混养',
 };
 
-const allCoreFacts = [
-  'water',
-  'temperature',
-  'ph',
-  'adult_size',
-  'tank_size',
-  'social_behavior',
-  'territoriality',
-  'predation',
-] as const;
-
-const readyDispositions = Object.fromEntries(allCoreFacts.map(field => [field, 'ready'])) as DomainSpeciesFact['compatibilityFactDispositions'];
+const decisionFacts = ['water', 'temperature', 'adult_size'] as const;
+const softRiskFacts = ['ph', 'tank_size', 'social_behavior', 'territoriality', 'predation'] as const;
+const partialRiskDispositions = {
+  ...Object.fromEntries(decisionFacts.map(field => [field, 'ready'])),
+  ...Object.fromEntries(softRiskFacts.map(field => [field, 'research_pending'])),
+} as DomainSpeciesFact['compatibilityFactDispositions'];
 
 const syntheticFact: DomainSpeciesFact = {
   id: syntheticId,
   waterType: 'freshwater',
   temperatureMinC: 24,
   temperatureMaxC: 28,
-  phMin: 6.5,
-  phMax: 7.5,
-  minTankLiters: 60,
-  minTankLengthCm: 60,
-  reviewed: true,
-  compatibilityRequiredFacts: [...allCoreFacts],
-  compatibilityFactDispositions: readyDispositions,
+  reviewed: false,
+  compatibilityRequiredFacts: [...decisionFacts],
+  compatibilityFactDispositions: partialRiskDispositions,
   adultLengthMinCm: 3,
   adultLengthMaxCm: 5,
-  socialMode: 'group',
-  minimumGroupSize: 6,
   evidenceIds: ['dynamic-reviewed-source'],
-  behaviorTraits: ['group_social'],
-  territoriality: 'none',
-  finNippingRisk: 'none',
-  finNipVulnerability: 'low',
-  swimmingPace: 'moderate',
-  predationRisk: 'none',
+  behaviorTraits: [],
   predationTargets: [],
-  predationVulnerability: 'low',
   lifeType: 'fish',
   size: 'Small',
 };
 
-const syntheticProfile: ReviewedCompatibilityProfile = {
-  speciesId: syntheticId,
-  waterType: 'freshwater',
-  behaviorTraits: ['group_social'],
-  minimumGroupSize: 6,
-  predationTargets: [],
-  confidence: 'high',
-  reviewStatus: 'reviewed',
-  requiredFacts: [...allCoreFacts],
-  citations: [{
-    id: 'dynamic-reviewed-source',
-    title: 'Dynamic onboarding reviewed fixture',
-    publisher: 'AquaGuide Test Authority',
-    url: 'https://example.invalid/dynamic-reviewed-source',
-    sourceType: 'peer_reviewed',
-    reviewStatus: 'reviewed',
-  }],
-};
-
 const evidenceProvider: CompatibilityEvidenceProvider = {
-  getProfile: speciesId => speciesId === syntheticId ? syntheticProfile : getReviewedCompatibilityProfile(speciesId),
+  getProfile: speciesId => speciesId === syntheticId ? undefined : getReviewedCompatibilityProfile(speciesId),
   getPairRule: (leftId, rightId) => {
     if (leftId === syntheticId || rightId === syntheticId) return undefined;
     return getReviewedPairRule(leftId, rightId);
@@ -161,15 +123,19 @@ for (const existing of readySpecies) {
 
   assert.equal(
     isCompatibilityDecisionFullyInformed(decision),
-    true,
-    'runtime-reviewed synthetic species must remain fully informed against ' + existing.id,
+    false,
+    'minimal decision-ready species must keep soft risk coverage explicitly partial against ' + existing.id,
   );
   assert.notEqual(
     decision.status,
     'insufficient_data',
-    'runtime-reviewed synthetic species must not require a precomputed pair against ' + existing.id,
+    'minimal decision-ready synthetic species must not require a full profile or precomputed pair against ' + existing.id,
   );
-  assert.equal(decision.metadata.decisionReadiness, 'reviewed');
+  assert.equal(decision.metadata.decisionReadiness, 'partial');
+  assert.ok(decision.metadata.domainRuleCodes.includes('risk_coverage_partial'));
+  assert.ok(!decision.metadata.domainRuleCodes.includes('species_review_pending'));
+  assert.ok(!decision.metadata.domainRuleCodes.includes('species_evidence_ceiling'));
+  assert.ok(!decision.metadata.domainRuleCodes.includes('evidence_ceiling_ph'));
   assert.ok(!decision.metadata.domainRuleCodes.includes('reviewed_pair_rule'));
 
   const plan = buildCompatibilityDecisionPlan(decision);
@@ -199,9 +165,11 @@ const wholeTankDecision = evaluateCompatibilityDecision({
 });
 assert.equal(wholeTankDecision.pairResults.length, 10, 'five-species whole tank must evaluate every unique pair dynamically');
 assert.ok(wholeTankDecision.tankAggregateResult, 'five-species whole tank must produce aggregate evaluation');
-assert.equal(isCompatibilityDecisionFullyInformed(wholeTankDecision), true);
+assert.equal(isCompatibilityDecisionFullyInformed(wholeTankDecision), false);
 assert.notEqual(wholeTankDecision.status, 'insufficient_data');
-assert.equal(wholeTankDecision.metadata.decisionReadiness, 'reviewed');
+assert.equal(wholeTankDecision.metadata.decisionReadiness, 'partial');
+assert.ok(wholeTankDecision.metadata.domainRuleCodes.includes('risk_coverage_partial'));
+assert.ok(!wholeTankDecision.metadata.domainRuleCodes.includes('species_review_pending'));
 for (const pair of wholeTankDecision.pairResults.filter(pair => pair.speciesA.id === syntheticId || pair.speciesB.id === syntheticId)) {
   assert.ok(!pair.rawResult.metadata.domainRuleCodes.includes('reviewed_pair_rule'), 'synthetic whole-tank pairs must remain generic-rule decisions');
 }
@@ -214,7 +182,15 @@ assert.ok(wholeTankPlan.stopCondition.length > 0);
 const incompleteProvider: CompatibilityEvidenceProvider = {
   ...evidenceProvider,
   getReviewedSpeciesFact: species => species.id === syntheticId
-    ? { ...syntheticFact, phMax: null }
+    ? {
+      ...syntheticFact,
+      adultLengthMinCm: null,
+      adultLengthMaxCm: null,
+      compatibilityFactDispositions: {
+        ...syntheticFact.compatibilityFactDispositions,
+        adult_size: 'public_evidence_insufficient',
+      },
+    }
     : undefined,
 };
 const freshwaterReference = readySpecies.find(item => String(item.waterType || '').toLowerCase() === 'freshwater') || readySpecies[0];
@@ -228,7 +204,7 @@ const incompleteDecision = evaluateCompatibilityDecision({
   evidenceProvider: incompleteProvider,
 });
 assert.equal(incompleteDecision.status, 'insufficient_data');
-assert.ok(incompleteDecision.metadata.domainRuleCodes.includes('required_fact_ph_missing'));
+assert.ok(incompleteDecision.metadata.domainRuleCodes.includes('species_public_evidence_insufficient'));
 
 console.log(JSON.stringify({
   syntheticSpecies: syntheticId,
@@ -242,5 +218,5 @@ console.log(JSON.stringify({
   wholeTankSpecies: 5,
   wholeTankPairs: wholeTankDecision.pairResults.length,
   wholeTankStatus: wholeTankDecision.status,
-  invariant: 'unregistered species + reviewed 8/8 runtime facts => generic Compatibility decision without pair precomputation',
+  invariant: 'unregistered fish + reviewed identity/water/temperature/adult-size => usable generic Compatibility decision; soft risk gaps stay explicit without pair precomputation',
 }, null, 2));

@@ -118,7 +118,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v16-space-input-relevance';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v17-decision-readiness';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -287,6 +287,27 @@ const SOFT_EVIDENCE_CEILING_FACTS = new Set<CompatibilityRequiredFact>([
 
 const isSoftEvidenceCeilingFact = (fact: CompatibilityRequiredFact) => SOFT_EVIDENCE_CEILING_FACTS.has(fact);
 
+const DECISION_CRITICAL_FACTS: readonly CompatibilityRequiredFact[] = ['water', 'temperature', 'adult_size'];
+const factDispositionFor = (species: DomainSpeciesFact, fact: CompatibilityRequiredFact) => species.compatibilityFactDispositions?.[fact];
+const hasCoverageMetadata = (species: DomainSpeciesFact) => Boolean(
+  species.compatibilityFactDispositions && Object.keys(species.compatibilityFactDispositions).length > 0,
+);
+const hasDecisionAuthority = (species: DomainSpeciesFact) => {
+  if (!hasCoverageMetadata(species)) return species.reviewed;
+  const decisionDispositions = DECISION_CRITICAL_FACTS.map(fact => factDispositionFor(species, fact));
+  if (decisionDispositions.every(disposition => disposition === undefined)) return species.reviewed;
+  return DECISION_CRITICAL_FACTS.every(fact => (
+    factDispositionFor(species, fact) === 'ready'
+    && requiredFactAvailable(species, fact)
+  ));
+};
+const hasSoftRiskCoverageGap = (species: DomainSpeciesFact) => (
+  Object.entries(species.compatibilityFactDispositions || {}).some(([fact, disposition]) => (
+    isSoftEvidenceCeilingFact(fact as CompatibilityRequiredFact)
+    && disposition !== 'ready'
+  ))
+);
+
 export const evaluateCompatibility = ({
   intent,
   tank,
@@ -306,8 +327,6 @@ export const evaluateCompatibility = ({
     ruleCodes.push(code);
     if (statusRank[next] > statusRank[status]) status = next;
   };
-  const factDispositionFor = (species: DomainSpeciesFact, fact: CompatibilityRequiredFact) => species.compatibilityFactDispositions?.[fact];
-  const hasCoverageMetadata = (species: DomainSpeciesFact) => Boolean(species.compatibilityFactDispositions && Object.keys(species.compatibilityFactDispositions).length > 0);
   const raiseFactGap = (species: DomainSpeciesFact[], fact: CompatibilityRequiredFact, legacyCode: string) => {
     const dispositions = species.map(item => factDispositionFor(item, fact)).filter(Boolean) as CompatibilityFactDisposition[];
     if (dispositions.includes('identity_unresolved')) return raise('insufficient_data', `identity_${fact}_unresolved`);
@@ -327,23 +346,39 @@ export const evaluateCompatibility = ({
   const allSpeciesReviewed = Boolean(candidateSpecies)
     && existingSpecies.every(species => species.reviewed)
     && Boolean(candidateSpecies?.reviewed);
+  const allSpeciesDecisionReady = Boolean(candidateSpecies)
+    && existingSpecies.every(hasDecisionAuthority)
+    && Boolean(candidateSpecies && hasDecisionAuthority(candidateSpecies));
   const hasIdentityUnresolved = participatingSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('identity_unresolved'));
-  const unreviewedSpecies = participatingSpecies.filter(species => !species.reviewed);
-  const unreviewedPublicEvidenceCeilings = unreviewedSpecies.flatMap(species => (
+  const decisionHeldSpecies = participatingSpecies.filter(species => !hasDecisionAuthority(species));
+  const heldPublicEvidenceCeilings = decisionHeldSpecies.flatMap(species => (
     Object.entries(species.compatibilityFactDispositions || {})
       .filter(([, disposition]) => disposition === 'public_evidence_insufficient')
       .map(([fact]) => fact as CompatibilityRequiredFact)
   ));
-  const hasUnreviewedHardEvidenceCeiling = unreviewedPublicEvidenceCeilings.some(fact => !isSoftEvidenceCeilingFact(fact));
-  const hasUnreviewedSoftEvidenceCeiling = unreviewedPublicEvidenceCeilings.some(isSoftEvidenceCeilingFact);
-  const hasUnreviewedResearchPending = unreviewedSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('research_pending'));
-  const hasLegacyUnreviewedSpecies = unreviewedSpecies.some(species => !hasCoverageMetadata(species));
+  const hasUnreviewedHardEvidenceCeiling = heldPublicEvidenceCeilings.some(fact => !isSoftEvidenceCeilingFact(fact));
+  const hasHeldSoftEvidenceCeiling = heldPublicEvidenceCeilings.some(isSoftEvidenceCeilingFact);
+  const hasDecisionReadySoftEvidenceCeiling = participatingSpecies.some(species => (
+    hasDecisionAuthority(species)
+    && !species.reviewed
+    && Object.entries(species.compatibilityFactDispositions || {}).some(([fact, disposition]) => (
+      disposition === 'public_evidence_insufficient'
+      && isSoftEvidenceCeilingFact(fact as CompatibilityRequiredFact)
+    ))
+  ));
+  const hasUnreviewedResearchPending = decisionHeldSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('research_pending'));
+  const hasLegacyUnreviewedSpecies = decisionHeldSpecies.some(species => !hasCoverageMetadata(species));
+  const hasPartialRiskCoverage = participatingSpecies.some(species => (
+    hasDecisionAuthority(species)
+    && !species.reviewed
+    && hasSoftRiskCoverageGap(species)
+  ));
   if (candidateSpecies) {
     if (hasIdentityUnresolved) raise('insufficient_data', 'species_identity_unresolved');
     else if (hasUnreviewedHardEvidenceCeiling) raise('insufficient_data', 'species_public_evidence_insufficient');
     else if (hasLegacyUnreviewedSpecies) raise('insufficient_data', 'species_evidence_unreviewed');
-    else if (hasUnreviewedSoftEvidenceCeiling) raise('caution', 'species_evidence_ceiling');
-    else if (hasUnreviewedResearchPending || !allSpeciesReviewed) raise('caution', 'species_review_pending');
+    else if (hasHeldSoftEvidenceCeiling || hasDecisionReadySoftEvidenceCeiling) raise('caution', 'species_evidence_ceiling');
+    else if (hasUnreviewedResearchPending || !allSpeciesDecisionReady) raise('caution', 'species_review_pending');
   }
   const reviewedSpeciesReadiness = participatingSpecies.filter(species => species.reviewed).map(species => ({ species, readiness: getCompatibilityTraitReadiness(species) }));
   for (const { species, readiness } of reviewedSpeciesReadiness) {
@@ -469,14 +504,10 @@ export const evaluateCompatibility = ({
       } else if (!temperatureOverlap) {
         raise('not_recommended', 'temperature_range_conflict');
       }
-      const phRequired = existing.compatibilityRequiredFacts?.includes('ph') || candidateSpecies.compatibilityRequiredFacts?.includes('ph');
       const phOverlap = rangesOverlap(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax);
-      if (phOverlap === null && phRequired) {
-        const missingPh = [existing, candidateSpecies].filter(species => !hasFiniteRange(species.phMin, species.phMax));
-        raiseFactGap(missingPh, 'ph', 'ph_range_missing');
-      } else if (phOverlap === false) {
+      if (phOverlap === false) {
         raise('caution', 'ph_range_conflict');
-      } else if (phRequired && rangesOnlyTouchAtBoundary(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax)) {
+      } else if (phOverlap === true && rangesOnlyTouchAtBoundary(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax)) {
         raise('caution', 'ph_range_edge_overlap');
       }
     }
@@ -630,15 +661,22 @@ export const evaluateCompatibility = ({
   }
 
   if (ruleCodes.length === 0 && status === 'compatible') ruleCodes.push('compatibility_clear');
+  if (hasPartialRiskCoverage) ruleCodes.push('risk_coverage_partial');
 
-  // Missing internal research coverage should make the decision conservative,
-  // not erase an otherwise usable verdict. Exhausted public evidence for
-  // manageable facts (pH/space/behavior/predation scope) stays caution with an
-  // explicit evidence boundary; identity, water, temperature and adult-size
-  // ceilings remain unknown. Hard safety blocks always outrank either state.
+  // Decision-critical authority is identity + water + temperature + adult size.
+  // Missing optional risk-detail fields (pH/space/social/territorial/predation)
+  // lower evidence completeness but do not create a risk verdict by themselves.
+  // Hard safety blocks and genuine decision-critical evidence ceilings still
+  // outrank this partial-coverage state.
   const finalStatus: CompatibilityDecisionStatus = status;
   const hasHardPairEvidenceBoundary = pairEvidenceBoundaries.some(boundary => boundary.status === 'insufficient_data');
-  const hasDecisionCriticalResearchGap = ruleCodes.some(code => code === 'species_review_pending' || code === 'species_evidence_ceiling' || code.startsWith('review_pending_') || code.startsWith('evidence_ceiling_') || code.startsWith('pair_'));
+  const hasDecisionCriticalResearchGap = ruleCodes.some(code => (
+    code === 'species_review_pending'
+    || code === 'species_evidence_ceiling'
+    || code.startsWith('review_pending_')
+    || code.startsWith('evidence_ceiling_')
+    || code.startsWith('pair_')
+  ));
   const hasOptionalTankInputGap = ruleCodes.some(code => (
     code === 'tank_temperature_unreported'
     || code === 'tank_volume_unreported_length_available'
@@ -646,7 +684,7 @@ export const evaluateCompatibility = ({
   ));
   const decisionReadiness: CompatibilityDecisionReadiness = hasIdentityUnresolved || hasUnreviewedHardEvidenceCeiling || hasLegacyUnreviewedSpecies || hasHardPairEvidenceBoundary
     ? 'unknown'
-    : hasDecisionCriticalResearchGap || hasOptionalTankInputGap || !allSpeciesReviewed || !allRequiredTraitsReady || isInsufficientData(finalStatus)
+    : hasPartialRiskCoverage || hasDecisionCriticalResearchGap || hasOptionalTankInputGap || !allSpeciesReviewed || !allRequiredTraitsReady || isInsufficientData(finalStatus)
       ? 'partial'
       : 'reviewed';
 

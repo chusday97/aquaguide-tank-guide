@@ -100,6 +100,9 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   tank_water_type_unreported_species_overlap: {
     code: 'tank_water_type_unreported_species_overlap', title: '水体类型由物种共同需求确认', evidence: '用户未单独填写水体类型，但参与物种的已审核水体需求存在明确共同类型，因此不阻断本次判断。', severity: 'info', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  risk_coverage_partial: {
+    code: 'risk_coverage_partial', title: '基础混养判断可用，风险资料仍在完善', evidence: '物种身份、水体、适温和成体体型已有审核依据，可用于当前基础混养判断；部分 pH、空间或行为风险资料尚未完整覆盖，不会被系统或 AI 自动补成“安全”。', severity: 'info', basis: 'rule_inference', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   species_evidence_unreviewed: {
     code: 'species_evidence_unreviewed', title: '物种资料尚未审核', evidence: '至少一个物种的关键行为资料尚未审核，不能据此给出安全结论。', severity: 'medium', basis: 'species_trait', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
@@ -272,7 +275,7 @@ export const applyCanonicalCompatibilityDecision = (
     warningCodes.has(rule.code)
     && (rule.code !== 'reviewed_pair_rule' || !hasConcreteReviewedPairRule)
   ));
-  const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context', 'tank_temperature_unreported', 'tank_volume_unreported_length_available', 'tank_water_type_unreported_species_overlap']);
+  const informationalCodes = new Set(['compatibility_clear', 'risk_coverage_partial', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context', 'tank_temperature_unreported', 'tank_volume_unreported_length_available', 'tank_water_type_unreported_species_overlap']);
   const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code) && !informationalCodes.has(rule.code));
   const domainInformationalRules = domainRules.filter(rule => informationalCodes.has(rule.code));
 

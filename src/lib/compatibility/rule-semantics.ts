@@ -81,12 +81,21 @@ const deterministicRuleTieBreakKey = (rule: PrioritizableRule) => ([
   rule.evidence || '',
 ].join('::'));
 
+const rulePriority = (code: string) => {
+  if (RULE_PRIORITY[code] != null) return RULE_PRIORITY[code];
+  if (code.startsWith('pair_rule_predation')) return RULE_PRIORITY.predation_risk;
+  if (code.startsWith('pair_rule_fin_nipping')) return RULE_PRIORITY.fin_nipping_target_vulnerability;
+  if (code.startsWith('pair_rule_behavior_and_territor')) return RULE_PRIORITY.territorial_conflict;
+  if (code.startsWith('pair_rule_')) return RULE_PRIORITY.reviewed_pair_rule;
+  return 500;
+};
+
 export const prioritizeCompatibilityRules = <T extends PrioritizableRule>(rules: T[]): T[] => (
   rules
     .map((rule, index) => ({ rule, index }))
     .sort((a, b) => (
-      (RULE_PRIORITY[a.rule.code] ?? (a.rule.code.startsWith('pair_rule_') ? 35 : 500))
-      - (RULE_PRIORITY[b.rule.code] ?? (b.rule.code.startsWith('pair_rule_') ? 35 : 500))
+      rulePriority(a.rule.code)
+      - rulePriority(b.rule.code)
       || severityPriority(a.rule.severity) - severityPriority(b.rule.severity)
       || deterministicRuleTieBreakKey(a.rule).localeCompare(deterministicRuleTieBreakKey(b.rule), 'en')
       || a.index - b.index

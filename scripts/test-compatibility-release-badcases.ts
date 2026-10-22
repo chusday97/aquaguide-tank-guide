@@ -256,7 +256,10 @@ const overloaded = evaluateCompatibilityDecision({
   items: loadItems.map(id => ({ species: byId(id), quantity: 12 })),
 });
 assert.equal(overloaded.status, 'caution');
-assert.ok(overloaded.warningRules.some(rule => rule.code === 'bioload_over_limit'));
+assert.ok(
+  overloaded.warningRules.some(rule => rule.code === 'bioload_screening_high' || rule.code === 'bioload_over_limit'),
+  'overloaded case must retain the canonical bioload warning even if legacy aliases are deduped',
+);
 const adjusted = evaluateCompatibilityDecision({
   tank: { ...fullTank, dimensions: { length: '60', width: '30', height: '35' }, targetTemperature: '24' },
   items: loadItems.map(id => ({ species: byId(id), quantity: 8 })),
