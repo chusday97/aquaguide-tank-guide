@@ -10,6 +10,8 @@ const config: CompatibilityResearchProviderConfig = {
   model: 'qwen3.7-flash-2026-07-15',
   fallbackModels: [],
   timeoutMs: 5_000,
+  searchTimeoutMs: 15_000,
+  searchStrategy: 'turbo',
   maxSearchCandidates: 6,
   maxVerifiedSources: 4,
   maxSourceChars: 8_000,

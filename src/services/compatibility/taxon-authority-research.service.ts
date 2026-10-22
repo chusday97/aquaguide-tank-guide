@@ -17,6 +17,7 @@ import {
 import { isCatalogFieldReviewValueValid } from '../../data/catalogFieldReviews';
 import { getBaseSpeciesScientificName } from '../../modules/species/speciesTaxonomy';
 import {
+  buildCompatibilityCoreFieldCoverage,
   getCompatibilityCoreFieldCoverageRow,
   type CompatibilityCoreField,
 } from './compatibility-field-coverage.service';
@@ -542,5 +543,148 @@ export const buildCompatibilityEvidenceAcquisitionPlan = (
     nextStage: !identityReady ? 'identity_resolution' : coverage.genericOnboardingReady ? 'decision_ready' : 'field_authority',
     genericOnboardingReady: coverage.genericOnboardingReady,
     fields,
+  };
+};
+
+export type CompatibilityResearchDebtLane =
+  | 'full_authority_ready'
+  | 'decision_ready_soft_debt'
+  | 'identity_first'
+  | 'domain_extension'
+  | 'hard_evidence_ceiling'
+  | 'decision_research_now'
+  | 'not_applicable'
+  | 'other_hold';
+
+export type CompatibilityResearchDebtRoutingItem = {
+  speciesId: string;
+  name: string;
+  scientificName: string;
+  lifeType: ReturnType<typeof getCompatibilityCoreFieldCoverageRow>['lifeType'];
+  lane: CompatibilityResearchDebtLane;
+  decisionReady: boolean;
+  genericOnboardingReady: boolean;
+  identityReadiness: ReturnType<typeof getCompatibilityCoreFieldCoverageRow>['identityReadiness'];
+  unresolvedFields: CompatibilityEvidenceAcquisitionPlan['fields'];
+  hardDecisionGaps: CompatibilityEvidenceAcquisitionPlan['fields'];
+  softRiskGaps: CompatibilityEvidenceAcquisitionPlan['fields'];
+  immediateResearchFields: CompatibilityEvidenceAcquisitionPlan['fields'];
+  optionalResearchFields: CompatibilityEvidenceAcquisitionPlan['fields'];
+};
+
+const unresolvedAcquisitionFields = (plan: CompatibilityEvidenceAcquisitionPlan) => (
+  plan.fields.filter(item => item.route !== 'authority_ready' && item.route !== 'not_applicable')
+);
+
+const countBy = <T extends string>(values: T[]) => Object.fromEntries(
+  [...new Set(values)].sort().map(value => [value, values.filter(candidate => candidate === value).length]),
+) as Partial<Record<T, number>>;
+
+export const buildCompatibilityResearchDebtRoutingReport = () => {
+  const coverage = buildCompatibilityCoreFieldCoverage();
+  const coverageById = new Map(coverage.rows.map(row => [row.speciesId, row]));
+  const decisionFieldSet = new Set<CompatibilityCoreField>(
+    [...COMPATIBILITY_DECISION_REQUIRED_FACTS] as CompatibilityCoreField[],
+  );
+
+  const items: CompatibilityResearchDebtRoutingItem[] = fishData.map(fish => {
+    const row = coverageById.get(fish.id) ?? getCompatibilityCoreFieldCoverageRow(fish);
+    const plan = buildCompatibilityEvidenceAcquisitionPlan(fish);
+    const unresolvedFields = unresolvedAcquisitionFields(plan);
+    const hardDecisionGaps = unresolvedFields.filter(item => decisionFieldSet.has(item.field));
+    const softRiskGaps = unresolvedFields.filter(item => !decisionFieldSet.has(item.field));
+    const applicableFields = plan.fields.filter(item => item.route !== 'not_applicable');
+
+    let lane: CompatibilityResearchDebtLane;
+    if (plan.genericOnboardingReady) lane = 'full_authority_ready';
+    else if (plan.decisionReady) lane = 'decision_ready_soft_debt';
+    else if (row.lifeType !== 'fish') lane = applicableFields.length === 0 ? 'not_applicable' : 'domain_extension';
+    else if (hardDecisionGaps.some(item => item.route === 'identity_resolution_required')) lane = 'identity_first';
+    else if (hardDecisionGaps.some(item => item.route === 'domain_extension_required')) lane = 'domain_extension';
+    else if (hardDecisionGaps.some(item => item.route === 'public_evidence_ceiling')) lane = 'hard_evidence_ceiling';
+    else if (hardDecisionGaps.some(item => (
+      item.route === 'genus_authority_research'
+      || item.route === 'species_targeted_research'
+    ))) lane = 'decision_research_now';
+    else lane = 'other_hold';
+
+    const immediateResearchFields = lane === 'decision_research_now'
+      ? hardDecisionGaps.filter(item => (
+          item.route === 'genus_authority_research'
+          || item.route === 'species_targeted_research'
+        ))
+      : [];
+    const optionalResearchFields = lane === 'decision_ready_soft_debt'
+      ? softRiskGaps.filter(item => (
+          item.route === 'genus_authority_research'
+          || item.route === 'species_targeted_research'
+        ))
+      : [];
+
+    return {
+      speciesId: fish.id,
+      name: fish.name,
+      scientificName: fish.scientificName,
+      lifeType: row.lifeType,
+      lane,
+      decisionReady: plan.decisionReady,
+      genericOnboardingReady: plan.genericOnboardingReady,
+      identityReadiness: plan.identityReadiness,
+      unresolvedFields,
+      hardDecisionGaps,
+      softRiskGaps,
+      immediateResearchFields,
+      optionalResearchFields,
+    };
+  });
+
+  const oldBacklogRouted = coverage.backlog.map(backlogItem => {
+    const item = items.find(candidate => candidate.speciesId === backlogItem.speciesId);
+    const fieldRoute = item?.unresolvedFields.find(field => field.field === backlogItem.field)?.route ?? null;
+    return {
+      speciesId: backlogItem.speciesId,
+      field: backlogItem.field,
+      route: fieldRoute,
+      lane: item?.lane ?? 'other_hold' as CompatibilityResearchDebtLane,
+      completionEligible: backlogItem.completionEligible,
+      blockingTerminalFields: [...backlogItem.blockingTerminalFields],
+      blockingTerminalReasons: [...backlogItem.blockingTerminalReasons],
+    };
+  });
+
+  const debtItems = items.filter(item => item.lane !== 'full_authority_ready');
+  const decisionReadySoftDebt = items.filter(item => item.lane === 'decision_ready_soft_debt');
+  const immediateResearch = items.filter(item => item.lane === 'decision_research_now');
+
+  return {
+    policy: 'Route work by decision impact: identity/domain/hard-evidence blockers first; direct research only when it can unlock a hard decision; decision-ready soft-risk gaps never block the user verdict. Pair packs are not an onboarding dependency.',
+    summary: {
+      catalogObjects: items.length,
+      fullAuthorityReadySpecies: items.filter(item => item.lane === 'full_authority_ready').length,
+      decisionReadySoftDebtSpecies: decisionReadySoftDebt.length,
+      decisionReadySoftDebtFields: decisionReadySoftDebt.reduce((count, item) => count + item.unresolvedFields.length, 0),
+      immediateDecisionResearchSpecies: immediateResearch.length,
+      immediateDecisionResearchFields: immediateResearch.reduce((count, item) => count + item.immediateResearchFields.length, 0),
+      optionalRiskResearchSpecies: decisionReadySoftDebt.filter(item => item.optionalResearchFields.length > 0).length,
+      optionalRiskResearchFields: decisionReadySoftDebt.reduce((count, item) => count + item.optionalResearchFields.length, 0),
+      identityFirstSpecies: items.filter(item => item.lane === 'identity_first').length,
+      domainExtensionSpecies: items.filter(item => item.lane === 'domain_extension').length,
+      hardEvidenceCeilingSpecies: items.filter(item => item.lane === 'hard_evidence_ceiling').length,
+      notApplicableSpecies: items.filter(item => item.lane === 'not_applicable').length,
+      otherHoldSpecies: items.filter(item => item.lane === 'other_hold').length,
+      laneCounts: countBy(items.map(item => item.lane)),
+      unresolvedRouteCounts: countBy(debtItems.flatMap(item => item.unresolvedFields.map(field => field.route))),
+      legacyVisibleBacklogItems: oldBacklogRouted.length,
+      legacyBacklogImmediateResearchItems: oldBacklogRouted.filter(item => (
+        item.completionEligible
+        && (item.route === 'genus_authority_research' || item.route === 'species_targeted_research')
+      )).length,
+      legacyBacklogIdentityFirstItems: oldBacklogRouted.filter(item => item.route === 'identity_resolution_required').length,
+      legacyBacklogDeferredSpeciesResearchItems: oldBacklogRouted.filter(item => (
+        !item.completionEligible && item.route === 'species_targeted_research'
+      )).length,
+    },
+    items: debtItems,
+    legacyBacklogRouting: oldBacklogRouted,
   };
 };

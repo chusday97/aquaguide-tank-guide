@@ -26,6 +26,8 @@ export type CompatibilityResearchProviderConfig = {
   model: string;
   fallbackModels: string[];
   timeoutMs: number;
+  searchTimeoutMs: number;
+  searchStrategy: 'turbo' | 'max';
   maxSearchCandidates: number;
   maxVerifiedSources: number;
   maxSourceChars: number;
@@ -39,6 +41,8 @@ export type CompatibilityResearchProviderReadiness = {
   fallbackModels: string[];
   searchMode: 'bailian_web_search';
   sourceVerification: 'server_fetch_required';
+  searchStrategy: 'turbo' | 'max';
+  searchTimeoutMs: number;
 };
 
 const searchCandidateSchema = z.object({
@@ -243,6 +247,7 @@ export type CompatibilityResearchResumeBundle = {
 };
 
 export type CompatibilityResearchProviderPreflight = {
+  phase?: 'base_model' | 'web_search';
   status: 'ready' | 'not_configured' | 'transport_unavailable' | 'credential_rejected' | 'http_error' | 'invalid_response';
   configured: boolean;
   providerId: string;
@@ -772,7 +777,7 @@ const discoveryCandidates = async (
       const routeFields = specializedRoute ? [specializedRoute.field] : targetFields;
       const output = await postJson<SearchOutput>(searchOutputSchema, {
         ...config,
-        timeoutMs: Math.min(config.timeoutMs, 7_000),
+        timeoutMs: config.searchTimeoutMs,
       }, fetchImpl, {
         stream: false,
         temperature: 0,
@@ -781,7 +786,7 @@ const discoveryCandidates = async (
         enable_search: true,
         search_options: {
           forced_search: true,
-          search_strategy: 'max',
+          search_strategy: config.searchStrategy,
         },
         response_format: { type: 'json_object' },
         messages: [
@@ -1158,7 +1163,7 @@ export const researchCompatibilityVariantIdentities = async (
   for (const route of variantIdentityDiscoveryRoutes) {
     const searchResult = await postJsonWithModel<SearchOutput>(
       searchOutputSchema,
-      { ...config, timeoutMs: Math.min(config.timeoutMs, 8_000) },
+      { ...config, timeoutMs: config.searchTimeoutMs },
       fetchImpl,
       {
         stream: false,
@@ -1166,7 +1171,7 @@ export const researchCompatibilityVariantIdentities = async (
         max_tokens: 1800,
         enable_thinking: false,
         enable_search: true,
-        search_options: { forced_search: true, search_strategy: 'max' },
+        search_options: { forced_search: true, search_strategy: config.searchStrategy },
         response_format: { type: 'json_object' },
         messages: [
           {
@@ -1392,7 +1397,7 @@ export const researchCompatibilityVariantFields = async (
   for (const route of ['institutional_husbandry', 'academic_variant'] as const) {
     const searchResult = await postJsonWithModel<SearchOutput>(
       searchOutputSchema,
-      { ...config, timeoutMs: Math.min(config.timeoutMs, 8_000) },
+      { ...config, timeoutMs: config.searchTimeoutMs },
       fetchImpl,
       {
         stream: false,
@@ -1400,7 +1405,7 @@ export const researchCompatibilityVariantFields = async (
         max_tokens: 1800,
         enable_thinking: false,
         enable_search: true,
-        search_options: { forced_search: true, search_strategy: 'max' },
+        search_options: { forced_search: true, search_strategy: config.searchStrategy },
         response_format: { type: 'json_object' },
         messages: [
           {
@@ -1637,7 +1642,7 @@ export const researchCompatibilityGenusAuthority = async (
   try {
     const search = await postJsonWithModel<SearchOutput>(
       searchOutputSchema,
-      { ...config, timeoutMs: Math.min(config.timeoutMs, 15_000) },
+      { ...config, timeoutMs: config.searchTimeoutMs },
       fetchImpl,
       {
         stream: false,
@@ -1645,7 +1650,7 @@ export const researchCompatibilityGenusAuthority = async (
         max_tokens: 1400,
         enable_thinking: false,
         enable_search: true,
-        search_options: { forced_search: true, search_strategy: 'max' },
+        search_options: { forced_search: true, search_strategy: config.searchStrategy },
         response_format: { type: 'json_object' },
         messages: [
           {
@@ -2115,16 +2120,23 @@ const parseModelList = (value?: string) => [...new Set(
 
 export const buildCompatibilityResearchProviderConfig = (
   env: NodeJS.ProcessEnv = process.env,
-): CompatibilityResearchProviderConfig => ({
-  apiKey: env.COMPATIBILITY_RESEARCH_AI_API_KEY || env.AI_API_KEY || env.DEEPSEEK_API_KEY || '',
-  baseUrl: (env.COMPATIBILITY_RESEARCH_AI_BASE_URL || env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || '').replace(/\/$/, ''),
-  model: env.COMPATIBILITY_RESEARCH_AI_MODEL || env.COMPATIBILITY_AI_MODEL || env.AI_MODEL || '',
-  fallbackModels: parseModelList(env.COMPATIBILITY_RESEARCH_AI_FALLBACK_MODELS || env.COMPATIBILITY_AI_FALLBACK_MODELS),
-  timeoutMs: Number(env.COMPATIBILITY_RESEARCH_TIMEOUT_MS || env.AI_TIMEOUT_MS || 20_000),
-  maxSearchCandidates: Math.max(1, Math.min(12, Number(env.COMPATIBILITY_RESEARCH_MAX_SEARCH_CANDIDATES || 10))),
-  maxVerifiedSources: Math.max(1, Math.min(8, Number(env.COMPATIBILITY_RESEARCH_MAX_VERIFIED_SOURCES || 6))),
-  maxSourceChars: Math.max(2_000, Math.min(20_000, Number(env.COMPATIBILITY_RESEARCH_MAX_SOURCE_CHARS || 8_000))),
-});
+): CompatibilityResearchProviderConfig => {
+  const timeoutMs = Math.max(1_000, Number(env.COMPATIBILITY_RESEARCH_TIMEOUT_MS || env.AI_TIMEOUT_MS || 20_000));
+  const requestedSearchTimeout = Number(env.COMPATIBILITY_RESEARCH_SEARCH_TIMEOUT_MS || Math.max(timeoutMs, 15_000));
+  const searchStrategy = env.COMPATIBILITY_RESEARCH_SEARCH_STRATEGY === 'max' ? 'max' : 'turbo';
+  return {
+    apiKey: env.COMPATIBILITY_RESEARCH_AI_API_KEY || env.AI_API_KEY || env.DEEPSEEK_API_KEY || '',
+    baseUrl: (env.COMPATIBILITY_RESEARCH_AI_BASE_URL || env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || '').replace(/\/$/, ''),
+    model: env.COMPATIBILITY_RESEARCH_AI_MODEL || env.COMPATIBILITY_AI_MODEL || env.AI_MODEL || '',
+    fallbackModels: parseModelList(env.COMPATIBILITY_RESEARCH_AI_FALLBACK_MODELS || env.COMPATIBILITY_AI_FALLBACK_MODELS),
+    timeoutMs,
+    searchTimeoutMs: Math.max(5_000, Math.min(60_000, requestedSearchTimeout)),
+    searchStrategy,
+    maxSearchCandidates: Math.max(1, Math.min(12, Number(env.COMPATIBILITY_RESEARCH_MAX_SEARCH_CANDIDATES || 10))),
+    maxVerifiedSources: Math.max(1, Math.min(8, Number(env.COMPATIBILITY_RESEARCH_MAX_VERIFIED_SOURCES || 6))),
+    maxSourceChars: Math.max(2_000, Math.min(20_000, Number(env.COMPATIBILITY_RESEARCH_MAX_SOURCE_CHARS || 8_000))),
+  };
+};
 
 export const acquireVerifiedCompatibilitySourcesDetailed = async (
   input: { scientificName: string },
@@ -2172,6 +2184,8 @@ export const getCompatibilitySpeciesResearchProviderReadiness = (
   fallbackModels: [...config.fallbackModels],
   searchMode: 'bailian_web_search',
   sourceVerification: 'server_fetch_required',
+  searchStrategy: config.searchStrategy,
+  searchTimeoutMs: config.searchTimeoutMs,
 });
 
 const buildResearchPacketFromDocuments = async ({
@@ -2267,6 +2281,86 @@ export const probeCompatibilityResearchProvider = async (
       return { ...base, status: 'http_error', httpStatus: normalized.statusCode ?? null, reasonCode: 'provider_quota_exhausted' };
     }
     return { ...base, status: 'invalid_response', httpStatus: normalized.statusCode ?? null, reasonCode: normalized.reason };
+  }
+};
+
+export const probeCompatibilityResearchSearchProvider = async (
+  config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
+  fetchImpl: FetchLike = fetch,
+): Promise<CompatibilityResearchProviderPreflight> => {
+  const base = await probeCompatibilityResearchProvider(config, fetchImpl);
+  if (base.status !== 'ready') return { ...base, phase: 'base_model' };
+
+  try {
+    const result = await postJsonWithModel<SearchOutput>(
+      searchOutputSchema,
+      { ...config, timeoutMs: config.searchTimeoutMs },
+      fetchImpl,
+      {
+        stream: false,
+        temperature: 0,
+        max_tokens: 500,
+        enable_thinking: false,
+        enable_search: true,
+        search_options: { forced_search: true, search_strategy: config.searchStrategy },
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a connectivity preflight for web search. Return one real public source URL as strict JSON only.',
+          },
+          {
+            role: 'user',
+            content: 'Search the web for FishBase and return JSON only: {"candidates":[{"url":"https://..."}]}',
+          },
+        ],
+      },
+      1,
+    );
+    return {
+      ...base,
+      phase: 'web_search',
+      model: result.model,
+      status: 'ready',
+      httpStatus: 200,
+      reasonCode: null,
+    };
+  } catch (error) {
+    const normalized = normalizeCompatibilityResearchProviderError(error);
+    if (normalized.reason === 'access_denied') {
+      return {
+        ...base,
+        phase: 'web_search',
+        status: 'credential_rejected',
+        httpStatus: normalized.statusCode ?? null,
+        reasonCode: 'provider_credential_rejected',
+      };
+    }
+    if (normalized.reason === 'timeout' || normalized.reason === 'network' || normalized.reason === 'rate_limited') {
+      return {
+        ...base,
+        phase: 'web_search',
+        status: 'transport_unavailable',
+        httpStatus: normalized.statusCode ?? null,
+        reasonCode: 'web_search_' + normalized.reason,
+      };
+    }
+    if (normalized.reason === 'quota_exhausted') {
+      return {
+        ...base,
+        phase: 'web_search',
+        status: 'http_error',
+        httpStatus: normalized.statusCode ?? null,
+        reasonCode: 'provider_quota_exhausted',
+      };
+    }
+    return {
+      ...base,
+      phase: 'web_search',
+      status: 'invalid_response',
+      httpStatus: normalized.statusCode ?? null,
+      reasonCode: 'web_search_' + normalized.reason,
+    };
   }
 };
 

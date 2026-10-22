@@ -40,6 +40,8 @@ npm run dev:api
 | `COMPATIBILITY_RESEARCH_AI_BASE_URL` | Compatibility 证据研究专用百炼兼容接口；优先于通用 `AI_BASE_URL` | 推荐，生产研究链路使用 |
 | `COMPATIBILITY_RESEARCH_AI_MODEL` | Compatibility 证据研究模型 | 推荐，生产研究链路使用 |
 | `COMPATIBILITY_RESEARCH_TIMEOUT_MS` | Compatibility 证据研究超时毫秒数 | 可选，默认继承 `AI_TIMEOUT_MS`/20000 |
+| `COMPATIBILITY_RESEARCH_SEARCH_TIMEOUT_MS` | 百炼联网搜索单独超时；不再被普通模型请求的短 timeout 截断 | 可选，默认不低于 15000，通常继承到 20000 |
+| `COMPATIBILITY_RESEARCH_SEARCH_STRATEGY` | 百炼 Chat Completions 联网搜索策略；`turbo`/`max` | 可选，默认 `turbo`；仅显式需要更深搜索时使用 `max` |
 | `API_PORT` | Express 端口 | 可选 |
 | `TRUST_PROXY_HOPS` | Express 可信代理层数；直连保持 `0`，单层可信代理设为 `1` | 可选，默认 0 |
 | `VITE_SUPABASE_URL` | Supabase 项目地址 | 仅登录能力需要 |

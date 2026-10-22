@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import {
+  probeCompatibilityResearchSearchProvider,
   researchCompatibilityVariantIdentities,
   type CompatibilityVariantIdentityResearchResult,
 } from '../apps/api/src/compatibility-species-research-provider';
@@ -53,6 +54,17 @@ const forceRetry = arg('force-retry') === 'true';
 const networkFailureThreshold = Math.max(1, Math.min(10, Number(arg('network-failure-threshold') || 3)));
 const delayMs = Math.max(0, Math.min(5_000, Number(arg('delay-ms') || 250)));
 const input = JSON.parse(readFileSync(inputPath, 'utf8')) as BaseManifest;
+
+const providerPreflight = await probeCompatibilityResearchSearchProvider();
+console.log('IDENTITY_BULK_VARIANT_PREFLIGHT', JSON.stringify(providerPreflight));
+if (providerPreflight.status !== 'ready') {
+  throw new Error(
+    'compatibility_identity_bulk_provider_preflight_failed:'
+    + (providerPreflight.phase || 'unknown')
+    + ':'
+    + (providerPreflight.reasonCode || providerPreflight.status),
+  );
+}
 
 const previous = resume && existsSync(outputPath)
   ? JSON.parse(readFileSync(outputPath, 'utf8')) as OutputReport

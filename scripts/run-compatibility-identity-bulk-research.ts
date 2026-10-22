@@ -17,7 +17,7 @@ const arg = (name: string) => {
   return process.argv.find(value => value.startsWith(prefix))?.slice(prefix.length);
 };
 
-const queuePath = arg('queue') || 'evaluation/product/compatibility-identity-review-queue.v1.json';
+const queuePath = arg('queue') || 'docs/compatibility_identity_bulk_queue.json';
 const outputPath = arg('output') || 'evaluation/product/compatibility-identity-bulk-base-resolution.v1.json';
 const resume = arg('resume') !== 'false';
 const concurrency = Math.max(1, Math.min(12, Number(arg('concurrency') || 6)));

@@ -1,6 +1,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets, buildCompatibilityTaxonResearchPlan } from '../src/services/compatibility/compatibility-field-coverage.service';
-import { buildCompatibilityGenusAuthorityResearchPlan } from '../src/services/compatibility/taxon-authority-research.service';
+import { buildCompatibilityGenusAuthorityResearchPlan, buildCompatibilityResearchDebtRoutingReport } from '../src/services/compatibility/taxon-authority-research.service';
+import { buildCompatibilityIdentityDebtRoutingReport } from '../src/services/compatibility/compatibility-identity-debt-routing.service';
+import { buildCompatibilityIdentityBulkQueue } from '../src/services/compatibility/compatibility-identity-bulk-plan.service';
 
 const root = new URL('../', import.meta.url).pathname;
 const outputDir = `${root}docs`;
@@ -9,6 +11,9 @@ const report = buildCompatibilityCoreFieldCoverage();
 const fastLanePackets = buildCompatibilityFastLaneResearchPackets();
 const taxonResearchPlan = buildCompatibilityTaxonResearchPlan();
 const genusAuthorityResearchPlan = buildCompatibilityGenusAuthorityResearchPlan();
+const researchDebtRouting = buildCompatibilityResearchDebtRoutingReport();
+const identityDebtRouting = buildCompatibilityIdentityDebtRoutingReport();
+const identityBulkQueue = buildCompatibilityIdentityBulkQueue();
 const deferredBacklog = report.backlog.filter(item => !item.completionEligible);
 const countValues = (values: string[]) => Object.fromEntries(
   [...new Set(values)].sort().map(value => [value, values.filter(candidate => candidate === value).length]),
@@ -59,6 +64,18 @@ writeFileSync(`${outputDir}/compatibility_genus_authority_research_plan.json`, J
   impactedSpecies: new Set(genusAuthorityResearchPlan.flatMap(item => item.impactedSpeciesIds)).size,
   items: genusAuthorityResearchPlan,
 }, null, 2) + '\n');
+writeFileSync(`${outputDir}/compatibility_research_debt_routing.json`, JSON.stringify({
+  generatedFrom: 'compatibility_core_field_coverage.json',
+  ...researchDebtRouting,
+}, null, 2) + '\n');
+writeFileSync(`${outputDir}/compatibility_identity_debt_routing.json`, JSON.stringify({
+  generatedFrom: 'compatibility_research_debt_routing.json',
+  ...identityDebtRouting,
+}, null, 2) + '\n');
+writeFileSync(`${outputDir}/compatibility_identity_bulk_queue.json`, JSON.stringify({
+  generatedFrom: 'compatibility_identity_debt_routing.json',
+  ...identityBulkQueue,
+}, null, 2) + '\n');
 
 const header = ['species_id','name','scientific_name','life_type','reviewed_profile','generic_onboarding_ready','decision_ready','authoritative_field_count','actionable_gap_count','terminal_gap_count',...report.summary.coreFields];
 const quote = (value: unknown) => { const text = String(value ?? ''); return /[,"\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text; };
@@ -101,5 +118,13 @@ console.log(JSON.stringify({
   variantBridgeJobs: taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length,
   genusAuthorityResearchJobs: genusAuthorityResearchPlan.length,
   genusAuthorityImpactedSpecies: new Set(genusAuthorityResearchPlan.flatMap(item => item.impactedSpeciesIds)).size,
+  immediateDecisionResearchFields: researchDebtRouting.summary.immediateDecisionResearchFields,
+  identityFirstSpecies: researchDebtRouting.summary.identityFirstSpecies,
+  decisionReadySoftDebtSpecies: researchDebtRouting.summary.decisionReadySoftDebtSpecies,
+  legacyBacklogImmediateResearchItems: researchDebtRouting.summary.legacyBacklogImmediateResearchItems,
+  actionableIdentityReviewSpecies: identityDebtRouting.summary.actionableIdentityReviewSpecies,
+  multiObjectIdentityClusters: identityDebtRouting.summary.multiObjectParentClusters,
+  automatedIdentityResearchObjects: identityBulkQueue.summary.automatedResearchEligible,
+  automatedIdentityResearchGroups: identityBulkQueue.summary.automatedParentGroups,
   fieldActionableGaps: report.summary.fieldActionableGaps,
 }, null, 2));

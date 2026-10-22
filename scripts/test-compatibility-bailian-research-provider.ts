@@ -7,6 +7,7 @@ import {
   createBailianCompatibilitySpeciesResearchProvider,
   getCompatibilitySpeciesResearchProviderReadiness,
   probeCompatibilityResearchProvider,
+  probeCompatibilityResearchSearchProvider,
 } from '../apps/api/src/compatibility-species-research-provider';
 import { assessCompatibilitySpeciesResearchPacket } from '../src/services/compatibility/species-onboarding-research.service';
 
@@ -16,6 +17,7 @@ const config = {
   baseUrl: 'https://workspace.cn-beijing.maas.aliyuncs.com/compatible-mode/v1',
   model: 'qwen3.7-flash-2026-07-15',
   timeoutMs: 5_000,
+  searchTimeoutMs: 15_000,
   maxSearchCandidates: 8,
   maxVerifiedSources: 4,
   maxSourceChars: 8_000,
@@ -29,6 +31,8 @@ assert.deepEqual(getCompatibilitySpeciesResearchProviderReadiness(config), {
   fallbackModels: [],
   searchMode: 'bailian_web_search',
   sourceVerification: 'server_fetch_required',
+  searchStrategy: 'turbo',
+  searchTimeoutMs: 15_000,
 });
 
 assert.equal(getCompatibilitySpeciesResearchProviderReadiness({
@@ -49,6 +53,14 @@ assert.equal(dedicatedConfig.apiKey, 'dedicated-bailian-key');
 assert.equal(dedicatedConfig.baseUrl, 'https://dashscope.aliyuncs.com/compatible-mode/v1');
 assert.equal(dedicatedConfig.model, 'qwen-dedicated-research');
 assert.deepEqual(dedicatedConfig.fallbackModels, ['qwen3.8-27b', 'deepseek-v4.1-flash']);
+assert.equal(dedicatedConfig.searchStrategy, 'turbo');
+assert.equal(dedicatedConfig.searchTimeoutMs, 20_000);
+const maxSearchConfig = buildCompatibilityResearchProviderConfig({
+  COMPATIBILITY_RESEARCH_SEARCH_STRATEGY: 'max',
+  COMPATIBILITY_RESEARCH_SEARCH_TIMEOUT_MS: '30000',
+});
+assert.equal(maxSearchConfig.searchStrategy, 'max');
+assert.equal(maxSearchConfig.searchTimeoutMs, 30_000);
 assert.deepEqual(buildCompatibilityResearchModelPool('qwen3.7-flash-2026-07-15', ['qwen3.8-27b', 'deepseek-v4.1-flash', 'qwen3.8-27b']), ['qwen3.7-flash-2026-07-15', 'qwen3.8-27b', 'deepseek-v4.1-flash']);
 assert.equal(getCompatibilitySpeciesResearchProviderReadiness(dedicatedConfig).configured, true, 'Compatibility research must be able to use Bailian independently from the app-wide DeepSeek provider');
 
@@ -88,6 +100,44 @@ const credentialFailure = await probeCompatibilityResearchProvider({
 assert.equal(credentialFailure.status, 'credential_rejected');
 assert.equal(credentialCalls, 1, 'invalid credentials must not waste requests across the free-model pool');
 
+let searchPreflightCalls = 0;
+const searchPreflight = await probeCompatibilityResearchSearchProvider(config, async (_input, init) => {
+  searchPreflightCalls += 1;
+  const body = JSON.parse(String(init?.body || '{}')) as Record<string, unknown>;
+  if (body.enable_search === true) {
+    const options = body.search_options as Record<string, unknown>;
+    assert.equal(options.forced_search, true);
+    assert.equal(options.search_strategy, 'turbo');
+    return new Response(JSON.stringify({
+      choices: [{ message: { content: '{"candidates":[{"url":"https://fishbase.se"}]}' } }],
+    }), { status: 200, headers: { 'content-type': 'application/json' } });
+  }
+  return new Response(JSON.stringify({
+    choices: [{ message: { content: '{"ok":true}' } }],
+  }), { status: 200, headers: { 'content-type': 'application/json' } });
+});
+assert.equal(searchPreflight.status, 'ready');
+assert.equal(searchPreflight.phase, 'web_search');
+assert.equal(searchPreflightCalls, 2, 'web-search preflight must verify base model first, then forced search');
+
+let failedSearchPreflightCalls = 0;
+const searchTransportFailure = await probeCompatibilityResearchSearchProvider(config, async (_input, init) => {
+  failedSearchPreflightCalls += 1;
+  const body = JSON.parse(String(init?.body || '{}')) as Record<string, unknown>;
+  if (body.enable_search === true) {
+    const error = new TypeError('fetch failed');
+    (error as TypeError & { cause?: Error }).cause = new Error('Client network socket disconnected before secure TLS connection was established');
+    throw error;
+  }
+  return new Response(JSON.stringify({
+    choices: [{ message: { content: '{"ok":true}' } }],
+  }), { status: 200, headers: { 'content-type': 'application/json' } });
+});
+assert.equal(searchTransportFailure.status, 'transport_unavailable');
+assert.equal(searchTransportFailure.phase, 'web_search');
+assert.equal(searchTransportFailure.reasonCode, 'web_search_network');
+assert.equal(failedSearchPreflightCalls, 2);
+
 
 const scientificName = 'Pseudomugil luminatus';
 const sourceUrl = 'https://www.seriouslyfish.com/species/pseudomugil-luminatus';
@@ -117,7 +167,7 @@ const mockFetch: typeof fetch = async (input, init) => {
       searchCalls += 1;
       const options = body.search_options as Record<string, unknown>;
       assert.equal(options.forced_search, true);
-      assert.equal(options.search_strategy, 'max');
+      assert.equal(options.search_strategy, 'turbo');
       const messages = body.messages as Array<{ role: string; content: string }>;
       const user = messages.find(message => message.role === 'user')?.content || '';
       if (user.includes('Target evidence fields:')) {

@@ -1,0 +1,3855 @@
+{
+  "generatedFrom": "compatibility_research_debt_routing.json",
+  "policy": "Identity is reviewed per catalog object. Parent-taxon clustering only deduplicates research context; it never auto-creates a canonical bridge or Compatibility inheritance. Reviewed evidence ceilings are not re-searched without new exact-object evidence.",
+  "summary": {
+    "identityFirstSpecies": 157,
+    "variantLikeSpecies": 130,
+    "exactOrUnparsedSpecies": 27,
+    "reviewedEvidenceCeilingSpecies": 15,
+    "actionableIdentityReviewSpecies": 142,
+    "canonicalBridgePresentSpecies": 0,
+    "multiObjectParentClusters": 32,
+    "speciesInMultiObjectParentClusters": 108,
+    "activeBatchReviewClusters": 31,
+    "stageCounts": {
+      "batch_identity_review": 98,
+      "reviewed_evidence_ceiling": 15,
+      "single_identity_review": 44
+    },
+    "reasonCounts": {
+      "catalog_parent_taxon_unresolved": 11,
+      "catalog_scientific_name_unresolved": 12,
+      "catalog_variant_identity_unresolved": 59,
+      "commercial_hybrid_identity_unresolved": 3,
+      "compatibility_field_source_strategy_exhausted": 2,
+      "identity_boundary_without_reason": 25,
+      "trade_name_taxon_ambiguous": 6,
+      "variant_identity_research_exhausted": 41
+    }
+  },
+  "items": [
+    {
+      "speciesId": "sp_0021",
+      "name": "迷你鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var.",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0025",
+      "name": "泗水玫瑰",
+      "scientificName": "Pterapogon kauderni",
+      "candidateBaseScientificName": "Pterapogon kauderni",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0037",
+      "name": "大鳍鱊",
+      "scientificName": "Acheilognathus macropterus",
+      "candidateBaseScientificName": "Acheilognathus macropterus",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0039",
+      "name": "方氏拟腹吸鳅",
+      "scientificName": "Pseudogastromyzon fangi",
+      "candidateBaseScientificName": "Pseudogastromyzon fangi",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "compatibility_field_source_strategy_exhausted",
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0040",
+      "name": "中华花鳅",
+      "scientificName": "Cobitis sinensis",
+      "candidateBaseScientificName": "Cobitis sinensis",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "compatibility_field_source_strategy_exhausted",
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0041",
+      "name": "棒花鱼",
+      "scientificName": "Abbottina rivularis",
+      "candidateBaseScientificName": "Abbottina rivularis",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0046",
+      "name": "中华细鲫",
+      "scientificName": "Aphyocypris chinensis",
+      "candidateBaseScientificName": "Aphyocypris chinensis",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0055",
+      "name": "金刚鹦鹉鱼",
+      "scientificName": "Cichlasoma var.",
+      "candidateBaseScientificName": "Cichlasoma var",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0060",
+      "name": "巧克力曼龙",
+      "scientificName": "Sphaerichthys osphromenoides",
+      "candidateBaseScientificName": "Sphaerichthys osphromenoides",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0061",
+      "name": "飞凤鱼",
+      "scientificName": "Semaprochilodus insignis",
+      "candidateBaseScientificName": "Semaprochilodus insignis",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0064",
+      "name": "泰狮金鱼",
+      "scientificName": "Carassius auratus var. Oranda",
+      "candidateBaseScientificName": "Carassius auratus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0106",
+      "name": "恐龙鱼 (草绳)",
+      "scientificName": "Erpetoichthys calabaricus",
+      "candidateBaseScientificName": "Erpetoichthys calabaricus",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0107",
+      "name": "飞凤鱼 (国旗飞凤)",
+      "scientificName": "Semaprochilodus taeniurus",
+      "candidateBaseScientificName": "Semaprochilodus taeniurus",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0110",
+      "name": "蓝月光雷龙",
+      "scientificName": "Channa lorti",
+      "candidateBaseScientificName": "Channa lorti",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0111",
+      "name": "亚洲红鼻",
+      "scientificName": "Sawbwa resplendens",
+      "candidateBaseScientificName": "Sawbwa resplendens",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0113",
+      "name": "斑节鳉",
+      "scientificName": "Epiplatys annulatus",
+      "candidateBaseScientificName": "Epiplatys annulatus",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0124",
+      "name": "蓝眼胡子",
+      "scientificName": "Ancistrus sp.",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0127",
+      "name": "巴基斯坦鼠",
+      "scientificName": "Botia almorhae",
+      "candidateBaseScientificName": "Botia almorhae",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0128",
+      "name": "吸鳅 (中国爬岩鳅)",
+      "scientificName": "Beaufortia kweichowensis",
+      "candidateBaseScientificName": "Beaufortia kweichowensis",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0132",
+      "name": "玻璃拉拉",
+      "scientificName": "Parambassis ranga",
+      "candidateBaseScientificName": "Parambassis ranga",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0134",
+      "name": "燕子美人",
+      "scientificName": "Iriatherina werneri",
+      "candidateBaseScientificName": "Iriatherina werneri",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0135",
+      "name": "霓虹燕子",
+      "scientificName": "Pseudomugil furcatus",
+      "candidateBaseScientificName": "Pseudomugil furcatus",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0136",
+      "name": "巧克力曼龙",
+      "scientificName": "Sphaerichthys osphromenoides",
+      "candidateBaseScientificName": "Sphaerichthys osphromenoides",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0137",
+      "name": "飞凤鱼",
+      "scientificName": "Semaprochilodus insignis",
+      "candidateBaseScientificName": "Semaprochilodus insignis",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0141",
+      "name": "甜心柠檬灯",
+      "scientificName": "Hyphessobrycon pulchripinnis var.",
+      "candidateBaseScientificName": "Hyphessobrycon pulchripinnis",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0142",
+      "name": "球鱼 (玛丽变种)",
+      "scientificName": "Poecilia sphenops var.",
+      "candidateBaseScientificName": "Poecilia sphenops",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0145",
+      "name": "大耳孔雀鱼",
+      "scientificName": "Poecilia reticulata var. Dumbo",
+      "candidateBaseScientificName": "Poecilia reticulata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0147",
+      "name": "蓝宝鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var. Blue",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0148",
+      "name": "雪玉鹦鹉鱼",
+      "scientificName": "Amatitlania nigrofasciata var. White",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0150",
+      "name": "短尾狮头金鱼",
+      "scientificName": "Carassius auratus var. Oranda",
+      "candidateBaseScientificName": "Carassius auratus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0152",
+      "name": "荧光斑马鱼",
+      "scientificName": "Danio rerio var. GloFish",
+      "candidateBaseScientificName": "Danio rerio",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0153",
+      "name": "球形珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Balloon",
+      "candidateBaseScientificName": "Trichopodus leerii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0154",
+      "name": "红鼻灯 (改良)",
+      "scientificName": "Hemigrammus bleheri var.",
+      "candidateBaseScientificName": "Hemigrammus bleheri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0158",
+      "name": "红苹果剑尾",
+      "scientificName": "Xiphophorus hellerii var.",
+      "candidateBaseScientificName": "Xiphophorus hellerii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0159",
+      "name": "黄金胡子 (异型变种)",
+      "scientificName": "Ancistrus sp. Gold",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0160",
+      "name": "大帆白金胡子",
+      "scientificName": "Ancistrus sp. Longfin Platinum",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0161",
+      "name": "巧克力皮球",
+      "scientificName": "Poecilia sphenops var. Chocolate",
+      "candidateBaseScientificName": "Poecilia sphenops",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0163",
+      "name": "鸿运当头锦鲤",
+      "scientificName": "Cyprinus carpio var. Kohaku",
+      "candidateBaseScientificName": "Cyprinus carpio",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0167",
+      "name": "球形红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var. Balloon",
+      "candidateBaseScientificName": "Hemigrammus bleheri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0168",
+      "name": "金玛丽",
+      "scientificName": "Poecilia latipinna var. Gold",
+      "candidateBaseScientificName": "Poecilia latipinna",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0169",
+      "name": "银玛丽",
+      "scientificName": "Poecilia latipinna var. Silver",
+      "candidateBaseScientificName": "Poecilia latipinna",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0170",
+      "name": "黑金刚孔雀鱼",
+      "scientificName": "Poecilia reticulata var. Full Black",
+      "candidateBaseScientificName": "Poecilia reticulata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0172",
+      "name": "长鳍白云金丝",
+      "scientificName": "Tanichthys albonubes var. Longfin",
+      "candidateBaseScientificName": "Tanichthys albonubes",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0175",
+      "name": "血钻神仙",
+      "scientificName": "Pterophyllum scalare var. Red",
+      "candidateBaseScientificName": "Pterophyllum scalare",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "catalog_label_disambiguation_required",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0179",
+      "name": "球形曼龙 (蓝/金)",
+      "scientificName": "Trichopodus trichopterus var. Balloon",
+      "candidateBaseScientificName": "Trichopodus trichopterus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0182",
+      "name": "蓝眼异型 (L191)",
+      "scientificName": "Panaque sp. L191",
+      "candidateBaseScientificName": "Panaque sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0186",
+      "name": "人字蝶",
+      "scientificName": "Chaetodon auriga",
+      "candidateBaseScientificName": "Chaetodon auriga",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0201",
+      "name": "黑白双星异型 (L240)",
+      "scientificName": "Leporacanthicus cf. galaxias",
+      "candidateBaseScientificName": "Leporacanthicus cf",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0203",
+      "name": "绿赏皮球",
+      "scientificName": "Poecilia sphenops var. Green",
+      "candidateBaseScientificName": "Poecilia sphenops",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0204",
+      "name": "黑金刚红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var.",
+      "candidateBaseScientificName": "Hemigrammus bleheri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0205",
+      "name": "紫艳红莲灯",
+      "scientificName": "Hyphessobrycon herbertaxelrodi var.",
+      "candidateBaseScientificName": "Hyphessobrycon herbertaxelrodi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0206",
+      "name": "电光红绿灯",
+      "scientificName": "Paracheirodon innesi var. Diamond",
+      "candidateBaseScientificName": "Paracheirodon innesi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0208",
+      "name": "球形红十字",
+      "scientificName": "Aphyocharax anisitsi var. Balloon",
+      "candidateBaseScientificName": "Aphyocharax anisitsi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0209",
+      "name": "血玛丽鱼",
+      "scientificName": "Poecilia latipinna var. Blood",
+      "candidateBaseScientificName": "Poecilia latipinna",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0210",
+      "name": "黄金眼镜蛇蛇鱼",
+      "scientificName": "Pangio kuhlii var.",
+      "candidateBaseScientificName": "Pangio kuhlii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0211",
+      "name": "大点火口",
+      "scientificName": "Thorichthys meeki var.",
+      "candidateBaseScientificName": "Thorichthys meeki",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0212",
+      "name": "蓝眼金灯",
+      "scientificName": "Hemigrammus rodwayi var.",
+      "candidateBaseScientificName": "Hemigrammus rodwayi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0213",
+      "name": "黑线飞狐 (金型)",
+      "scientificName": "Crossocheilus langei var. Gold",
+      "candidateBaseScientificName": "Crossocheilus langei",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0215",
+      "name": "长鳍一眉道人",
+      "scientificName": "Sahyadria denisonii var. Longfin",
+      "candidateBaseScientificName": "Sahyadria denisonii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0217",
+      "name": "白金黑地魔",
+      "scientificName": "Geophagus sp. var. Platinum",
+      "candidateBaseScientificName": "Geophagus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0219",
+      "name": "球形金波子",
+      "scientificName": "Mikrogeophagus ramirezi var. Gold Balloon",
+      "candidateBaseScientificName": "Mikrogeophagus ramirezi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0220",
+      "name": "白金波子 (球形)",
+      "scientificName": "Mikrogeophagus ramirezi var. Platinum Balloon",
+      "candidateBaseScientificName": "Mikrogeophagus ramirezi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0222",
+      "name": "蓝宝鹦鹉 (球形)",
+      "scientificName": "Amatitlania nigrofasciata var. Jellybean",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0223",
+      "name": "红眼白子雷龙",
+      "scientificName": "Channa asiatica var. Albino",
+      "candidateBaseScientificName": "Channa asiatica",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0225",
+      "name": "大帆红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var. Longfin",
+      "candidateBaseScientificName": "Hemigrammus bleheri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0226",
+      "name": "白金红鼻剪刀",
+      "scientificName": "Hemigrammus bleheri var. Platinum",
+      "candidateBaseScientificName": "Hemigrammus bleheri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0227",
+      "name": "长鳍红裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Longfin",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0228",
+      "name": "球形红裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Balloon",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0230",
+      "name": "大帆黄金胡子",
+      "scientificName": "Ancistrus sp. Gold Longfin",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0232",
+      "name": "白金咖啡鼠",
+      "scientificName": "Corydoras aeneus var. Platinum",
+      "candidateBaseScientificName": "Corydoras aeneus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0233",
+      "name": "球形珍珠马甲 (红眼)",
+      "scientificName": "Trichopodus leerii var. Albino Balloon",
+      "candidateBaseScientificName": "Trichopodus leerii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0235",
+      "name": "白金黑帝王灯",
+      "scientificName": "Nematobrycon palmeri var. Platinum",
+      "candidateBaseScientificName": "Nematobrycon palmeri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0237",
+      "name": "高鳍红玛丽",
+      "scientificName": "Poecilia latipinna var. High Fin Red",
+      "candidateBaseScientificName": "Poecilia latipinna",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0241",
+      "name": "大理石神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Marble Balloon",
+      "candidateBaseScientificName": "Pterophyllum scalare",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0243",
+      "name": "球形血鹦鹉",
+      "scientificName": "Cichlasoma var. Blood Parrot Balloon",
+      "candidateBaseScientificName": "Cichlasoma var",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0244",
+      "name": "黄金草尾孔雀",
+      "scientificName": "Poecilia reticulata var. Yellow Grass",
+      "candidateBaseScientificName": "Poecilia reticulata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0245",
+      "name": "红白剑尾孔雀",
+      "scientificName": "Poecilia reticulata var. Kohaku",
+      "candidateBaseScientificName": "Poecilia reticulata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0246",
+      "name": "白子红白孔雀",
+      "scientificName": "Poecilia reticulata var. Albino Kohaku",
+      "candidateBaseScientificName": "Poecilia reticulata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0247",
+      "name": "蓝钻神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Blue Balloon",
+      "candidateBaseScientificName": "Pterophyllum scalare",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0248",
+      "name": "黄金战舰",
+      "scientificName": "Osphronemus goramy var. Gold",
+      "candidateBaseScientificName": "Osphronemus goramy",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0252",
+      "name": "白金反游猫",
+      "scientificName": "Synodontis nigriventris var. White",
+      "candidateBaseScientificName": "Synodontis nigriventris",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0253",
+      "name": "红纹一眉道人",
+      "scientificName": "Sahyadria denisonii var. Red Line",
+      "candidateBaseScientificName": "Sahyadria denisonii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0254",
+      "name": "白金黑线飞狐",
+      "scientificName": "Crossocheilus langei var. Platinum",
+      "candidateBaseScientificName": "Crossocheilus langei",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0255",
+      "name": "大帆红衣梦幻旗",
+      "scientificName": "Hyphessobrycon sweglesi var. Longfin",
+      "candidateBaseScientificName": "Hyphessobrycon sweglesi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0256",
+      "name": "红眼白子黑裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Albino Red Eye",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0259",
+      "name": "半月斗鱼 (蓝蝴蝶)",
+      "scientificName": "Betta splendens var. Halfmoon",
+      "candidateBaseScientificName": "Betta splendens",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0260",
+      "name": "狮王斗鱼 (红黑)",
+      "scientificName": "Betta splendens var. Crowntail",
+      "candidateBaseScientificName": "Betta splendens",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0261",
+      "name": "大耳半月斗鱼",
+      "scientificName": "Betta splendens var. Dumbo Halfmoon",
+      "candidateBaseScientificName": "Betta splendens",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0262",
+      "name": "将军斗鱼 (蓝龙)",
+      "scientificName": "Betta splendens var. Dragon",
+      "candidateBaseScientificName": "Betta splendens",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0263",
+      "name": "雪中红慈鲷",
+      "scientificName": "Maylandia estherae var. Albino",
+      "candidateBaseScientificName": "Maylandia estherae",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0264",
+      "name": "白金阿里慈鲷",
+      "scientificName": "Sciaenochromis fryeri var. White",
+      "candidateBaseScientificName": "Sciaenochromis fryeri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0265",
+      "name": "血中红慈鲷",
+      "scientificName": "Nimbochromis livingstonii var.",
+      "candidateBaseScientificName": "Nimbochromis livingstonii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0267",
+      "name": "红头珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Red Head",
+      "candidateBaseScientificName": "Trichopodus leerii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0268",
+      "name": "球形蓝曼龙",
+      "scientificName": "Trichopodus trichopterus var. Blue Balloon",
+      "candidateBaseScientificName": "Trichopodus trichopterus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0269",
+      "name": "球形金曼龙",
+      "scientificName": "Trichopodus trichopterus var. Gold Balloon",
+      "candidateBaseScientificName": "Trichopodus trichopterus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0270",
+      "name": "白子红眼关刀",
+      "scientificName": "Geophagus surinamensis var. Albino",
+      "candidateBaseScientificName": "Geophagus surinamensis",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0271",
+      "name": "白子红宝石",
+      "scientificName": "Hemichromis bimaculatus var. Albino",
+      "candidateBaseScientificName": "Hemichromis bimaculatus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0273",
+      "name": "血钻短鲷",
+      "scientificName": "Apistogramma cacatuoides var. Super Red",
+      "candidateBaseScientificName": "Apistogramma cacatuoides",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0280",
+      "name": "黄金胡子 (长鳍)",
+      "scientificName": "Ancistrus sp. Gold Longfin",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0281",
+      "name": "白金胡子 (大帆)",
+      "scientificName": "Ancistrus sp. White Longfin",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0282",
+      "name": "黄金达摩 (改良)",
+      "scientificName": "Parancistrus aurantiacus var. Gold",
+      "candidateBaseScientificName": "Parancistrus aurantiacus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0285",
+      "name": "黄金眼镜蛇雷龙 (改良)",
+      "scientificName": "Channa aurantimaculata var. Gold",
+      "candidateBaseScientificName": "Channa aurantimaculata",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0286",
+      "name": "幻彩蓝雷龙 (改良)",
+      "scientificName": "Channa andrao var. Super Blue",
+      "candidateBaseScientificName": "Channa andrao",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0287",
+      "name": "球形红鼻灯",
+      "scientificName": "Hemigrammus bleheri var. Balloon",
+      "candidateBaseScientificName": "Hemigrammus bleheri",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0288",
+      "name": "白金黑裙鱼 (长鳍)",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Longfin",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0292",
+      "name": "球形金玛丽",
+      "scientificName": "Poecilia latipinna var. Gold Balloon",
+      "candidateBaseScientificName": "Poecilia latipinna",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0293",
+      "name": "球形黑玛丽",
+      "scientificName": "Poecilia sphenops var. Black Balloon",
+      "candidateBaseScientificName": "Poecilia sphenops",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0294",
+      "name": "红眼白子红裙 (球形)",
+      "scientificName": "Gymnocorymbus ternetzi var. Albino Balloon",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0295",
+      "name": "长鳍电光美人",
+      "scientificName": "Melanotaenia praecox var. Longfin",
+      "candidateBaseScientificName": "Melanotaenia praecox",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0296",
+      "name": "红利鱼 (改良)",
+      "scientificName": "Lutjanus kasmira var.",
+      "candidateBaseScientificName": "Lutjanus kasmira",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0297",
+      "name": "黄金草莓鱼 (海水)",
+      "scientificName": "Pseudochromis sp. Gold",
+      "candidateBaseScientificName": "Pseudochromis sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0339",
+      "name": "红眼金灯",
+      "scientificName": "Hemigrammus rodwayi var. Gold",
+      "candidateBaseScientificName": "Hemigrammus rodwayi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0340",
+      "name": "球形红十字灯",
+      "scientificName": "Aphyocharax anisitsi var. Balloon",
+      "candidateBaseScientificName": "Aphyocharax anisitsi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0341",
+      "name": "长鳍白金黑裙",
+      "scientificName": "Gymnocorymbus ternetzi var. Longfin White",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0350",
+      "name": "黑狮头金鱼",
+      "scientificName": "Carassius auratus var. Black Oranda",
+      "candidateBaseScientificName": "Carassius auratus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0358",
+      "name": "红尾玻璃灯 (改良)",
+      "scientificName": "Prionobrama filigera var.",
+      "candidateBaseScientificName": "Prionobrama filigera",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0359",
+      "name": "红眼蓝钻灯",
+      "scientificName": "Boehlkea fredcochui var. Blue",
+      "candidateBaseScientificName": "Boehlkea fredcochui",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0360",
+      "name": "白金黑霓虹灯",
+      "scientificName": "Hyphessobrycon herbertaxelrodi var.",
+      "candidateBaseScientificName": "Hyphessobrycon herbertaxelrodi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0364",
+      "name": "荧光粉斑马",
+      "scientificName": "Danio rerio var. Glo Pink",
+      "candidateBaseScientificName": "Danio rerio",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0365",
+      "name": "红利鱼 (长鳍型)",
+      "scientificName": "Lutjanus kasmira var.",
+      "candidateBaseScientificName": "Lutjanus kasmira",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0366",
+      "name": "五彩青蛙 (改良型)",
+      "scientificName": "Synchiropus splendidus var.",
+      "candidateBaseScientificName": "Synchiropus splendidus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0372",
+      "name": "球形蓝宝石鱼",
+      "scientificName": "Andinoacara pulcher var. Balloon",
+      "candidateBaseScientificName": "Andinoacara pulcher",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0373",
+      "name": "球形红宝石鱼",
+      "scientificName": "Hemichromis bimaculatus var. Balloon",
+      "candidateBaseScientificName": "Hemichromis bimaculatus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0374",
+      "name": "球形地图鱼",
+      "scientificName": "Astronotus ocellatus var. Balloon",
+      "candidateBaseScientificName": "Astronotus ocellatus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0375",
+      "name": "白金黑霓虹灯 (球形)",
+      "scientificName": "Hyphessobrycon herbertaxelrodi var. Balloon",
+      "candidateBaseScientificName": "Hyphessobrycon herbertaxelrodi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0376",
+      "name": "黄金斑马异型 (L134改良版)",
+      "scientificName": "Peckoltia compta var. Super Gold",
+      "candidateBaseScientificName": "Peckoltia compta",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0385",
+      "name": "雪白金金鱼 (改良)",
+      "scientificName": "Carassius auratus var. White Gold",
+      "candidateBaseScientificName": "Carassius auratus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0387",
+      "name": "熊猫蝶尾 (极品)",
+      "scientificName": "Carassius auratus var. Panda Butterfly",
+      "candidateBaseScientificName": "Carassius auratus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0389",
+      "name": "白金半月斗鱼",
+      "scientificName": "Betta splendens var. Platinum",
+      "candidateBaseScientificName": "Betta splendens",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0390",
+      "name": "红白狮头斗鱼",
+      "scientificName": "Betta splendens var. Kohaku Crown",
+      "candidateBaseScientificName": "Betta splendens",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0391",
+      "name": "蓝龙将军斗鱼",
+      "scientificName": "Betta splendens var. Blue Dragon",
+      "candidateBaseScientificName": "Betta splendens",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0392",
+      "name": "黄金胡子 (雪花型)",
+      "scientificName": "Ancistrus sp. Snowflake Gold",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0393",
+      "name": "大帆白金红裙",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Longfin",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0394",
+      "name": "荧光橙经鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Glo Orange",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0395",
+      "name": "黄金大帆飞狐",
+      "scientificName": "Crossocheilus langei var. Gold Longfin",
+      "candidateBaseScientificName": "Crossocheilus langei",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0399",
+      "name": "白金蓝魔鬼 (海水)",
+      "scientificName": "Chrysiptera cyanea var. Platinum",
+      "candidateBaseScientificName": "Chrysiptera cyanea",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": "exact_object_evidence_not_found",
+      "canonicalBridgePresent": false,
+      "stage": "reviewed_evidence_ceiling",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_identity_hold_until_new_exact_evidence"
+    },
+    {
+      "speciesId": "sp_0406",
+      "name": "五彩青蛙 (大规格改良)",
+      "scientificName": "Synchiropus splendidus var. XL",
+      "candidateBaseScientificName": "Synchiropus splendidus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0409",
+      "name": "白子黑白魟",
+      "scientificName": "Potamotrygon leopoldi var. Albino",
+      "candidateBaseScientificName": "Potamotrygon leopoldi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0410",
+      "name": "皇冠黑白魟 (点位改良)",
+      "scientificName": "Potamotrygon leopoldi var. Eclipse",
+      "candidateBaseScientificName": "Potamotrygon leopoldi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0412",
+      "name": "幻彩红雷龙 (改良)",
+      "scientificName": "Channa andrao var. Red",
+      "candidateBaseScientificName": "Channa andrao",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0413",
+      "name": "黄金眼镜蛇蛇鱼 (长鳍)",
+      "scientificName": "Pangio kuhlii var. Longfin",
+      "candidateBaseScientificName": "Pangio kuhlii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0414",
+      "name": "白金黑帝魔 (长鳍)",
+      "scientificName": "Geophagus sp. var. Longfin Platinum",
+      "candidateBaseScientificName": "Geophagus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0415",
+      "name": "红眼白子红剑 (高鳍)",
+      "scientificName": "Xiphophorus hellerii var. High Fin",
+      "candidateBaseScientificName": "Xiphophorus hellerii",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0416",
+      "name": "球形蓝宝石鱼 (特级)",
+      "scientificName": "Andinoacara pulcher var. Super Balloon",
+      "candidateBaseScientificName": "Andinoacara pulcher",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0417",
+      "name": "血钻波子 (球形)",
+      "scientificName": "Mikrogeophagus ramirezi var. Super Red Balloon",
+      "candidateBaseScientificName": "Mikrogeophagus ramirezi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0418",
+      "name": "黄金大帆胡子 (红眼)",
+      "scientificName": "Ancistrus sp. Albino Longfin",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0419",
+      "name": "荧光橙斑马 (长鳍)",
+      "scientificName": "Danio rerio var. Glo Orange Longfin",
+      "candidateBaseScientificName": "Danio rerio",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0420",
+      "name": "球形金曼龙 (大规格)",
+      "scientificName": "Trichopodus trichopterus var. Balloon Gold XL",
+      "candidateBaseScientificName": "Trichopodus trichopterus",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0421",
+      "name": "白金黑裙 (球形长鳍)",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Balloon Longfin",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0426",
+      "name": "极地白云金丝",
+      "scientificName": "Tanichthys albonubes var. Polar",
+      "candidateBaseScientificName": "Tanichthys albonubes",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0458",
+      "name": "玻璃猫鱼",
+      "scientificName": "Kryptopterus vitreolus",
+      "candidateBaseScientificName": "Kryptopterus vitreolus",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0467",
+      "name": "黑尾大勾",
+      "scientificName": "Hyphessobrycon megalopterus",
+      "candidateBaseScientificName": "Hyphessobrycon megalopterus",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0470",
+      "name": "黑莲灯",
+      "scientificName": "Hyphessobrycon herbertaxelrodi",
+      "candidateBaseScientificName": "Hyphessobrycon herbertaxelrodi",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "batch_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0471",
+      "name": "钻石灯",
+      "scientificName": "Moenkhausia pittieri",
+      "candidateBaseScientificName": "Moenkhausia pittieri",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0472",
+      "name": "企鹅灯",
+      "scientificName": "Thayeria boehlkei",
+      "candidateBaseScientificName": "Thayeria boehlkei",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0473",
+      "name": "红肚铅笔鱼",
+      "scientificName": "Nannostomus beckfordi",
+      "candidateBaseScientificName": "Nannostomus beckfordi",
+      "identityForm": "exact_or_unparsed",
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    },
+    {
+      "speciesId": "sp_0474",
+      "name": "观背青鳉",
+      "scientificName": "Oryzias latipes var.",
+      "candidateBaseScientificName": "Oryzias latipes",
+      "identityForm": "variant_like",
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "reviewedResearchDebtStatus": null,
+      "canonicalBridgePresent": false,
+      "stage": "single_identity_review",
+      "candidateForAutomaticBridge": false,
+      "nextAction": "review_exact_object_identity_with_parent_taxon_context"
+    }
+  ],
+  "clusters": [
+    {
+      "researchKey": "Gymnocorymbus ternetzi",
+      "candidateBaseScientificName": "Gymnocorymbus ternetzi",
+      "catalogObjectCount": 9,
+      "activeReviewSpecies": 9,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 9,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0227",
+        "sp_0228",
+        "sp_0256",
+        "sp_0288",
+        "sp_0294",
+        "sp_0341",
+        "sp_0393",
+        "sp_0394",
+        "sp_0421"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Ancistrus sp",
+      "candidateBaseScientificName": "Ancistrus sp",
+      "catalogObjectCount": 8,
+      "activeReviewSpecies": 8,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 8,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0124",
+        "sp_0159",
+        "sp_0160",
+        "sp_0230",
+        "sp_0280",
+        "sp_0281",
+        "sp_0392",
+        "sp_0418"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Betta splendens",
+      "candidateBaseScientificName": "Betta splendens",
+      "catalogObjectCount": 7,
+      "activeReviewSpecies": 7,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 7,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0259",
+        "sp_0260",
+        "sp_0261",
+        "sp_0262",
+        "sp_0389",
+        "sp_0390",
+        "sp_0391"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Hemigrammus bleheri",
+      "candidateBaseScientificName": "Hemigrammus bleheri",
+      "catalogObjectCount": 6,
+      "activeReviewSpecies": 6,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 6,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved",
+        "trade_name_taxon_ambiguous"
+      ],
+      "speciesIds": [
+        "sp_0154",
+        "sp_0167",
+        "sp_0204",
+        "sp_0225",
+        "sp_0226",
+        "sp_0287"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Carassius auratus",
+      "candidateBaseScientificName": "Carassius auratus",
+      "catalogObjectCount": 5,
+      "activeReviewSpecies": 5,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 5,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0064",
+        "sp_0150",
+        "sp_0350",
+        "sp_0385",
+        "sp_0387"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Poecilia latipinna",
+      "candidateBaseScientificName": "Poecilia latipinna",
+      "catalogObjectCount": 5,
+      "activeReviewSpecies": 5,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 5,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0168",
+        "sp_0169",
+        "sp_0209",
+        "sp_0237",
+        "sp_0292"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Poecilia reticulata",
+      "candidateBaseScientificName": "Poecilia reticulata",
+      "catalogObjectCount": 5,
+      "activeReviewSpecies": 5,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 5,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0145",
+        "sp_0170",
+        "sp_0244",
+        "sp_0245",
+        "sp_0246"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Amatitlania nigrofasciata",
+      "candidateBaseScientificName": "Amatitlania nigrofasciata",
+      "catalogObjectCount": 4,
+      "activeReviewSpecies": 4,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 4,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "commercial_hybrid_identity_unresolved",
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0021",
+        "sp_0147",
+        "sp_0148",
+        "sp_0222"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Trichopodus trichopterus",
+      "candidateBaseScientificName": "Trichopodus trichopterus",
+      "catalogObjectCount": 4,
+      "activeReviewSpecies": 4,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 4,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0179",
+        "sp_0268",
+        "sp_0269",
+        "sp_0420"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Poecilia sphenops",
+      "candidateBaseScientificName": "Poecilia sphenops",
+      "catalogObjectCount": 4,
+      "activeReviewSpecies": 3,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 4,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved",
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0142",
+        "sp_0161",
+        "sp_0203",
+        "sp_0293"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Crossocheilus langei",
+      "candidateBaseScientificName": "Crossocheilus langei",
+      "catalogObjectCount": 3,
+      "activeReviewSpecies": 3,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 3,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0213",
+        "sp_0254",
+        "sp_0395"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Danio rerio",
+      "candidateBaseScientificName": "Danio rerio",
+      "catalogObjectCount": 3,
+      "activeReviewSpecies": 3,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 3,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0152",
+        "sp_0364",
+        "sp_0419"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Mikrogeophagus ramirezi",
+      "candidateBaseScientificName": "Mikrogeophagus ramirezi",
+      "catalogObjectCount": 3,
+      "activeReviewSpecies": 3,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 3,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0219",
+        "sp_0220",
+        "sp_0417"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Trichopodus leerii",
+      "candidateBaseScientificName": "Trichopodus leerii",
+      "catalogObjectCount": 3,
+      "activeReviewSpecies": 3,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 3,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0153",
+        "sp_0233",
+        "sp_0267"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Hyphessobrycon herbertaxelrodi",
+      "candidateBaseScientificName": "Hyphessobrycon herbertaxelrodi",
+      "catalogObjectCount": 4,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 2,
+      "variantLikeSpecies": 3,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved",
+        "catalog_variant_identity_unresolved",
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0205",
+        "sp_0360",
+        "sp_0375",
+        "sp_0470"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Pterophyllum scalare",
+      "candidateBaseScientificName": "Pterophyllum scalare",
+      "catalogObjectCount": 3,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 3,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0175",
+        "sp_0241",
+        "sp_0247"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Andinoacara pulcher",
+      "candidateBaseScientificName": "Andinoacara pulcher",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0372",
+        "sp_0416"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Aphyocharax anisitsi",
+      "candidateBaseScientificName": "Aphyocharax anisitsi",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0208",
+        "sp_0340"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Channa andrao",
+      "candidateBaseScientificName": "Channa andrao",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0286",
+        "sp_0412"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Cichlasoma var",
+      "candidateBaseScientificName": "Cichlasoma var",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "commercial_hybrid_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0055",
+        "sp_0243"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Geophagus sp",
+      "candidateBaseScientificName": "Geophagus sp",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0217",
+        "sp_0414"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Hemigrammus rodwayi",
+      "candidateBaseScientificName": "Hemigrammus rodwayi",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved",
+        "trade_name_taxon_ambiguous"
+      ],
+      "speciesIds": [
+        "sp_0212",
+        "sp_0339"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Potamotrygon leopoldi",
+      "candidateBaseScientificName": "Potamotrygon leopoldi",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0409",
+        "sp_0410"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Sahyadria denisonii",
+      "candidateBaseScientificName": "Sahyadria denisonii",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0215",
+        "sp_0253"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Semaprochilodus insignis",
+      "candidateBaseScientificName": "Semaprochilodus insignis",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 2,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0061",
+        "sp_0137"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Sphaerichthys osphromenoides",
+      "candidateBaseScientificName": "Sphaerichthys osphromenoides",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 2,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0060",
+        "sp_0136"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Tanichthys albonubes",
+      "candidateBaseScientificName": "Tanichthys albonubes",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 2,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0172",
+        "sp_0426"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Hemichromis bimaculatus",
+      "candidateBaseScientificName": "Hemichromis bimaculatus",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0271",
+        "sp_0373"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Pangio kuhlii",
+      "candidateBaseScientificName": "Pangio kuhlii",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved",
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0210",
+        "sp_0413"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Synchiropus splendidus",
+      "candidateBaseScientificName": "Synchiropus splendidus",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved",
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0366",
+        "sp_0406"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Xiphophorus hellerii",
+      "candidateBaseScientificName": "Xiphophorus hellerii",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved",
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0158",
+        "sp_0415"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "batch_exact_object_identity_review_with_parent_taxon_context"
+    },
+    {
+      "researchKey": "Abbottina rivularis",
+      "candidateBaseScientificName": "Abbottina rivularis",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0041"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Acheilognathus macropterus",
+      "candidateBaseScientificName": "Acheilognathus macropterus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0037"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Aphyocypris chinensis",
+      "candidateBaseScientificName": "Aphyocypris chinensis",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0046"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Apistogramma cacatuoides",
+      "candidateBaseScientificName": "Apistogramma cacatuoides",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0273"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Astronotus ocellatus",
+      "candidateBaseScientificName": "Astronotus ocellatus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0374"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Beaufortia kweichowensis",
+      "candidateBaseScientificName": "Beaufortia kweichowensis",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0128"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Boehlkea fredcochui",
+      "candidateBaseScientificName": "Boehlkea fredcochui",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0359"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Botia almorhae",
+      "candidateBaseScientificName": "Botia almorhae",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "speciesIds": [
+        "sp_0127"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Chaetodon auriga",
+      "candidateBaseScientificName": "Chaetodon auriga",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0186"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Channa asiatica",
+      "candidateBaseScientificName": "Channa asiatica",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0223"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Channa aurantimaculata",
+      "candidateBaseScientificName": "Channa aurantimaculata",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0285"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Channa lorti",
+      "candidateBaseScientificName": "Channa lorti",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0110"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Cobitis sinensis",
+      "candidateBaseScientificName": "Cobitis sinensis",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "compatibility_field_source_strategy_exhausted",
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0040"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Corydoras aeneus",
+      "candidateBaseScientificName": "Corydoras aeneus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0232"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Cyprinus carpio",
+      "candidateBaseScientificName": "Cyprinus carpio",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0163"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Epiplatys annulatus",
+      "candidateBaseScientificName": "Epiplatys annulatus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0113"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Erpetoichthys calabaricus",
+      "candidateBaseScientificName": "Erpetoichthys calabaricus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0106"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Geophagus surinamensis",
+      "candidateBaseScientificName": "Geophagus surinamensis",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0270"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Hyphessobrycon megalopterus",
+      "candidateBaseScientificName": "Hyphessobrycon megalopterus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0467"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Hyphessobrycon pulchripinnis",
+      "candidateBaseScientificName": "Hyphessobrycon pulchripinnis",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "speciesIds": [
+        "sp_0141"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Hyphessobrycon sweglesi",
+      "candidateBaseScientificName": "Hyphessobrycon sweglesi",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0255"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Iriatherina werneri",
+      "candidateBaseScientificName": "Iriatherina werneri",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0134"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Kryptopterus vitreolus",
+      "candidateBaseScientificName": "Kryptopterus vitreolus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0458"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Leporacanthicus cf",
+      "candidateBaseScientificName": "Leporacanthicus cf",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0201"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Maylandia estherae",
+      "candidateBaseScientificName": "Maylandia estherae",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0263"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Melanotaenia praecox",
+      "candidateBaseScientificName": "Melanotaenia praecox",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0295"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Moenkhausia pittieri",
+      "candidateBaseScientificName": "Moenkhausia pittieri",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0471"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Nannostomus beckfordi",
+      "candidateBaseScientificName": "Nannostomus beckfordi",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0473"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Nematobrycon palmeri",
+      "candidateBaseScientificName": "Nematobrycon palmeri",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0235"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Oryzias latipes",
+      "candidateBaseScientificName": "Oryzias latipes",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "speciesIds": [
+        "sp_0474"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Osphronemus goramy",
+      "candidateBaseScientificName": "Osphronemus goramy",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0248"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Panaque sp",
+      "candidateBaseScientificName": "Panaque sp",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0182"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Paracheirodon innesi",
+      "candidateBaseScientificName": "Paracheirodon innesi",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0206"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Parambassis ranga",
+      "candidateBaseScientificName": "Parambassis ranga",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0132"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Parancistrus aurantiacus",
+      "candidateBaseScientificName": "Parancistrus aurantiacus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0282"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Pseudochromis sp",
+      "candidateBaseScientificName": "Pseudochromis sp",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_parent_taxon_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0297"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Pseudogastromyzon fangi",
+      "candidateBaseScientificName": "Pseudogastromyzon fangi",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "compatibility_field_source_strategy_exhausted",
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0039"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Pseudomugil furcatus",
+      "candidateBaseScientificName": "Pseudomugil furcatus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0135"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Pterapogon kauderni",
+      "candidateBaseScientificName": "Pterapogon kauderni",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0025"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Sawbwa resplendens",
+      "candidateBaseScientificName": "Sawbwa resplendens",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0111"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Sciaenochromis fryeri",
+      "candidateBaseScientificName": "Sciaenochromis fryeri",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0264"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Semaprochilodus taeniurus",
+      "candidateBaseScientificName": "Semaprochilodus taeniurus",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0107"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Synodontis nigriventris",
+      "candidateBaseScientificName": "Synodontis nigriventris",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "variant_identity_research_exhausted"
+      ],
+      "speciesIds": [
+        "sp_0252"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Thayeria boehlkei",
+      "candidateBaseScientificName": "Thayeria boehlkei",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 1,
+      "reviewedEvidenceCeilingSpecies": 0,
+      "variantLikeSpecies": 0,
+      "exactOrUnparsedSpecies": 1,
+      "reasonCodes": [
+        "identity_boundary_without_reason"
+      ],
+      "speciesIds": [
+        "sp_0472"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "single_exact_object_identity_review"
+    },
+    {
+      "researchKey": "Lutjanus kasmira",
+      "candidateBaseScientificName": "Lutjanus kasmira",
+      "catalogObjectCount": 2,
+      "activeReviewSpecies": 0,
+      "reviewedEvidenceCeilingSpecies": 2,
+      "variantLikeSpecies": 2,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0296",
+        "sp_0365"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_cluster_on_identity_evidence_ceiling"
+    },
+    {
+      "researchKey": "Chrysiptera cyanea",
+      "candidateBaseScientificName": "Chrysiptera cyanea",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 0,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0399"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_cluster_on_identity_evidence_ceiling"
+    },
+    {
+      "researchKey": "Nimbochromis livingstonii",
+      "candidateBaseScientificName": "Nimbochromis livingstonii",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 0,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0265"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_cluster_on_identity_evidence_ceiling"
+    },
+    {
+      "researchKey": "Peckoltia compta",
+      "candidateBaseScientificName": "Peckoltia compta",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 0,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_variant_identity_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0376"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_cluster_on_identity_evidence_ceiling"
+    },
+    {
+      "researchKey": "Prionobrama filigera",
+      "candidateBaseScientificName": "Prionobrama filigera",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 0,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0358"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_cluster_on_identity_evidence_ceiling"
+    },
+    {
+      "researchKey": "Thorichthys meeki",
+      "candidateBaseScientificName": "Thorichthys meeki",
+      "catalogObjectCount": 1,
+      "activeReviewSpecies": 0,
+      "reviewedEvidenceCeilingSpecies": 1,
+      "variantLikeSpecies": 1,
+      "exactOrUnparsedSpecies": 0,
+      "reasonCodes": [
+        "catalog_scientific_name_unresolved"
+      ],
+      "speciesIds": [
+        "sp_0211"
+      ],
+      "candidateForAutomaticBridge": false,
+      "nextAction": "keep_cluster_on_identity_evidence_ceiling"
+    }
+  ]
+}
