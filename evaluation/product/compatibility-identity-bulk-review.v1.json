@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_bulk_review",
-  "generatedAt": "2026-10-22T13:27:46.209Z",
+  "generatedAt": "2026-10-22T13:55:26.802Z",
   "generatedFrom": {
     "baseResolutionGeneratedAt": "2026-10-22T13:26:17.775Z"
   },
@@ -56,7 +56,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -93,7 +98,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -167,7 +177,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -204,7 +219,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -241,7 +261,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -278,7 +303,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -315,7 +345,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -352,7 +387,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -389,7 +429,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -426,7 +471,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -463,7 +513,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -500,7 +555,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -537,7 +597,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -574,7 +639,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -611,7 +681,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -685,7 +760,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -722,7 +802,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -759,7 +844,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -796,7 +886,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -833,7 +928,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -870,7 +970,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -907,7 +1012,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -981,7 +1091,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1018,7 +1133,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1055,7 +1175,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1092,7 +1217,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1129,7 +1259,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1166,7 +1301,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1203,7 +1343,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1240,7 +1385,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1277,7 +1427,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1314,7 +1469,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1351,7 +1511,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1388,7 +1553,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1425,7 +1595,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1462,7 +1637,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1499,7 +1679,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1536,7 +1721,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1573,7 +1763,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,
@@ -1610,7 +1805,12 @@
       "stage": "variant_identity_research",
       "status": "research_retry_required",
       "identityCandidate": null,
-      "provider": null,
+      "provider": {
+        "status": "retry_required",
+        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "attemptedUrls": [],
+        "sourceIds": []
+      },
       "requiresHumanReview": true,
       "promotionAllowed": false,
       "writesAuthority": false,

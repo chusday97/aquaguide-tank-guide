@@ -1,6 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import {
+  buildCompatibilityResearchExtractionConfig,
+  buildCompatibilityResearchProviderConfig,
   probeCompatibilityResearchSearchProvider,
   researchCompatibilityVariantIdentities,
   type CompatibilityVariantIdentityResearchResult,
@@ -20,7 +22,7 @@ type BaseManifest = {
 };
 
 type GroupResult = CompatibilityVariantIdentityResearchResult & {
-  status: 'completed' | 'failed';
+  status: 'completed' | 'retry_required' | 'failed';
   errorCode: string | null;
 };
 
@@ -34,6 +36,7 @@ type OutputReport = {
   summary: {
     groupCount: number;
     completedGroups: number;
+    retryRequiredGroups: number;
     failedGroups: number;
     objectCount: number;
     candidateCount: number;
@@ -55,16 +58,16 @@ const networkFailureThreshold = Math.max(1, Math.min(10, Number(arg('network-fai
 const delayMs = Math.max(0, Math.min(5_000, Number(arg('delay-ms') || 250)));
 const input = JSON.parse(readFileSync(inputPath, 'utf8')) as BaseManifest;
 
-const providerPreflight = await probeCompatibilityResearchSearchProvider();
-console.log('IDENTITY_BULK_VARIANT_PREFLIGHT', JSON.stringify(providerPreflight));
-if (providerPreflight.status !== 'ready') {
-  throw new Error(
-    'compatibility_identity_bulk_provider_preflight_failed:'
-    + (providerPreflight.phase || 'unknown')
-    + ':'
-    + (providerPreflight.reasonCode || providerPreflight.status),
-  );
-}
+const discoveryConfig = buildCompatibilityResearchProviderConfig();
+const extractionConfig = buildCompatibilityResearchExtractionConfig();
+const providerPreflight = await probeCompatibilityResearchSearchProvider(discoveryConfig);
+const discoveryReady = providerPreflight.status === 'ready';
+console.log('IDENTITY_BULK_VARIANT_PREFLIGHT', JSON.stringify({
+  ...providerPreflight,
+  discoveryReady,
+  extractionHost: (() => { try { return new URL(extractionConfig.baseUrl).host; } catch { return null; } })(),
+  extractionModel: extractionConfig.model || null,
+}));
 
 const previous = resume && existsSync(outputPath)
   ? JSON.parse(readFileSync(outputPath, 'utf8')) as OutputReport
@@ -74,7 +77,7 @@ const resultByBase = new Map<string, GroupResult>(
 );
 
 const isNetworkFailure = (group: GroupResult | undefined) => Boolean(
-  group?.status === 'failed'
+  (group?.status === 'failed' || group?.status === 'retry_required')
   && (
     group.errorCode === 'provider_circuit_open_after_repeated_network_failures'
     || (group.errorCode || '').toLowerCase().includes('provider request failed')
@@ -100,6 +103,7 @@ const writeReport = () => {
     summary: {
       groupCount: input.groups.length,
       completedGroups: groups.filter(group => group.status === 'completed').length,
+      retryRequiredGroups: groups.filter(group => group.status === 'retry_required').length,
       failedGroups: groups.filter(group => group.status === 'failed').length,
       objectCount: input.groups.reduce((sum, group) => sum + group.objects.length, 0),
       candidateCount: groups.reduce((sum, group) => sum + group.candidates.length, 0),
@@ -132,12 +136,35 @@ for (let index = 0; index < input.groups.length; index += 1) {
       candidates: [],
       unresolvedSpeciesIds: group.objects.map(object => object.speciesId),
       attemptedUrls: previousGroup?.attemptedUrls || [],
+      sourceDiagnostics: previousGroup?.sourceDiagnostics || [],
       promotionAllowed: false,
       writesAuthority: false,
-      status: 'failed',
+      status: 'retry_required',
       errorCode: 'provider_circuit_open_after_repeated_network_failures',
     });
     console.log('IDENTITY_BULK_VARIANT_CIRCUIT_OPEN', index + 1, '/', input.groups.length, group.baseScientificName);
+    writeReport();
+    continue;
+  }
+
+  if (!discoveryReady && !(previousGroup?.attemptedUrls?.length)) {
+    resultByBase.set(group.baseScientificName, {
+      baseScientificName: group.baseScientificName,
+      model: null,
+      sources: [],
+      candidates: [],
+      unresolvedSpeciesIds: group.objects.map(object => object.speciesId),
+      attemptedUrls: [],
+      sourceDiagnostics: [],
+      promotionAllowed: false,
+      writesAuthority: false,
+      status: 'retry_required',
+      errorCode: 'discovery_preflight_unavailable:'
+        + (providerPreflight.phase || 'unknown')
+        + ':'
+        + (providerPreflight.reasonCode || providerPreflight.status),
+    });
+    console.log('IDENTITY_BULK_VARIANT_RETRY_REQUIRED', index + 1, '/', input.groups.length, group.baseScientificName, 'reason=discovery_unavailable_no_urls');
     writeReport();
     continue;
   }
@@ -151,6 +178,10 @@ for (let index = 0; index < input.groups.length; index += 1) {
         scientificName: object.scientificName,
         commonName: object.name,
       })),
+    }, discoveryConfig, fetch, {
+      candidateUrls: previousGroup?.attemptedUrls || [],
+      skipDiscovery: !discoveryReady,
+      extractionConfig,
     });
     resultByBase.set(group.baseScientificName, {
       ...result,
@@ -168,6 +199,12 @@ for (let index = 0; index < input.groups.length; index += 1) {
     const errorCode = error instanceof Error
       ? error.message.replace(/\s+/g, ' ').slice(0, 240)
       : 'unknown_error';
+    const normalizedError = errorCode.toLowerCase();
+    const networkFailure = normalizedError.includes('provider request failed')
+      || normalizedError.includes('network')
+      || normalizedError.includes('fetch failed')
+      || normalizedError.includes('timed out')
+      || normalizedError.includes('rate limit');
     resultByBase.set(group.baseScientificName, {
       baseScientificName: group.baseScientificName,
       model: null,
@@ -175,15 +212,12 @@ for (let index = 0; index < input.groups.length; index += 1) {
       candidates: [],
       unresolvedSpeciesIds: group.objects.map(object => object.speciesId),
       attemptedUrls: previousGroup?.attemptedUrls || [],
+      sourceDiagnostics: previousGroup?.sourceDiagnostics || [],
       promotionAllowed: false,
       writesAuthority: false,
-      status: 'failed',
+      status: networkFailure ? 'retry_required' : 'failed',
       errorCode,
     });
-    const normalizedError = errorCode.toLowerCase();
-    const networkFailure = normalizedError.includes('provider request failed')
-      || normalizedError.includes('network')
-      || normalizedError.includes('fetch failed');
     consecutiveNetworkFailures = networkFailure ? consecutiveNetworkFailures + 1 : 0;
     if (!forceRetry && consecutiveNetworkFailures >= networkFailureThreshold) {
       providerCircuitOpen = true;

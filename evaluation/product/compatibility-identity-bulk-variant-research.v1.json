@@ -1,17 +1,297 @@
 {
   "version": 1,
   "kind": "compatibility_identity_bulk_variant_research",
-  "generatedAt": "2026-10-19T03:21:16.806Z",
+  "generatedAt": "2026-10-22T13:54:13.119Z",
   "generatedFrom": "evaluation/product/compatibility-identity-bulk-base-resolution.v1.json",
   "promotionAllowed": false,
   "writesAuthority": false,
   "summary": {
-    "groupCount": 0,
+    "groupCount": 17,
     "completedGroups": 0,
+    "retryRequiredGroups": 17,
     "failedGroups": 0,
-    "objectCount": 0,
+    "objectCount": 40,
     "candidateCount": 0,
-    "unresolvedCount": 0
+    "unresolvedCount": 40
   },
-  "groups": []
+  "groups": [
+    {
+      "baseScientificName": "Andinoacara pulcher",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0372",
+        "sp_0416"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Astronotus ocellatus",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0374"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Channa asiatica",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0223"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Channa aurantimaculata",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0285"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Corydoras aeneus",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0232"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Danio rerio",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0152",
+        "sp_0364",
+        "sp_0419"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Gymnocorymbus ternetzi",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0227",
+        "sp_0228",
+        "sp_0256",
+        "sp_0288",
+        "sp_0294",
+        "sp_0341",
+        "sp_0393",
+        "sp_0394",
+        "sp_0421"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Hemichromis bimaculatus",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0373"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Hemigrammus rodwayi",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0212",
+        "sp_0339"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Mikrogeophagus ramirezi",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0219",
+        "sp_0220",
+        "sp_0417"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Paracheirodon innesi",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0206"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Poecilia reticulata",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0145",
+        "sp_0170",
+        "sp_0244",
+        "sp_0245",
+        "sp_0246"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Poecilia sphenops",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0161",
+        "sp_0203",
+        "sp_0293"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Pterophyllum scalare",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0241",
+        "sp_0247"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Sahyadria denisonii",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0215",
+        "sp_0253"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Tanichthys albonubes",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0172",
+        "sp_0426"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    },
+    {
+      "baseScientificName": "Xiphophorus hellerii",
+      "model": null,
+      "sources": [],
+      "candidates": [],
+      "unresolvedSpeciesIds": [
+        "sp_0415"
+      ],
+      "attemptedUrls": [],
+      "sourceDiagnostics": [],
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "status": "retry_required",
+      "errorCode": "discovery_preflight_unavailable:base_model:network"
+    }
+  ]
 }
