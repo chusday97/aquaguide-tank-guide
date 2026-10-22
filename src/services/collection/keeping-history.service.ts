@@ -251,6 +251,7 @@ export const loadKeepingHistoryFromRepository = async (repository: AquaGuideRepo
     aquariums,
     currentAquariumId: appState.currentAquariumId,
     diagnosisRecords,
+    reminders,
     memorials,
     history: buildKeepingHistory({ appState, memorials, reminders, speciesCatalog: [] }),
   };

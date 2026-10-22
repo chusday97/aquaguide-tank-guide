@@ -226,6 +226,7 @@ export const loadCurrentKeepingHistory = async () => {
           && typeof record.problemType === 'string'
           && typeof record.createdAt === 'string';
       }),
+      reminders: getCareReminders(),
       memorials: snapshot.memorials,
       history: snapshot.history,
     };

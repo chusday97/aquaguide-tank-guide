@@ -153,6 +153,7 @@ export default function CollectionHub() {
     aquariums: homeData?.aquariums ?? [],
     currentAquariumId: homeData?.currentAquariumId,
     diagnosisRecords: homeData?.diagnosisRecords ?? [],
+    reminders: homeData?.reminders ?? [],
     history: homeData?.history ?? {
       events: [],
       activeCohorts: [],
@@ -425,30 +426,71 @@ export default function CollectionHub() {
           route: taskRoutes.aquarium.addSpecies(undefined, 'collection-home'),
           attention: false,
         };
-      case 'daily_check_attention':
+      case 'diagnosis_attention':
         return {
           eyebrow: isEn ? 'Needs attention' : '现在最值得关注',
-          title: isEn ? 'Today’s check found something to review' : '今天的巡检有需要关注的地方',
-          description: homeModel.priority.summary || (isEn ? 'Review the latest check before making changes to the tank.' : '先查看最新巡检结果，再决定是否调整鱼缸。'),
-          action: isEn ? 'Review check' : '查看巡检',
+          title: homeModel.priority.sourceTitle
+            ? (isEn ? 'Review an unresolved tank issue' : `还有一条未解决的问题：${homeModel.priority.sourceTitle}`)
+            : (isEn ? 'Review an unresolved tank issue' : '还有一条未解决的风险记录'),
+          description: homeModel.priority.summary || (isEn ? 'Use the latest recorded evidence before making another change.' : '先基于最近一次真实记录复查，不直接假设问题已经消失。'),
+          action: isEn ? 'Review now' : '现在复查',
           route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
           attention: true,
+        };
+      case 'follow_up_due':
+        return {
+          eyebrow: isEn ? 'Follow-up due' : '该复查了',
+          title: homeModel.priority.sourceTitle
+            ? (isEn ? 'A previous issue is due for follow-up' : `复查：${homeModel.priority.sourceTitle}`)
+            : (isEn ? 'A previous issue is due for follow-up' : '之前的问题到了复查时间'),
+          description: homeModel.priority.summary || (isEn ? 'This follow-up comes from a previously recorded diagnosis.' : '这是之前诊断记录里明确留下的复查点，不是系统临时生成的任务。'),
+          action: isEn ? 'Start follow-up' : '开始复查',
+          route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
+          attention: true,
+        };
+      case 'care_reminder_overdue':
+      case 'care_reminder_today':
+        return {
+          eyebrow: homeModel.priority.kind === 'care_reminder_overdue'
+            ? (isEn ? 'Overdue' : '已到期')
+            : (isEn ? 'Today' : '今天'),
+          title: homeModel.priority.sourceTitle || (isEn ? 'A care reminder is due' : '有一项养护计划到了时间'),
+          description: homeModel.priority.summary || (isEn ? 'This is a care reminder you previously created.' : '这是你之前自己设定的养护提醒。'),
+          action: isEn ? 'View plan' : '查看计划',
+          route: homeModel.aquarium
+            ? taskRoutes.aquarium.timeline(homeModel.aquarium.id, 'collection-home')
+            : taskRoutes.care.home,
+          attention: homeModel.priority.kind === 'care_reminder_overdue',
+        };
+      case 'new_resident_observation':
+        return {
+          eyebrow: isEn ? 'New resident' : '新成员',
+          title: isEn ? 'A new resident was added recently' : '最近刚加入了新成员',
+          description: isEn
+            ? 'This comes from an explicit add event in the past 72 hours. You can record adaptation without assuming there is a problem.'
+            : '这是最近 72 小时内明确记录的加入事件。可以记录适应情况，但这里不会假设它已经出现异常。',
+          action: isEn ? 'Record status' : '记录状态',
+          route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
+          attention: false,
         };
       case 'daily_check_recorded':
         return {
           eyebrow: isEn ? 'Today' : '今天',
-          title: isEn ? 'Today’s check is recorded' : '今天已经检查过了',
-          description: homeModel.priority.summary || (isEn ? 'Your latest check is saved.' : '最新巡检已经记录，这里只展示已有结果，不额外推断鱼缸状态。'),
-          action: isEn ? 'Open check' : '查看检查',
+          title: isEn ? 'Today already has a check record' : '今天已经有巡检记录',
+          description: homeModel.priority.summary || (isEn ? 'The record is saved without making any extra stability claim.' : '这里只展示已经记录的结果，不额外推断鱼缸稳定或正常。'),
+          action: isEn ? 'Open check' : '查看记录',
           route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
           attention: false,
         };
+      case 'no_priority_task':
       default:
         return {
           eyebrow: isEn ? 'Today' : '今天',
-          title: isEn ? 'One-minute tank check' : '今天还没检查',
-          description: isEn ? 'A quick check keeps the aquarium record useful without asking for lots of parameters.' : '花一分钟确认鱼的状态和水体变化，不需要每天填写一堆参数。',
-          action: isEn ? 'Start check' : '开始检查',
+          title: isEn ? 'No clear action is due right now' : '目前没有明确待处理事项',
+          description: isEn
+            ? 'There is no unresolved risk, due follow-up, or reminder on record. You can still add a status note if you want.'
+            : '目前没有未解决风险、到期复查或你自己设定的到期提醒。想留一条状态记录也可以，但不是必须任务。',
+          action: isEn ? 'Record a status' : '记录一次状态',
           route: taskRoutes.aquarium.dailyCheckFrom('collection-home'),
           attention: false,
         };
