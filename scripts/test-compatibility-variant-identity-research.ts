@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  discoverCompatibilityVariantIdentityAcademicCandidates,
   researchCompatibilityVariantIdentities,
   type CompatibilityResearchProviderConfig,
 } from '../apps/api/src/compatibility-species-research-provider';
@@ -150,6 +151,37 @@ assert.deepEqual(resumed.unresolvedSpeciesIds, []);
 assert.equal(resumed.promotionAllowed, false);
 assert.equal(resumed.writesAuthority, false);
 
+let invalidExtractorCalls = 0;
+const extractorUnavailable = await researchCompatibilityVariantIdentities({
+  baseScientificName: 'Betta splendens',
+  variants: [{ speciesId: 'sp_koi_retry', scientificName: 'Betta splendens var. Koi', commonName: 'Koi Betta' }],
+}, config, async input => {
+  const url = String(input);
+  if (url === 'http://127.0.0.1:11434/api/chat') {
+    invalidExtractorCalls += 1;
+    return new Response(JSON.stringify({ message: { content: '{"claims":[{"speciesId":42}]}' } }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+  if (url === 'https://animaldiversity.org/accounts/Betta_splendens' || url === 'https://animaldiversity.org/accounts/Betta_splendens/') {
+    return new Response(localModelPage, { status: 200, headers: { 'content-type': 'text/html' } });
+  }
+  return new Response('not found', { status: 404 });
+}, {
+  candidateUrls: ['https://animaldiversity.org/accounts/Betta_splendens/'],
+  skipDiscovery: true,
+  extractionConfig: localExtractionConfig,
+});
+assert.equal(invalidExtractorCalls, 1, 'a local extractor schema failure must not fan out to cloud fallback models');
+assert.equal(extractorUnavailable.sources.length, 1, 'verified evidence must survive an extractor failure');
+assert.equal(extractorUnavailable.candidates.length, 0);
+assert.deepEqual(extractorUnavailable.unresolvedSpeciesIds, ['sp_koi_retry']);
+assert.equal(extractorUnavailable.extractionStatus, 'unavailable');
+assert.match(extractorUnavailable.extractionErrorCode || '', /invalid schema/i);
+assert.equal(extractorUnavailable.promotionAllowed, false);
+assert.equal(extractorUnavailable.writesAuthority, false);
+
 const transgenicSourceUrl = 'https://biology.example.edu/glofish';
 const transgenicPage = `<html><head><title>GloFish identity</title></head><body><h1>Danio rerio</h1><p>GloFish are transgenic zebra fish (Danio rerio) expressing variants of GFP.</p><p>${'genetic modification and ornamental zebrafish context '.repeat(20)}</p></body></html>`;
 const transgenicResult = await researchCompatibilityVariantIdentities({
@@ -182,5 +214,88 @@ assert.equal(transgenicResult.candidates[0]?.speciesId, 'sp_glo', 'direct transg
 assert.equal(transgenicResult.sourceDiagnostics[0]?.status, 'verified');
 assert.equal(transgenicResult.promotionAllowed, false);
 assert.equal(transgenicResult.writesAuthority, false);
+
+const pubmedCitationUrl = 'https://pubmed.ncbi.nlm.nih.gov/12345678';
+const hydratedIdentityText = [
+  'GloFish are transgenic zebrafish (Danio rerio) used as ornamental fluorescent fish.',
+  'This peer-reviewed abstract describes Danio rerio and directly identifies GloFish as a transgenic zebrafish form.',
+  'Additional study context '.repeat(30),
+].join(' ');
+let hydrationCalls = 0;
+const hydratedIdentity = await researchCompatibilityVariantIdentities({
+  baseScientificName: 'Danio rerio',
+  variants: [{ speciesId: 'sp_glo_hydrated', scientificName: 'Danio rerio var. GloFish', commonName: 'GloFish zebrafish' }],
+}, config, async input => {
+  const url = String(input);
+  if (url === pubmedCitationUrl || url === pubmedCitationUrl + '/') {
+    return new Response('<html><head><title>pubmed.ncbi.nlm.nih.gov</title></head><body>Cookies must be enabled</body></html>', {
+      status: 203,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+  }
+  if (url.startsWith('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=12345678')) {
+    hydrationCalls += 1;
+    return new Response(hydratedIdentityText, {
+      status: 200,
+      headers: { 'content-type': 'text/plain; charset=UTF-8' },
+    });
+  }
+  throw new Error('unexpected hydration test URL: ' + url);
+}, {
+  candidateUrls: [pubmedCitationUrl],
+  skipDiscovery: true,
+  extractionConfig: localExtractionConfig,
+});
+assert.equal(hydrationCalls, 1);
+assert.equal(hydratedIdentity.sources[0]?.url, pubmedCitationUrl, 'machine-readable NCBI hydration must preserve the normal citation URL');
+assert.equal(hydratedIdentity.sourceDiagnostics[0]?.status, 'verified');
+assert.equal(hydratedIdentity.sourceDiagnostics[0]?.reason, 'ncbi_machine_readable_hydration');
+assert.equal(hydratedIdentity.candidates[0]?.speciesId, 'sp_glo_hydrated');
+assert.deepEqual(hydratedIdentity.unresolvedSpeciesIds, []);
+assert.equal(hydratedIdentity.promotionAllowed, false);
+assert.equal(hydratedIdentity.writesAuthority, false);
+
+const academicInput = {
+  baseScientificName: 'Danio rerio',
+  variants: [{ speciesId: 'sp_glo', scientificName: 'Danio rerio var. GloFish', commonName: 'GloFish zebrafish' }],
+};
+let academicCalls = 0;
+const academic = await discoverCompatibilityVariantIdentityAcademicCandidates(academicInput, async input => {
+  academicCalls += 1;
+  assert.match(String(input), /^https:\/\/www\.ebi\.ac\.uk\/europepmc\/webservices\/rest\/search\?/);
+  return new Response(JSON.stringify({
+    resultList: {
+      result: [
+        { pmid: '12345678', pmcid: 'PMC7654321' },
+        { pmid: 'not-a-pmid', pmcid: 'bad-pmcid' },
+        { pmid: '12345678', pmcid: 'PMC7654321' },
+      ],
+    },
+  }), { status: 200, headers: { 'content-type': 'application/json' } });
+});
+assert.equal(academic.status, 'ok');
+assert.ok(academicCalls >= 1);
+assert.deepEqual(academic.candidateUrls, [
+  'https://pubmed.ncbi.nlm.nih.gov/12345678',
+  'https://pmc.ncbi.nlm.nih.gov/articles/PMC7654321',
+]);
+assert.ok(academic.successfulQueries >= 1);
+
+const academicNoResults = await discoverCompatibilityVariantIdentityAcademicCandidates(academicInput, async () => (
+  new Response(JSON.stringify({ resultList: { result: [] } }), {
+    status: 200,
+    headers: { 'content-type': 'application/json' },
+  })
+));
+assert.equal(academicNoResults.status, 'no_results');
+assert.deepEqual(academicNoResults.candidateUrls, []);
+assert.ok(academicNoResults.successfulQueries >= 1);
+
+const academicTransportUnavailable = await discoverCompatibilityVariantIdentityAcademicCandidates(academicInput, async () => {
+  throw new Error('network unavailable');
+});
+assert.equal(academicTransportUnavailable.status, 'transport_unavailable');
+assert.deepEqual(academicTransportUnavailable.candidateUrls, []);
+assert.equal(academicTransportUnavailable.successfulQueries, 0);
 
 console.log('Compatibility variant identity research PASS: grouped identity discovery is server-verified, quote-checked, draft-only, and does not persist raw source text.');

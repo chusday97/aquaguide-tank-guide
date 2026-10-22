@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_bulk_variant_research",
-  "generatedAt": "2026-10-22T13:54:13.119Z",
+  "generatedAt": "2026-10-22T16:19:18.177Z",
   "generatedFrom": "evaluation/product/compatibility-identity-bulk-base-resolution.v1.json",
   "promotionAllowed": false,
   "writesAuthority": false,
@@ -29,22 +29,75 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Astronotus ocellatus",
-      "model": null,
-      "sources": [],
+      "model": "qwen3.5:9b",
+      "sources": [
+        {
+          "id": "research-d1154582f1a6e435618a",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10668548",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "ffb9b21ebffc66d66d93302f208beb45d366ead820c92d30f9a8a7b9974933bf"
+        },
+        {
+          "id": "research-ab62dbd514295ffeb2ee",
+          "title": "Ultrastructural Damage of Loligo vulgaris and Illex coindetii statocysts after Low Frequency Sound Exposure - PMC",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3797068",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "8f7f57f5f94a1b36651c6f26e232c840cdddd00ee45198bb8f18d9b55d9ba2e0"
+        }
+      ],
       "candidates": [],
       "unresolvedSpeciesIds": [
         "sp_0374"
       ],
-      "attemptedUrls": [],
-      "sourceDiagnostics": [],
+      "attemptedUrls": [
+        "https://pubmed.ncbi.nlm.nih.gov/38023273",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10668548",
+        "https://pubmed.ncbi.nlm.nih.gov/24143265",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3797068"
+      ],
+      "sourceDiagnostics": [
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/38023273",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/38023273/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10668548",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10668548/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/24143265",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/24143265",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3797068",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3797068/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": null
+        }
+      ],
+      "extractionStatus": "completed",
+      "extractionErrorCode": null,
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok"
     },
     {
       "baseScientificName": "Channa asiatica",
@@ -59,7 +112,7 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Channa aurantimaculata",
@@ -74,7 +127,7 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Corydoras aeneus",
@@ -89,24 +142,134 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Danio rerio",
       "model": null,
-      "sources": [],
+      "sources": [
+        {
+          "id": "research-fb1f71257972037b5f15",
+          "title": "pubmed.ncbi.nlm.nih.gov",
+          "publisher": "PubMed / NCBI",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/42651127",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "8b3b24747605c461e796096460606bfa9114114ec4af0450e0b653c9cc8d129c"
+        },
+        {
+          "id": "research-372e4fe806edc593db63",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510721",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "1045ce838b52bd9dd6d2d2528d2a5b9fd038dd535ad5ddbff3b67f3e62fc9d43"
+        },
+        {
+          "id": "research-6ef1f456ab240dabcedd",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed / NCBI",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/40955450",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "a84f631cd1670f21211d47ec169eca2f29674bad50e07bb59d2533c9bac99866"
+        },
+        {
+          "id": "research-54998de628e57b3d8381",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12547860",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "f046091683cc95bcfd410e45bd6354773b4d6b3e08d47b5ca54ef2b10dbd22a4"
+        },
+        {
+          "id": "research-a5675ec6a1ee515c2585",
+          "title": "Anxiolytic-like effects of acute serotonin-releasing agents in zebrafish models of anxiety: experimental study and systematic review - PMC",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13130266",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "839b95383e0e560d3fc59240eb85cc46bf125c04942488dc4edfc5c687e29226"
+        },
+        {
+          "id": "research-cd31523394db7f531f9c",
+          "title": "pubmed.ncbi.nlm.nih.gov",
+          "publisher": "PubMed / NCBI",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34253753",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "c897863185baeaea6c3a8b1ba99fada1138ce6585b7bcae32b19b27e27960bac"
+        }
+      ],
       "candidates": [],
       "unresolvedSpeciesIds": [
         "sp_0152",
         "sp_0364",
         "sp_0419"
       ],
-      "attemptedUrls": [],
-      "sourceDiagnostics": [],
+      "attemptedUrls": [
+        "https://pubmed.ncbi.nlm.nih.gov/42651127",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510721",
+        "https://pubmed.ncbi.nlm.nih.gov/40955450",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC12547860",
+        "https://pubmed.ncbi.nlm.nih.gov/39463428",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC13130266",
+        "https://pubmed.ncbi.nlm.nih.gov/34253753",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC8275758"
+      ],
+      "sourceDiagnostics": [
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/42651127",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/42651127/",
+          "status": "verified",
+          "httpStatus": 203,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510721",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510721",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/40955450",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/40955450",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12547860",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12547860",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/39463428",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/39463428/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13130266",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13130266/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": null
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/34253753",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/34253753/",
+          "status": "verified",
+          "httpStatus": 203,
+          "reason": "ncbi_machine_readable_hydration"
+        }
+      ],
+      "extractionStatus": "unavailable",
+      "extractionErrorCode": "Compatibility research provider returned an invalid schema.",
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok;identity_extractor_unavailable:Compatibility research provider returned an invalid schema."
     },
     {
       "baseScientificName": "Gymnocorymbus ternetzi",
@@ -129,7 +292,7 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Hemichromis bimaculatus",
@@ -144,7 +307,7 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Hemigrammus rodwayi",
@@ -155,12 +318,30 @@
         "sp_0212",
         "sp_0339"
       ],
-      "attemptedUrls": [],
-      "sourceDiagnostics": [],
+      "attemptedUrls": [
+        "https://pubmed.ncbi.nlm.nih.gov/20604188",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC2554711"
+      ],
+      "sourceDiagnostics": [
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/20604188",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/20604188/",
+          "status": "content_too_short",
+          "httpStatus": 203,
+          "reason": "verified_text_below_minimum_length"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2554711",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2554711",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        }
+      ],
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok"
     },
     {
       "baseScientificName": "Mikrogeophagus ramirezi",
@@ -177,27 +358,153 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Paracheirodon innesi",
-      "model": null,
-      "sources": [],
+      "model": "qwen3.5:9b",
+      "sources": [
+        {
+          "id": "research-b6143920006aaec5adce",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11383212",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "44bfe02d955d9ceb213cdd46f8f732fa977bdca73683906fb278234d8e02d6ea"
+        },
+        {
+          "id": "research-e677455aac61cc18c956",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10924128",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "2d01f455882eabccc6464c416be4dc2faf55148e8562a2bf350bec93bd824609"
+        },
+        {
+          "id": "research-2b2176994bc79b64f10f",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9590048",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "77ff33762619cec81bf354cccf5106265be9e986091f66378aa2777cdc790687"
+        },
+        {
+          "id": "research-ca47345a2078c7437676",
+          "title": "The Role of Confinement in Biomineralization - PMC",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12746419",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "e588729098e6f630cb6f449fe9cd52ae0c76f0af26971b2c1548c12ed80b0ce7"
+        }
+      ],
       "candidates": [],
       "unresolvedSpeciesIds": [
         "sp_0206"
       ],
-      "attemptedUrls": [],
-      "sourceDiagnostics": [],
+      "attemptedUrls": [
+        "https://pubmed.ncbi.nlm.nih.gov/39250439",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11383212",
+        "https://pubmed.ncbi.nlm.nih.gov/38464591",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10924128",
+        "https://pubmed.ncbi.nlm.nih.gov/36278710",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9590048",
+        "https://pubmed.ncbi.nlm.nih.gov/41252175",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC12746419"
+      ],
+      "sourceDiagnostics": [
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/39250439",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/39250439",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11383212",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11383212",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/38464591",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/38464591",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10924128",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10924128/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/36278710",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/36278710/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9590048",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9590048/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/41252175",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/41252175/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12746419",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12746419/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        }
+      ],
+      "extractionStatus": "completed",
+      "extractionErrorCode": null,
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok"
     },
     {
       "baseScientificName": "Poecilia reticulata",
-      "model": null,
-      "sources": [],
+      "model": "qwen3.5:9b",
+      "sources": [
+        {
+          "id": "research-767940d2adb8e8b0740c",
+          "title": "Aspects of the Histopathology of Clarias gariepinus Infected With the Camallanid Parasite Procamallanus (Procamallanus) pseudolaeviconchus Moravec and Van As, 2015 - PMC",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "9e82254d20f73a74c26b8e5ea4e6c187f22a32ea36bf19d442e2e2ca2afbed8b"
+        },
+        {
+          "id": "research-cc2af36a3c2ba10157bb",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "4e8a3fc11dea4d0fb461f027056b0db85135bf882fd0a2464514f4fefbb35889"
+        },
+        {
+          "id": "research-11d7a5bb5e3d9b994d57",
+          "title": "Seasonal variation in reversal learning reveals greater female cognitive flexibility in African striped mice - PMC",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "a4990c6fb811494e2e61d62fd81112369914d7361afd46f5c3788950663cedda"
+        }
+      ],
       "candidates": [],
       "unresolvedSpeciesIds": [
         "sp_0145",
@@ -206,29 +513,158 @@
         "sp_0245",
         "sp_0246"
       ],
-      "attemptedUrls": [],
-      "sourceDiagnostics": [],
+      "attemptedUrls": [
+        "https://pubmed.ncbi.nlm.nih.gov/41386685",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+        "https://pubmed.ncbi.nlm.nih.gov/42158208",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+        "https://pubmed.ncbi.nlm.nih.gov/34625648",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043"
+      ],
+      "sourceDiagnostics": [
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/41386685",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/41386685",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": null
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/42158208",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/42158208",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/34625648",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/34625648/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": null
+        }
+      ],
+      "extractionStatus": "completed",
+      "extractionErrorCode": null,
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok"
     },
     {
       "baseScientificName": "Poecilia sphenops",
-      "model": null,
-      "sources": [],
+      "model": "qwen3.5:9b",
+      "sources": [
+        {
+          "id": "research-9df23cd1a5a88b3e4cc9",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7750215",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "62a831a0d7f881e85baa0246ec56fe48bca8d2140c4f8bb1b3694eb9820af2da"
+        }
+      ],
       "candidates": [],
       "unresolvedSpeciesIds": [
         "sp_0161",
         "sp_0203",
         "sp_0293"
       ],
-      "attemptedUrls": [],
-      "sourceDiagnostics": [],
+      "attemptedUrls": [
+        "https://pubmed.ncbi.nlm.nih.gov/33363355",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7750215",
+        "https://pubmed.ncbi.nlm.nih.gov/35360602",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC8963904",
+        "https://pubmed.ncbi.nlm.nih.gov/34381314",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC8341485",
+        "https://pubmed.ncbi.nlm.nih.gov/27162372",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4837740"
+      ],
+      "sourceDiagnostics": [
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/33363355",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/33363355",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7750215",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7750215",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/35360602",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/35360602",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8963904",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8963904",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/34381314",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/34381314/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8341485",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8341485/",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/27162372",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/27162372/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4837740",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4837740",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        }
+      ],
+      "extractionStatus": "completed",
+      "extractionErrorCode": null,
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok"
     },
     {
       "baseScientificName": "Pterophyllum scalare",
@@ -244,7 +680,7 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Sahyadria denisonii",
@@ -260,23 +696,124 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     },
     {
       "baseScientificName": "Tanichthys albonubes",
       "model": null,
-      "sources": [],
+      "sources": [
+        {
+          "id": "research-6b1acf5a5af295950eb1",
+          "title": "Morphological, Toxicological, and Biochemical Characterization of Two Species of Gambierdiscus from Bahía de La Paz, Gulf of California - PMC",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11433345",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "c5ea6d446dc7f6b30fafa826e8a68a6dedc659364beb62728de79ec1a02339bd"
+        },
+        {
+          "id": "research-945222d93eb222e9a88a",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3770931",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "e926194970274cfcfc29e3a213ac4f7641858ac9ff02f8b84ab7bbfd09f6da05"
+        },
+        {
+          "id": "research-9309c90af216321a6ab7",
+          "title": "Checking your browser - reCAPTCHA",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12733527",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "f3113c1bf9069fc9435e4e6ab4d6cab7a11859b862181ffbd61a8dd61cb2368c"
+        },
+        {
+          "id": "research-044bfd9d8b755d11466d",
+          "title": "Optimized Derivation of Predicted No-Effect Concentrations (PNECs) for Eight Polycyclic Aromatic Hydrocarbons (PAHs) Using HC10 Based on Acute Toxicity Data - PMC",
+          "publisher": "PubMed Central / NCBI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10384761",
+          "sourceType": "peer_reviewed",
+          "contentSha256": "220922537fd46d39dd3b83f931e242747dbc09c9127c161218866049c7c250a0"
+        }
+      ],
       "candidates": [],
       "unresolvedSpeciesIds": [
         "sp_0172",
         "sp_0426"
       ],
-      "attemptedUrls": [],
-      "sourceDiagnostics": [],
+      "attemptedUrls": [
+        "https://pubmed.ncbi.nlm.nih.gov/39330303",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11433345",
+        "https://pubmed.ncbi.nlm.nih.gov/24039297",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3770931",
+        "https://pubmed.ncbi.nlm.nih.gov/41440751",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC12733527",
+        "https://pubmed.ncbi.nlm.nih.gov/37505529",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10384761"
+      ],
+      "sourceDiagnostics": [
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/39330303",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/39330303/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11433345",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11433345/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/24039297",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/24039297/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3770931",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3770931",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/41440751",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/41440751/",
+          "status": "taxon_mismatch",
+          "httpStatus": 203,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12733527",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12733527",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": "ncbi_machine_readable_hydration"
+        },
+        {
+          "requestedUrl": "https://pubmed.ncbi.nlm.nih.gov/37505529",
+          "finalUrl": "https://pubmed.ncbi.nlm.nih.gov/37505529",
+          "status": "taxon_mismatch",
+          "httpStatus": 200,
+          "reason": "exact_scientific_name_not_found"
+        },
+        {
+          "requestedUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10384761",
+          "finalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10384761/",
+          "status": "verified",
+          "httpStatus": 200,
+          "reason": null
+        }
+      ],
+      "extractionStatus": "unavailable",
+      "extractionErrorCode": "Compatibility research provider returned an invalid schema.",
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok;identity_extractor_unavailable:Compatibility research provider returned an invalid schema."
     },
     {
       "baseScientificName": "Xiphophorus hellerii",
@@ -291,7 +828,7 @@
       "promotionAllowed": false,
       "writesAuthority": false,
       "status": "retry_required",
-      "errorCode": "discovery_preflight_unavailable:base_model:network"
+      "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_bulk_review",
-  "generatedAt": "2026-10-22T13:55:26.802Z",
+  "generatedAt": "2026-10-22T16:19:58.244Z",
   "generatedFrom": {
     "baseResolutionGeneratedAt": "2026-10-22T13:26:17.775Z"
   },
@@ -58,9 +58,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/41386685",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+          "https://pubmed.ncbi.nlm.nih.gov/42158208",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "https://pubmed.ncbi.nlm.nih.gov/34625648",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043"
+        ],
+        "sourceIds": [
+          "research-767940d2adb8e8b0740c",
+          "research-cc2af36a3c2ba10157bb",
+          "research-11d7a5bb5e3d9b994d57"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -100,9 +111,25 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok;identity_extractor_unavailable:Compatibility research provider returned an invalid schema.",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/42651127",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510721",
+          "https://pubmed.ncbi.nlm.nih.gov/40955450",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC12547860",
+          "https://pubmed.ncbi.nlm.nih.gov/39463428",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13130266",
+          "https://pubmed.ncbi.nlm.nih.gov/34253753",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8275758"
+        ],
+        "sourceIds": [
+          "research-fb1f71257972037b5f15",
+          "research-372e4fe806edc593db63",
+          "research-6ef1f456ab240dabcedd",
+          "research-54998de628e57b3d8381",
+          "research-a5675ec6a1ee515c2585",
+          "research-cd31523394db7f531f9c"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -179,9 +206,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/33363355",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7750215",
+          "https://pubmed.ncbi.nlm.nih.gov/35360602",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8963904",
+          "https://pubmed.ncbi.nlm.nih.gov/34381314",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8341485",
+          "https://pubmed.ncbi.nlm.nih.gov/27162372",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC4837740"
+        ],
+        "sourceIds": [
+          "research-9df23cd1a5a88b3e4cc9"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -221,9 +259,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/41386685",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+          "https://pubmed.ncbi.nlm.nih.gov/42158208",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "https://pubmed.ncbi.nlm.nih.gov/34625648",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043"
+        ],
+        "sourceIds": [
+          "research-767940d2adb8e8b0740c",
+          "research-cc2af36a3c2ba10157bb",
+          "research-11d7a5bb5e3d9b994d57"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -263,9 +312,23 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok;identity_extractor_unavailable:Compatibility research provider returned an invalid schema.",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/39330303",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC11433345",
+          "https://pubmed.ncbi.nlm.nih.gov/24039297",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC3770931",
+          "https://pubmed.ncbi.nlm.nih.gov/41440751",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC12733527",
+          "https://pubmed.ncbi.nlm.nih.gov/37505529",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10384761"
+        ],
+        "sourceIds": [
+          "research-6b1acf5a5af295950eb1",
+          "research-945222d93eb222e9a88a",
+          "research-9309c90af216321a6ab7",
+          "research-044bfd9d8b755d11466d"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -305,9 +368,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/33363355",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7750215",
+          "https://pubmed.ncbi.nlm.nih.gov/35360602",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8963904",
+          "https://pubmed.ncbi.nlm.nih.gov/34381314",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8341485",
+          "https://pubmed.ncbi.nlm.nih.gov/27162372",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC4837740"
+        ],
+        "sourceIds": [
+          "research-9df23cd1a5a88b3e4cc9"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -347,9 +421,23 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/39250439",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC11383212",
+          "https://pubmed.ncbi.nlm.nih.gov/38464591",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10924128",
+          "https://pubmed.ncbi.nlm.nih.gov/36278710",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC9590048",
+          "https://pubmed.ncbi.nlm.nih.gov/41252175",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC12746419"
+        ],
+        "sourceIds": [
+          "research-b6143920006aaec5adce",
+          "research-e677455aac61cc18c956",
+          "research-2b2176994bc79b64f10f",
+          "research-ca47345a2078c7437676"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -389,8 +477,11 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/20604188",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC2554711"
+        ],
         "sourceIds": []
       },
       "requiresHumanReview": true,
@@ -431,7 +522,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -473,7 +564,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -515,7 +606,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -557,7 +648,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -599,7 +690,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -641,7 +732,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -683,7 +774,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -762,7 +853,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -804,9 +895,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/41386685",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+          "https://pubmed.ncbi.nlm.nih.gov/42158208",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "https://pubmed.ncbi.nlm.nih.gov/34625648",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043"
+        ],
+        "sourceIds": [
+          "research-767940d2adb8e8b0740c",
+          "research-cc2af36a3c2ba10157bb",
+          "research-11d7a5bb5e3d9b994d57"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -846,9 +948,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/41386685",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+          "https://pubmed.ncbi.nlm.nih.gov/42158208",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "https://pubmed.ncbi.nlm.nih.gov/34625648",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043"
+        ],
+        "sourceIds": [
+          "research-767940d2adb8e8b0740c",
+          "research-cc2af36a3c2ba10157bb",
+          "research-11d7a5bb5e3d9b994d57"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -888,9 +1001,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/41386685",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13051325",
+          "https://pubmed.ncbi.nlm.nih.gov/42158208",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13180646",
+          "https://pubmed.ncbi.nlm.nih.gov/34625648",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8501043"
+        ],
+        "sourceIds": [
+          "research-767940d2adb8e8b0740c",
+          "research-cc2af36a3c2ba10157bb",
+          "research-11d7a5bb5e3d9b994d57"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -930,7 +1054,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -972,7 +1096,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1014,7 +1138,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1093,7 +1217,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1135,7 +1259,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1177,9 +1301,20 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/33363355",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC7750215",
+          "https://pubmed.ncbi.nlm.nih.gov/35360602",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8963904",
+          "https://pubmed.ncbi.nlm.nih.gov/34381314",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8341485",
+          "https://pubmed.ncbi.nlm.nih.gov/27162372",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC4837740"
+        ],
+        "sourceIds": [
+          "research-9df23cd1a5a88b3e4cc9"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -1219,7 +1354,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1261,8 +1396,11 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/20604188",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC2554711"
+        ],
         "sourceIds": []
       },
       "requiresHumanReview": true,
@@ -1303,7 +1441,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1345,9 +1483,25 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok;identity_extractor_unavailable:Compatibility research provider returned an invalid schema.",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/42651127",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510721",
+          "https://pubmed.ncbi.nlm.nih.gov/40955450",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC12547860",
+          "https://pubmed.ncbi.nlm.nih.gov/39463428",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13130266",
+          "https://pubmed.ncbi.nlm.nih.gov/34253753",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8275758"
+        ],
+        "sourceIds": [
+          "research-fb1f71257972037b5f15",
+          "research-372e4fe806edc593db63",
+          "research-6ef1f456ab240dabcedd",
+          "research-54998de628e57b3d8381",
+          "research-a5675ec6a1ee515c2585",
+          "research-cd31523394db7f531f9c"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -1387,7 +1541,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1429,7 +1583,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1471,9 +1625,17 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/38023273",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10668548",
+          "https://pubmed.ncbi.nlm.nih.gov/24143265",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC3797068"
+        ],
+        "sourceIds": [
+          "research-d1154582f1a6e435618a",
+          "research-ab62dbd514295ffeb2ee"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -1513,7 +1675,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1555,7 +1717,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1597,7 +1759,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1639,7 +1801,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1681,7 +1843,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1723,9 +1885,25 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok;identity_extractor_unavailable:Compatibility research provider returned an invalid schema.",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/42651127",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510721",
+          "https://pubmed.ncbi.nlm.nih.gov/40955450",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC12547860",
+          "https://pubmed.ncbi.nlm.nih.gov/39463428",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC13130266",
+          "https://pubmed.ncbi.nlm.nih.gov/34253753",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8275758"
+        ],
+        "sourceIds": [
+          "research-fb1f71257972037b5f15",
+          "research-372e4fe806edc593db63",
+          "research-6ef1f456ab240dabcedd",
+          "research-54998de628e57b3d8381",
+          "research-a5675ec6a1ee515c2585",
+          "research-cd31523394db7f531f9c"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
@@ -1765,7 +1943,7 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
+        "errorCode": "discovery_preflight_unavailable:base_model:network;academic_fallback:no_results",
         "attemptedUrls": [],
         "sourceIds": []
       },
@@ -1807,9 +1985,23 @@
       "identityCandidate": null,
       "provider": {
         "status": "retry_required",
-        "errorCode": "discovery_preflight_unavailable:base_model:network",
-        "attemptedUrls": [],
-        "sourceIds": []
+        "errorCode": "broad_discovery_unavailable_with_unresolved_objects;academic_fallback:ok;identity_extractor_unavailable:Compatibility research provider returned an invalid schema.",
+        "attemptedUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/39330303",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC11433345",
+          "https://pubmed.ncbi.nlm.nih.gov/24039297",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC3770931",
+          "https://pubmed.ncbi.nlm.nih.gov/41440751",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC12733527",
+          "https://pubmed.ncbi.nlm.nih.gov/37505529",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC10384761"
+        ],
+        "sourceIds": [
+          "research-6b1acf5a5af295950eb1",
+          "research-945222d93eb222e9a88a",
+          "research-9309c90af216321a6ab7",
+          "research-044bfd9d8b755d11466d"
+        ]
       },
       "requiresHumanReview": true,
       "promotionAllowed": false,
