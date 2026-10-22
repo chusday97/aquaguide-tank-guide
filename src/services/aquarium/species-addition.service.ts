@@ -10,7 +10,7 @@ import {
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
 import { evaluateCompatibilityDecision } from '../../modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
-import { prioritizeDistinctCompatibilityRules } from '../compatibility/compatibility-action.service';
+import { getCompatibilityDecisionDisplayRules } from '../compatibility/compatibility-action.service';
 
 export type SpeciesAdditionItem = {
   fishId: string;
@@ -82,13 +82,6 @@ export const normalizeSpeciesAdditionItems = (items: SpeciesAdditionItem[], spec
   return Array.from(grouped.values());
 };
 
-const getRulesForDecision = (decision: CompatibilityDecision) => {
-  if (decision.status === 'not_recommended') return decision.blockingRules;
-  if (decision.status === 'insufficient_data') return decision.missingData;
-  if (decision.status === 'caution') return [...decision.warningRules, ...decision.missingData];
-  return decision.passedRules;
-};
-
 export const reviewSpeciesAdditions = ({
   aquarium,
   items,
@@ -155,7 +148,10 @@ export const assessSpeciesAddition = ({
   });
 
   if (evaluations.length === 0) return null;
-  const keyRules = prioritizeDistinctCompatibilityRules(getRulesForDecision(decision))
+  const keyRules = getCompatibilityDecisionDisplayRules(
+    decision,
+    intent === 'planned_addition' ? 'planned_addition' : 'current_tank',
+  )
     .filter((rule, index, rules) => rules.findIndex(candidate => (
       `${candidate.code}-${candidate.title}-${candidate.evidence}` === `${rule.code}-${rule.title}-${rule.evidence}`
     )) === index)

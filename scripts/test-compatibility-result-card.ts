@@ -85,7 +85,9 @@ const remoteFixture: RemoteCompatibilityAssessment = {
   main: local.main,
   details: {
     label: '查看依据',
-    reasons: [{ text: 'fixture reason', ruleCodes: ['predation_vulnerability_context'] }],
+    reasons: [...local.details.reasons]
+      .reverse()
+      .map(item => ({ text: item.text, ruleCodes: item.ruleCodes })),
     adjustments: [],
     uncertainties: [],
     explanation: {
@@ -103,6 +105,27 @@ const adaptedRemote = adaptRemoteCompatibilityAssessmentForPlan(remoteFixture, r
 assert.ok(adaptedRemote);
 assert.equal(adaptedRemote.assessmentMode, 'planned_addition');
 assert.equal(adaptedRemote.details.authorityStatus, review.status);
+assert.deepEqual(
+  adaptedRemote.details.reasons.slice(0, local.main.why.length).map(item => item.text),
+  local.main.why,
+  'remote evidence reasons must be reordered to the same sequence as the visible main reasons',
+);
+assert.deepEqual(
+  adaptedRemote.details.reasons[0]?.citations?.map(item => item.id),
+  local.details.reasons[0]?.citations?.map(item => item.id),
+  'client must rebuild remote citations from the local deterministic rule codes instead of trusting remote citation payloads',
+);
+assert.equal(
+  adaptRemoteCompatibilityAssessmentForPlan({
+    ...remoteFixture,
+    details: {
+      ...remoteFixture.details,
+      reasons: [{ text: remoteFixture.main.why[0], ruleCodes: ['bioload_screening_high'] }],
+    },
+  }, review.decision),
+  null,
+  'remote reason text may not be rebound to an unrelated local rule code',
+);
 assert.equal(
   adaptRemoteCompatibilityAssessmentForPlan({ ...remoteFixture, schemaVersion: 2 as any }, review.decision),
   null,

@@ -97,6 +97,20 @@ export const prioritizePlannedAdditionBlockingRules = (
   ];
 };
 
+export const getCompatibilityDecisionDisplayRules = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode = 'planned_addition',
+): TankCompatibilityRule[] => {
+  if (decision.status === 'not_recommended') {
+    return mode === 'planned_addition'
+      ? prioritizePlannedAdditionBlockingRules(decision)
+      : prioritizeDistinctCompatibilityRules(decision.blockingRules);
+  }
+  if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules);
+  if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData);
+  return prioritizeDistinctCompatibilityRules(decision.passedRules);
+};
+
 export const getPreExistingBlockingLabel = (
   decision: CompatibilityDecision,
   sourceRule?: { affectedSpeciesIds?: string[]; code?: string },
@@ -673,16 +687,7 @@ const buildCurrentTankCompatibilityAction = (
 const actionSourceRules = (
   decision: CompatibilityDecision,
   mode: CompatibilityAssessmentMode,
-) => {
-  if (decision.status === 'not_recommended') return (
-    mode === 'planned_addition'
-      ? prioritizePlannedAdditionBlockingRules(decision)
-      : prioritizeDistinctCompatibilityRules(decision.blockingRules)
-  ).slice(0, 2);
-  if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules).slice(0, 2);
-  if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData).slice(0, 2);
-  return prioritizeDistinctCompatibilityRules(decision.passedRules).slice(0, 2);
-};
+) => getCompatibilityDecisionDisplayRules(decision, mode).slice(0, 2);
 
 const domainAuthoritySourceCodes = (decision: CompatibilityDecision): string[] => {
   const domainCodes = decision.metadata.domainRuleCodes || [];

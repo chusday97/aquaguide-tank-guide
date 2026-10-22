@@ -27,6 +27,11 @@ export type CompatibilityReadableConclusion = {
   howTo: string[];
 };
 
+export type CompatibilityReadableReasonEntry = {
+  text: string;
+  ruleCodes: string[];
+};
+
 export type CompatibilityReadableAiNarrative = {
   reasons?: Array<{ text: string }>;
   adjustments?: Array<{ text: string }>;
@@ -449,11 +454,24 @@ const deterministicActionsFor = (
   return [fallback];
 };
 
-export const buildCompatibilityReadableConclusion = (
+const uniqueReasonEntries = (entries: CompatibilityReadableReasonEntry[]) => {
+  const seen = new Set<string>();
+  return entries.filter(entry => {
+    const text = cleanText(entry.text);
+    const ruleCodes = Array.from(new Set(entry.ruleCodes.filter(Boolean)));
+    const key = `${text}::${ruleCodes.join(',')}`;
+    if (!isCompatibilityUserReadableText(text, 'reason') || seen.has(key)) return false;
+    seen.add(key);
+    entry.text = text;
+    entry.ruleCodes = ruleCodes;
+    return true;
+  });
+};
+
+export const buildCompatibilityDeterministicReasonEntries = (
   decision: CompatibilityDecision,
-  aiNarrative: CompatibilityReadableAiNarrative = {},
   assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
-): CompatibilityReadableConclusion => {
+): CompatibilityReadableReasonEntry[] => {
   const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
   const primaryRules = primaryRulesFor(decision, assessmentMode);
   const preExistingOnlyBlock = assessmentMode === 'planned_addition'
@@ -463,29 +481,63 @@ export const buildCompatibilityReadableConclusion = (
     : null;
   const hasCandidateBlock = assessmentMode === 'planned_addition'
     && hasCandidateInvolvedBlockingRules(decision);
-  const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(
-    [...decision.blockingRules, ...decision.warningRules]
-      .filter(rule => getCompatibilityRuleFamily(rule.code) === 'space'),
-  );
-  const deterministicWhy = preExistingOnlyBlock
-    ? [preExistingBlockingLabel
-      ? `当前缸已有 ${preExistingBlockingLabel} 的明确冲突；这次硬阻断不是候选生物新触发的。`
-      : '当前硬阻断来自鱼缸原有组合，不是这次候选生物新触发的冲突。']
-    : primaryRules.map(rule => {
-      if (
-        hasCandidateBlock
-        && getCompatibilityRuleOriginScope(decision, rule) === 'existing_only'
-      ) {
-        const existingConflictLabel = getPreExistingBlockingLabel(decision, rule);
-        const conflictLabel = conciseConflictLabelFor(rule);
-        return existingConflictLabel
-          ? `另外，当前缸原有的 ${existingConflictLabel} 还有${conflictLabel}，不是候选生物新触发。`
-          : `另外，当前缸还有原有的${conflictLabel}，不是候选生物新触发。`;
-      }
-      return getCompatibilityRuleFamily(rule.code) === 'space' && combinedSpaceThreshold
-        ? `当前空间不足；按成体需求至少需要 ${combinedSpaceThreshold}。`
-        : getCompatibilityReadableRuleText(rule, assessmentMode);
-    });
+  const combinedSpaceRules = [...decision.blockingRules, ...decision.warningRules]
+    .filter(rule => getCompatibilityRuleFamily(rule.code) === 'space');
+  const combinedSpaceThreshold = getExplicitCompatibilitySpaceThreshold(combinedSpaceRules);
+
+  if (decision.status === 'compatible') {
+    const supportingCodes = primaryRules[0]?.code === 'compatibility_clear'
+      ? ['compatibility_clear']
+      : primaryRules.slice(0, 2).map(rule => rule.code);
+    return [{
+      text: getCompatibilityReadableRuleText(primaryRules[0] || { code: 'compatibility_clear' }, assessmentMode)
+        || action.primaryReason
+        || defaultReason(decision, assessmentMode),
+      ruleCodes: supportingCodes,
+    }];
+  }
+
+  if (preExistingOnlyBlock) {
+    const sourceRule = primaryRules[0];
+    return [{
+      text: preExistingBlockingLabel
+        ? `当前缸已有 ${preExistingBlockingLabel} 的明确冲突；这次硬阻断不是候选生物新触发的。`
+        : '当前硬阻断来自鱼缸原有组合，不是这次候选生物新触发的冲突。',
+      ruleCodes: sourceRule ? [sourceRule.code] : [],
+    }];
+  }
+
+  return uniqueReasonEntries(primaryRules.map(rule => {
+    const family = getCompatibilityRuleFamily(rule.code);
+    let text: string;
+    if (hasCandidateBlock && getCompatibilityRuleOriginScope(decision, rule) === 'existing_only') {
+      const existingConflictLabel = getPreExistingBlockingLabel(decision, rule);
+      const conflictLabel = conciseConflictLabelFor(rule);
+      text = existingConflictLabel
+        ? `另外，当前缸原有的 ${existingConflictLabel} 还有${conflictLabel}，不是候选生物新触发。`
+        : `另外，当前缸还有原有的${conflictLabel}，不是候选生物新触发。`;
+    } else if (family === 'space' && combinedSpaceThreshold) {
+      text = `当前空间不足；按成体需求至少需要 ${combinedSpaceThreshold}。`;
+    } else {
+      text = getCompatibilityReadableRuleText(rule, assessmentMode);
+    }
+    return {
+      text,
+      ruleCodes: family === 'space' && combinedSpaceThreshold
+        ? Array.from(new Set(combinedSpaceRules.map(spaceRule => spaceRule.code)))
+        : [rule.code],
+    };
+  }));
+};
+
+export const buildCompatibilityReadableConclusion = (
+  decision: CompatibilityDecision,
+  aiNarrative: CompatibilityReadableAiNarrative = {},
+  assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
+): CompatibilityReadableConclusion => {
+  const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
+  const deterministicReasonEntries = buildCompatibilityDeterministicReasonEntries(decision, assessmentMode);
+  const deterministicWhy = deterministicReasonEntries.map(entry => entry.text);
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
   const whySeed = decision.status === 'compatible'
     ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision, assessmentMode), ...aiWhy]
@@ -497,6 +549,8 @@ export const buildCompatibilityReadableConclusion = (
   const aiActions = decision.status === 'compatible'
     ? []
     : (aiNarrative.adjustments || []).map(item => item.text);
+  const preExistingOnlyBlock = assessmentMode === 'planned_addition'
+    && hasOnlyPreExistingBlockingRules(decision);
   const deterministicActions = preExistingOnlyBlock
     ? [action.immediateAction]
     : deterministicActionsFor(decision, action.immediateAction, assessmentMode);

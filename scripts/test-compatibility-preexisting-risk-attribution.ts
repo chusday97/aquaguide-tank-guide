@@ -7,6 +7,7 @@ import {
 } from '../src/services/compatibility/compatibility-action.service';
 import { buildCompatibilityDecisionPlan } from '../src/services/compatibility/compatibility-decision-plan.service';
 import { buildCompatibilityReadableConclusion } from '../src/services/compatibility/compatibility-readable-copy.service';
+import { buildLocalCompatibilityAssessment } from '../src/services/compatibility/compatibility-assessment.service';
 import type { Aquarium } from '../src/types';
 
 const tank: Aquarium = {
@@ -157,6 +158,37 @@ assert.match(
   mixedReadable.howTo[1] || '',
   /当前缸原有的 黑裙鱼 与 马口鱼/,
   'the old tank conflict action must be explicitly labeled as pre-existing',
+);
+
+assert.equal(
+  mixedConflictReview.keyRules[0]?.code,
+  'temperature_range_conflict',
+  'expanded key rules must use the same candidate-first ordering as the main conclusion',
+);
+
+const mixedLocalAssessment = buildLocalCompatibilityAssessment(mixedConflictReview.decision);
+assert.equal(mixedLocalAssessment.details.reasons[0]?.text, mixedReadable.why[0]);
+assert.equal(mixedLocalAssessment.details.reasons[1]?.text, mixedReadable.why[1]);
+assert.deepEqual(mixedLocalAssessment.details.reasons[0]?.ruleCodes, ['temperature_range_conflict']);
+assert.deepEqual(mixedLocalAssessment.details.reasons[1]?.ruleCodes, ['predation_risk']);
+const temperatureRule = mixedConflictReview.decision.blockingRules.find(rule => rule.code === 'temperature_range_conflict');
+const predationRule = mixedConflictReview.decision.blockingRules.find(rule => rule.code === 'predation_risk');
+assert.ok(temperatureRule);
+assert.ok(predationRule);
+assert.deepEqual(
+  mixedLocalAssessment.details.reasons[0]?.citations?.map(item => item.id),
+  temperatureRule.citations.map(item => item.id),
+  'primary displayed reason must expose only the candidate temperature blocker citations',
+);
+assert.deepEqual(
+  mixedLocalAssessment.details.reasons[1]?.citations?.map(item => item.id),
+  predationRule.citations.map(item => item.id),
+  'secondary displayed reason must expose only the pre-existing predation blocker citations',
+);
+assert.equal(
+  mixedLocalAssessment.details.reasons[0]?.citations?.some(source => predationRule.citations.some(item => item.id === source.id)),
+  false,
+  'candidate reason citations must not be contaminated by the old tank blocker',
 );
 
 const mixedPlan = buildCompatibilityDecisionPlan(mixedConflictReview.decision, 'planned_addition');

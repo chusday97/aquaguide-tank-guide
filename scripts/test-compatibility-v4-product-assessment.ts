@@ -98,6 +98,11 @@ assert.equal(product.details.authority.finalSource, 'deterministic');
 assert.equal(product.details.authority.status, 'caution');
 assert.ok(product.details.reasons.length > 0);
 assert.ok(product.details.adjustments.length > 0);
+assert.deepEqual(
+  product.details.reasons.slice(0, product.main.why.length).map(item => item.text),
+  product.main.why,
+  'cloud product details must preserve the exact visible reason order before exposing evidence',
+);
 
 assert.throws(
   () => buildCompatibilityProductAssessment(

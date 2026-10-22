@@ -1,19 +1,13 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
 import type { TankCompatibilityRule } from '../../lib/tankCompatibilityEngine';
-import { prioritizeDistinctCompatibilityRules } from './compatibility-action.service';
+import type { CompatibilityAssessmentMode } from './compatibility-action.service';
+import { buildCompatibilityDeterministicReasonEntries } from './compatibility-readable-copy.service';
 
 export type CompatibilityGroundedEvidenceItem = {
   text: string;
   ruleCodes: string[];
   citations?: EvidenceSourceDto[];
-};
-
-const relevantRules = (decision: CompatibilityDecision): TankCompatibilityRule[] => {
-  if (decision.status === 'not_recommended') return decision.blockingRules;
-  if (decision.status === 'caution') return [...decision.warningRules, ...decision.missingData];
-  if (decision.status === 'insufficient_data') return decision.missingData;
-  return decision.passedRules;
 };
 
 const allRules = (decision: CompatibilityDecision): TankCompatibilityRule[] => [
@@ -51,15 +45,39 @@ export const enrichCompatibilityGroundedItemsWithCitations = (
   }))
 );
 
+export const alignCompatibilityGroundedReasonsToMain = (
+  mainReasons: string[],
+  items: CompatibilityGroundedEvidenceItem[],
+  limit = 3,
+): CompatibilityGroundedEvidenceItem[] | null => {
+  const used = new Set<number>();
+  const aligned: CompatibilityGroundedEvidenceItem[] = [];
+  for (const reason of mainReasons) {
+    const normalized = reason.trim();
+    const index = items.findIndex((item, itemIndex) => (
+      !used.has(itemIndex) && item.text.trim() === normalized
+    ));
+    if (index < 0) return null;
+    used.add(index);
+    aligned.push(items[index]);
+  }
+  for (let index = 0; index < items.length && aligned.length < limit; index += 1) {
+    if (used.has(index)) continue;
+    aligned.push(items[index]);
+  }
+  return aligned.slice(0, limit);
+};
+
 export const buildDeterministicCompatibilityEvidenceReasons = (
   decision: CompatibilityDecision,
   limit = 3,
+  assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityGroundedEvidenceItem[] => (
-  prioritizeDistinctCompatibilityRules(relevantRules(decision))
-    .map(rule => ({
-      text: rule.evidence || rule.title,
-      ruleCodes: [rule.code],
-      citations: reviewedCitationsForCodes(decision, [rule.code]),
+  buildCompatibilityDeterministicReasonEntries(decision, assessmentMode)
+    .map(entry => ({
+      text: entry.text,
+      ruleCodes: entry.ruleCodes,
+      citations: reviewedCitationsForCodes(decision, entry.ruleCodes),
     }))
     .filter(item => item.text.trim())
     .slice(0, limit)

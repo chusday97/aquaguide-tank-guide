@@ -5,7 +5,9 @@ import { apiRequest } from '../api/api-client';
 import { resolveRepositoryMode } from '../repository/repository-provider';
 import type { CompatibilityAssessmentMode } from './compatibility-action.service';
 import {
+  alignCompatibilityGroundedReasonsToMain,
   buildDeterministicCompatibilityEvidenceReasons,
+  enrichCompatibilityGroundedItemsWithCitations,
   type CompatibilityGroundedEvidenceItem,
 } from './compatibility-evidence-projection.service';
 import {
@@ -90,6 +92,22 @@ const isValidMain = (
   && main.howTo.every(text => isCompatibilityUserReadableText(text, 'action'))
 );
 
+const locallyAllowedReasonCodes = (decision: CompatibilityDecision) => new Set(
+  buildDeterministicCompatibilityEvidenceReasons(decision, 3, 'planned_addition')
+    .flatMap(item => item.ruleCodes),
+);
+
+const remoteReasonItemsAreLocallyGrounded = (
+  decision: CompatibilityDecision,
+  items: CompatibilityGroundedEvidenceItem[],
+) => {
+  const allowedCodes = locallyAllowedReasonCodes(decision);
+  return items.every(item => (
+    item.ruleCodes.length > 0
+    && item.ruleCodes.every(code => allowedCodes.has(code))
+  ));
+};
+
 export const adaptRemoteCompatibilityAssessmentForPlan = (
   remote: RemoteCompatibilityAssessment,
   decision: CompatibilityDecision,
@@ -100,6 +118,20 @@ export const adaptRemoteCompatibilityAssessmentForPlan = (
   if (remote.details?.authority?.finalSource !== 'deterministic') return null;
   if (remote.details.authority.status !== decision.status) return null;
 
+  const remoteReasons = Array.isArray(remote.details.reasons) ? remote.details.reasons : [];
+  if (!remoteReasonItemsAreLocallyGrounded(decision, remoteReasons)) return null;
+  const alignedReasons = alignCompatibilityGroundedReasonsToMain(remote.main.why, remoteReasons);
+  if (!alignedReasons) return null;
+  const reasons = enrichCompatibilityGroundedItemsWithCitations(decision, alignedReasons);
+  const adjustments = enrichCompatibilityGroundedItemsWithCitations(
+    decision,
+    Array.isArray(remote.details.adjustments) ? remote.details.adjustments : [],
+  );
+  const uncertainties = enrichCompatibilityGroundedItemsWithCitations(
+    decision,
+    Array.isArray(remote.details.uncertainties) ? remote.details.uncertainties : [],
+  );
+
   return {
     assessmentMode: 'planned_addition',
     main: remote.main,
@@ -109,9 +141,9 @@ export const adaptRemoteCompatibilityAssessmentForPlan = (
     decisionPlan: buildCompatibilityDecisionPlan(decision),
     details: {
       label: '查看依据',
-      reasons: Array.isArray(remote.details.reasons) ? remote.details.reasons : [],
-      adjustments: Array.isArray(remote.details.adjustments) ? remote.details.adjustments : [],
-      uncertainties: Array.isArray(remote.details.uncertainties) ? remote.details.uncertainties : [],
+      reasons,
+      adjustments,
+      uncertainties,
       model: remote.details.explanation?.model || null,
       aiStatus: remote.details.explanation?.aiStatus || null,
       authorityStatus: remote.details.authority.status,

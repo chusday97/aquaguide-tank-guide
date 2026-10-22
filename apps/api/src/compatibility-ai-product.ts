@@ -1,5 +1,6 @@
 import type { CompatibilityDecision } from '../../../src/modules/knowledge/knowledge.types';
 import {
+  alignCompatibilityGroundedReasonsToMain,
   buildDeterministicCompatibilityEvidenceReasons,
   enrichCompatibilityGroundedItemsWithCitations,
   type CompatibilityGroundedEvidenceItem,
@@ -63,8 +64,11 @@ const uniqueItems = (items: CompatibilityProductGroundedItem[]) => {
   });
 };
 
-const deterministicReasons = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => (
-  buildDeterministicCompatibilityEvidenceReasons(decision, 3)
+const deterministicReasons = (
+  decision: CompatibilityDecision,
+  assessmentMode: CompatibilityAssessmentMode,
+): CompatibilityProductGroundedItem[] => (
+  buildDeterministicCompatibilityEvidenceReasons(decision, 3, assessmentMode)
 );
 
 const deterministicUncertainties = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => {
@@ -212,7 +216,7 @@ export const buildCompatibilityProductAssessment = (
   }
   const presentation = getCompatibilityPresentation(decision, assessmentMode);
   const resolutionTargets = buildCompatibilityResolutionTargets(decision, assessmentMode);
-  const deterministicReasonItems = deterministicReasons(decision);
+  const deterministicReasonItems = deterministicReasons(decision, assessmentMode);
   const deterministicUncertaintyItems = deterministicUncertainties(decision);
   const primaryRuleCodes = new Set(deterministicReasonItems.flatMap(item => item.ruleCodes));
   const uncertaintyRuleCodes = new Set(getCompatibilityDataLimitationCodes(decision));
@@ -235,7 +239,7 @@ export const buildCompatibilityProductAssessment = (
     finalDecision.ruleCodes,
     assessmentMode,
   );
-  const reasons = enrichCompatibilityGroundedItemsWithCitations(
+  const reasonCandidates = enrichCompatibilityGroundedItemsWithCitations(
     decision,
     aiNarrativeMatchesAuthority
       ? uniqueItems([...clampedAiReasons, ...deterministicReasonItems]).slice(0, 3)
@@ -261,12 +265,14 @@ export const buildCompatibilityProductAssessment = (
   const main = aiNarrativeMatchesAuthority
     ? {
       judgment: deterministicMain.judgment,
-      why: mergeReadableText(clampedAiReasons.map(item => item.text), deterministicMain.why, 'reason'),
+      why: mergeReadableText(reasonCandidates.map(item => item.text), deterministicMain.why, 'reason'),
       howTo: decision.status === 'compatible'
         ? deterministicMain.howTo
         : mergeReadableText(clampedAiAdjustments.map(item => item.text), deterministicMain.howTo, 'action'),
     }
     : deterministicMain;
+  const reasons = alignCompatibilityGroundedReasonsToMain(main.why, reasonCandidates)
+    ?? reasonCandidates;
 
   return {
     schemaVersion: COMPATIBILITY_PRODUCT_SCHEMA_VERSION,
