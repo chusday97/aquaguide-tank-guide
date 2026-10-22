@@ -14,10 +14,12 @@ import {
   getRuntimeReviewedCompatibilityStageRisks,
   getRuntimeReviewedPairRule,
 } from '../data/runtimeCompatibilityRegistry';
-import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
+import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS, type CompatibilityEvidenceDto } from '../../packages/contracts/src';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
 import { applyCatalogReviewDecisionBoundary } from '../data/catalogFieldReviews';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
+import { resolveKnowledgeSources } from '../modules/knowledge/knowledgeSources';
+import { resolveReviewedCompatibilityTaxonFact, type CompatibilityTaxonFactResolver } from '../data/compatibilityTaxonAuthority';
 import {
   COMPATIBILITY_RULE_VERSION,
   evaluateCompatibility,
@@ -83,6 +85,8 @@ export type CompatibilityEvidenceProvider = {
   getPairRule: (leftId: string, rightId: string) => ReviewedPairRule | undefined;
   getStageRisks: (speciesId: string) => ReviewedStageRiskProfile[];
   getReviewedSpeciesFact?: (species: Fish) => DomainSpeciesFact | undefined;
+  getReviewedFieldCitations?: (speciesId: string, field: CompatibilityRequiredFact) => CompatibilityEvidenceDto['citations'];
+  getTaxonFact?: CompatibilityTaxonFactResolver;
   authorityVersion: string;
 };
 
@@ -90,6 +94,7 @@ const runtimeEvidenceProvider = (): CompatibilityEvidenceProvider => ({
   getProfile: getRuntimeReviewedCompatibilityProfile,
   getPairRule: getRuntimeReviewedPairRule,
   getStageRisks: getRuntimeReviewedCompatibilityStageRisks,
+  getTaxonFact: resolveReviewedCompatibilityTaxonFact,
   authorityVersion: getRuntimeCompatibilityStatus().authorityVersion,
 });
 
@@ -265,16 +270,17 @@ const attachCanonicalReviewedSources = (
   species: Fish[],
   provider: CompatibilityEvidenceProvider,
 ): TankCompatibilityResult => {
-  const reviewedSpecies = species.flatMap(item => {
-    const profile = resolveReviewedProfileForFish(item, provider);
-    if (!profile) return [];
-    return [{
-      fish: item,
-      profile,
-      coverage: getCompatibilityCoreFieldCoverageRow(item),
-    }];
-  });
-  const sharedCitations = dedupeReviewedCitations(reviewedSpecies.flatMap(item => item.profile.citations));
+  const taxonFactResolver = provider.getTaxonFact ?? resolveReviewedCompatibilityTaxonFact;
+  const reviewedSpecies = species.map(item => ({
+    fish: item,
+    profile: resolveReviewedProfileForFish(item, provider),
+    coverage: getCompatibilityCoreFieldCoverageRow(item, { taxonFactResolver }),
+  }));
+  const sharedCitations = dedupeReviewedCitations(reviewedSpecies.flatMap(item => [
+    ...(item.profile?.citations || []),
+    ...resolveKnowledgeSources(Object.values(item.coverage.fields).flatMap(cell => cell.evidenceIds)),
+    ...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS.flatMap(field => provider.getReviewedFieldCitations?.(item.fish.id, field) || []),
+  ]));
   const sharedSpeciesIds = Array.from(new Set(species.map(item => item.id)));
   const allRules = [
     ...result.blockingRules,
@@ -295,8 +301,13 @@ const attachCanonicalReviewedSources = (
       const fields = CANONICAL_RULE_EVIDENCE_FIELDS[rule.code];
       if (fields?.length) {
         citations = dedupeReviewedCitations(reviewedSpecies.flatMap(({ profile, coverage }) => {
-          const evidenceIds = new Set(fields.flatMap(field => coverage.fields[field]?.evidenceIds || []));
-          return profile.citations.filter(citation => evidenceIds.has(citation.id));
+          const evidenceIds = Array.from(new Set(fields.flatMap(field => coverage.fields[field]?.evidenceIds || [])));
+          const evidenceIdSet = new Set(evidenceIds);
+          return [
+            ...(profile?.citations.filter(citation => evidenceIdSet.has(citation.id)) || []),
+            ...resolveKnowledgeSources(evidenceIds),
+            ...fields.flatMap(field => provider.getReviewedFieldCitations?.(coverage.speciesId, field) || []),
+          ];
         }));
       }
       // Some older reviewed Profiles predate field-granular evidence. Falling
@@ -923,7 +934,13 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   }
   const profile = catalogProfileForCompatibility(fish);
   const reviewed = resolveReviewedProfileForFish(fish, provider);
-  const coverage = getCompatibilityCoreFieldCoverageRow(fish);
+  const taxonFactResolver = provider.getTaxonFact ?? resolveReviewedCompatibilityTaxonFact;
+  const coverage = getCompatibilityCoreFieldCoverageRow(fish, { taxonFactResolver });
+  const taxonPatch = Object.assign({}, ...Object.entries(coverage.fields).flatMap(([field, cell]) => (
+    cell.authoritySource === 'genus_default' || cell.authoritySource === 'family_default'
+      ? [taxonFactResolver(fish, field as CompatibilityRequiredFact)?.patch || {}]
+      : []
+  ))) as Partial<DomainSpeciesFact>;
   const compatibilityFactDispositions = Object.fromEntries(Object.entries(coverage.fields).map(([field, cell]) => {
     let disposition: CompatibilityFactDisposition;
     if (cell.disposition === 'targeted_source_expansion') disposition = 'research_pending';
@@ -1022,36 +1039,37 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   ];
   return {
     id: profile.catalogKey,
-    waterType: reviewedEnvironmentWaterType ?? canonicalEnvironmentWaterType ?? staticReviewed?.waterType ?? profile.waterType,
-    waterTypes: reviewedEnvironmentWaterTypes ?? canonicalEnvironmentWaterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
-    temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? canonicalTemperatureEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
-    temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? canonicalTemperatureEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
-    phMin: reviewedEnvironment?.phRange?.min ?? canonicalPhEnvironment?.phRange?.min ?? profile.phMin,
-    phMax: reviewedEnvironment?.phRange?.max ?? canonicalPhEnvironment?.phRange?.max ?? profile.phMax,
-    minTankLiters: reviewedSpace?.minVolumeLiters ?? canonicalTankSpace?.minVolumeLiters ?? profile.minTankLiters,
-    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? canonicalTankSpace?.minTankLengthCm ?? profile.minTankLengthCm ?? null,
-    reviewed: Boolean(reviewed),
-    compatibilityRequiredFacts: reviewed?.requiredFacts,
+    waterType: reviewedEnvironmentWaterType ?? canonicalEnvironmentWaterType ?? taxonPatch.waterType ?? staticReviewed?.waterType ?? profile.waterType,
+    waterTypes: reviewedEnvironmentWaterTypes ?? canonicalEnvironmentWaterTypes ?? taxonPatch.waterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
+    temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? canonicalTemperatureEnvironment?.temperatureRangeC?.min ?? taxonPatch.temperatureMinC ?? profile.waterTemperatureMinC,
+    temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? canonicalTemperatureEnvironment?.temperatureRangeC?.max ?? taxonPatch.temperatureMaxC ?? profile.waterTemperatureMaxC,
+    phMin: reviewedEnvironment?.phRange?.min ?? canonicalPhEnvironment?.phRange?.min ?? taxonPatch.phMin ?? profile.phMin,
+    phMax: reviewedEnvironment?.phRange?.max ?? canonicalPhEnvironment?.phRange?.max ?? taxonPatch.phMax ?? profile.phMax,
+    minTankLiters: reviewedSpace?.minVolumeLiters ?? canonicalTankSpace?.minVolumeLiters ?? taxonPatch.minTankLiters ?? profile.minTankLiters,
+    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? canonicalTankSpace?.minTankLengthCm ?? taxonPatch.minTankLengthCm ?? profile.minTankLengthCm ?? null,
+    reviewed: Boolean(reviewed) || coverage.genericOnboardingReady,
+    compatibilityRequiredFacts: reviewed?.requiredFacts ?? (coverage.genericOnboardingReady ? [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] : undefined),
     compatibilityFactDispositions,
     minimumGroupSize: reviewedSocial?.minimumGroupSize
       ?? canonicalSocialBehavior?.minimumGroupSize
+      ?? taxonPatch.minimumGroupSize
       ?? (reviewedSocial
         ? (reviewed?.minimumGroupSize ?? null)
         : (reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null)),
     stockingGuidance: reviewed?.stockingGuidance,
     evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...(profile.evidenceSourceIds || []), ...knowledgeEvidenceIds, ...canonicalKnowledgeEvidenceIds, ...coverageEvidenceIds])),
-    adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? canonicalAdultSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
-    adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? canonicalAdultSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
-    socialMode: reviewedSocialMode ?? concreteReviewedEnum(canonicalSocialBehavior?.mode) ?? profile.socialMode,
-    swimmingZone: reviewedSwimmingZone ?? 'unknown',
-    behaviorTraits: reviewed?.behaviorTraits || [],
-    territoriality: reviewedTerritoriality ?? concreteReviewedEnum(canonicalTerritorialBehavior?.territoriality),
-    finNippingRisk: reviewedFinNippingRisk ?? concreteReviewedEnum(canonicalSocialBehavior?.finNipping),
-    finNipVulnerability: reviewedFinNipVulnerability ?? concreteReviewedEnum(canonicalSocialBehavior?.finNipVulnerability),
-    swimmingPace: reviewedSwimmingPace ?? concreteReviewedEnum(canonicalSocialBehavior?.swimmingPace),
-    predationRisk: reviewedPredationRisk ?? concreteReviewedEnum(canonicalPredationBehavior?.predationRisk),
-    predationTargets: reviewed?.predationTargets || [],
-    predationVulnerability: reviewedPredationVulnerability ?? concreteReviewedEnum(canonicalPredationBehavior?.predationVulnerability),
+    adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? canonicalAdultSpace?.adultLengthCm?.min ?? taxonPatch.adultLengthMinCm ?? profile.adultLengthMinCm,
+    adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? canonicalAdultSpace?.adultLengthCm?.max ?? taxonPatch.adultLengthMaxCm ?? profile.adultLengthMaxCm,
+    socialMode: reviewedSocialMode ?? concreteReviewedEnum(canonicalSocialBehavior?.mode) ?? taxonPatch.socialMode ?? profile.socialMode,
+    swimmingZone: reviewedSwimmingZone ?? taxonPatch.swimmingZone ?? 'unknown',
+    behaviorTraits: Array.from(new Set([...(reviewed?.behaviorTraits || []), ...(taxonPatch.behaviorTraits || [])])),
+    territoriality: reviewedTerritoriality ?? concreteReviewedEnum(canonicalTerritorialBehavior?.territoriality) ?? taxonPatch.territoriality,
+    finNippingRisk: reviewedFinNippingRisk ?? concreteReviewedEnum(canonicalSocialBehavior?.finNipping) ?? taxonPatch.finNippingRisk,
+    finNipVulnerability: reviewedFinNipVulnerability ?? concreteReviewedEnum(canonicalSocialBehavior?.finNipVulnerability) ?? taxonPatch.finNipVulnerability,
+    swimmingPace: reviewedSwimmingPace ?? concreteReviewedEnum(canonicalSocialBehavior?.swimmingPace) ?? taxonPatch.swimmingPace,
+    predationRisk: reviewedPredationRisk ?? concreteReviewedEnum(canonicalPredationBehavior?.predationRisk) ?? taxonPatch.predationRisk,
+    predationTargets: reviewed?.predationTargets?.length ? reviewed.predationTargets : (taxonPatch.predationTargets || []),
+    predationVulnerability: reviewedPredationVulnerability ?? concreteReviewedEnum(canonicalPredationBehavior?.predationVulnerability) ?? taxonPatch.predationVulnerability,
     lifeType: getLifeType(fish),
     size: fish.size,
   };

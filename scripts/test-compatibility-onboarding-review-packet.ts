@@ -46,6 +46,11 @@ const readyPacket = buildCompatibilityOnboardingReviewPacket(readyAssessment);
 assert.equal(readyPacket.gate, 'manual_review_required');
 assert.equal(readyPacket.readyFieldCount, 8);
 assert.equal(readyPacket.requiredFieldCount, 8);
+assert.equal(readyPacket.reviewableFieldCount, 8);
+assert.equal(readyPacket.canReviewSupportedFields, true);
+assert.equal(readyPacket.decisionReadyFieldCount, 3);
+assert.equal(readyPacket.decisionFieldSetReady, true);
+assert.equal(readyPacket.fullAuthorityReady, true);
 assert.equal(readyPacket.canApprove, true);
 assert.equal(readyPacket.writesAuthority, false);
 assert.equal(readyPacket.fields.length, 8);
@@ -53,9 +58,10 @@ assert.equal(readyPacket.fields.every(field => field.status === 'supported' && f
 const readyItem = buildCompatibilityOnboardingReviewWorkItem(readyPacket, base.commonName);
 assert.equal(readyItem.severity, 'decision');
 assert.equal(readyItem.authority, 'compatibility');
-assert.match(readyItem.title, /8-field Compatibility 待审核/);
+assert.match(readyItem.title, /Compatibility 字段待审核/);
 assert.match(readyItem.href, /kind=onboarding/);
-assert.match(readyItem.nextStep, /批准全部 8 项/);
+assert.match(readyItem.nextStep, /字段可独立批准/);
+assert.match(readyItem.nextStep, /decision-ready/);
 
 const incompleteAssessment = assessCompatibilitySpeciesResearchPacket({
   ...base,
@@ -66,10 +72,16 @@ assert.equal(incompleteAssessment.status, 'research_pending');
 const incompletePacket = buildCompatibilityOnboardingReviewPacket(incompleteAssessment);
 assert.equal(incompletePacket.gate, 'research_incomplete');
 assert.equal(incompletePacket.canApprove, false);
+assert.equal(incompletePacket.reviewableFieldCount, 7);
+assert.equal(incompletePacket.canReviewSupportedFields, true);
+assert.equal(incompletePacket.decisionReadyFieldCount, 3);
+assert.equal(incompletePacket.decisionFieldSetReady, true);
+assert.equal(incompletePacket.fullAuthorityReady, false);
 assert.ok(incompletePacket.unresolvedFields.includes('tank_size'));
 const incompleteItem = buildCompatibilityOnboardingReviewWorkItem(incompletePacket, base.commonName);
 assert.equal(incompleteItem.severity, 'attention');
-assert.match(incompleteItem.nextStep, /只补缺失字段/);
+assert.match(incompleteItem.nextStep, /先审核 supported 字段/);
+assert.match(incompleteItem.verificationNote, /审核通过后可进入 decision-ready/);
 
 const transportAssessment = assessCompatibilitySpeciesResearchPacket({
   ...base,
@@ -100,6 +112,8 @@ assert.equal(holdAssessment.status, 'terminal_hold');
 const holdPacket = buildCompatibilityOnboardingReviewPacket(holdAssessment);
 assert.equal(holdPacket.gate, 'terminal_hold');
 assert.equal(holdPacket.canApprove, false);
+assert.equal(holdPacket.canReviewSupportedFields, false);
+assert.equal(holdPacket.fullAuthorityReady, false);
 const holdItem = buildCompatibilityOnboardingReviewWorkItem(holdPacket, base.commonName);
 assert.equal(holdItem.severity, 'blocker');
 assert.match(holdItem.nextStep, /先解决身份或公开证据冲突/);
@@ -109,5 +123,5 @@ console.log(JSON.stringify({
   incomplete: { gate: incompletePacket.gate, unresolved: incompletePacket.unresolvedFields, workItem: incompleteItem.severity },
   transport: { gate: transportPacket.gate, workItem: transportItem.severity, nextStep: transportItem.nextStep },
   hold: { gate: holdPacket.gate, workItem: holdItem.severity },
-  invariant: 'research preview emits an actionable 8-field review packet without writing reviewed authority',
+  invariant: 'research preview supports independent field review; hard-3 enables decision-ready after approval while 8/8 remains full authority-ready',
 }, null, 2));

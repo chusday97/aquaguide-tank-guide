@@ -13,6 +13,10 @@ import {
   type CompatibilitySpeciesResearchProvider,
 } from '../../../src/services/compatibility/species-onboarding-research.service';
 import type { CompatibilitySpecializedSourceRoute } from '../../../src/services/compatibility/source-strategy-resolver.service';
+import type {
+  CompatibilityGenusAuthorityField,
+  CompatibilityGenusAuthorityResearchResult,
+} from '../../../src/services/compatibility/taxon-authority-research.service';
 
 type FetchLike = typeof fetch;
 
@@ -100,6 +104,15 @@ const variantFieldClaimSchema = extractedClaimSchema.extend({
 
 const variantFieldOutputSchema = z.object({
   claims: z.array(variantFieldClaimSchema).max(64),
+}).strict();
+
+const genusAuthorityClaimSchema = extractedClaimSchema.extend({
+  field: z.enum(['water', 'social_behavior', 'territoriality', 'predation']),
+  evidenceText: z.string().trim().min(8).max(900),
+}).strict();
+
+const genusAuthorityOutputSchema = z.object({
+  claims: z.array(genusAuthorityClaimSchema).max(64),
 }).strict();
 
 export type CompatibilityVariantIdentityResearchInput = {
@@ -1517,6 +1530,264 @@ export const researchCompatibilityVariantFields = async (
     discoveryStatus: 'verified_variant_documents',
     discoveredUrlCount: currentAttemptedUrls.length,
     verifiedVariantDocumentCount: documents.length,
+    writesAuthority: false,
+  };
+};
+
+const genusAuthoritySearchPrompt = (
+  genus: string,
+  targetFields: CompatibilityGenusAuthorityField[],
+  attemptedUrls: string[] = [],
+) => [
+  'Find authoritative sources that make DIRECT genus-wide statements for aquarium Compatibility research.',
+  'Genus: ' + genus,
+  'Target fields only: ' + targetFields.join(', '),
+  'A source is useful only when it explicitly describes the genus as a group/taxon (for example "the genus ' + genus + '", "' + genus + ' species", or "species of ' + genus + '").',
+  'Do NOT promote agreement among individual species pages into a genus fact. A species page is eligible only if the quoted passage itself explicitly generalizes to the genus.',
+  'water: accept only an explicit genus-wide freshwater/brackish/marine statement.',
+  'social_behavior: accept only an explicit genus-wide normal social/grouping statement; breeding cohorts do not qualify.',
+  'territoriality: accept only an explicit genus-wide territorial or non-territorial statement; peaceful alone is insufficient.',
+  'predation: accept only an explicit genus-wide fish/tankmate prey statement or explicit genus-wide no-fish-prey statement; diet alone is insufficient.',
+  'Do not search for or return numeric temperature, pH, adult-size, or tank-size genus defaults.',
+  attemptedUrls.length ? 'Exclude already attempted URLs: ' + attemptedUrls.join(' | ') : '',
+  'Prefer government, peer-reviewed, university, professional-association, museum/aquarium institution, or high-quality curated husbandry sources.',
+  'Avoid shops, forums, social media, SEO farms, scraped mirrors, generic search pages, and sources that discuss only one species without an explicit genus-wide statement.',
+  'Return JSON only: {"candidates":[{"url":"https://..."}]}. Do not invent URLs.',
+].filter(Boolean).join('\n');
+
+const genusScopeEvidenceQuoteIsEligible = (evidenceText: string, genus: string) => {
+  const text = normalizeEvidencePhrase(evidenceText);
+  const genusText = normalizeEvidencePhrase(genus);
+  if (!text || !genusText || !text.includes(genusText)) return false;
+  const escaped = genusText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const patterns = [
+    new RegExp('\\bgenus\\s+' + escaped + '\\b', 'i'),
+    new RegExp('\\b' + escaped + '\\s+(?:is\\s+(?:a|an)\\s+)?genus\\b', 'i'),
+    new RegExp('\\b' + escaped + '\\s+species\\b', 'i'),
+    new RegExp('\\bspecies\\s+(?:of|in|within)\\s+(?:the\\s+)?(?:genus\\s+)?' + escaped + '\\b', 'i'),
+    new RegExp('\\bmembers?\\s+of\\s+(?:the\\s+)?(?:genus\\s+)?' + escaped + '\\b', 'i'),
+  ];
+  return patterns.some(pattern => pattern.test(text));
+};
+
+const genusAuthorityExtractionPrompt = (
+  genus: string,
+  document: VerifiedDocument,
+  targetFields: CompatibilityGenusAuthorityField[],
+) => [
+  'Extract DIRECT genus-wide evidence only. This is not species-level research.',
+  'Genus: ' + genus,
+  'Target fields ONLY: ' + targetFields.join(', '),
+  'Every claim MUST be supported by a short verbatim evidenceText from this document that explicitly scopes the statement to the genus as a group/taxon.',
+  'A statement about one named species does NOT qualify, even if other species in the genus appear similar.',
+  'Return JSON only: {"claims":[...]} with field, proposedValue, sourceUrl, evidenceKind="direct", confidence, evidenceText, and note.',
+  'Allowed value shapes:',
+  'water: "freshwater"|"saltwater"|"brackish".',
+  'social_behavior: {"mode":"solitary"|"pair"|"group"|"colony"|"variable","minimumGroupSize":number|null}.',
+  'territoriality: {"traits":[]} only for explicit non-territorial genus-wide evidence, or {"traits":["territorial"]} / {"traits":["conspecific_territorial"]} when the genus-wide source explicitly states that behavior.',
+  'predation: {"targets":[]} only for explicit genus-wide no-fish-prey evidence, or targets using ONLY fish_fry, very_small_fish, small_fish, fish_unspecified_size when the genus-wide source directly establishes that prey scope.',
+  'Do not return temperature, pH, adult_size or tank_size claims.',
+  'Do not infer a genus fact from multiple species examples. If the passage does not explicitly generalize to the genus, omit the claim.',
+  'SOURCE_DOCUMENT:',
+  JSON.stringify({
+    url: document.url,
+    title: document.title,
+    publisher: document.publisher,
+    text: document.text,
+  }),
+].join('\n');
+
+export const researchCompatibilityGenusAuthority = async (
+  input: {
+    genus: string;
+    targetFields: CompatibilityGenusAuthorityField[];
+    attemptedUrls?: string[];
+  },
+  config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
+  fetchImpl: FetchLike = fetch,
+): Promise<CompatibilityGenusAuthorityResearchResult> => {
+  const genus = input.genus.trim();
+  const targetFields = [...new Set(input.targetFields)];
+  const attemptedUrls = [...new Set((input.attemptedUrls || [])
+    .map(canonicalSourceUrl)
+    .filter((value): value is string => Boolean(value)))];
+
+  if (!/^[A-Z][A-Za-z-]+$/.test(genus) || targetFields.length === 0) {
+    return {
+      genus,
+      model: null,
+      targetFields,
+      sources: [],
+      fieldCandidates: [],
+      unresolvedFields: targetFields,
+      attemptedUrls,
+      discoveryStatus: 'not_run',
+      discoveredUrlCount: 0,
+      verifiedGenusDocumentCount: 0,
+      promotionAllowed: false,
+      writesAuthority: false,
+    };
+  }
+
+  const readiness = getCompatibilitySpeciesResearchProviderReadiness(config);
+  if (!readiness.configured) throw new Error('compatibility_research_provider_not_configured');
+
+  let searchModel: string | null = null;
+  let rawCandidates: string[] = [];
+  try {
+    const search = await postJsonWithModel<SearchOutput>(
+      searchOutputSchema,
+      { ...config, timeoutMs: Math.min(config.timeoutMs, 15_000) },
+      fetchImpl,
+      {
+        stream: false,
+        temperature: 0,
+        max_tokens: 1400,
+        enable_thinking: false,
+        enable_search: true,
+        search_options: { forced_search: true, search_strategy: 'max' },
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a source-discovery worker for taxonomic authority research. Web search is mandatory. Return candidate source URLs only. Never generalize species facts to a genus.',
+          },
+          { role: 'user', content: genusAuthoritySearchPrompt(genus, targetFields, attemptedUrls) },
+        ],
+      },
+    );
+    searchModel = search.model;
+    rawCandidates = search.data.candidates.map(item => item.url);
+  } catch (error) {
+    // Provider/search failure is operationally different from a successful
+    // search with zero eligible genus sources. Surface it so retries do not
+    // accidentally become a false public-evidence ceiling.
+    throw normalizeCompatibilityResearchProviderError(error);
+  }
+
+  const candidates = [...new Set(rawCandidates
+    .map(canonicalSourceUrl)
+    .filter((value): value is string => Boolean(value) && !attemptedUrls.includes(value)))]
+    .slice(0, config.maxSearchCandidates);
+
+  if (!candidates.length) {
+    return {
+      genus,
+      model: searchModel,
+      targetFields,
+      sources: [],
+      fieldCandidates: [],
+      unresolvedFields: targetFields,
+      attemptedUrls,
+      discoveryStatus: 'discovery_empty',
+      discoveredUrlCount: 0,
+      verifiedGenusDocumentCount: 0,
+      promotionAllowed: false,
+      writesAuthority: false,
+    };
+  }
+
+  const acquisition = await verifiedDocumentsDetailed(candidates, genus, config, fetchImpl);
+  const documents = acquisition.documents;
+  const allAttemptedUrls = [...new Set([
+    ...attemptedUrls,
+    ...acquisition.diagnostics.map(item => canonicalSourceUrl(item.requestedUrl) ?? item.requestedUrl),
+  ])];
+
+  if (!documents.length) {
+    return {
+      genus,
+      model: searchModel,
+      targetFields,
+      sources: [],
+      fieldCandidates: [],
+      unresolvedFields: targetFields,
+      attemptedUrls: allAttemptedUrls,
+      discoveryStatus: 'no_verified_genus_documents',
+      discoveredUrlCount: candidates.length,
+      verifiedGenusDocumentCount: 0,
+      promotionAllowed: false,
+      writesAuthority: false,
+    };
+  }
+
+  let extractionModel: string | null = null;
+  const claims: Array<z.infer<typeof genusAuthorityClaimSchema>> = [];
+  for (const document of documents) {
+    try {
+      const extracted = await postJsonWithModel(
+        genusAuthorityOutputSchema,
+        config,
+        fetchImpl,
+        {
+          stream: false,
+          temperature: 0,
+          max_tokens: 2200,
+          enable_thinking: false,
+          response_format: { type: 'json_object' },
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a conservative genus-level evidence extractor. Use only the supplied fetched document. Never infer genus traits from one or more species examples.',
+            },
+            { role: 'user', content: genusAuthorityExtractionPrompt(genus, document, targetFields) },
+          ],
+        },
+        2,
+      );
+      extractionModel = extracted.model;
+      claims.push(...extracted.data.claims);
+    } catch {
+      // A failed document cannot contribute authority; other verified sources may still succeed.
+    }
+  }
+
+  const documentByUrl = new Map(documents.map(document => [
+    canonicalSourceUrl(document.url) ?? document.url,
+    document,
+  ] as const));
+  const fieldCandidates = claims.flatMap(claim => {
+    if (!targetFields.includes(claim.field as CompatibilityGenusAuthorityField)) return [];
+    const canonicalClaimUrl = canonicalSourceUrl(claim.sourceUrl);
+    if (!canonicalClaimUrl) return [];
+    const document = documentByUrl.get(canonicalClaimUrl);
+    if (!document) return [];
+    if (!variantFieldEvidenceQuoteIsEligible(claim.evidenceText, document)) return [];
+    if (!genusScopeEvidenceQuoteIsEligible(claim.evidenceText, genus)) return [];
+    if (!isCompatibilityResearchClaimScopeEligible(claim)) return [];
+    return [{
+      field: claim.field as CompatibilityGenusAuthorityField,
+      proposedValue: claim.proposedValue,
+      sourceIds: [sourceIdFor(document.url)],
+      confidence: claim.confidence,
+      evidenceText: claim.evidenceText,
+      note: claim.note || null,
+    }];
+  });
+
+  const sources = documents.map(document => ({
+    id: sourceIdFor(document.url),
+    title: document.title.slice(0, 300),
+    publisher: document.publisher.slice(0, 200),
+    url: document.url,
+    sourceType: document.sourceType,
+    contentSha256: createHash('sha256').update(document.text).digest('hex'),
+    contentVerified: true as const,
+  }));
+  const resolved = new Set(fieldCandidates.map(candidate => candidate.field));
+
+  return {
+    genus,
+    model: extractionModel ?? searchModel,
+    targetFields,
+    sources,
+    fieldCandidates,
+    unresolvedFields: targetFields.filter(field => !resolved.has(field)),
+    attemptedUrls: allAttemptedUrls,
+    discoveryStatus: 'verified_genus_documents',
+    discoveredUrlCount: candidates.length,
+    verifiedGenusDocumentCount: documents.length,
+    promotionAllowed: false,
     writesAuthority: false,
   };
 };

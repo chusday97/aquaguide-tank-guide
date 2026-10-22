@@ -118,7 +118,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v17-decision-readiness';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v18-field-authority-onboarding';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,

@@ -62,7 +62,6 @@ export const assessCompatibilityOnboardingGate = (
     reasons.push(identityReadiness);
     decisionReasons.push(identityReadiness);
   }
-  if (!input.hasReviewedCompatibilityProfile) reasons.push('reviewed_compatibility_profile_missing');
   if (missingDeclaredFacts.length) reasons.push('required_fact_contract_incomplete');
   if (missingAuthoritativeFacts.length) reasons.push('authoritative_core_facts_incomplete');
   if (missingDecisionFacts.length) decisionReasons.push('authoritative_decision_facts_incomplete');

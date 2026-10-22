@@ -1,0 +1,26 @@
+{
+  "generatedFrom": "compatibility_core_field_coverage.json",
+  "policy": "identity-ready exact species only; direct genus-wide evidence is required; agreement among species pages is never genus authority; ornamental variants are excluded by default; automated research may create draft candidates but never auto-promotes production authority",
+  "totalResearchJobs": 1,
+  "impactedSpecies": 2,
+  "items": [
+    {
+      "genus": "Opsariichthys",
+      "priorityScore": 200,
+      "targetFields": [
+        "territoriality"
+      ],
+      "fieldImpactCounts": {
+        "territoriality": 2
+      },
+      "impactedSpeciesIds": [
+        "sp_0038",
+        "sp_0130"
+      ],
+      "exactSpeciesCount": 2,
+      "variantObjectCount": 0,
+      "existingAuthorityFields": [],
+      "promotionPolicy": "Research must directly state a genus-wide fact. Agreement among individual species pages is never enough. Production authority requires reviewed source provenance; ornamental variants remain excluded unless the authority explicitly opts into variant coverage."
+    }
+  ]
+}

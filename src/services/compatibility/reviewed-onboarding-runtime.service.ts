@@ -5,10 +5,10 @@ import {
 } from '../../data/compatibilityEvidence';
 import type { Fish } from '../../types';
 import type { CompatibilityEvidenceProvider } from './compatibility.service';
-import type { ReviewedCompatibilityOnboardingAuthority } from './species-onboarding-research.service';
+import type { ReviewedCompatibilityFieldAuthority, ReviewedCompatibilityOnboardingAuthority } from './species-onboarding-research.service';
 
 export const createReviewedOnboardingEvidenceProvider = (
-  authorities: ReviewedCompatibilityOnboardingAuthority[],
+  authorities: Array<ReviewedCompatibilityOnboardingAuthority | ReviewedCompatibilityFieldAuthority>,
   authorityVersion = 'reviewed-onboarding-runtime-v1',
 ): CompatibilityEvidenceProvider => {
   const bySpeciesId = new Map(authorities.map(authority => [authority.catalogKey, authority]));

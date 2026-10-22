@@ -8,12 +8,15 @@ import {
   compatibilityProfileRevisionStatusMutationSchema,
   compatibilityProfileRevisionUpdateSchema,
   compatibilityRevisionReviewMutationSchema,
+  catalogEvidenceSourceSchema,
+  speciesAdminInputSchema,
   type ReviewedCompatibilityProfileDto,
   uuidSchema,
 } from '../../../../packages/contracts/src/index';
 import type { AuthenticatedRequest } from '../auth';
 import {
   beginIdempotentWrite,
+  deterministicUuid,
   camelize,
   finishIdempotentWrite,
   snakeize,
@@ -31,9 +34,14 @@ import { getAdminSupabase } from '../supabase';
 import {
   compatibilitySpeciesResearchProvider,
   getCompatibilitySpeciesResearchProviderReadiness,
+  researchCompatibilityGenusAuthority,
 } from '../compatibility-species-research-provider';
 import { createGbifSpeciesIdentityResolver } from '../../../../src/services/compatibility/gbif-species-identity.service';
-import { researchAndAssessCompatibilitySpeciesDetailed } from '../../../../src/services/compatibility/species-onboarding-research.service';
+import {
+  assessCompatibilitySpeciesResearchPacket,
+  buildReviewedCompatibilityFieldAuthority,
+  runCompatibilityFieldAuthorityOnboardingPipeline,
+} from '../../../../src/services/compatibility/species-onboarding-research.service';
 import { buildCompatibilityOnboardingReviewPacket, buildCompatibilityOnboardingReviewWorkItem } from '../../../../src/services/compatibility/onboarding-review-packet.service';
 import { runCompatibilityResearchBatchPreview } from '../compatibility-research-batch';
 
@@ -193,6 +201,49 @@ const compatibilityResearchPreviewInputSchema = z.object({
   commonName: z.string().trim().min(1).max(180).optional(),
 }).strict();
 
+const compatibilityOnboardingFieldSchema = z.enum([
+  'water',
+  'temperature',
+  'ph',
+  'adult_size',
+  'tank_size',
+  'social_behavior',
+  'territoriality',
+  'predation',
+]);
+
+const compatibilityResearchPacketSchema = z.object({
+  packetId: z.string().trim().min(1).max(220),
+  providerId: z.string().trim().min(1).max(220),
+  catalogKey: z.string().trim().min(1).max(160),
+  commonName: z.string().trim().min(1).max(200),
+  scientificName: z.string().trim().min(1).max(220),
+  identityStatus: z.enum(['verified', 'ambiguous', 'unresolved']),
+  sources: z.array(catalogEvidenceSourceSchema.extend({
+    sourceType: z.enum(['government', 'peer_reviewed', 'university', 'professional_association', 'curated_husbandry']),
+    contentVerified: z.boolean(),
+  })).max(32),
+  claims: z.array(z.object({
+    field: compatibilityOnboardingFieldSchema,
+    proposedValue: z.unknown(),
+    sourceId: z.string().trim().min(1).max(220),
+    evidenceKind: z.enum(['direct', 'contextual']),
+    confidence: z.enum(['high', 'medium', 'low', 'unknown']),
+    note: z.string().max(4000).optional(),
+  }).strict()).max(128),
+  diagnostics: z.object({
+    extractionStatus: z.enum(['ok', 'not_attempted', 'partial_transport_unavailable', 'transport_unavailable']),
+    verifiedSourceCount: z.number().int().min(0),
+    transportErrorCode: z.literal('retryable_network_error').optional(),
+  }).strict().optional(),
+}).strict();
+
+const compatibilityFieldAuthorityApprovalSchema = z.object({
+  species: speciesAdminInputSchema,
+  packet: compatibilityResearchPacketSchema,
+  approvedFields: z.array(compatibilityOnboardingFieldSchema).min(1).max(8),
+}).strict();
+
 const compatibilityResearchBatchPreviewInputSchema = z.object({
   offset: z.number().int().min(0).default(0),
   limit: z.number().int().min(1).max(4).default(4),
@@ -214,34 +265,48 @@ adminCompatibilityRouter.post('/research-preview', asyncRoute(async (request, re
   const parsed = compatibilityResearchPreviewInputSchema.safeParse(request.body);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility research 输入无效。', parsed.error.flatten());
 
-  const identity = await createGbifSpeciesIdentityResolver().resolve(parsed.data.scientificName);
-  if (identity.status !== 'verified') {
-    return sendData(request, response, {
-      status: 'identity_hold' as const,
-      identity,
-      packet: null,
-      assessment: null,
-      writesAuthority: false,
-    });
-  }
-
-  const readiness = getCompatibilitySpeciesResearchProviderReadiness();
-  if (!readiness.configured) {
-    throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Compatibility research provider 尚未配置。', {
-      providerId: readiness.providerId,
-      host: readiness.host,
-      model: readiness.model,
-    });
-  }
-
   try {
-    const detailed = await researchAndAssessCompatibilitySpeciesDetailed(compatibilitySpeciesResearchProvider, parsed.data);
-    const reviewPacket = buildCompatibilityOnboardingReviewPacket(detailed.assessment);
-    const reviewWorkItem = buildCompatibilityOnboardingReviewWorkItem(reviewPacket, parsed.data.commonName || parsed.data.scientificName);
+    const routed = await runCompatibilityFieldAuthorityOnboardingPipeline(
+      createGbifSpeciesIdentityResolver(),
+      compatibilitySpeciesResearchProvider,
+      {
+        id: 'bailian-genus-authority-v1',
+        research: researchCompatibilityGenusAuthority,
+      },
+      parsed.data,
+    );
+
+    if (routed.status === 'identity_hold') {
+      return sendData(request, response, {
+        status: 'identity_hold' as const,
+        routingMode: 'field_authority' as const,
+        identity: routed.identity,
+        acquisitionPlan: routed.acquisitionPlan,
+        genusResearch: routed.genusResearch,
+        speciesResearch: null,
+        packet: null,
+        assessment: null,
+        reviewPacket: null,
+        reviewWorkItem: null,
+        writesAuthority: false,
+      });
+    }
+
+    const assessment = routed.assessment;
+    const reviewPacket = assessment ? buildCompatibilityOnboardingReviewPacket(assessment) : null;
+    const reviewWorkItem = reviewPacket
+      ? buildCompatibilityOnboardingReviewWorkItem(reviewPacket, parsed.data.commonName || parsed.data.scientificName)
+      : null;
+
     return sendData(request, response, {
       status: 'research_assessed' as const,
-      identity,
-      ...detailed,
+      routingMode: 'field_authority' as const,
+      identity: routed.identity,
+      acquisitionPlan: routed.acquisitionPlan,
+      genusResearch: routed.genusResearch,
+      speciesResearch: routed.speciesResearch,
+      packet: routed.speciesResearch?.packet ?? null,
+      assessment,
       reviewPacket,
       reviewWorkItem,
       writesAuthority: false,
@@ -250,6 +315,107 @@ adminCompatibilityRouter.post('/research-preview', asyncRoute(async (request, re
     const reason = error instanceof Error ? error.message : 'compatibility_research_failed';
     throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Compatibility research 暂时不可用。', { reason });
   }
+}));
+
+adminCompatibilityRouter.post('/research-batch-preview', asyncRoute(async (request, response) => {}));
+
+adminCompatibilityRouter.post('/onboarding/approve-fields', asyncRoute(async (request, response) => {
+  const parsed = compatibilityFieldAuthorityApprovalSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility 字段审核输入无效。', parsed.error.flatten());
+  const { species, packet } = parsed.data;
+  const approvedFields = [...new Set(parsed.data.approvedFields)];
+  if (packet.catalogKey !== species.catalogKey || packet.scientificName !== species.scientificName) {
+    throw new ApiError(409, 'VERSION_CONFLICT', 'Research packet 与当前 Product species 身份不一致，请重新 Research。');
+  }
+  if (packet.identityStatus !== 'verified') {
+    throw new ApiError(409, 'MIGRATION_REJECTED', '物种身份尚未完成 verified review，不能批准 Compatibility 字段。');
+  }
+
+  const idempotency = await beginIdempotentWrite(request);
+  const speciesId = deterministicUuid(`catalog:species:${species.catalogKey}`);
+  if (idempotency.replay?.resourceId) {
+    return sendData(request, response, {
+      status: 'field_authority_persisted' as const,
+      speciesId: idempotency.replay.resourceId,
+      replay: true,
+      writesPairRules: false,
+      publishesSpecies: false,
+    }, idempotency.replay.responseStatus);
+  }
+
+  const identity = await createGbifSpeciesIdentityResolver().resolve(species.scientificName);
+  if (identity.status !== 'verified' || !identity.canonicalName || !identity.externalId || !identity.sourceUrl) {
+    throw new ApiError(409, 'MIGRATION_REJECTED', '当前 scientificName 无法重新通过 reviewed identity gate，请重新 Research。', {
+      reasonCode: identity.reasonCode,
+    });
+  }
+
+  const assessment = assessCompatibilitySpeciesResearchPacket(packet);
+  const approvedAt = new Date().toISOString();
+  const draftByField = new Map(assessment.draftFieldReviews.map(review => [review.field, review]));
+  const reviewedFieldReviews = approvedFields.map(field => {
+    const review = draftByField.get(field);
+    if (!review) throw new ApiError(409, 'MIGRATION_REJECTED', `字段 ${field} 没有可批准的 direct supported evidence。`);
+    return {
+      ...review,
+      status: 'reviewed' as const,
+      resolution: 'supported' as const,
+      reviewedAt: approvedAt,
+    };
+  });
+
+  const authority = buildReviewedCompatibilityFieldAuthority(assessment, {
+    fieldReviews: reviewedFieldReviews,
+    reviewedSourceIds: [...new Set(reviewedFieldReviews.flatMap(review => review.citationIds))],
+    approvedAt,
+  });
+  const usedSourceIds = new Set(authority.reviewedSourceIds);
+  const sources = assessment.sources.filter(source => usedSourceIds.has(source.id));
+  if (sources.length !== usedSourceIds.size) {
+    throw new ApiError(409, 'MIGRATION_REJECTED', '已批准字段存在无法解析的 verified evidence source。');
+  }
+
+  const actorId = (request as AuthenticatedRequest).authUser.id;
+  const client = getAdminSupabase();
+  const { data, error } = await client.rpc('persist_species_compatibility_field_authority', {
+    p_species_id: speciesId,
+    p_species: snakeize(species),
+    p_identity: {
+      provider_id: 'gbif-species-match-v1',
+      external_id: identity.externalId,
+      source_url: identity.sourceUrl,
+      canonical_name: identity.canonicalName,
+      queried_scientific_name: identity.queriedScientificName,
+      confidence: identity.confidence,
+      reason_code: identity.reasonCode,
+    },
+    p_field_reviews: authority.reviewedFieldReviews.map(review => ({
+      field: review.field,
+      proposed_value: review.proposedValue,
+      confidence: review.confidence,
+      source_ids: review.citationIds,
+    })),
+    p_sources: sources.map(source => ({
+      source_key: source.id,
+      title: source.title,
+      publisher: source.publisher,
+      url: source.url,
+      source_type: source.sourceType,
+    })),
+    p_actor_id: actorId,
+  });
+  if (error) throwDatabaseError(error, 'Compatibility 字段 authority 暂时无法持久化。');
+
+  await finishIdempotentWrite(request, idempotency, 'compatibility_field_authority', speciesId, 200);
+  return sendData(request, response, {
+    status: 'field_authority_persisted' as const,
+    ...camelize<Record<string, unknown>>(data || {}),
+    approvedFields: authority.approvedFields,
+    decisionReady: authority.decisionReady,
+    fullAuthorityReady: authority.fullAuthorityReady,
+    writesPairRules: false,
+    publishesSpecies: false,
+  });
 }));
 
 adminCompatibilityRouter.post('/research-batch-preview', asyncRoute(async (request, response) => {

@@ -14,6 +14,7 @@ import { getCompatibilityVariantResearchCeiling } from '../../data/compatibility
 import { getCompatibilityVariantExactResearchCeiling } from '../../data/compatibilityVariantExactResearchCeilings';
 import { getCompatibilityFieldResearchCeiling } from '../../data/compatibilityFieldResearchCeilings';
 import { buildReviewedCompatibilityProfileFromCatalogFields, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
+import { resolveReviewedCompatibilityTaxonFact, type CompatibilityTaxonFactResolver } from '../../data/compatibilityTaxonAuthority';
 import {
   getReviewedSpeciesKnowledge,
   getReviewedSpeciesKnowledgeByBaseScientificName,
@@ -33,7 +34,7 @@ export type CompatibilityFieldCoverageCell = {
   status: CompatibilityFieldCoverageStatus;
   disposition: CompatibilityResearchDisposition;
   evidenceIds: string[];
-  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'canonical_inheritance' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'variant_evidence_ceiling' | 'research_evidence_ceiling' | 'none';
+  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'canonical_inheritance' | 'genus_default' | 'family_default' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'variant_evidence_ceiling' | 'research_evidence_ceiling' | 'none';
   reasonCode: string | null;
 };
 export type CompatibilityFieldCoverageRow = {
@@ -42,6 +43,7 @@ export type CompatibilityFieldCoverageRow = {
   scientificName: string;
   lifeType: ReturnType<typeof getLifeType>;
   reviewedProfile: 'direct' | 'field_review_derived' | 'inherited' | 'none';
+  identityReadiness: ReturnType<typeof assessCompatibilityOnboardingGate>['identityReadiness'];
   genericOnboardingReady: boolean;
   decisionReady: boolean;
   authoritativeFieldCount: number;
@@ -180,6 +182,31 @@ const finiteRange = (min: unknown, max: unknown) => typeof min === 'number' && N
 const unique = (items: string[]) => Array.from(new Set(items.filter(Boolean)));
 const reviewedFieldReviews = (speciesId: string, field: CompatibilityCoreField) => getCatalogFieldReviews(speciesId)
   .filter(review => review.field === field && review.status === 'reviewed' && isCatalogFieldReviewValueValid(review));
+
+const hasReviewedDirectIdentity = (speciesId: string) => getCatalogFieldReviews(speciesId).some(review => (
+  review.field === 'identity'
+  && review.status === 'reviewed'
+  && review.resolution === 'supported'
+  && review.citationIds.length > 0
+  && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))
+  && isCatalogFieldReviewValueValid(review)
+));
+
+const taxonAuthorityCell = (
+  fish: Fish,
+  field: CompatibilityCoreField,
+  resolver: CompatibilityTaxonFactResolver,
+): CompatibilityFieldCoverageCell | null => {
+  const authority = resolver(fish, field);
+  if (!authority) return null;
+  return {
+    status: authority.status,
+    disposition: 'ready',
+    evidenceIds: [...authority.evidenceIds],
+    authoritySource: authority.rank === 'genus' ? 'genus_default' : 'family_default',
+    reasonCode: `reviewed_${authority.rank}_default`,
+  };
+};
 
 const supportedValueStatus = (review: CatalogFieldReview): CompatibilityFieldCoverageStatus => {
   if (review.resolution === 'unknown') return 'reviewed_unknown';
@@ -327,7 +354,11 @@ const evidenceCeilingForField = (fish: Fish, field: CompatibilityCoreField) => {
   return ceilings.find(item => item.field === mapped);
 };
 
-const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell => {
+const fieldCell = (
+  fish: Fish,
+  field: CompatibilityCoreField,
+  taxonFactResolver: CompatibilityTaxonFactResolver = resolveReviewedCompatibilityTaxonFact,
+): CompatibilityFieldCoverageCell => {
   const domainBoundary = getCompatibilityDomainBoundary(fish.id);
   if (domainBoundary) return { status: 'missing_identity_or_domain', disposition: 'domain_extension_required', evidenceIds: domainBoundary.sourceIds, authoritySource: 'domain_boundary', reasonCode: domainBoundary.code };
   const lifeType = getLifeType(fish);
@@ -373,6 +404,12 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   if (variantResearchCeiling) {
     return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: [], authoritySource: 'variant_evidence_ceiling', reasonCode: variantResearchCeiling.reasonCode };
   }
+
+  // Genus/family authority is field-scoped and explicitly reviewed. It is a
+  // fallback only after exact/canonical authority has had a chance to win, and
+  // it never expands to fields that the taxon authority did not review.
+  const taxonAuthority = taxonAuthorityCell(fish, field, taxonFactResolver);
+  if (taxonAuthority) return taxonAuthority;
 
   const unknown = exactReviews.find(review => review.resolution === 'unknown');
   if (unknown) {
@@ -422,30 +459,38 @@ const defaultFastLaneConstraint = (field: CompatibilityCoreField) => {
   return 'Promote only an exact-taxon reviewed fact with source provenance; otherwise keep reviewed_unknown.';
 };
 
-export const getCompatibilityCoreFieldCoverageRow = (fish: Fish): CompatibilityFieldCoverageRow => {
+export const getCompatibilityCoreFieldCoverageRow = (
+  fish: Fish,
+  options: { taxonFactResolver?: CompatibilityTaxonFactResolver } = {},
+): CompatibilityFieldCoverageRow => {
   const directProfile = getReviewedCompatibilityProfile(fish.id);
   const fieldReviewDerivedProfile = directProfile ? undefined : buildReviewedCompatibilityProfileFromCatalogFields(fish.id);
   const resolvedProfile = directProfile ?? fieldReviewDerivedProfile ?? getReviewedCompatibilityProfileForFish(fish);
-  const fields = Object.fromEntries(coreFields.map(field => [field, fieldCell(fish, field)])) as Record<CompatibilityCoreField, CompatibilityFieldCoverageCell>;
+  const catalogPersisted = fishData.some(item => item.id === fish.id);
+  const taxonFactResolver = options.taxonFactResolver ?? resolveReviewedCompatibilityTaxonFact;
+  const fields = Object.fromEntries(coreFields.map(field => [field, fieldCell(fish, field, taxonFactResolver)])) as Record<CompatibilityCoreField, CompatibilityFieldCoverageCell>;
   const authoritativeFieldCount = coreFields.filter(field => isAuthoritative(fields[field].status)).length;
   const actionableGapCount = coreFields.filter(field => fields[field].disposition === 'targeted_source_expansion').length;
   const terminalGapCount = coreFields.filter(field => ['terminal_hold', 'domain_extension_required'].includes(fields[field].disposition)).length;
-  const declared = new Set(resolvedProfile?.requiredFacts || []);
+  // The generic fact contract belongs to the compatibility system, not to a
+  // hand-authored per-species profile. A new species declares the same contract
+  // automatically; readiness is determined by field authority coverage.
   const authoritativeFacts = coreFields.filter(field => isAuthoritative(fields[field].status));
   const onboarding = assessCompatibilityOnboardingGate(fish, {
     lifeType: getLifeType(fish),
     hasReviewedCompatibilityProfile: Boolean(resolvedProfile),
-    declaredRequiredFacts: [...declared],
+    declaredRequiredFacts: coreFields,
     authoritativeFacts,
-    catalogPersisted: true,
+    catalogPersisted,
+    reviewedDirectIdentity: hasReviewedDirectIdentity(fish.id),
   });
   const genericOnboardingReady = onboarding.ready;
   const decisionReady = onboarding.decisionReady;
-  return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : fieldReviewDerivedProfile ? 'field_review_derived' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, decisionReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
+  return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : fieldReviewDerivedProfile ? 'field_review_derived' : resolvedProfile ? 'inherited' : 'none', identityReadiness: onboarding.identityReadiness, genericOnboardingReady, decisionReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
 };
 
 export const buildCompatibilityCoreFieldCoverage = () => {
-  const rows: CompatibilityFieldCoverageRow[] = fishData.map(getCompatibilityCoreFieldCoverageRow);
+  const rows: CompatibilityFieldCoverageRow[] = fishData.map(fish => getCompatibilityCoreFieldCoverageRow(fish));
 
   const fieldCounts = Object.fromEntries(coreFields.map(field => {
     const counts: Record<CompatibilityFieldCoverageStatus, number> = { reviewed_supported: 0, reviewed_neutral_or_negative: 0, reviewed_unknown: 0, needs_research: 0, missing_identity_or_domain: 0, not_applicable: 0 };

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../../packages/contracts/src';
+import type { CompatibilityRequiredFact, DomainSpeciesFact } from '../../../packages/domain-rules/src';
 import type {
   CompatibilityStageRiskRuleInput,
   ReviewedCompatibilityPairRuleDto,
@@ -18,11 +19,20 @@ import { mapSpeciesDetail } from './content-mappers';
 import { type PublicationSnapshotPayload, speciesPublicationSelect } from './content-publications';
 import { ApiError } from './http';
 
+export type ReviewedCompatibilityFieldAuthorityDto = {
+  catalogKey: string;
+  approvedFields: CompatibilityRequiredFact[];
+  fact: DomainSpeciesFact;
+  fieldCitations: Partial<Record<CompatibilityRequiredFact, RuntimeEvidenceSourceDto[]>>;
+  version: number;
+};
+
 export type ReviewedCompatibilityAuthority = {
   profiles: ReviewedCompatibilityProfileDto[];
   pairRules: ReviewedCompatibilityPairRuleDto[];
+  fieldAuthorities?: ReviewedCompatibilityFieldAuthorityDto[];
   authority: 'reviewed-db';
-  counts: { profiles: number; pairRules: number };
+  counts: { profiles: number; pairRules: number; fieldAuthoritySpecies?: number; fieldReviews?: number };
 };
 
 const pairKey = (left: string, right: string) => [left, right].sort().join('__');
@@ -69,16 +79,23 @@ const reviewedStageRisks = (rows: any[] = []) => rows.flatMap(row => {
 });
 
 export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient): Promise<ReviewedCompatibilityAuthority> => {
-  const [profileResult, pairResult] = await Promise.all([
+  const [profileResult, pairResult, fieldResult] = await Promise.all([
     client.from('species_compatibility_profiles')
       .select('species_id,behavior_traits,minimum_group_size,predation_targets,required_facts,stocking_guidance,confidence,review_status,version,species_compatibility_profile_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at)),species_compatibility_profile_stage_risks(rule_key,younger_stages,older_stages,verdict,risk_type,reason,mitigation,basis,confidence,review_status,deleted_at,species_compatibility_profile_stage_risk_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at)))')
       .eq('review_status', 'reviewed').is('deleted_at', null),
     client.from('species_pair_compatibility_rules')
       .select('species_a_id,species_b_id,verdict,risk_type,reason,mitigation,basis,confidence,review_status,version,species_pair_compatibility_rule_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at))')
       .eq('review_status', 'reviewed').is('deleted_at', null),
+    client.from('species_compatibility_field_reviews')
+      .select('species_id,field,proposed_value,resolution,confidence,review_status,identity_provider_id,identity_external_id,identity_source_url,version,species_compatibility_field_review_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at))')
+      .eq('review_status', 'reviewed').is('deleted_at', null),
   ]);
-  if (profileResult.error || pairResult.error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Reviewed Compatibility authority 尚未准备完成。');
-  const speciesIds = Array.from(new Set([...(profileResult.data || []).map(row => row.species_id), ...(pairResult.data || []).flatMap(row => [row.species_a_id, row.species_b_id])]));
+  if (profileResult.error || pairResult.error || fieldResult.error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Reviewed Compatibility authority 尚未准备完成。');
+  const speciesIds = Array.from(new Set([
+    ...(profileResult.data || []).map(row => row.species_id),
+    ...(pairResult.data || []).flatMap(row => [row.species_a_id, row.species_b_id]),
+    ...(fieldResult.data || []).map(row => row.species_id),
+  ]));
   const speciesResult = speciesIds.length
     ? await client.from('species').select('id,catalog_key').in('id', speciesIds).eq('status', 'published').is('deleted_at', null)
     : { data: [], error: null };
@@ -121,6 +138,87 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
     }];
   }).sort((left, right) => pairKey(...left.catalogKeys).localeCompare(pairKey(...right.catalogKeys)));
 
+  const fieldRowsBySpecies = new Map<string, any[]>();
+  for (const row of fieldResult.data || []) {
+    const catalogKey = keyBySpeciesId.get(row.species_id);
+    if (!catalogKey) continue;
+    const rows = fieldRowsBySpecies.get(catalogKey) || [];
+    rows.push(row);
+    fieldRowsBySpecies.set(catalogKey, rows);
+  }
+  const compatibilityFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityRequiredFact[];
+  const fieldAuthorities: ReviewedCompatibilityFieldAuthorityDto[] = [...fieldRowsBySpecies.entries()].flatMap(([catalogKey, rows]) => {
+    const identity = rows.find(row => row.field === 'identity'
+      && row.resolution === 'supported'
+      && row.identity_provider_id
+      && row.identity_external_id
+      && row.identity_source_url);
+    if (!identity) return [];
+
+    const approved = rows.filter(row => row.field !== 'identity'
+      && compatibilityFields.includes(row.field as CompatibilityRequiredFact)
+      && row.resolution === 'supported');
+    const usable = approved.flatMap(row => {
+      const citations = reviewedSources(row.species_compatibility_field_review_sources as any[]);
+      return citations.length ? [{ row, citations }] : [];
+    });
+    const approvedFields = [...new Set(usable.map(item => item.row.field as CompatibilityRequiredFact))];
+    if (!approvedFields.length) return [];
+
+    const byField = new Map(usable.map(item => [item.row.field as CompatibilityRequiredFact, item]));
+    const proposed = <T>(field: CompatibilityRequiredFact): T | undefined => byField.get(field)?.row.proposed_value as T | undefined;
+    const water = proposed<'freshwater' | 'saltwater' | 'brackish'>('water');
+    const temperature = proposed<{ min?: number; max?: number }>('temperature');
+    const ph = proposed<{ min?: number; max?: number }>('ph');
+    const adult = proposed<{ min?: number; max?: number }>('adult_size');
+    const tank = proposed<{ liters?: number; lengthCm?: number }>('tank_size');
+    const social = proposed<{ mode?: DomainSpeciesFact['socialMode']; minimumGroupSize?: number | null }>('social_behavior');
+    const territorial = proposed<{ traits?: string[] }>('territoriality');
+    const predation = proposed<{ targets?: string[] }>('predation');
+    const evidenceIds = [...new Set(usable.flatMap(item => item.citations.map(source => source.id)))];
+    const dispositions = Object.fromEntries(compatibilityFields.map(field => [
+      field,
+      approvedFields.includes(field) ? 'ready' : 'research_pending',
+    ])) as DomainSpeciesFact['compatibilityFactDispositions'];
+    const adultMax = adult?.max ?? adult?.min ?? null;
+    const fact: DomainSpeciesFact = {
+      id: catalogKey,
+      waterType: water ?? 'unknown',
+      ...(water ? { waterTypes: [water] } : {}),
+      temperatureMinC: temperature?.min ?? null,
+      temperatureMaxC: temperature?.max ?? null,
+      phMin: ph?.min ?? null,
+      phMax: ph?.max ?? null,
+      minTankLiters: tank?.liters ?? null,
+      minTankLengthCm: tank?.lengthCm ?? null,
+      reviewed: compatibilityFields.every(field => approvedFields.includes(field)),
+      compatibilityRequiredFacts: approvedFields,
+      compatibilityFactDispositions: dispositions,
+      minimumGroupSize: social?.minimumGroupSize ?? null,
+      adultLengthMinCm: adult?.min ?? null,
+      adultLengthMaxCm: adult?.max ?? null,
+      socialMode: social?.mode,
+      behaviorTraits: [...(territorial?.traits || [])],
+      territoriality: territorial ? ((territorial.traits || []).some(trait => /territor/i.test(trait)) ? 'medium' : 'none') : undefined,
+      predationRisk: predation ? ((predation.targets || []).length > 0 ? 'high' : 'none') : undefined,
+      predationTargets: predation?.targets ? [...predation.targets] : undefined,
+      evidenceIds,
+      lifeType: 'fish',
+      size: adultMax == null ? 'Medium' : adultMax < 10 ? 'Small' : adultMax < 30 ? 'Medium' : 'Large',
+    };
+    const fieldCitations = Object.fromEntries(usable.map(item => [
+      item.row.field,
+      item.citations,
+    ])) as Partial<Record<CompatibilityRequiredFact, RuntimeEvidenceSourceDto[]>>;
+    return [{
+      catalogKey,
+      approvedFields,
+      fact,
+      fieldCitations,
+      version: Math.max(identity.version || 1, ...approved.map(row => row.version || 1)),
+    }];
+  }).sort((left, right) => left.catalogKey.localeCompare(right.catalogKey));
+
   const profileKeys = new Set(profiles.map(profile => profile.catalogKey));
   const pairKeys = new Set(pairRules.map(rule => pairKey(...rule.catalogKeys)));
   const stageRiskKeys = new Set(profiles.flatMap(profile => profile.stageRiskRules.map(rule => rule.ruleKey)));
@@ -153,7 +251,18 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
       + expectedPairKeys.size + ' Pair Rules / '
       + expectedStageRiskKeys.size + ' Stage Risk。',
   );
-  return { profiles, pairRules, authority: 'reviewed-db', counts: { profiles: profiles.length, pairRules: pairRules.length } };
+  return {
+    profiles,
+    pairRules,
+    fieldAuthorities,
+    authority: 'reviewed-db',
+    counts: {
+      profiles: profiles.length,
+      pairRules: pairRules.length,
+      fieldAuthoritySpecies: fieldAuthorities.length,
+      fieldReviews: fieldAuthorities.reduce((count, authority) => count + authority.approvedFields.length, 0),
+    },
+  };
 };
 const speciesDetailToFish = (detail: SpeciesDetailDto): Fish => ({
   id: detail.catalogKey,
@@ -238,12 +347,17 @@ export const createAuthorityEvidenceProvider = (
   authorityVersion: string,
 ): CompatibilityEvidenceProvider => {
   const profiles = new Map(authority.profiles.map(profile => [profile.catalogKey, toProfile(profile)]));
+  const fieldAuthorities = new Map((authority.fieldAuthorities || [])
+    .filter(item => !profiles.has(item.catalogKey))
+    .map(item => [item.catalogKey, item]));
   const pairRules = new Map(authority.pairRules.map(rule => [pairKey(...rule.catalogKeys), toPairRule(rule)]));
   const stageRisks = new Map(authority.profiles.map(profile => [profile.catalogKey, profile.stageRiskRules.map(rule => toStageRisk(profile.catalogKey, rule))]));
   return {
     getProfile: speciesId => profiles.get(speciesId),
     getPairRule: (leftId, rightId) => pairRules.get(pairKey(leftId, rightId)),
     getStageRisks: speciesId => stageRisks.get(speciesId) || [],
+    getReviewedSpeciesFact: species => fieldAuthorities.get(species.id)?.fact,
+    getReviewedFieldCitations: (speciesId, field) => fieldAuthorities.get(speciesId)?.fieldCitations[field] || [],
     authorityVersion,
   };
 };
@@ -253,6 +367,7 @@ const citationsForSourceKeys = (authority: ReviewedCompatibilityAuthority, sourc
     ...authority.profiles.flatMap(profile => profile.citations),
     ...authority.profiles.flatMap(profile => profile.stageRiskRules.flatMap(rule => rule.citations)),
     ...authority.pairRules.flatMap(rule => rule.citations),
+    ...(authority.fieldAuthorities || []).flatMap(item => Object.values(item.fieldCitations).flatMap(citations => citations || [])),
   ].map(source => [source.id, source]));
   const citations = sourceKeys.map(key => sourceByKey.get(key)).filter((source): source is RuntimeEvidenceSourceDto => Boolean(source));
   if (citations.length !== sourceKeys.length) throw new ApiError(409, 'MIGRATION_REJECTED', 'Regression 无法解析 Draft 使用的 canonical Evidence。');

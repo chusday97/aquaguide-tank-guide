@@ -13,6 +13,14 @@ import {
   type CatalogFieldReview,
 } from '../../data/catalogFieldReviews';
 import type { ReviewedCompatibilityProfile } from '../../data/compatibilityEvidence';
+import {
+  assessCompatibilityGenusAuthorityResearchResult,
+  buildCompatibilityNewSpeciesEvidenceAcquisitionPlan,
+  type CompatibilityEvidenceAcquisitionPlan,
+  type CompatibilityGenusAuthorityAssessment,
+  type CompatibilityGenusAuthorityField,
+  type CompatibilityGenusAuthorityResearchResult,
+} from './taxon-authority-research.service';
 
 export type CompatibilityOnboardingCoreField = typeof GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS[number];
 
@@ -113,6 +121,14 @@ export interface CompatibilitySpeciesResearchProvider {
   research(input: CompatibilitySpeciesResearchInput): Promise<CompatibilitySpeciesResearchPacket>;
 }
 
+export interface CompatibilityGenusAuthorityResearchProvider {
+  id: string;
+  research(input: {
+    genus: string;
+    targetFields: CompatibilityGenusAuthorityField[];
+  }): Promise<CompatibilityGenusAuthorityResearchResult>;
+}
+
 export type CompatibilitySpeciesIdentityResolution = {
   status: 'verified' | 'ambiguous' | 'unresolved' | 'provider_unavailable';
   queriedScientificName: string;
@@ -132,6 +148,25 @@ export type CompatibilitySpeciesOnboardingPipelineResult = {
   status: 'research_assessed' | 'identity_hold';
   identity: CompatibilitySpeciesIdentityResolution;
   assessment: CompatibilitySpeciesOnboardingAssessment | null;
+};
+
+export type CompatibilityFieldAuthorityOnboardingPipelineResult = {
+  status: 'research_routed' | 'identity_hold';
+  identity: CompatibilitySpeciesIdentityResolution;
+  acquisitionPlan: CompatibilityEvidenceAcquisitionPlan;
+  speciesResearch: Awaited<ReturnType<typeof researchAndAssessCompatibilitySpeciesDetailed>> | null;
+  genusResearch: {
+    attempted: boolean;
+    providerId: string | null;
+    genus: string | null;
+    targetFields: CompatibilityGenusAuthorityField[];
+    result: CompatibilityGenusAuthorityResearchResult | null;
+    assessment: CompatibilityGenusAuthorityAssessment | null;
+    fallbackToSpeciesFields: CompatibilityOnboardingCoreField[];
+    error: string | null;
+  };
+  assessment: CompatibilitySpeciesOnboardingAssessment | null;
+  writesAuthority: false;
 };
 
 export const getCompatibilitySpeciesResearchCapability = (
@@ -170,6 +205,7 @@ export type CompatibilitySpeciesOnboardingAssessment = {
   reasonCodes: string[];
   fieldResolutions: CompatibilityOnboardingFieldResolution[];
   draftFieldReviews: CatalogFieldReview[];
+  sources: CompatibilityResearchSource[];
   candidateProfile: CompatibilityOnboardingCandidateProfile | null;
 };
 
@@ -186,6 +222,19 @@ export type ReviewedCompatibilityOnboardingAuthority = {
   reviewedFieldReviews: CatalogFieldReview[];
   fact: DomainSpeciesFact;
   profile: ReviewedCompatibilityProfile;
+};
+
+export type ReviewedCompatibilityFieldAuthority = {
+  catalogKey: string;
+  scientificName: string;
+  approvedAt: string;
+  reviewedSourceIds: string[];
+  reviewedFieldReviews: CatalogFieldReview[];
+  approvedFields: CompatibilityOnboardingCoreField[];
+  decisionReady: boolean;
+  fullAuthorityReady: boolean;
+  fact: DomainSpeciesFact;
+  profile?: ReviewedCompatibilityProfile;
 };
 
 const coreFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityOnboardingCoreField[];
@@ -605,6 +654,7 @@ export const assessCompatibilitySpeciesResearchPacket = (
     reasonCodes: [...new Set(reasonCodes)],
     fieldResolutions,
     draftFieldReviews,
+    sources: packet.sources.map(source => ({ ...source })),
     candidateProfile: status === 'ready_for_review'
       ? candidateProfileFrom(packet, fieldResolutions, sourceById)
       : null,
@@ -836,6 +886,113 @@ export const runCompatibilitySpeciesOnboardingPipeline = async (
   return { status: 'research_assessed', identity, assessment };
 };
 
+export const runCompatibilityFieldAuthorityOnboardingPipeline = async (
+  identityResolver: CompatibilitySpeciesIdentityResolver,
+  speciesResearchProvider: CompatibilitySpeciesResearchProvider,
+  genusResearchProvider: CompatibilityGenusAuthorityResearchProvider | null,
+  input: { catalogKey: string; scientificName: string; commonName?: string },
+): Promise<CompatibilityFieldAuthorityOnboardingPipelineResult> => {
+  const identity = await identityResolver.resolve(input.scientificName);
+  const acquisitionPlan = buildCompatibilityNewSpeciesEvidenceAcquisitionPlan({
+    catalogKey: input.catalogKey,
+    scientificName: input.scientificName,
+    identityVerified: identity.status === 'verified',
+  });
+
+  const emptyGenusResearch = {
+    attempted: false as const,
+    providerId: genusResearchProvider?.id ?? null,
+    genus: acquisitionPlan.genus,
+    targetFields: [] as CompatibilityGenusAuthorityField[],
+    result: null as CompatibilityGenusAuthorityResearchResult | null,
+    assessment: null as CompatibilityGenusAuthorityAssessment | null,
+    fallbackToSpeciesFields: [] as CompatibilityOnboardingCoreField[],
+    error: null as string | null,
+  };
+
+  if (identity.status !== 'verified') {
+    return {
+      status: 'identity_hold',
+      identity,
+      acquisitionPlan,
+      speciesResearch: null,
+      genusResearch: emptyGenusResearch,
+      assessment: null,
+      writesAuthority: false,
+    };
+  }
+
+  const plannedGenusFields = acquisitionPlan.fields
+    .filter(item => item.route === 'genus_authority_research')
+    .map(item => item.field)
+    .filter((field): field is CompatibilityGenusAuthorityField => (
+      field === 'water'
+      || field === 'social_behavior'
+      || field === 'territoriality'
+      || field === 'predation'
+    ));
+  const directSpeciesFields = acquisitionPlan.fields
+    .filter(item => item.route === 'species_targeted_research')
+    .map(item => item.field);
+
+  let genusResult: CompatibilityGenusAuthorityResearchResult | null = null;
+  let genusAssessment: CompatibilityGenusAuthorityAssessment | null = null;
+  let genusError: string | null = null;
+  let fallbackGenusFields: CompatibilityOnboardingCoreField[] = [];
+
+  if (plannedGenusFields.length > 0) {
+    if (!genusResearchProvider || !acquisitionPlan.genus) {
+      fallbackGenusFields = [...plannedGenusFields];
+      genusError = genusResearchProvider ? 'genus_identity_unavailable' : 'genus_research_provider_unavailable';
+    } else {
+      try {
+        genusResult = await genusResearchProvider.research({
+          genus: acquisitionPlan.genus,
+          targetFields: plannedGenusFields,
+        });
+        genusAssessment = assessCompatibilityGenusAuthorityResearchResult(genusResult);
+        if (genusAssessment.status !== 'ready_for_review') {
+          fallbackGenusFields = [...plannedGenusFields];
+        }
+      } catch (error) {
+        fallbackGenusFields = [...plannedGenusFields];
+        genusError = error instanceof Error ? error.message : 'genus_authority_research_failed';
+      }
+    }
+  }
+
+  const speciesTargetFields = [...new Set([
+    ...directSpeciesFields,
+    ...fallbackGenusFields,
+  ])];
+  const speciesResearch = speciesTargetFields.length > 0
+    ? await researchAndAssessCompatibilitySpeciesDetailed(
+        speciesResearchProvider,
+        input,
+        { researchScopeFields: speciesTargetFields },
+      )
+    : null;
+
+  return {
+    status: 'research_routed',
+    identity,
+    acquisitionPlan,
+    speciesResearch,
+    genusResearch: {
+      attempted: plannedGenusFields.length > 0 && Boolean(genusResearchProvider && acquisitionPlan.genus),
+      providerId: genusResearchProvider?.id ?? null,
+      genus: acquisitionPlan.genus,
+      targetFields: plannedGenusFields,
+      result: genusResult,
+      assessment: genusAssessment,
+      fallbackToSpeciesFields: fallbackGenusFields,
+      error: genusError,
+    },
+    assessment: speciesResearch?.assessment ?? null,
+    writesAuthority: false,
+  };
+};
+
 const buildCompatibilityFactFromAssessment = (
   assessment: CompatibilitySpeciesOnboardingAssessment,
   reviewed: boolean,
@@ -908,6 +1065,143 @@ const sameStringSet = (left: string[], right: string[]) => {
   const a = [...new Set(left)].sort();
   const b = [...new Set(right)].sort();
   return a.length === b.length && a.every((value, index) => value === b[index]);
+};
+
+const buildFieldAuthorityFact = (
+  assessment: CompatibilitySpeciesOnboardingAssessment,
+  approvedReviews: CatalogFieldReview[],
+): DomainSpeciesFact => {
+  const approvedByField = new Map(approvedReviews.map(review => [review.field, review]));
+  const dispositions = Object.fromEntries(coreFields.map(field => [
+    field,
+    approvedByField.has(field) ? 'ready' as const : 'research_pending' as const,
+  ])) as Partial<Record<CompatibilityRequiredFact, CompatibilityFactDisposition>>;
+  const value = <T>(field: CompatibilityOnboardingCoreField): T | undefined => (
+    approvedByField.get(field)?.proposedValue as T | undefined
+  );
+
+  const water = value<'freshwater' | 'saltwater' | 'brackish'>('water');
+  const temperature = value<NumericRange>('temperature');
+  const ph = value<NumericRange>('ph');
+  const adult = value<NumericRange>('adult_size');
+  const tank = value<TankMinimum>('tank_size');
+  const social = value<SocialValue>('social_behavior');
+  const territoriality = value<{ traits: string[] }>('territoriality');
+  const predation = value<{ targets: string[] }>('predation');
+  const approvedFields = coreFields.filter(field => approvedByField.has(field));
+  const fullyReviewed = approvedFields.length === coreFields.length;
+  const maxLength = adult?.max ?? adult?.min ?? null;
+
+  return {
+    id: assessment.catalogKey,
+    waterType: water ?? 'unknown',
+    ...(water ? { waterTypes: [water] } : {}),
+    temperatureMinC: temperature?.min ?? null,
+    temperatureMaxC: temperature?.max ?? null,
+    phMin: ph?.min ?? null,
+    phMax: ph?.max ?? null,
+    minTankLiters: tank?.liters ?? null,
+    minTankLengthCm: tank?.lengthCm ?? null,
+    reviewed: fullyReviewed,
+    compatibilityRequiredFacts: approvedFields,
+    compatibilityFactDispositions: dispositions,
+    adultLengthMinCm: adult?.min ?? null,
+    adultLengthMaxCm: adult?.max ?? null,
+    socialMode: social?.mode,
+    minimumGroupSize: social?.minimumGroupSize ?? null,
+    evidenceIds: [...new Set(approvedReviews.flatMap(review => review.citationIds))],
+    behaviorTraits: [...(territoriality?.traits ?? [])],
+    territoriality: territoriality
+      ? territoriality.traits.some(trait => /territor/i.test(trait)) ? 'medium' : 'none'
+      : undefined,
+    predationRisk: predation ? (predation.targets.length > 0 ? 'high' : 'none') : undefined,
+    predationTargets: predation ? [...predation.targets] : undefined,
+    lifeType: 'fish',
+    size: maxLength == null ? 'Medium' : maxLength < 10 ? 'Small' : maxLength < 30 ? 'Medium' : 'Large',
+  };
+};
+
+export const buildReviewedCompatibilityFieldAuthority = (
+  assessment: CompatibilitySpeciesOnboardingAssessment,
+  approval: CompatibilityOnboardingApprovalBundle,
+): ReviewedCompatibilityFieldAuthority => {
+  if (assessment.status === 'terminal_hold') {
+    throw new Error('Field authority approval cannot promote a terminal-hold assessment.');
+  }
+  if (!Number.isFinite(Date.parse(approval.approvedAt))) {
+    throw new Error('Field authority approval requires a valid approvedAt timestamp.');
+  }
+  if (approval.fieldReviews.length === 0) {
+    throw new Error('Field authority approval requires at least one reviewed field decision.');
+  }
+
+  const reviewedSourceIds = [...new Set(approval.reviewedSourceIds)];
+  const reviewedSourceSet = new Set(reviewedSourceIds);
+  const sourceById = new Map(assessment.sources.map(source => [source.id, source]));
+  const approvedReviews: CatalogFieldReview[] = [];
+  const seenFields = new Set<CompatibilityOnboardingCoreField>();
+
+  for (const review of approval.fieldReviews) {
+    const field = review.field as CompatibilityOnboardingCoreField;
+    if (!coreFields.includes(field) || seenFields.has(field)) {
+      throw new Error('Field authority approval contains an invalid or duplicate field: ' + review.field);
+    }
+    const resolution = assessment.fieldResolutions.find(item => item.field === field);
+    const exact = resolution?.status === 'supported'
+      && review.speciesId === assessment.catalogKey
+      && review.status === 'reviewed'
+      && review.resolution === 'supported'
+      && Boolean(review.reviewedAt)
+      && stableValueKey(review.proposedValue) === stableValueKey(resolution.proposedValue)
+      && sameStringSet(review.citationIds, resolution.sourceIds)
+      && review.citationIds.every(sourceId => reviewedSourceSet.has(sourceId))
+      && review.citationIds.every(sourceId => sourceById.get(sourceId)?.contentVerified === true)
+      && isCatalogFieldReviewValueValid(review);
+    if (!exact) {
+      throw new Error('Field authority approval is missing an exact reviewed decision for: ' + field);
+    }
+    seenFields.add(field);
+    approvedReviews.push(review);
+  }
+
+  const usedSourceIds = [...new Set(approvedReviews.flatMap(review => review.citationIds))];
+  const approvedFields = coreFields.filter(field => seenFields.has(field));
+  const fact = buildFieldAuthorityFact(assessment, approvedReviews);
+  const decisionReady = ['water', 'temperature', 'adult_size'].every(field => seenFields.has(field as CompatibilityOnboardingCoreField));
+  const fullAuthorityReady = approvedFields.length === coreFields.length;
+
+  let profile: ReviewedCompatibilityProfile | undefined;
+  if (fullAuthorityReady) {
+    const citations = usedSourceIds.map(sourceId => {
+      const source = sourceById.get(sourceId);
+      if (!source) throw new Error('Field authority approval references an unknown source: ' + sourceId);
+      return { ...source, reviewStatus: 'reviewed' as const };
+    });
+    profile = {
+      speciesId: assessment.catalogKey,
+      waterType: fact.waterType === 'unknown' ? undefined : fact.waterType,
+      behaviorTraits: [...(fact.behaviorTraits || [])],
+      minimumGroupSize: fact.minimumGroupSize ?? undefined,
+      predationTargets: [...(fact.predationTargets || [])],
+      confidence: 'medium',
+      reviewStatus: 'reviewed',
+      citations,
+      requiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
+    };
+  }
+
+  return {
+    catalogKey: assessment.catalogKey,
+    scientificName: assessment.scientificName,
+    approvedAt: approval.approvedAt,
+    reviewedSourceIds: usedSourceIds,
+    reviewedFieldReviews: approvedReviews,
+    approvedFields,
+    decisionReady,
+    fullAuthorityReady,
+    fact,
+    ...(profile ? { profile } : {}),
+  };
 };
 
 export const buildReviewedCompatibilityOnboardingAuthority = (
