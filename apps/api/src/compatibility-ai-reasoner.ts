@@ -12,6 +12,7 @@ import { getReviewedCompatibilityProfile } from '../../../src/data/compatibility
 import { getReviewedSpeciesKnowledgeForFish } from '../../../src/modules/knowledge/speciesKnowledge';
 import {
   prioritizeDistinctCompatibilityRules,
+  prioritizeIndependentBlockingCoverage,
   type CompatibilityAssessmentMode,
 } from '../../../src/services/compatibility/compatibility-action.service';
 import type { CompatibilityResolutionTarget } from '../../../src/services/compatibility/compatibility-decision-plan.service';
@@ -226,7 +227,11 @@ const primaryNarrativeRules = (
       : finalDecision.status === 'insufficient_data'
         ? result.missingData
         : result.passedRules;
-  const selected = prioritizeDistinctCompatibilityRules(relevantRules).slice(0, 3);
+  const selected = (
+    finalDecision.status === 'not_recommended'
+      ? prioritizeIndependentBlockingCoverage(prioritizeDistinctCompatibilityRules(relevantRules))
+      : prioritizeDistinctCompatibilityRules(relevantRules)
+  ).slice(0, 3);
   if (selected.length > 0) return selected;
   const domainCodes = new Set(result.metadata.domainRuleCodes || []);
   return prioritizeDistinctCompatibilityRules(

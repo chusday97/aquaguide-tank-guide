@@ -381,14 +381,26 @@ const estimateBioload = (fish: Fish, quantity = 1) => (
 );
 
 const convertFitItem = (
-  item: { type: string; title: string; detail: string; severity?: 'low' | 'medium' | 'high' },
+  item: {
+    type: string;
+    title: string;
+    detail: string;
+    severity?: 'low' | 'medium' | 'high';
+    affectedSpeciesIds?: string[];
+  },
   fallbackSeverity: TankCompatibilityRule['severity'],
+  defaultAffectedSpeciesIds: string[] = [],
 ): TankCompatibilityRule => asRule(
   item.type,
   item.title,
   item.detail,
   item.severity || fallbackSeverity,
-  reviewedRuleEvidence,
+  {
+    ...reviewedRuleEvidence,
+    affectedSpeciesIds: item.affectedSpeciesIds?.length
+      ? item.affectedSpeciesIds
+      : defaultAffectedSpeciesIds,
+  },
 );
 
 const buildSummary = (
@@ -686,10 +698,11 @@ const evaluateLegacyTankCompatibility = ({
   const fit = evaluateSpeciesForAquarium(candidateSpecies, tank, livestock);
 
   const isPairRuleFitItem = (item: { type: string }) => item.type.startsWith('pair_rule_');
-  fit.matchedItems.filter(item => !isPairRuleFitItem(item)).forEach(item => passedRules.push(convertFitItem(item, 'info')));
-  fit.warnings.filter(item => !isPairRuleFitItem(item)).forEach(item => warningRules.push(convertFitItem(item, item.severity || 'medium')));
-  fit.hardBlocks.filter(item => !isPairRuleFitItem(item)).forEach(item => blockingRules.push(convertFitItem(item, item.severity || 'high')));
-  fit.confirmations.forEach(item => missingData.push(convertFitItem(item, 'low')));
+  const candidateFitScope = [candidateSpecies.id];
+  fit.matchedItems.filter(item => !isPairRuleFitItem(item)).forEach(item => passedRules.push(convertFitItem(item, 'info', candidateFitScope)));
+  fit.warnings.filter(item => !isPairRuleFitItem(item)).forEach(item => warningRules.push(convertFitItem(item, item.severity || 'medium', candidateFitScope)));
+  fit.hardBlocks.filter(item => !isPairRuleFitItem(item)).forEach(item => blockingRules.push(convertFitItem(item, item.severity || 'high', candidateFitScope)));
+  fit.confirmations.forEach(item => missingData.push(convertFitItem(item, 'low', candidateFitScope)));
 
   const tankVolume = getAquariumVolumeLiters(tank);
   if (tank.waterType !== 'Freshwater' && tank.waterType !== 'Saltwater') {

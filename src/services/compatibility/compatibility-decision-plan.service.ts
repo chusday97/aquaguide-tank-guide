@@ -8,6 +8,7 @@ import {
   getPreExistingBlockingLabel,
   hasCandidateInvolvedBlockingRules,
   hasOnlyPreExistingBlockingRules,
+  prioritizeIndependentBlockingCoverage,
   prioritizePlannedAdditionBlockingRules,
   prioritizeDistinctCompatibilityRules,
   type BeginnerCompatibilityVerdict,
@@ -179,7 +180,9 @@ const sourceRulesForPlan = (
   if (decision.status === 'not_recommended') return (
     mode === 'planned_addition'
       ? prioritizePlannedAdditionBlockingRules(decision)
-      : prioritizeDistinctCompatibilityRules(decision.blockingRules)
+      : prioritizeIndependentBlockingCoverage(
+        prioritizeDistinctCompatibilityRules(decision.blockingRules),
+      )
   ).slice(0, 2);
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules).slice(0, 2);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData).slice(0, 2);
@@ -311,10 +314,15 @@ const specificActionFor = (
       : `把 ${namedItem.name} 计划数量从 ${namedItem.quantity} 调整到至少 ${min} 条/只，再重新判断是否加入。`;
   }
 
-  if (family === 'housing' && namedItem) {
+  if (family === 'housing') {
+    if (namedItem) {
+      return mode === 'current_tank'
+        ? `${namedItem.name} 有明确单养要求；把 ${namedItem.name} 单独饲养，再重新评估其余组合。`
+        : `不要把 ${namedItem.name} 按普通混养方案加入；该物种有明确单养要求。`;
+    }
     return mode === 'current_tank'
-      ? `${namedItem.name} 有明确单养要求；把 ${namedItem.name} 单独饲养，再重新评估其余组合。`
-      : `不要把 ${namedItem.name} 按普通混养方案加入；该物种有明确单养要求。`;
+      ? '把有明确单养要求的物种单独饲养，再重新评估其余组合。'
+      : '不要按普通混养方案加入有明确单养要求的物种；应按单养方案处理或更换候选物种。';
   }
 
   if (family === 'temperature' && decision.status === 'not_recommended' && !hasHardTemperatureNoOverlap(decision)) {
@@ -685,8 +693,10 @@ const actionSequenceRulesFor = (
 ): CompatibilityActionSequenceRule[] => {
   if (decision.status === 'compatible') return [];
 
-  const blockingRules = decision.status === 'not_recommended' && mode === 'planned_addition'
-    ? prioritizePlannedAdditionBlockingRules(decision)
+  const blockingRules = decision.status === 'not_recommended'
+    ? (mode === 'planned_addition'
+      ? prioritizePlannedAdditionBlockingRules(decision)
+      : prioritizeIndependentBlockingCoverage(orderedDistinctRules(decision.blockingRules)))
     : orderedDistinctRules(decision.blockingRules);
   const blocking = blockingRules.map(rule => ({ rule, kind: 'blocking' as const }));
   const usedFamilies = new Set(blocking.map(item => getCompatibilityRuleFamily(item.rule.code)));

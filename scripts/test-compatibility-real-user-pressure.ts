@@ -267,6 +267,13 @@ cases.push(makeCase(
       assert.ok(housing);
       assert.deepEqual(housing.speciesIds, ['sp_0049']);
     }),
+    probe('action_plan', 'top-2 covers the species-only blocker plus an independent candidate conflict', () => {
+      assert.deepEqual(
+        complexPlan.resolutionTargets.map(target => target.riskFamily),
+        ['housing', 'aggression'],
+      );
+      assert.equal(complexPlan.resolutionTargets.some(target => target.riskFamily === 'predation'), false);
+    }),
     probe('action_plan', 'hard-block plan does not emit contradictory add advice', () => {
       assert.equal(complexPlan.verdict, 'do_not_mix');
       assert.equal(complexPlan.nextSteps.some(step => /可以按当前计划加入|直接加入/.test(step)), false);
@@ -1289,8 +1296,8 @@ cases.push(makeCase(
     }),
     probe('action_plan', 'same-priority hard blockers use deterministic species/rule tie-breaks', () => {
       assert.deepEqual(sequenceSignature(orderStableHardBlockPlanB), sequenceSignature(orderStableHardBlockPlanA));
-      assert.equal(orderStableHardBlockPlanA.actionSequence[0]?.riskFamily, 'predation');
-      assert.deepEqual(orderStableHardBlockPlanA.actionSequence[0]?.resolutionTarget.speciesIds.sort(), ['sp_0011', 'sp_0049']);
+      assert.equal(orderStableHardBlockPlanA.actionSequence[0]?.riskFamily, 'housing');
+      assert.deepEqual(orderStableHardBlockPlanA.actionSequence[0]?.resolutionTarget.speciesIds.sort(), ['sp_0049']);
     }),
     probe('presentation', 'primary verdict reason and action stay identical after reorder', () => {
       assert.equal(orderStableHardBlockPresentationB.headline, orderStableHardBlockPresentationA.headline);
@@ -1339,7 +1346,7 @@ cases.push(makeCase(
   [
     probe('whole_tank_aggregation', 'initial state is hard blocked', () => {
       assert.equal(threeStageInitial.status, 'not_recommended');
-      assert.equal(threeStageInitialPlan.actionSequence[0]?.riskFamily, 'predation');
+      assert.equal(threeStageInitialPlan.actionSequence[0]?.riskFamily, 'housing');
     }),
     probe('action_plan', 'after removing the hard blocker only the remaining territory action becomes current', () => {
       assert.equal(threeStageMiddle.status, 'caution');

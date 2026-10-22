@@ -81,7 +81,7 @@ const compatible = decisionFor([
 assert.equal(compatible.status, 'compatible');
 assertActionContract('compatible', compatible);
 
-// 2) Large fish / small fish predation is a hard block, never softened into a caution.
+// 2) A solitary predator remains a hard block; the strongest independent blocker owns the primary action while predation remains traceable.
 const predation = decisionFor([
   ['sp_0431', 10],
   ['sp_0049', 1],
@@ -90,8 +90,13 @@ assert.equal(predation.status, 'not_recommended');
 assert.ok(predation.blockingRules.some(rule => rule.code === 'predation_risk'));
 const predationAction = assertActionContract('predation hard block', predation);
 assert.equal(predationAction.authorityLevel, 'hard_rule');
-assert.ok(predationAction.sourceRuleCodes.includes('predation_risk'));
-assert.match(predationAction.immediateAction, /不要|先不要|分开|阻断/);
+assert.ok(predationAction.sourceRuleCodes.includes('single_housing_required'));
+assert.match(predationAction.immediateAction, /单养|不要|先不要|普通混养/);
+const predationPlan = buildCompatibilityDecisionPlan(predation);
+assert.ok(
+  predationPlan.actionSequence.some(step => step.sourceRuleCode === 'predation_risk'),
+  'predation must remain traceable in deterministic detail even when solitary housing owns the primary action',
+);
 
 // 3) One-sided territorial pressure remains conditional and has a concrete separation stop condition.
 const territory = decisionFor([

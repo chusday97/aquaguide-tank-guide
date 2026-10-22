@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import type { Aquarium } from '../src/types';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
-import { getCompatibilityRuleFamily, prioritizeDistinctCompatibilityRules } from '../src/services/compatibility/compatibility-action.service';
+import {
+  getCompatibilityRuleFamily,
+  prioritizeDistinctCompatibilityRules,
+  prioritizeIndependentBlockingCoverage,
+} from '../src/services/compatibility/compatibility-action.service';
 import {
   createCompatibilityAiCombinationAssessment,
   type CompatibilityAiReasoningProvider,
@@ -77,7 +81,11 @@ const groundedProvider: CompatibilityAiReasoningProvider = async ({ user }) => {
   assert.deepEqual(plannedPrompt.primaryRiskRuleCodes, codes);
   assert.equal(plannedPrompt.deterministicAuthority.rules.length, codes.length);
   const families = codes.map(getCompatibilityRuleFamily);
-  assert.deepEqual(families, ['water_type', 'predation', 'housing']);
+  assert.deepEqual(
+    families,
+    ['housing', 'temperature', 'space'],
+    'AI prompt must use the same independent blocker coverage ordering as the product surface',
+  );
   return {
     model: 'ai-explanation-clamp-fixture',
     output: {
@@ -106,12 +114,14 @@ assert.equal(complexShadow.ai.adjustments.length, 2);
 const complexProduct = buildCompatibilityProductAssessment(complexDecision, complexShadow, 'planned_addition');
 assert.equal(complexProduct.details.explanation.source, 'ai_grounded');
 assert.equal(complexProduct.details.explanation.narrativeAccepted, true);
-assert.match(complexProduct.main.why[0] || '', /水体|淡水|海水/);
-assert.match(complexProduct.main.howTo[0] || '', /同一缸|淡水|海水/);
+assert.match(complexProduct.main.why[0] || '', /单养|普通混养/);
+assert.match(complexProduct.main.howTo[0] || '', /单养|混养/);
 assert.equal(complexProduct.details.reasons.length <= 3, true);
 assert.equal(complexProduct.details.adjustments.length <= 2, true);
 
-const fourthRule = prioritizeDistinctCompatibilityRules(complexDecision.blockingRules)[3];
+const fourthRule = prioritizeIndependentBlockingCoverage(
+  prioritizeDistinctCompatibilityRules(complexDecision.blockingRules),
+)[3];
 assert.ok(fourthRule, 'complex fixture must expose a fourth lower-priority risk');
 const nonPrimaryProvider: CompatibilityAiReasoningProvider = async ({ user }) => {
   const payload = JSON.parse(user);

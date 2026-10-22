@@ -86,7 +86,15 @@ assert.equal(waterMismatch.status, 'not_recommended');
 assert.match(waterMismatchPlan.nextSteps[0] || '', new RegExp(lionfish.name));
 assert.match(waterMismatchPlan.nextSteps[0] || '', new RegExp(neon.name));
 assert.match(waterMismatchPlan.nextSteps[0] || '', /水体需求不一致|分缸/);
-assert.match(waterMismatchPlan.nextSteps[1] || '', /捕食/);
+assert.match(
+  waterMismatchPlan.nextSteps[1] || '',
+  /1200L|空间/,
+  'top-2 should use the second slot for an independent candidate husbandry blocker instead of repeating another conflict on the same impossible pair',
+);
+assert.ok(
+  waterMismatchPlan.actionSequence.some(step => step.sourceRuleCode === 'predation_risk'),
+  'same-pair predation still remains in deterministic detail after independent top-2 compression',
+);
 assert.match(waterMismatchPlan.expectedAfterAdjustment, /水体需求冲突|分缸|更换/);
 assert.match(waterMismatchPlan.reviewCheckpoint, /不需要靠行为观察期/);
 

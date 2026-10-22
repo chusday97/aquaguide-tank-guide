@@ -14,6 +14,7 @@ export type SpeciesFitItem = {
   title: string;
   detail: string;
   severity?: 'low' | 'medium' | 'high';
+  affectedSpeciesIds?: string[];
 };
 
 export type SpeciesFitEvaluation = {
@@ -117,10 +118,18 @@ const getSpeciesWaterTypes = (species: Fish): SpeciesWaterType[] => {
 };
 
 const isSpecialTankSpecies = (species: Fish) => {
-  const text = textOf(species);
-  if (/水母|jellyfish|Aurelia|Chrysaora|Phyllorhiza|Cassiopea|Cotylorhiza|Sanderia/i.test(text)) return 'jellyfish';
-  if (/珊瑚|coral|SPS|LPS|Zoanthus|Acropora|Euphyllia|Tubastraea/i.test(text)) return 'coral';
-  if (/海葵|anemone|Entacmaea|Stichodactyla|Heteractis/i.test(text)) return 'anemone';
+  const canonical = getCanonicalRuntimeFish(species) || species;
+  // Special-tank identity must come from taxonomic/display identity, not free-form
+  // husbandry copy. A stale housingReason once made the freshwater shell-dweller
+  // Neolamprologus multifasciatus look like coral/anemone livestock.
+  const identity = [
+    canonical.name,
+    canonical.scientificName,
+    canonical.category,
+  ].filter(Boolean).join(' ');
+  if (/水母|jellyfish|Aurelia|Chrysaora|Phyllorhiza|Cassiopea|Cotylorhiza|Sanderia/i.test(identity)) return 'jellyfish';
+  if (/珊瑚|coral|\bSPS\b|\bLPS\b|Zoanthus|Acropora|Euphyllia|Tubastraea/i.test(identity)) return 'coral';
+  if (/海葵|anemone|Entacmaea|Stichodactyla|Heteractis/i.test(identity)) return 'anemone';
   return null;
 };
 
@@ -179,6 +188,7 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
       title: '存在捕食或吞食风险',
       detail: `当前鱼缸已有 ${predator.species.name}，不建议再加入体型明显更小的 ${species.name}。`,
       severity: 'high',
+      affectedSpeciesIds: [predator.species.id, species.id],
     };
   }
 
@@ -192,6 +202,7 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
       title: '长鳍被啄咬风险',
       detail: `当前鱼缸已有 ${nipper.species.name}，长鳍或慢游鱼可能被追咬。`,
       severity: 'medium',
+      affectedSpeciesIds: [nipper.species.id, species.id],
     };
   }
 
@@ -206,6 +217,7 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
       title: '领地冲突风险',
       detail: `当前已有 ${territorial.species.name}，不建议再加入强领地或建议单养物种。`,
       severity: 'high',
+      affectedSpeciesIds: [territorial.species.id, species.id],
     };
   }
 

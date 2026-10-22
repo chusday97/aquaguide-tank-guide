@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
+import { evaluateSpeciesForAquarium } from '../src/lib/speciesFitEngine';
 import {
   getCompatibilityRuleFamily,
   prioritizeDistinctCompatibilityRules,
+  prioritizePlannedAdditionBlockingRules,
 } from '../src/services/compatibility/compatibility-action.service';
 import { buildCompatibilityDecisionPlan } from '../src/services/compatibility/compatibility-decision-plan.service';
 import type { Aquarium } from '../src/types';
@@ -63,18 +65,74 @@ assert.ok(plannedPlan.riskSummary.length <= 3);
 assert.ok(plannedPlan.nextSteps.length <= 2);
 assert.deepEqual(
   plannedPlan.evidence.sourceRuleCodes.map(getCompatibilityRuleFamily),
-  ['water_type', 'predation'],
-  'surfaced primary risks must retain matching provenance',
+  ['housing', 'temperature'],
+  'top-2 must cover independent resolution targets instead of spending both slots on pair conflicts already subsumed by species-only housing',
 );
 assert.equal(plannedPlan.riskSummary.length, plannedPlan.evidence.sourceRuleCodes.length);
 assert.ok(plannedPlan.evidence.evidenceIds.length > 0);
-assert.match(plannedPlan.riskSummary[0] || '', /水体类型/);
-assert.match(plannedPlan.riskSummary[1] || '', /捕食|吞食/);
-assert.match(plannedPlan.nextSteps[0] || '', /水体需求不一致|分缸|淡水|海水/);
-assert.match(plannedPlan.nextSteps[1] || '', /捕食|体型/);
+assert.match(plannedPlan.riskSummary[0] || '', /物种缸|单独|单养/);
+assert.match(plannedPlan.riskSummary[1] || '', /温度|水温|适温/);
+assert.match(plannedPlan.nextSteps[0] || '', /单养|更换更适合混养/);
+assert.match(plannedPlan.nextSteps[1] || '', /温度|分缸|更换温度需求更接近/);
 assert.doesNotMatch(plannedPlan.nextSteps.join(' '), /先处理下面的明确阻断风险/);
 assert.doesNotMatch(plannedPlan.nextSteps.join(' '), /观察看看|继续观察/);
 assert.match(plannedPlan.stopCondition, /不要执行当前混养计划/);
+
+const coverageOrder = prioritizePlannedAdditionBlockingRules(plannedDecision);
+assert.deepEqual(
+  coverageOrder.slice(0, 2).map(rule => getCompatibilityRuleFamily(rule.code)),
+  ['housing', 'temperature'],
+);
+assert.ok(
+  coverageOrder.findIndex(rule => getCompatibilityRuleFamily(rule.code) === 'water_type')
+    > coverageOrder.findIndex(rule => getCompatibilityRuleFamily(rule.code) === 'temperature'),
+  'pair conflict involving a species-only fish should be deferred behind an independent blocker',
+);
+
+const competingIds = ['sp_0049', 'sp_0431', 'sp_0443', 'sp_0439', 'sp_0436'];
+const competingQuantities: Record<string, number> = {
+  sp_0049: 1,
+  sp_0431: 10,
+  sp_0443: 6,
+  sp_0439: 8,
+  sp_0436: 5,
+};
+const competingDecision = evaluateCompatibilityDecision({
+  tank,
+  items: competingIds.map((id, index) => ({
+    species: byId(id),
+    quantity: competingQuantities[id],
+    origin: index === 0 ? 'existing' : 'candidate',
+  })),
+});
+const competingOrder = prioritizePlannedAdditionBlockingRules(competingDecision);
+assert.deepEqual(
+  competingOrder.slice(0, 2).map(rule => getCompatibilityRuleFamily(rule.code)),
+  ['housing', 'aggression'],
+  'single-housing should consume the old pair conflicts around that species only after independent hard blockers get a slot',
+);
+assert.ok(
+  competingOrder.findIndex(rule => getCompatibilityRuleFamily(rule.code) === 'predation') > 1,
+  'predation involving the single-housing species must not consume the second top-level slot',
+);
+assert.equal(
+  competingDecision.blockingRules.some(rule => rule.code === 'special_tank_required'),
+  false,
+  'freshwater shell-dweller husbandry copy must not be misread as coral/anemone identity',
+);
+const genuineSpecialTank = evaluateSpeciesForAquarium(byId('sp_0192'), tank, []);
+assert.equal(
+  genuineSpecialTank.hardBlocks.some(item => item.type === 'special_tank_required'),
+  true,
+  'real anemone identity must still trigger the special-tank boundary',
+);
+const competingPlan = buildCompatibilityDecisionPlan(competingDecision, 'planned_addition');
+assert.deepEqual(
+  competingPlan.evidence.sourceRuleCodes.map(getCompatibilityRuleFamily),
+  ['housing', 'aggression'],
+);
+assert.match(competingPlan.nextSteps[0] || '', /单养|更换更适合混养/);
+assert.match(competingPlan.nextSteps[1] || '', /追鳍|冲突|更换|分隔/);
 
 const currentDecision = evaluateCompatibilityDecision({
   tank,
@@ -90,10 +148,10 @@ assert.ok(currentPlan.riskSummary.length <= 3);
 assert.ok(currentPlan.nextSteps.length <= 2);
 assert.deepEqual(
   currentPlan.evidence.sourceRuleCodes.map(getCompatibilityRuleFamily),
-  ['water_type', 'predation'],
+  ['housing', 'temperature'],
 );
-assert.match(currentPlan.nextSteps[0] || '', /水体需求不一致|尽快分缸|淡水|海水/);
-assert.match(currentPlan.nextSteps[1] || '', /分隔|捕食/);
+assert.match(currentPlan.nextSteps[0] || '', /单养|重新调整现有组合/);
+assert.match(currentPlan.nextSteps[1] || '', /温度|分缸|更换温度需求更接近/);
 assert.doesNotMatch(currentPlan.nextSteps.join(' '), /新增|计划加入|观察看看/);
 assert.match(currentPlan.stopCondition, /保持分隔|原组合/);
 

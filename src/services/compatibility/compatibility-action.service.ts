@@ -82,19 +82,80 @@ export const hasCandidateInvolvedBlockingRules = (decision: CompatibilityDecisio
   decision.blockingRules.some(rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved')
 );
 
+const COHABITATION_BLOCK_FAMILIES = new Set([
+  'water_type',
+  'predation',
+  'temperature',
+  'aggression',
+  'territory',
+  'ph',
+]);
+
+const affectedScopeKey = (rule: Pick<TankCompatibilityRule, 'affectedSpeciesIds'>) => (
+  Array.from(new Set(rule.affectedSpeciesIds || []))
+    .sort((left, right) => left.localeCompare(right, 'en'))
+    .join('|')
+);
+
+export const prioritizeIndependentBlockingCoverage = (
+  orderedRules: TankCompatibilityRule[],
+): TankCompatibilityRule[] => {
+  const housingSpeciesIds = new Set(
+    orderedRules
+      .filter(rule => getCompatibilityRuleFamily(rule.code) === 'housing')
+      .flatMap(rule => rule.affectedSpeciesIds || []),
+  );
+  const seenPairScopes = new Set<string>();
+  const independent: TankCompatibilityRule[] = [];
+  const repeatedPairScope: TankCompatibilityRule[] = [];
+  const housingDominated: TankCompatibilityRule[] = [];
+
+  for (const rule of orderedRules) {
+    const family = getCompatibilityRuleFamily(rule.code);
+    const affectedIds = Array.from(new Set(rule.affectedSpeciesIds || []));
+    const isPairwiseCohabitationBlock = (
+      COHABITATION_BLOCK_FAMILIES.has(family)
+      && affectedIds.length >= 2
+    );
+
+    if (
+      isPairwiseCohabitationBlock
+      && affectedIds.some(speciesId => housingSpeciesIds.has(speciesId))
+    ) {
+      housingDominated.push(rule);
+      continue;
+    }
+
+    if (isPairwiseCohabitationBlock) {
+      const scopeKey = affectedScopeKey(rule);
+      if (scopeKey && seenPairScopes.has(scopeKey)) {
+        repeatedPairScope.push(rule);
+        continue;
+      }
+      if (scopeKey) seenPairScopes.add(scopeKey);
+    }
+
+    independent.push(rule);
+  }
+
+  return [...independent, ...repeatedPairScope, ...housingDominated];
+};
+
 export const prioritizePlannedAdditionBlockingRules = (
   decision: CompatibilityDecision,
 ): TankCompatibilityRule[] => {
   const ordered = prioritizeDistinctCompatibilityRules(decision.blockingRules);
-  if (!ordered.some(rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved')) {
-    return ordered;
-  }
+  const originOrdered = ordered.some(
+    rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved',
+  )
+    ? [
+      ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved'),
+      ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'unknown'),
+      ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'existing_only'),
+    ]
+    : ordered;
 
-  return [
-    ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'candidate_involved'),
-    ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'unknown'),
-    ...ordered.filter(rule => getCompatibilityRuleOriginScope(decision, rule) === 'existing_only'),
-  ];
+  return prioritizeIndependentBlockingCoverage(originOrdered);
 };
 
 export const getCompatibilityDecisionDisplayRules = (
@@ -104,7 +165,9 @@ export const getCompatibilityDecisionDisplayRules = (
   if (decision.status === 'not_recommended') {
     return mode === 'planned_addition'
       ? prioritizePlannedAdditionBlockingRules(decision)
-      : prioritizeDistinctCompatibilityRules(decision.blockingRules);
+      : prioritizeIndependentBlockingCoverage(
+        prioritizeDistinctCompatibilityRules(decision.blockingRules),
+      );
   }
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData);

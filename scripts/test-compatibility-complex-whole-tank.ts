@@ -281,8 +281,13 @@ assert.equal(blocked.decision.pairResults.length, 10, 'five distinct species mus
 const keyFamilies = blocked.keyRules.map(rule => getCompatibilityRuleFamily(rule.code));
 assert.deepEqual(
   keyFamilies.slice(0, 4),
-  ['water_type', 'predation', 'temperature', 'territory'],
-  'complex blocking evidence should surface distinct reviewed risk families in deterministic priority order',
+  ['water_type', 'temperature', 'territory', 'space'],
+  'top blocking evidence should maximize independent resolution coverage instead of repeating a second risk on the same pair',
+);
+assert.equal(
+  blocked.decision.blockingRules.some(rule => getCompatibilityRuleFamily(rule.code) === 'predation'),
+  true,
+  'deferred predation blockers must remain in deterministic detail even when they do not consume a top-level slot',
 );
 assert.equal(
   keyFamilies.includes('housing'),
@@ -325,17 +330,17 @@ const blockedMain = buildCompatibilityReadableConclusion(blocked.decision, {
 });
 assert.deepEqual(blockedMain.why, [
   '这些生物需要的水体类型不同，长期放在同一缸不合适。',
-  '体型和捕食关系存在明显风险，较小的一方可能被追逐或吞食。',
+  '它们适合的长期水温没有安全重叠，勉强取中间值也不适合长期饲养。',
 ]);
 assert.match(blockedMain.howTo[0] || '', /淡水|海水|同一缸/);
-assert.match(blockedMain.howTo[1] || '', /捕食|体型|混养/);
+assert.match(blockedMain.howTo[1] || '', /温度|分缸|更换温度需求更接近/);
 assert.equal(blockedMain.howTo.length, 2);
 
 const blockedProduct = buildCompatibilityProductAssessment(blocked.decision, genericAiShadow);
 const productFamilies = blockedProduct.details.reasons
   .slice(0, 3)
   .map(item => getCompatibilityRuleFamily(item.ruleCodes[0] || ''));
-assert.deepEqual(productFamilies, ['water_type', 'predation', 'temperature']);
+assert.deepEqual(productFamilies, ['water_type', 'temperature', 'territory']);
 assert.equal(new Set(productFamilies).size, 3);
 assert.equal(blockedProduct.details.explanation.source, 'deterministic_fallback');
 assert.equal(blockedProduct.details.explanation.narrativeAccepted, false);

@@ -8,6 +8,7 @@ import {
   getPreExistingBlockingLabel,
   hasCandidateInvolvedBlockingRules,
   hasOnlyPreExistingBlockingRules,
+  prioritizeIndependentBlockingCoverage,
   prioritizePlannedAdditionBlockingRules,
   prioritizeDistinctCompatibilityRules,
   type CompatibilityAssessmentMode,
@@ -218,7 +219,9 @@ const primaryRulesFor = (
 ): ReadableRule[] => {
   if (decision.status === 'not_recommended') return assessmentMode === 'planned_addition'
     ? prioritizePlannedAdditionBlockingRules(decision)
-    : prioritizeDistinctCompatibilityRules(decision.blockingRules);
+    : prioritizeIndependentBlockingCoverage(
+      prioritizeDistinctCompatibilityRules(decision.blockingRules),
+    );
   if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules);
   if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData);
   return [{ code: 'compatibility_clear', title: '当前没有发现明确混养冲突。' }];
@@ -344,7 +347,9 @@ const deterministicActionsFor = (
   if (decision.status === 'not_recommended') {
     const primaryBlockingRules = assessmentMode === 'planned_addition'
       ? prioritizePlannedAdditionBlockingRules(decision)
-      : prioritizeDistinctCompatibilityRules(decision.blockingRules);
+      : prioritizeIndependentBlockingCoverage(
+        prioritizeDistinctCompatibilityRules(decision.blockingRules),
+      );
     const hasCandidateBlock = assessmentMode === 'planned_addition'
       && hasCandidateInvolvedBlockingRules(decision);
     const hasNonSpaceBlocker = primaryBlockingRules.some(rule => getCompatibilityRuleFamily(rule.code) !== 'space');

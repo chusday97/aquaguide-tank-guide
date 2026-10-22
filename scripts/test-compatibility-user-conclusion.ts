@@ -124,16 +124,21 @@ assert.doesNotMatch(underGroupedPresentation.primaryActionText, /只加 1–2 �
 
 const predationPresentation = getCompatibilityPresentation(channaWithNeon as unknown as CompatibilityDecision);
 assert.equal(predationPresentation.headline, '不建议混养');
-assert.match(predationPresentation.primaryReason, /捕食|吞食/);
+assert.match(predationPresentation.primaryReason, /单养|不适合作为普通混养对象/);
 assert.match(predationPresentation.primaryActionText, /不要|先不要/);
 
 const predationPlan = buildCompatibilityDecisionPlan(channaWithNeon as unknown as CompatibilityDecision);
 assert.equal(predationPlan.judgment, '不建议混养');
 assert.equal(predationPlan.verdict, 'do_not_mix');
-assert.match(predationPlan.expectedAfterAdjustment, /消除阻断风险|更换|分隔/);
+assert.match(predationPlan.expectedAfterAdjustment, /单养|移除/);
 assert.match(predationPlan.stopCondition, /不要执行当前混养计划|阻断风险/);
-assert.ok(predationPlan.evidence.sourceRuleCodes.includes('predation_risk'));
-assert.ok(predationPlan.nextSteps.length >= 1);
+assert.ok(predationPlan.evidence.sourceRuleCodes.includes('single_housing_required'));
+assert.ok(
+  predationPlan.actionSequence.some(step => step.sourceRuleCode === 'predation_risk'),
+  'predation must remain available as a deferred blocker even when the stronger housing rule owns the primary slot',
+);
+assert.match(predationPlan.nextSteps[0] || '', /单养|普通混养/);
+assert.match(predationPlan.nextSteps[1] || '', /500L|空间/);
 
 const tigerGuppyDecision = evaluateCompatibilityDecision({
   tank: tank(100, 40, 30, 24),
@@ -171,7 +176,7 @@ assert.ok(multiSpeciesConflict.blockingRules.some(rule => rule.code === 'predati
 assert.ok(multiSpeciesConflict.blockedReasons.some(reason => reason.sourceRule.code === 'predation_risk'));
 const multiSpeciesConflictPresentation = getCompatibilityPresentation(multiSpeciesConflict);
 assert.equal(multiSpeciesConflictPresentation.headline, '不建议混养');
-assert.match(multiSpeciesConflictPresentation.primaryReason, /捕食|吞食/);
+assert.match(multiSpeciesConflictPresentation.primaryReason, /单养|不适合作为普通混养对象/);
 assert.match(multiSpeciesConflictPresentation.primaryActionText, /不要|先不要/);
 
 const cumulativeLoadItems = ['sp_0012', 'sp_0431', 'sp_0443'].map(id => ({

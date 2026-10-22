@@ -237,6 +237,12 @@
         },
         {
           "stage": "action_plan",
+          "check": "top-2 covers the species-only blocker plus an independent candidate conflict",
+          "pass": true,
+          "detail": null
+        },
+        {
+          "stage": "action_plan",
           "check": "hard-block plan does not emit contradictory add advice",
           "pass": true,
           "detail": null
@@ -267,22 +273,22 @@
         ],
         "resolutionTargets": [
           {
-            "riskFamily": "predation",
-            "resolutionMode": "deterministic_clearance",
-            "criterion": "珍珠赤雷龙 与 红绿灯 不再直接接触（分隔、分缸或替换组合），重新评估后不再出现该捕食阻断。",
-            "sourceRuleCode": "predation_risk",
-            "speciesIds": [
-              "sp_0049",
-              "sp_0431"
-            ]
-          },
-          {
             "riskFamily": "housing",
             "resolutionMode": "deterministic_clearance",
             "criterion": "珍珠赤雷龙 已从普通混养组合中移除并按单养要求处理，重新评估后不再出现 housing 阻断。",
             "sourceRuleCode": "single_housing_required",
             "speciesIds": [
               "sp_0049"
+            ]
+          },
+          {
+            "riskFamily": "aggression",
+            "resolutionMode": "deterministic_clearance",
+            "criterion": "孔雀鱼 与 虎皮鱼 的直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。",
+            "sourceRuleCode": "pair_rule_fin_nipping_long_fin_conflict",
+            "speciesIds": [
+              "sp_0436",
+              "sp_0439"
             ]
           }
         ]
@@ -560,11 +566,7 @@
             "sourceRuleCode": "territorial_conflict",
             "speciesIds": [
               "sp_0010",
-              "sp_0012",
-              "sp_0431",
-              "sp_0436",
-              "sp_0439",
-              "sp_0443"
+              "sp_0439"
             ]
           }
         ]
@@ -693,7 +695,6 @@
             "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
             "sourceRuleCode": "tank_volume_below_species_minimum",
             "speciesIds": [
-              "sp_0431",
               "sp_0446"
             ]
           }
@@ -839,7 +840,6 @@
             "criterion": "明确领地冲突已通过分隔或更换组合消除，重新评估后不再出现 territory 阻断。",
             "sourceRuleCode": "territorial_conflict",
             "speciesIds": [
-              "sp_0011",
               "sp_0015",
               "sp_0118"
             ]
@@ -1044,7 +1044,6 @@
               "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
               "sourceRuleCode": "tank_length_below_species_minimum",
               "speciesIds": [
-                "sp_0431",
                 "sp_0446"
               ]
             },
@@ -1100,7 +1099,6 @@
               "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
               "sourceRuleCode": "tank_volume_below_species_minimum",
               "speciesIds": [
-                "sp_0431",
                 "sp_0446"
               ]
             },
@@ -1168,11 +1166,7 @@
               "sourceRuleCode": "territorial_conflict",
               "speciesIds": [
                 "sp_0010",
-                "sp_0012",
-                "sp_0431",
-                "sp_0436",
-                "sp_0439",
-                "sp_0443"
+                "sp_0439"
               ]
             },
             "blockedByHardStop": false
@@ -1279,7 +1273,6 @@
               "criterion": "明确领地冲突已通过分隔或更换组合消除，重新评估后不再出现 territory 阻断。",
               "sourceRuleCode": "territorial_conflict",
               "speciesIds": [
-                "sp_0011",
                 "sp_0015",
                 "sp_0118"
               ]
@@ -1316,7 +1309,6 @@
               "criterion": "完成建议调整后重新评估，并用实际状态确认风险是否仍存在；没有新的确定性依据时不自动宣告风险已解除。",
               "sourceRuleCode": "hard_species",
               "speciesIds": [
-                "sp_0011",
                 "sp_0118"
               ]
             },
@@ -1402,7 +1394,6 @@
                 "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
                 "sourceRuleCode": "volume_too_small",
                 "speciesIds": [
-                  "sp_0011",
                   "sp_0048"
                 ]
               },
@@ -1722,13 +1713,29 @@
         "blockingFamilies": [
           "predation",
           "housing",
-          "territory",
-          "special_tank_required"
+          "territory"
         ],
         "actionSequence": [
           {
             "order": 1,
             "state": "current",
+            "riskFamily": "housing",
+            "action": "不要把 珍珠赤雷龙 按普通混养方案加入；该物种有明确单养要求。",
+            "sourceRuleCode": "single_housing_required",
+            "resolutionTarget": {
+              "riskFamily": "housing",
+              "resolutionMode": "deterministic_clearance",
+              "criterion": "珍珠赤雷龙 已从普通混养组合中移除并按单养要求处理，重新评估后不再出现 housing 阻断。",
+              "sourceRuleCode": "single_housing_required",
+              "speciesIds": [
+                "sp_0049"
+              ]
+            },
+            "blockedByHardStop": false
+          },
+          {
+            "order": 2,
+            "state": "next",
             "riskFamily": "predation",
             "action": "不要加入 月光鱼；它与 珍珠赤雷龙 存在明确捕食风险，应更换没有该捕食冲突的组合。",
             "sourceRuleCode": "predation_risk",
@@ -1739,23 +1746,6 @@
               "sourceRuleCode": "predation_risk",
               "speciesIds": [
                 "sp_0011",
-                "sp_0049"
-              ]
-            },
-            "blockedByHardStop": false
-          },
-          {
-            "order": 2,
-            "state": "next",
-            "riskFamily": "housing",
-            "action": "不要把 珍珠赤雷龙 按普通混养方案加入；该物种有明确单养要求。",
-            "sourceRuleCode": "single_housing_required",
-            "resolutionTarget": {
-              "riskFamily": "housing",
-              "resolutionMode": "deterministic_clearance",
-              "criterion": "珍珠赤雷龙 已从普通混养组合中移除并按单养要求处理，重新评估后不再出现 housing 阻断。",
-              "sourceRuleCode": "single_housing_required",
-              "speciesIds": [
                 "sp_0049"
               ]
             },
@@ -1781,24 +1771,6 @@
           },
           {
             "order": 4,
-            "state": "next",
-            "riskFamily": "special_tank_required",
-            "action": "完成建议调整后重新评估，并用实际状态确认风险是否仍存在；没有新的确定性依据时不自动宣告风险已解除。",
-            "sourceRuleCode": "special_tank_required",
-            "resolutionTarget": {
-              "riskFamily": "special_tank_required",
-              "resolutionMode": "behavioral_recheck",
-              "criterion": "完成建议调整后重新评估，并用实际状态确认风险是否仍存在；没有新的确定性依据时不自动宣告风险已解除。",
-              "sourceRuleCode": "special_tank_required",
-              "speciesIds": [
-                "sp_0049",
-                "sp_0058"
-              ]
-            },
-            "blockedByHardStop": false
-          },
-          {
-            "order": 5,
             "state": "deferred",
             "riskFamily": "ph",
             "action": "先确认 九间贝 与 珍珠赤雷龙 有可长期维持的共同 pH 区间，再决定是否加入。",
@@ -1993,7 +1965,7 @@
             "order": 1,
             "state": "current",
             "riskFamily": "space",
-            "action": "至少需要 41L 水体且 60cm 缸长再考虑加入。",
+            "action": "至少需要 54L 水体且 60cm 缸长再考虑加入。",
             "sourceRuleCode": "tank_length_below_species_minimum",
             "resolutionTarget": {
               "riskFamily": "space",
@@ -2001,8 +1973,7 @@
               "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
               "sourceRuleCode": "tank_length_below_species_minimum",
               "speciesIds": [
-                "sp_0431",
-                "sp_0443"
+                "sp_0431"
               ]
             },
             "blockedByHardStop": false
@@ -2045,7 +2016,7 @@
             "order": 1,
             "state": "current",
             "riskFamily": "space",
-            "action": "至少需要 41L 水体且 60cm 缸长再考虑加入。",
+            "action": "至少需要 54L 水体且 60cm 缸长再考虑加入。",
             "sourceRuleCode": "tank_length_below_species_minimum",
             "resolutionTarget": {
               "riskFamily": "space",
@@ -2053,8 +2024,7 @@
               "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
               "sourceRuleCode": "tank_length_below_species_minimum",
               "speciesIds": [
-                "sp_0431",
-                "sp_0443"
+                "sp_0431"
               ]
             },
             "blockedByHardStop": false
@@ -2130,18 +2100,18 @@
         "status": "not_recommended",
         "sequence": [
           {
-            "riskFamily": "predation",
-            "sourceRuleCode": "predation_risk",
+            "riskFamily": "housing",
+            "sourceRuleCode": "single_housing_required",
             "speciesIds": [
-              "sp_0011",
               "sp_0049"
             ],
             "state": "current"
           },
           {
-            "riskFamily": "housing",
-            "sourceRuleCode": "single_housing_required",
+            "riskFamily": "predation",
+            "sourceRuleCode": "predation_risk",
             "speciesIds": [
+              "sp_0011",
               "sp_0049"
             ],
             "state": "next"
@@ -2149,15 +2119,6 @@
           {
             "riskFamily": "territory",
             "sourceRuleCode": "territorial_conflict",
-            "speciesIds": [
-              "sp_0049",
-              "sp_0058"
-            ],
-            "state": "next"
-          },
-          {
-            "riskFamily": "special_tank_required",
-            "sourceRuleCode": "special_tank_required",
             "speciesIds": [
               "sp_0049",
               "sp_0058"
@@ -2174,7 +2135,7 @@
             "state": "deferred"
           }
         ],
-        "primaryReason": "已审核资料显示组合存在捕食或吞食风险。",
+        "primaryReason": "已审核资料显示候选物种不适合作为普通混养对象。",
         "primaryAction": "先不要把这组生物放在一起；先处理下面的明确阻断风险，再重新判断。"
       }
     },
@@ -2246,7 +2207,7 @@
           "compatible"
         ],
         "firstFamilies": [
-          "predation",
+          "housing",
           "territory",
           null
         ]
@@ -2305,7 +2266,7 @@
             "order": 1,
             "state": "current",
             "riskFamily": "space",
-            "action": "至少需要 41L 水体且 60cm 缸长再考虑加入。",
+            "action": "至少需要 54L 水体且 60cm 缸长再考虑加入。",
             "sourceRuleCode": "tank_length_below_species_minimum",
             "resolutionTarget": {
               "riskFamily": "space",
@@ -2313,8 +2274,7 @@
               "criterion": "调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。",
               "sourceRuleCode": "tank_length_below_species_minimum",
               "speciesIds": [
-                "sp_0431",
-                "sp_0443"
+                "sp_0431"
               ]
             },
             "blockedByHardStop": false
@@ -2397,7 +2357,7 @@
               "order": 1,
               "state": "current",
               "riskFamily": "space",
-              "action": "请先填写鱼缸长度；当前组合涉及已审核的 60cm 缸长 条件，填写后再重新评估。",
+              "action": "请先填写鱼缸长度；当前组合涉及已审核的 75cm 缸长 条件，填写后再重新评估。",
               "sourceRuleCode": "tank_volume_missing",
               "resolutionTarget": {
                 "riskFamily": "space",
@@ -2412,7 +2372,7 @@
               "blockedByHardStop": false
             }
           ],
-          "action": "先填写鱼缸长度；这次判断涉及已审核的 60cm 缸长 条件，填写后再算一次。"
+          "action": "先填写鱼缸长度；这次判断涉及已审核的 75cm 缸长 条件，填写后再算一次。"
         },
         "after": {
           "status": "caution",
