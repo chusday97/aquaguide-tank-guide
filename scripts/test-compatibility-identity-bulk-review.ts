@@ -57,7 +57,7 @@ assert.equal(
 );
 
 const queue = JSON.parse(readFileSync(
-  'evaluation/product/compatibility-identity-review-queue.v1.json',
+  'docs/compatibility_identity_bulk_queue.json',
   'utf8',
 )) as IdentityBulkQueueManifest;
 const base = JSON.parse(readFileSync(
@@ -73,8 +73,8 @@ const automated = queue.items.filter(item => item.automatedResearchAllowed);
 const manual = queue.items.filter(item => !item.automatedResearchAllowed);
 const preparation = buildIdentityBulkPreparation(queue, fishData);
 
-assert.equal(automated.length, 0);
-assert.equal(manual.length, queue.items.length, 'all current identity-review queue items must remain manual-only');
+assert.equal(automated.length, 43);
+assert.equal(manual.length, 114, 'only reviewed-ready exact-parent objects may enter automated grouped identity research');
 assert.equal(base.summary.totalAutomatedItems, automated.length);
 assert.equal(base.items.length, automated.length);
 assert.equal(review.summary.total, automated.length);
@@ -115,9 +115,11 @@ assert.equal(
   base.summary.variantResearchObjects,
 );
 assert.equal(preparation.items.length, automated.length);
-assert.equal(preparation.items.length, 0);
-assert.equal(base.groups.length, 0);
-assert.equal(base.summary.variantResearchObjects, 0);
+assert.equal(preparation.items.length, 43);
+assert.equal(preparation.uniqueBaseCandidateNames.length, 18);
+assert.equal(base.groups.length, 17);
+assert.equal(base.summary.variantResearchObjects, 40);
+assert.equal(base.summary.itemsWithoutVerifiedBase, 3);
 assert.equal(
   review.summary.identityCandidateReady
   + review.summary.partialInheritanceCandidateReady

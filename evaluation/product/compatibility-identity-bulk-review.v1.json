@@ -1,9 +1,9 @@
 {
   "version": 1,
   "kind": "compatibility_identity_bulk_review",
-  "generatedAt": "2026-10-19T03:21:17.056Z",
+  "generatedAt": "2026-10-22T13:27:46.209Z",
   "generatedFrom": {
-    "baseResolutionGeneratedAt": "2026-10-19T03:21:16.426Z"
+    "baseResolutionGeneratedAt": "2026-10-22T13:26:17.775Z"
   },
   "promotionAllowed": false,
   "writesAuthority": false,
@@ -14,15 +14,1607 @@
     "noAutomaticInheritance": true
   },
   "summary": {
-    "total": 0,
+    "total": 43,
     "identityCandidateReady": 0,
     "partialInheritanceCandidateReady": 0,
     "taxonomyCandidateReady": 0,
     "exactObjectEvidenceNotFoundThisPass": 0,
-    "researchRetryRequired": 0,
-    "parentOrTaxonomyUnresolved": 0,
+    "researchRetryRequired": 40,
+    "parentOrTaxonomyUnresolved": 3,
     "candidateReadyPairImpact": 0,
     "unresolvedPairImpact": 0
   },
-  "items": []
+  "items": [
+    {
+      "speciesId": "sp_0145",
+      "name": "大耳孔雀鱼",
+      "scientificName": "Poecilia reticulata var. Dumbo",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia reticulata"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia reticulata",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia reticulata",
+        "canonicalName": "Poecilia reticulata",
+        "externalId": "2350050",
+        "sourceUrl": "https://www.gbif.org/species/2350050",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0152",
+      "name": "荧光斑马鱼",
+      "scientificName": "Danio rerio var. GloFish",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Danio rerio"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0435"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0435"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Danio rerio",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Danio rerio",
+        "canonicalName": "Danio rerio",
+        "externalId": "9797255",
+        "sourceUrl": "https://www.gbif.org/species/9797255",
+        "confidence": 97,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0153",
+      "name": "球形珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Trichopodus leerii"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0444"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0444"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": null,
+      "baseResolution": {
+        "status": "provider_unavailable",
+        "queriedScientificName": "Trichopodus leerii",
+        "canonicalName": null,
+        "externalId": null,
+        "sourceUrl": null,
+        "confidence": null,
+        "reasonCode": "gbif_request_failed"
+      },
+      "stage": "parent_resolution_unresolved",
+      "status": "parent_or_taxonomy_unresolved",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0161",
+      "name": "巧克力皮球",
+      "scientificName": "Poecilia sphenops var. Chocolate",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia sphenops"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0437"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0437"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia sphenops",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia sphenops",
+        "canonicalName": "Poecilia sphenops",
+        "externalId": "5203748",
+        "sourceUrl": "https://www.gbif.org/species/5203748",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0170",
+      "name": "黑金刚孔雀鱼",
+      "scientificName": "Poecilia reticulata var. Full Black",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia reticulata"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia reticulata",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia reticulata",
+        "canonicalName": "Poecilia reticulata",
+        "externalId": "2350050",
+        "sourceUrl": "https://www.gbif.org/species/2350050",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0172",
+      "name": "长鳍白云金丝",
+      "scientificName": "Tanichthys albonubes var. Longfin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Tanichthys albonubes"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0434"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0434"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Tanichthys albonubes",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Tanichthys albonubes",
+        "canonicalName": "Tanichthys albonubes",
+        "externalId": "5207572",
+        "sourceUrl": "https://www.gbif.org/species/5207572",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0203",
+      "name": "绿赏皮球",
+      "scientificName": "Poecilia sphenops var. Green",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia sphenops"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0437"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0437"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia sphenops",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia sphenops",
+        "canonicalName": "Poecilia sphenops",
+        "externalId": "5203748",
+        "sourceUrl": "https://www.gbif.org/species/5203748",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0206",
+      "name": "电光红绿灯",
+      "scientificName": "Paracheirodon innesi var. Diamond",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Paracheirodon innesi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0431"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0431"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Paracheirodon innesi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Paracheirodon innesi",
+        "canonicalName": "Paracheirodon innesi",
+        "externalId": "2353909",
+        "sourceUrl": "https://www.gbif.org/species/2353909",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0212",
+      "name": "蓝眼金灯",
+      "scientificName": "Hemigrammus rodwayi var.",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Hemigrammus rodwayi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0362"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0362"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Hemigrammus rodwayi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Hemigrammus rodwayi",
+        "canonicalName": "Hemigrammus rodwayi",
+        "externalId": "2354381",
+        "sourceUrl": "https://www.gbif.org/species/2354381",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0215",
+      "name": "长鳍一眉道人",
+      "scientificName": "Sahyadria denisonii var. Longfin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Sahyadria denisonii"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0440"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0440"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Sahyadria denisonii",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Sahyadria denisonii",
+        "canonicalName": "Sahyadria denisonii",
+        "externalId": "8395052",
+        "sourceUrl": "https://www.gbif.org/species/8395052",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0219",
+      "name": "球形金波子",
+      "scientificName": "Mikrogeophagus ramirezi var. Gold Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Mikrogeophagus ramirezi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0448"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0448"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Mikrogeophagus ramirezi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Mikrogeophagus ramirezi",
+        "canonicalName": "Mikrogeophagus ramirezi",
+        "externalId": "2373104",
+        "sourceUrl": "https://www.gbif.org/species/2373104",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0220",
+      "name": "白金波子 (球形)",
+      "scientificName": "Mikrogeophagus ramirezi var. Platinum Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Mikrogeophagus ramirezi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0448"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0448"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Mikrogeophagus ramirezi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Mikrogeophagus ramirezi",
+        "canonicalName": "Mikrogeophagus ramirezi",
+        "externalId": "2373104",
+        "sourceUrl": "https://www.gbif.org/species/2373104",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0223",
+      "name": "红眼白子雷龙",
+      "scientificName": "Channa asiatica var. Albino",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Channa asiatica"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0049"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0049"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Channa asiatica",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Channa asiatica",
+        "canonicalName": "Channa asiatica",
+        "externalId": "2391557",
+        "sourceUrl": "https://www.gbif.org/species/2391557",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0227",
+      "name": "长鳍红裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Longfin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0228",
+      "name": "球形红裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0232",
+      "name": "白金咖啡鼠",
+      "scientificName": "Corydoras aeneus var. Platinum",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Corydoras aeneus"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0014"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0014"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Corydoras aeneus",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Corydoras aeneus",
+        "canonicalName": "Corydoras aeneus",
+        "externalId": "2342606",
+        "sourceUrl": "https://www.gbif.org/species/2342606",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0233",
+      "name": "球形珍珠马甲 (红眼)",
+      "scientificName": "Trichopodus leerii var. Albino Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Trichopodus leerii"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0444"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0444"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": null,
+      "baseResolution": {
+        "status": "provider_unavailable",
+        "queriedScientificName": "Trichopodus leerii",
+        "canonicalName": null,
+        "externalId": null,
+        "sourceUrl": null,
+        "confidence": null,
+        "reasonCode": "gbif_request_failed"
+      },
+      "stage": "parent_resolution_unresolved",
+      "status": "parent_or_taxonomy_unresolved",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0241",
+      "name": "大理石神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Marble Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Pterophyllum scalare"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0446"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0446"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Pterophyllum scalare",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Pterophyllum scalare",
+        "canonicalName": "Pterophyllum scalare",
+        "externalId": "5208518",
+        "sourceUrl": "https://www.gbif.org/species/5208518",
+        "confidence": 97,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0244",
+      "name": "黄金草尾孔雀",
+      "scientificName": "Poecilia reticulata var. Yellow Grass",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia reticulata"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia reticulata",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia reticulata",
+        "canonicalName": "Poecilia reticulata",
+        "externalId": "2350050",
+        "sourceUrl": "https://www.gbif.org/species/2350050",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0245",
+      "name": "红白剑尾孔雀",
+      "scientificName": "Poecilia reticulata var. Kohaku",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia reticulata"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia reticulata",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia reticulata",
+        "canonicalName": "Poecilia reticulata",
+        "externalId": "2350050",
+        "sourceUrl": "https://www.gbif.org/species/2350050",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0246",
+      "name": "白子红白孔雀",
+      "scientificName": "Poecilia reticulata var. Albino Kohaku",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia reticulata"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0436"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia reticulata",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia reticulata",
+        "canonicalName": "Poecilia reticulata",
+        "externalId": "2350050",
+        "sourceUrl": "https://www.gbif.org/species/2350050",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0247",
+      "name": "蓝钻神仙 (球形)",
+      "scientificName": "Pterophyllum scalare var. Blue Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Pterophyllum scalare"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0446"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0446"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Pterophyllum scalare",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Pterophyllum scalare",
+        "canonicalName": "Pterophyllum scalare",
+        "externalId": "5208518",
+        "sourceUrl": "https://www.gbif.org/species/5208518",
+        "confidence": 97,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0253",
+      "name": "红纹一眉道人",
+      "scientificName": "Sahyadria denisonii var. Red Line",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Sahyadria denisonii"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0440"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0440"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Sahyadria denisonii",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Sahyadria denisonii",
+        "canonicalName": "Sahyadria denisonii",
+        "externalId": "8395052",
+        "sourceUrl": "https://www.gbif.org/species/8395052",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0256",
+      "name": "红眼白子黑裙鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Albino Red Eye",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0267",
+      "name": "红头珍珠马甲",
+      "scientificName": "Trichopodus leerii var. Red Head",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Trichopodus leerii"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0444"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0444"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": null,
+      "baseResolution": {
+        "status": "provider_unavailable",
+        "queriedScientificName": "Trichopodus leerii",
+        "canonicalName": null,
+        "externalId": null,
+        "sourceUrl": null,
+        "confidence": null,
+        "reasonCode": "gbif_request_failed"
+      },
+      "stage": "parent_resolution_unresolved",
+      "status": "parent_or_taxonomy_unresolved",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0285",
+      "name": "黄金眼镜蛇雷龙 (改良)",
+      "scientificName": "Channa aurantimaculata var. Gold",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Channa aurantimaculata"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0109"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0109"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Channa aurantimaculata",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Channa aurantimaculata",
+        "canonicalName": "Channa aurantimaculata",
+        "externalId": "2391454",
+        "sourceUrl": "https://www.gbif.org/species/2391454",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0288",
+      "name": "白金黑裙鱼 (长鳍)",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Longfin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0293",
+      "name": "球形黑玛丽",
+      "scientificName": "Poecilia sphenops var. Black Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Poecilia sphenops"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0437"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0437"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Poecilia sphenops",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Poecilia sphenops",
+        "canonicalName": "Poecilia sphenops",
+        "externalId": "5203748",
+        "sourceUrl": "https://www.gbif.org/species/5203748",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0294",
+      "name": "红眼白子红裙 (球形)",
+      "scientificName": "Gymnocorymbus ternetzi var. Albino Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0339",
+      "name": "红眼金灯",
+      "scientificName": "Hemigrammus rodwayi var. Gold",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Hemigrammus rodwayi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0362"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0362"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Hemigrammus rodwayi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Hemigrammus rodwayi",
+        "canonicalName": "Hemigrammus rodwayi",
+        "externalId": "2354381",
+        "sourceUrl": "https://www.gbif.org/species/2354381",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0341",
+      "name": "长鳍白金黑裙",
+      "scientificName": "Gymnocorymbus ternetzi var. Longfin White",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0364",
+      "name": "荧光粉斑马",
+      "scientificName": "Danio rerio var. Glo Pink",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Danio rerio"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0435"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0435"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Danio rerio",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Danio rerio",
+        "canonicalName": "Danio rerio",
+        "externalId": "9797255",
+        "sourceUrl": "https://www.gbif.org/species/9797255",
+        "confidence": 97,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0372",
+      "name": "球形蓝宝石鱼",
+      "scientificName": "Andinoacara pulcher var. Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Andinoacara pulcher"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0450"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0450"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Andinoacara pulcher",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Andinoacara pulcher",
+        "canonicalName": "Andinoacara pulcher",
+        "externalId": "7525430",
+        "sourceUrl": "https://www.gbif.org/species/7525430",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0373",
+      "name": "球形红宝石鱼",
+      "scientificName": "Hemichromis bimaculatus var. Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Hemichromis bimaculatus"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0054"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0054"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Hemichromis bimaculatus",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Hemichromis bimaculatus",
+        "canonicalName": "Hemichromis bimaculatus",
+        "externalId": "2371368",
+        "sourceUrl": "https://www.gbif.org/species/2371368",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0374",
+      "name": "球形地图鱼",
+      "scientificName": "Astronotus ocellatus var. Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Astronotus ocellatus"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0451"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0451"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Astronotus ocellatus",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Astronotus ocellatus",
+        "canonicalName": "Astronotus ocellatus",
+        "externalId": "2370243",
+        "sourceUrl": "https://www.gbif.org/species/2370243",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0393",
+      "name": "大帆白金红裙",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Longfin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0394",
+      "name": "荧光橙经鱼",
+      "scientificName": "Gymnocorymbus ternetzi var. Glo Orange",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0415",
+      "name": "红眼白子红剑 (高鳍)",
+      "scientificName": "Xiphophorus hellerii var. High Fin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Xiphophorus hellerii"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0438"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0438"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Xiphophorus hellerii",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Xiphophorus hellerii",
+        "canonicalName": "Xiphophorus hellerii",
+        "externalId": "8246728",
+        "sourceUrl": "https://www.gbif.org/species/8246728",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0416",
+      "name": "球形蓝宝石鱼 (特级)",
+      "scientificName": "Andinoacara pulcher var. Super Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Andinoacara pulcher"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0450"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0450"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Andinoacara pulcher",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Andinoacara pulcher",
+        "canonicalName": "Andinoacara pulcher",
+        "externalId": "7525430",
+        "sourceUrl": "https://www.gbif.org/species/7525430",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0417",
+      "name": "血钻波子 (球形)",
+      "scientificName": "Mikrogeophagus ramirezi var. Super Red Balloon",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Mikrogeophagus ramirezi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0448"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0448"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Mikrogeophagus ramirezi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Mikrogeophagus ramirezi",
+        "canonicalName": "Mikrogeophagus ramirezi",
+        "externalId": "2373104",
+        "sourceUrl": "https://www.gbif.org/species/2373104",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0419",
+      "name": "荧光橙斑马 (长鳍)",
+      "scientificName": "Danio rerio var. Glo Orange Longfin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Danio rerio"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0435"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0435"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Danio rerio",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Danio rerio",
+        "canonicalName": "Danio rerio",
+        "externalId": "9797255",
+        "sourceUrl": "https://www.gbif.org/species/9797255",
+        "confidence": 97,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0421",
+      "name": "白金黑裙 (球形长鳍)",
+      "scientificName": "Gymnocorymbus ternetzi var. Platinum Balloon Longfin",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": true,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Gymnocorymbus ternetzi"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0010"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Gymnocorymbus ternetzi",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Gymnocorymbus ternetzi",
+        "canonicalName": "Gymnocorymbus ternetzi",
+        "externalId": "2353920",
+        "sourceUrl": "https://www.gbif.org/species/2353920",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    },
+    {
+      "speciesId": "sp_0426",
+      "name": "极地白云金丝",
+      "scientificName": "Tanichthys albonubes var. Polar",
+      "sourceQueue": "exact_object_identity_research",
+      "morphologyRisk": false,
+      "soleBoundaryIdentityUnknownPairs": 0,
+      "affectedIdentityUnknownPairs": 0,
+      "baseCandidateNames": [
+        "Tanichthys albonubes"
+      ],
+      "localBaseSpeciesIds": [
+        "sp_0434"
+      ],
+      "readyBaseSpeciesIds": [
+        "sp_0434"
+      ],
+      "hasDeterministicBaseCandidate": true,
+      "selectedBaseScientificName": "Tanichthys albonubes",
+      "baseResolution": {
+        "status": "verified",
+        "queriedScientificName": "Tanichthys albonubes",
+        "canonicalName": "Tanichthys albonubes",
+        "externalId": "5207572",
+        "sourceUrl": "https://www.gbif.org/species/5207572",
+        "confidence": 99,
+        "reasonCode": "gbif_exact_accepted_species"
+      },
+      "stage": "variant_identity_research",
+      "status": "research_retry_required",
+      "identityCandidate": null,
+      "provider": null,
+      "requiresHumanReview": true,
+      "promotionAllowed": false,
+      "writesAuthority": false,
+      "fullInheritanceAllowed": false
+    }
+  ]
 }
