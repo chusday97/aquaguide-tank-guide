@@ -110,7 +110,7 @@ import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
 import { isCompatibilityCalculatorSelectableSpecies } from '../services/compatibility/compatibility-domain-scope.service';
-import { getCompatibilityDataLimitationReason } from '../services/compatibility/compatibility-decision-plan.service';
+import { trackCompatibilityBadcases } from '../services/compatibility/compatibility-observability.service';
 import { getCompatibilityStatusLabelLocalized } from '../services/compatibility/compatibility-status-label.service';
 import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
@@ -652,17 +652,7 @@ export function CompatibilityRiskCalculator({
       source: 'rules',
       candidateCount: selectedItems.length,
     });
-    result.decision?.pairResults.forEach(pair => {
-      const unknownReason = getCompatibilityDataLimitationReason(pair.rawResult) || undefined;
-      trackSessionEvent('compatibility_pair_evaluated', {
-        action: 'evaluate_pair',
-        status: pair.status,
-        entry: 'full_compatibility',
-        source: 'rules',
-        pairKey: `${pair.speciesA.id}__${pair.speciesB.id}`,
-        unknownReason,
-      });
-    });
+    if (result.decision) trackCompatibilityBadcases(result.decision);
     recordTankCompatibility({ aquariumId: selectedAquarium.id, speciesIds: selectedItems.map(item => item.species.id), status: result.level });
     onEvaluationRecorded?.();
   }, [onEvaluationRecorded, result.level, result.ruleResult, selectedAquarium, selectedItems]);

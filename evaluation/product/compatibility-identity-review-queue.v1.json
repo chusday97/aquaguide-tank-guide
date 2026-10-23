@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "compatibility_identity_review_queue",
-  "generatedAt": "2026-10-22T11:40:01.450Z",
+  "generatedAt": "2026-10-23T05:13:39.343Z",
   "generatedFrom": "docs/compatibility_identity_migration_audit.json",
   "sourceSchemaVersion": 4,
   "promotionAllowed": false,
@@ -30,6 +30,10 @@
     "sourceIdentityUnknownPairs": 16047,
     "automatedResearchEligible": 0,
     "manualReviewOnly": 93,
+    "terminalEvidenceCeilingHolds": 68,
+    "actionableManualIntervention": 25,
+    "classifiedBoundaryCoveragePct": 100,
+    "unclassifiedBoundaries": 0,
     "evidenceCeilingHolds": 68,
     "partialInheritanceReview": 0,
     "byQueue": {

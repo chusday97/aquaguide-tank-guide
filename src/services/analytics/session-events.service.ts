@@ -15,6 +15,7 @@ export type AquaGuideEventName =
   | 'species_candidate_selected'
   | 'compatibility_started'
   | 'compatibility_pair_evaluated'
+  | 'compatibility_badcase_observed'
   | 'compatibility_completed'
   | 'activation_completed'
   | 'identification_completed'
@@ -53,6 +54,15 @@ export type AnalyticsCompatibilityUnknownReason =
   | 'missing_species_fact'
   | 'system_gap';
 
+export type AnalyticsCompatibilityBadcaseKind =
+  | 'identity_resolution_failed'
+  | 'evidence_gap'
+  | 'user_input_gap'
+  | 'system_gap'
+  | 'rule_conflict'
+  | 'cloud_fallback'
+  | 'authority_clamp';
+
 export type SafeAnalyticsProperties = {
   action: string;
   status?: string;
@@ -69,6 +79,8 @@ export type SafeAnalyticsProperties = {
   filterType?: AiSafetyFilterType;
   pairKey?: string;
   unknownReason?: AnalyticsCompatibilityUnknownReason;
+  badcaseKind?: AnalyticsCompatibilityBadcaseKind;
+  badcaseCount?: number;
 };
 
 export type AquaGuideEvent = SafeAnalyticsProperties & {
@@ -119,6 +131,12 @@ const sanitizeProperties = (properties: SafeAnalyticsProperties): SafeAnalyticsP
   const unknownReason = ['missing_user_input', 'unresolved_identity', 'public_evidence_insufficient', 'missing_species_fact', 'system_gap'].includes(String(properties.unknownReason))
     ? properties.unknownReason
     : undefined;
+  const badcaseKind = ['identity_resolution_failed', 'evidence_gap', 'user_input_gap', 'system_gap', 'rule_conflict', 'cloud_fallback', 'authority_clamp'].includes(String(properties.badcaseKind))
+    ? properties.badcaseKind
+    : undefined;
+  const badcaseCount = Number.isFinite(properties.badcaseCount)
+    ? Math.max(1, Math.min(100, Math.round(Number(properties.badcaseCount))))
+    : undefined;
   return {
     action: trim(properties.action, 80) || 'unknown',
     status: trim(properties.status, 40),
@@ -135,6 +153,8 @@ const sanitizeProperties = (properties: SafeAnalyticsProperties): SafeAnalyticsP
     filterType,
     pairKey: sanitizePairKey(properties.pairKey),
     unknownReason,
+    badcaseKind,
+    badcaseCount,
   };
 };
 

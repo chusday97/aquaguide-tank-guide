@@ -15,6 +15,8 @@ assert.equal(events.length, 1);
 assert.deepEqual(Object.keys(events[0]).sort(), [
   'action',
   'appVersion',
+  'badcaseCount',
+  'badcaseKind',
   'candidateCount',
   'durationBucket',
   'entry',
@@ -77,6 +79,19 @@ trackSessionEvent('compatibility_pair_evaluated', {
 });
 events = getSessionEvents();
 assert.equal(events[4].pairKey, undefined, 'self-pairs are not valid compatibility telemetry');
+
+trackSessionEvent('compatibility_badcase_observed', {
+  action: 'observe_badcase',
+  status: 'insufficient_data',
+  entry: 'full_compatibility',
+  source: 'rules',
+  badcaseKind: 'identity_resolution_failed',
+  badcaseCount: 3,
+  unknownReason: 'unresolved_identity',
+});
+events = getSessionEvents();
+assert.equal(events[5].badcaseKind, 'identity_resolution_failed');
+assert.equal(events[5].badcaseCount, 3);
 
 resetSessionEvents();
 assert.equal(getSessionEvents().length, 0);
