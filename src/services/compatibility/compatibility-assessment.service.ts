@@ -21,6 +21,7 @@ import {
   type CompatibilityReadableConclusion,
 } from './compatibility-readable-copy.service';
 import { getCompatibilityStatusLabel } from './compatibility-status-label.service';
+import { trackCompatibilityRuntimeBadcase } from './compatibility-observability.service';
 
 type GroundedItem = CompatibilityGroundedEvidenceItem;
 
@@ -170,6 +171,11 @@ export const loadCompatibilityAssessmentForPlan = async ({
   try {
     mode = await resolveRepositoryMode();
   } catch {
+    trackCompatibilityRuntimeBadcase({
+      kind: 'cloud_fallback',
+      status: decision.status,
+      failureReason: 'repository_mode_unavailable',
+    });
     return fallback;
   }
   if (mode !== 'cloud') return fallback;
@@ -181,8 +187,20 @@ export const loadCompatibilityAssessmentForPlan = async ({
     const remote = await apiRequest<RemoteCompatibilityAssessment>(
       `/aquariums/${encodeURIComponent(aquariumId)}/compatibility-assessment?${query.toString()}`,
     );
-    return adaptRemoteCompatibilityAssessmentForPlan(remote, decision) || fallback;
+    const adapted = adaptRemoteCompatibilityAssessmentForPlan(remote, decision);
+    if (adapted) return adapted;
+    trackCompatibilityRuntimeBadcase({
+      kind: 'authority_clamp',
+      status: decision.status,
+      failureReason: 'remote_assessment_rejected',
+    });
+    return fallback;
   } catch {
+    trackCompatibilityRuntimeBadcase({
+      kind: 'cloud_fallback',
+      status: decision.status,
+      failureReason: 'remote_assessment_unavailable',
+    });
     return fallback;
   }
 };

@@ -133,7 +133,15 @@ export type CompatibilityIdentityReviewQueueManifest = {
     sourceActiveIdentityBoundaries: number;
     sourceIdentityUnknownPairs: number;
     automatedResearchEligible: number;
+    /** Backward-compatible raw count of all non-automated rows, including terminal evidence ceilings. */
     manualReviewOnly: number;
+    /** Terminal, explicitly bounded rows that should not be treated as active manual backlog. */
+    terminalEvidenceCeilingHolds: number;
+    /** Active human intervention backlog after terminal evidence ceilings are excluded. */
+    actionableManualIntervention: number;
+    /** Every active boundary must reconcile to one explicit queue; anything else blocks release. */
+    classifiedBoundaryCoveragePct: number;
+    unclassifiedBoundaries: number;
     evidenceCeilingHolds: number;
     partialInheritanceReview: number;
     byQueue: Record<CompatibilityIdentityReviewQueueKind, number>;
@@ -325,6 +333,16 @@ export const buildCompatibilityIdentityReviewQueue = (
     }
   }
 
+  const classifiedBoundaries = Object.values(byQueue).reduce((sum, count) => sum + count, 0);
+  const unclassifiedBoundaries = Math.max(0, audit.activeIdentityBoundaries - classifiedBoundaries);
+  const terminalEvidenceCeilingHolds = items.filter(item => item.queue === 'evidence_ceiling_hold').length;
+  const actionableManualIntervention = items.filter(item => (
+    !item.automatedResearchAllowed && item.queue !== 'evidence_ceiling_hold'
+  )).length;
+  const classifiedBoundaryCoveragePct = audit.activeIdentityBoundaries > 0
+    ? Number(((classifiedBoundaries / audit.activeIdentityBoundaries) * 100).toFixed(2))
+    : 100;
+
   return {
     version: 1,
     kind: 'compatibility_identity_review_queue',
@@ -352,7 +370,11 @@ export const buildCompatibilityIdentityReviewQueue = (
       sourceIdentityUnknownPairs: audit.identityUnknownPairs,
       automatedResearchEligible: items.filter(item => item.automatedResearchAllowed).length,
       manualReviewOnly: items.filter(item => !item.automatedResearchAllowed).length,
-      evidenceCeilingHolds: items.filter(item => item.queue === 'evidence_ceiling_hold').length,
+      terminalEvidenceCeilingHolds,
+      actionableManualIntervention,
+      classifiedBoundaryCoveragePct,
+      unclassifiedBoundaries,
+      evidenceCeilingHolds: terminalEvidenceCeilingHolds,
       partialInheritanceReview: items.filter(item => item.queue === 'partial_inheritance_review').length,
       byQueue,
       soleBoundaryPairImpactByQueue,
