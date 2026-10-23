@@ -6,6 +6,8 @@ import {
   resolveAnalyticsRuntimeConfig,
 } from '../src/services/analytics/analytics-readiness.service';
 
+assert.equal(DEFAULT_POSTHOG_HOST, 'https://us.i.posthog.com');
+
 const missing = resolveAnalyticsRuntimeConfig({});
 assert.equal(missing.enabled, false);
 assert.equal(missing.readiness.status, 'not_configured');
