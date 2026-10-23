@@ -9,6 +9,7 @@ const gates = [
   ['compatibility:release-badcases', ['--import', 'tsx', 'scripts/test-compatibility-release-badcases.ts']],
   ['observability:session-events', ['--import', 'tsx', 'scripts/test-session-events.ts']],
   ['observability:badcase-aggregation', ['--import', 'tsx', 'scripts/test-compatibility-observability.ts']],
+  ['observability:runtime-config', ['--import', 'tsx', 'scripts/test-analytics-readiness.ts']],
   ['production:readiness-contract', ['scripts/test-compatibility-production-readiness.mjs']],
 ];
 

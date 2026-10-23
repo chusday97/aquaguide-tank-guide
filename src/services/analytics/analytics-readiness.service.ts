@@ -1,4 +1,4 @@
-export const DEFAULT_POSTHOG_HOST = 'https://app.posthog.com';
+export const DEFAULT_POSTHOG_HOST = 'https://us.i.posthog.com';
 export const SYNTHETIC_POSTHOG_KEY = 'phc_synthetic_dummy_key_123';
 
 export type AnalyticsReadinessStatus =
